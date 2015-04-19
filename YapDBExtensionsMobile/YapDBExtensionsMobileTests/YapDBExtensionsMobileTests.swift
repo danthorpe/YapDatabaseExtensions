@@ -32,6 +32,16 @@ class YapDatabaseValueTests: XCTestCase {
 
         waitForExpectationsWithTimeout(5.0, handler: nil)
     }
+    
+    func testAllValuesSavedSynchronously() {
+        let db = createYapDatabase(suffix: __FUNCTION__)
+        let product1 = Product(metadata: Product.Metadata(categoryIdentifier: 1), identifier: "1", name: "007", barcode: .UPCA(1, 2, 3, 4))
+        let product2 = Product(metadata: Product.Metadata(categoryIdentifier: 1), identifier: "2", name: "008", barcode: .UPCA(1, 2, 3, 4))
+        let saved = [product1, product2]
+        db.saveValues(saved)
+        let read: [Product] = db.readAllValuesInCollection(Product.collection)
+        XCTAssertEqual(saved, read, "Expecting all keys in Collection to return all items")
+    }
 }
 
 class YapDatabaseValueWithMetadataTests: XCTestCase {
@@ -82,6 +92,5 @@ class YapDatabaseReplaceValueWithMetadataTests: XCTestCase {
     }
 
 }
-
 
 

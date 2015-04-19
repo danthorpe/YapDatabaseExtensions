@@ -96,6 +96,10 @@ extension YapDatabase {
     public func readValuesAtIndexes<V where V: Saveable, V: Persistable, V.ArchiverType.ValueType == V>(indexes: [YapDatabase.Index]) -> [V] {
         return newConnection().readValuesAtIndexes(indexes)
     }
+    
+    public func readAllValuesInCollection<V where V: Saveable, V: Persistable, V.ArchiverType.ValueType == V>(collection: String) -> [V] {
+        return newConnection().readAllValuesInCollection(collection)
+    }
 
     public func filterExistingValuesForKeys<V where V: Saveable, V: Persistable, V.ArchiverType.ValueType == V>(keys: [String]) -> (existing: [V], missing: [String]) {
         return newConnection().filterExistingValuesForKeys(keys)
@@ -240,6 +244,10 @@ extension YapDatabaseConnection {
         return read(readInTransactionValuesAtIndexes(indexes))
     }
 
+    public func readAllValuesInCollection<V where V: Saveable, V: Persistable, V.ArchiverType.ValueType == V>(collection: String) -> [V] {
+        return self.read { $0.readAllValuesInCollection(collection) }
+    }
+    
     public func filterExistingValuesForKeys<V where V: Saveable, V: Persistable, V.ArchiverType.ValueType == V>(keys: [String]) -> (existing: [V], missing: [String]) {
         return read(filterInTransactionValuesForKeys(keys))
     }
@@ -441,6 +449,11 @@ extension YapDatabaseReadTransaction {
 
     public func readValuesAtIndexes<V where V: Saveable, V: Persistable, V.ArchiverType.ValueType == V>(indexes: [YapDatabase.Index]) -> [V] {
         return indexes.mapOptionals(readValueAtIndex)
+    }
+    
+    public func readAllValuesInCollection<V where V: Saveable, V: Persistable, V.ArchiverType.ValueType == V>(collection: String) -> [V] {
+        let keys = self.allKeysInCollection(collection) as? [String]
+        return self.readValuesForKeys(keys ?? [])
     }
 
     public func filterExistingValuesForKeys<V where V: Saveable, V: Persistable, V.ArchiverType.ValueType == V>(keys: [String]) -> (existing: [V], missing: [String]) {
