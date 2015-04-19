@@ -245,7 +245,7 @@ extension YapDatabaseConnection {
     }
 
     public func readAllValuesInCollection<V where V: Saveable, V: Persistable, V.ArchiverType.ValueType == V>(collection: String) -> [V] {
-        return self.read { $0.readAllValuesInCollection(collection) }
+        return read { $0.readAllValuesInCollection(collection) }
     }
     
     public func filterExistingValuesForKeys<V where V: Saveable, V: Persistable, V.ArchiverType.ValueType == V>(keys: [String]) -> (existing: [V], missing: [String]) {
@@ -452,8 +452,8 @@ extension YapDatabaseReadTransaction {
     }
     
     public func readAllValuesInCollection<V where V: Saveable, V: Persistable, V.ArchiverType.ValueType == V>(collection: String) -> [V] {
-        let keys = self.allKeysInCollection(collection) as? [String]
-        return self.readValuesForKeys(keys ?? [])
+        let keys = allKeysInCollection(collection) as? [String]
+        return readValuesForKeys(keys ?? [])
     }
 
     public func filterExistingValuesForKeys<V where V: Saveable, V: Persistable, V.ArchiverType.ValueType == V>(keys: [String]) -> (existing: [V], missing: [String]) {
