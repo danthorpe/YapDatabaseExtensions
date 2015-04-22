@@ -33,12 +33,12 @@ public func valuesFromArchives<Archives, Value where Archives: SequenceType, Arc
     return archives.map { map($0, valueFromArchive) }
 }
 
-public func archiveFromValue<Value: Saveable where Value.ArchiverType.ValueType == Value>(value: Value?) -> Value.ArchiverType? {
-    return value?.archive
+public func archiveFromValue<Value where Value: Saveable, Value.ArchiverType.ValueType == Value>(value: Value?) -> Value.ArchiverType? {
+    return value.map { $0.archive }
 }
 
-public func archivesFromValues<Value: Saveable where Value.ArchiverType.ValueType == Value>(values: [Value]?) -> [Value.ArchiverType]? {
-    return values?.map { $0.archive }
+public func archivesFromValues<Values, Value where Values: SequenceType, Values.Generator.Element == Value, Value: Saveable, Value.ArchiverType.ValueType == Value>(values: Values?) -> [Value.ArchiverType]? {
+    return values.map { map($0, { archiveFromValue($0) }) }
 }
 
 // MARK: - Persistable
