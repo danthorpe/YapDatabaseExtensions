@@ -9,28 +9,28 @@ extension YapDatabaseReadTransaction {
 
     /**
         Reads the object sored at this index using the transaction.
-        :param: index The YapDatabase.Index value.
+        :param: index The YapDB.Index value.
         :returns: An optional AnyObject.
     */
-    public func readAtIndex(index: YapDatabase.Index) -> AnyObject? {
+    public func readAtIndex(index: YapDB.Index) -> AnyObject? {
         return objectForKey(index.key, inCollection: index.collection)
     }
 
     /**
         Reads the object sored at this index using the transaction.
-        :param: index The YapDatabase.Index value.
+        :param: index The YapDB.Index value.
         :returns: An optional Object.
     */
-    public func readAtIndex<Object where Object: Persistable>(index: YapDatabase.Index) -> Object? {
+    public func readAtIndex<Object where Object: Persistable>(index: YapDB.Index) -> Object? {
         return readAtIndex(index) as? Object
     }
 
     /**
         Unarchives a value type if stored at this index
-        :param: index The YapDatabase.Index value.
+        :param: index The YapDB.Index value.
         :returns: An optional Value.
     */
-    public func readAtIndex<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(index: YapDatabase.Index) -> Value? {
+    public func readAtIndex<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(index: YapDB.Index) -> Value? {
         return valueFromArchive(readAtIndex(index))
     }
 }
@@ -39,19 +39,19 @@ extension YapDatabaseReadTransaction {
 
     /**
         Reads the object sored at these indexes using the transaction.
-        :param: indexes An array of YapDatabase.Index values.
+        :param: indexes An array of YapDB.Index values.
         :returns: An array of Object instances.
     */
-    public func readAtIndexes<Object where Object: Persistable>(indexes: [YapDatabase.Index]) -> [Object] {
+    public func readAtIndexes<Object where Object: Persistable>(indexes: [YapDB.Index]) -> [Object] {
         return map(indexes, readAtIndex)
     }
 
     /**
         Reads the value sored at these indexes using the transaction.
-        :param: indexes An array of YapDatabase.Index values.
+        :param: indexes An array of YapDB.Index values.
         :returns: An array of Value instances.
     */
-    public func readAtIndexes<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(indexes: [YapDatabase.Index]) -> [Value] {
+    public func readAtIndexes<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(indexes: [YapDB.Index]) -> [Value] {
         return map(indexes, readAtIndex)
     }
 }
@@ -111,15 +111,15 @@ extension YapDatabaseReadTransaction {
 
 extension YapDatabaseConnection {
 
-    public func readAtIndex(index: YapDatabase.Index) -> AnyObject? {
+    public func readAtIndex(index: YapDB.Index) -> AnyObject? {
         return read({ $0.readAtIndex(index) })
     }
 
-    public func readAtIndex<Object where Object: Persistable>(index: YapDatabase.Index) -> Object? {
+    public func readAtIndex<Object where Object: Persistable>(index: YapDB.Index) -> Object? {
         return read({ $0.readAtIndex(index) })
     }
 
-    public func readAtIndex<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(index: YapDatabase.Index) -> Value? {
+    public func readAtIndex<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(index: YapDB.Index) -> Value? {
         return read({ $0.readAtIndex(index) })
     }
 
@@ -127,11 +127,11 @@ extension YapDatabaseConnection {
 
 extension YapDatabaseConnection {
 
-    public func readAtIndexes<Object where Object: Persistable>(indexes: [YapDatabase.Index]) -> [Object] {
+    public func readAtIndexes<Object where Object: Persistable>(indexes: [YapDB.Index]) -> [Object] {
         return read({ $0.readAtIndexes(indexes) })
     }
 
-    public func readAtIndexes<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(indexes: [YapDatabase.Index]) -> [Value] {
+    public func readAtIndexes<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(indexes: [YapDB.Index]) -> [Value] {
         return read({ $0.readAtIndexes(indexes) })
     }
 }
@@ -184,22 +184,22 @@ extension YapDatabaseConnection {
 
 extension YapDatabaseConnection {
 
-    public func asyncReadAtIndex<Object where Object: Persistable>(index: YapDatabase.Index, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: (Object?) -> Void) {
+    public func asyncReadAtIndex<Object where Object: Persistable>(index: YapDB.Index, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: (Object?) -> Void) {
         asyncRead({ $0.readAtIndex(index) }, queue: queue, completion: completion)
     }
 
-    public func asyncReadAtIndex<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(index: YapDatabase.Index, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: (Value?) -> Void) {
+    public func asyncReadAtIndex<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(index: YapDB.Index, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: (Value?) -> Void) {
         asyncRead({ $0.readAtIndex(index) }, queue: queue, completion: completion)
     }
 }
 
 extension YapDatabaseConnection {
 
-    public func asyncReadAtIndexes<Object where Object: Persistable>(indexes: [YapDatabase.Index], queue: dispatch_queue_t = dispatch_get_main_queue(), completion: ([Object]) -> Void) {
+    public func asyncReadAtIndexes<Object where Object: Persistable>(indexes: [YapDB.Index], queue: dispatch_queue_t = dispatch_get_main_queue(), completion: ([Object]) -> Void) {
         asyncRead({ $0.readAtIndexes(indexes) }, queue: queue, completion: completion)
     }
 
-    public func asyncReadAtIndexes<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(indexes: [YapDatabase.Index], queue: dispatch_queue_t = dispatch_get_main_queue(), completion: ([Value]) -> Void) {
+    public func asyncReadAtIndexes<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(indexes: [YapDB.Index], queue: dispatch_queue_t = dispatch_get_main_queue(), completion: ([Value]) -> Void) {
         asyncRead({ $0.readAtIndexes(indexes) }, queue: queue, completion: completion)
     }
 }
@@ -242,22 +242,22 @@ extension YapDatabaseConnection {
 
 extension YapDatabase {
 
-    public func readAtIndex<Object where Object: Persistable>(index: YapDatabase.Index) -> Object? {
+    public func readAtIndex<Object where Object: Persistable>(index: YapDB.Index) -> Object? {
         return newConnection().readAtIndex(index)
     }
 
-    public func readAtIndex<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(index: YapDatabase.Index) -> Value? {
+    public func readAtIndex<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(index: YapDB.Index) -> Value? {
         return newConnection().readAtIndex(index)
     }
 }
 
 extension YapDatabase {
 
-    public func readAtIndexes<Object where Object: Persistable>(indexes: [YapDatabase.Index]) -> [Object] {
+    public func readAtIndexes<Object where Object: Persistable>(indexes: [YapDB.Index]) -> [Object] {
         return newConnection().readAtIndexes(indexes)
     }
 
-    public func readAtIndexes<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(indexes: [YapDatabase.Index]) -> [Value] {
+    public func readAtIndexes<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(indexes: [YapDB.Index]) -> [Value] {
         return newConnection().readAtIndexes(indexes)
     }
 }
@@ -311,11 +311,11 @@ extension YapDatabase {
 
 extension YapDatabase {
 
-    public func asyncReadAtIndex<Object where Object: Persistable>(index: YapDatabase.Index, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: (Object?) -> Void) {
+    public func asyncReadAtIndex<Object where Object: Persistable>(index: YapDB.Index, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: (Object?) -> Void) {
         newConnection().asyncReadAtIndex(index, queue: queue, completion: completion)
     }
 
-    public func asyncReadAtIndex<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(index: YapDatabase.Index, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: (Value?) -> Void) {
+    public func asyncReadAtIndex<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(index: YapDB.Index, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: (Value?) -> Void) {
         newConnection().asyncReadAtIndex(index, queue: queue, completion: completion)
     }
 }
