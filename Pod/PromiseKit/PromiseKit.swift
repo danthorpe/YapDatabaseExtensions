@@ -7,6 +7,36 @@ import PromiseKit
 
 extension YapDatabaseConnection {
 
+    public func asyncRead<Object where Object: Persistable>(key: String) -> Promise<Object?> {
+        return Promise { (fulfiller, _) in
+            self.asyncRead({ $0.read(key) }, queue: dispatch_get_main_queue(), completion: fulfiller)
+        }
+    }
+
+    public func asyncRead<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(key: String) -> Promise<Value?> {
+        return Promise { (fulfiller, _) in
+            self.asyncRead({ $0.read(key) }, queue: dispatch_get_main_queue(), completion: fulfiller)
+        }
+    }
+}
+
+extension YapDatabaseConnection {
+
+    public func asyncRead<Object where Object: Persistable>(keys: [String]) -> Promise<[Object]> {
+        return Promise { (fulfiller, _) in
+            self.asyncRead({ $0.read(keys) }, queue: dispatch_get_main_queue(), completion: fulfiller)
+        }
+    }
+
+    public func asyncRead<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(keys: [String]) -> Promise<[Value]> {
+        return Promise { (fulfiller, _) in
+            self.asyncRead({ $0.read(keys) }, queue: dispatch_get_main_queue(), completion: fulfiller)
+        }
+    }
+}
+
+extension YapDatabaseConnection {
+
     public func asyncWrite<Object where Object: NSCoding, Object: Persistable>(object: Object) -> Promise<Object> {
         return Promise { (fulfiller, _) in
             self.asyncWrite(object, completion: fulfiller)
@@ -53,6 +83,36 @@ extension YapDatabaseConnection {
     }
 }
 
+
+extension YapDatabase {
+
+    public func asyncRead<Object where Object: Persistable>(key: String) -> Promise<Object?> {
+        return Promise { (fulfiller, _) in
+            self.asyncRead(key, queue: dispatch_get_main_queue(), completion: fulfiller)
+        }
+    }
+
+    public func asyncRead<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(key: String) -> Promise<Value?> {
+        return Promise { (fulfiller, _) in
+            self.asyncRead(key, queue: dispatch_get_main_queue(), completion: fulfiller)
+        }
+    }
+}
+
+extension YapDatabase {
+
+    public func asyncRead<Object where Object: Persistable>(keys: [String]) -> Promise<[Object]> {
+        return Promise { (fulfiller, _) in
+            self.asyncRead(keys, queue: dispatch_get_main_queue(), completion: fulfiller)
+        }
+    }
+
+    public func asyncRead<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(keys: [String]) -> Promise<[Value]> {
+        return Promise { (fulfiller, _) in
+            self.asyncRead(keys, queue: dispatch_get_main_queue(), completion: fulfiller)
+        }
+    }
+}
 
 
 extension YapDatabase {
