@@ -242,7 +242,6 @@ class SynchronousRemoveTests: BaseTestCase {
         XCTAssertEqual((db.readAll() as [Barcode]).count, 0, "There should be no barcodes in the database.")
     }
 
-/* - For some reason this doesn't link...
     func testSynchronous_RemoveAtIndexes() {
         let db = createYapDatabase(__FILE__, suffix: __FUNCTION__)
 
@@ -250,11 +249,9 @@ class SynchronousRemoveTests: BaseTestCase {
         db.write(_barcodes)
         XCTAssertEqual((db.readAll() as [Barcode]).count, _barcodes.count, "There should be one barcodes in the database.")
 
-        let indexes: [YapDatabase.Index] = map(_barcodes, indexForPersistable)
-        db.removeAtIndexes(indexes)
+        db.removeAtIndexes(map(_barcodes, indexForPersistable))
         XCTAssertEqual((db.readAll() as [Barcode]).count, 0, "There should be no barcodes in the database.")
     }
-*/
 
     func test_RemovePersistable() {
         let db = createYapDatabase(__FILE__, suffix: __FUNCTION__)
