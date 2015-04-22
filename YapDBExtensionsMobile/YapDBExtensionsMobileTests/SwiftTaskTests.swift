@@ -14,7 +14,7 @@ import YapDatabaseExtensions
 import YapDBExtensionsMobile
 
 
-extension AsynchronousReadWriteTests {
+extension AsynchronousWriteTests {
 
     func test_ReadingAndWriting_Object_SwiftTask() {
         let db = createYapDatabase(__FILE__, suffix: __FUNCTION__)
