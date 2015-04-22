@@ -15,7 +15,7 @@ import YapDBExtensionsMobile
 extension YapDatabaseValueTests {
 
     func testSavingValueAsynchronouslyWithSwiftTask() {
-        let db = createYapDatabase(suffix: __FUNCTION__)
+        let db = createYapDatabase(__FILE__, suffix: __FUNCTION__)
         let expectation = expectationWithDescription("Finished async swift tasks saving.")
 
         (db.asyncSaveValue(barcode) as Task<Void, Barcode, Void>).success { saved -> Void in
@@ -30,7 +30,7 @@ extension YapDatabaseValueTests {
 extension YapDatabaseValueWithMetadataTests {
 
     func testSavingValueAsynchronouslyWithSwiftTask() {
-        let db = createYapDatabase(suffix: __FUNCTION__)
+        let db = createYapDatabase(__FILE__, suffix: __FUNCTION__)
         let expectation = expectationWithDescription("Finished async swift task saving.")
 
         (db.asyncSaveValue(product) as Task<Void, Product, Void>).success { saved -> Void in
@@ -45,7 +45,7 @@ extension YapDatabaseValueWithMetadataTests {
 extension YapDatabaseReplaceValueWithMetadataTests {
 
     func testReplaceingValueAsynchronouslyWithSwiftTask() {
-        let db = createYapDatabase(suffix: __FUNCTION__)
+        let db = createYapDatabase(__FILE__, suffix: __FUNCTION__)
         db.saveValue(a)
 
         let expectation = expectationWithDescription("Finished async swift tasks replace.")

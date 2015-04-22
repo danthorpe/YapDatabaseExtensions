@@ -43,6 +43,27 @@ public struct Product: Identifiable, Equatable {
     }
 }
 
+public class Person: NSObject, NSCoding, Equatable {
+
+    public let identifier: Identifier
+    public let name: String
+
+    public init(id: String, name n: String) {
+        identifier = id
+        name = n
+    }
+
+    public required init(coder aDecoder: NSCoder) {
+        identifier = aDecoder.decodeObjectForKey("identifier") as! Identifier
+        name = aDecoder.decodeObjectForKey("name") as! String
+    }
+
+    public func encodeWithCoder(aCoder: NSCoder) {
+        aCoder.encodeObject(identifier, forKey: "identifier")
+        aCoder.encodeObject(name, forKey: "name")
+    }
+}
+
 // MARK: - Hashable etc
 
 extension Barcode: Hashable {
@@ -63,7 +84,12 @@ public func == (a: Barcode, b: Barcode) -> Bool {
 }
 
 public func == (a: Product, b: Product) -> Bool {
+    // Note - this is not a very good Equatable implementation.
     return a.identifier == b.identifier
+}
+
+public func == (a: Person, b: Person) -> Bool {
+    return (a.identifier == b.identifier) && (a.name == b.name)
 }
 
 // MARK: - Persistable
@@ -95,6 +121,13 @@ extension Product: ValueMetadataPersistable {
 
     public static var collection: String {
         return "Products"
+    }
+}
+
+extension Person: Persistable {
+
+    public static var collection: String {
+        return "People"
     }
 }
 

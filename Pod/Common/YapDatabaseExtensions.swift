@@ -25,19 +25,19 @@ public protocol Saveable {
     var archive: ArchiverType { get }
 }
 
-public func valueFromArchive<V: Saveable where V.ArchiverType.ValueType == V>(archive: AnyObject?) -> V? {
-    return archive.map { ($0 as! V.ArchiverType).value }
+public func valueFromArchive<Value: Saveable where Value.ArchiverType.ValueType == Value>(archive: AnyObject?) -> Value? {
+    return archive.map { ($0 as! Value.ArchiverType).value }
 }
 
-public func valuesFromArchives<V: Saveable where V.ArchiverType.ValueType == V>(archives: [AnyObject]?) -> [V]? {
+public func valuesFromArchives<Value: Saveable where Value.ArchiverType.ValueType == Value>(archives: [AnyObject]?) -> [Value]? {
     return archives?.mapOptionals { valueFromArchive($0) }
 }
 
-public func archiveFromValue<V: Saveable where V.ArchiverType.ValueType == V>(value: V?) -> V.ArchiverType? {
+public func archiveFromValue<Value: Saveable where Value.ArchiverType.ValueType == Value>(value: Value?) -> Value.ArchiverType? {
     return value?.archive
 }
 
-public func archivesFromValues<V: Saveable where V.ArchiverType.ValueType == V>(values: [V]?) -> [V.ArchiverType]? {
+public func archivesFromValues<Value: Saveable where Value.ArchiverType.ValueType == Value>(values: [Value]?) -> [Value.ArchiverType]? {
     return values?.map { $0.archive }
 }
 
@@ -79,29 +79,251 @@ public func indexForPersistable<P: Persistable>(persistable: P) -> YapDatabase.I
     return YapDatabase.Index(collection: persistable.dynamicType.collection, key: "\(persistable.identifier)")
 }
 
+internal func map<S: SequenceType, T>(source: S, transform: (S.Generator.Element) -> T?) -> [T] {
+    return reduce(source, [T](), { (var accumulator, element) -> [T] in
+        if let transformed = transform(element) {
+            accumulator.append(transformed)
+        }
+        return accumulator
+    })
+}
+
+
+// MARK: - Pure Functional API: Reading Value(s)
+
+public func readInTransactionValueForKey<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(key: String) -> (YapDatabaseReadTransaction) -> Value? {
+    return { $0.readValueForKey(key) }
+}
+
+public func readInTransactionValuesForKeys<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(keys: [String]) -> (YapDatabaseReadTransaction) -> [Value] {
+    return { $0.readValuesForKeys(keys) }
+}
+
+public func readInTransactionValueAtIndex<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(index: YapDatabase.Index) -> (YapDatabaseReadTransaction) -> Value? {
+    return { $0.readValueAtIndex(index) }
+}
+
+public func readInTransactionValuesAtIndexes<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(indexes: [YapDatabase.Index]) -> (YapDatabaseReadTransaction) -> [Value] {
+    return { $0.readValuesAtIndexes(indexes) }
+}
+
+public func filterInTransactionValuesForKeys<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(keys: [String]) -> (YapDatabaseReadTransaction) -> (existing: [Value], missing: [String]) {
+    return { $0.filterExistingValuesForKeys(keys) }
+}
+
+public func readInTransactionObjectForKey<Object where Object: Persistable>(key: String) -> (YapDatabaseReadTransaction) -> Object? {
+    return { $0.readObjectForKey(key) }
+}
+
+public func readInTransactionObjectsForKeys<Object where Object: Persistable>(keys: [String]) -> (YapDatabaseReadTransaction) -> [Object] {
+    return { $0.readObjectsForKeys(keys) }
+}
+
+// MARK: - Pure Functional API: Saving Value(s)
+
+public func saveInTransationValue<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(value: Value) -> (YapDatabaseReadWriteTransaction) -> Value {
+    return { $0.saveValue(value) }
+}
+
+public func saveInTransationValues<Values, Value where Values: SequenceType, Values.Generator.Element == Value, Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(values: Values) -> (YapDatabaseReadWriteTransaction) -> [Value] {
+    return { $0.saveValues(values) }
+}
+
+public func saveInTransationValue<Value where Value: Saveable, Value: ValueMetadataPersistable, Value.ArchiverType.ValueType == Value>(value: Value) -> (YapDatabaseReadWriteTransaction) -> Value {
+    return { $0.saveValue(value) }
+}
+
+public func saveInTransationValues<Values, Value where Values: SequenceType, Values.Generator.Element == Value, Value: Saveable, Value: ValueMetadataPersistable, Value.ArchiverType.ValueType == Value>(values: Values) -> (YapDatabaseReadWriteTransaction) -> [Value] {
+    return { $0.saveValues(values) }
+}
+
+public func saveInTransationObject<Object where Object: NSCoding, Object: Persistable>(object: Object) -> (YapDatabaseReadWriteTransaction) -> Object {
+    return { $0.saveObject(object) }
+}
+
+public func saveInTransationObject<Object where Object: NSCoding, Object: ObjectMetadataPersistable>(object: Object) -> (YapDatabaseReadWriteTransaction) -> Object {
+    return { $0.saveObject(object) }
+}
+
+// MARK: - Pure Functional API: Removing Value(s)
+
+public func removeInTransactionValue<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(value: Value) -> (YapDatabaseReadWriteTransaction) -> Void {
+    return { $0.removeValue(value) }
+}
+
+public func removeInTransactionValues<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(values: [Value]) -> (YapDatabaseReadWriteTransaction) -> Void {
+    return { $0.removeValues(values) }
+}
+
+// MARK: - Pure Functional API: Replacing Value(s)
+
+public func replaceInTransactionValue<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(replacement: Value) -> (YapDatabaseReadWriteTransaction) -> Value {
+    return { $0.replaceValue(replacement) }
+}
+
+public func replaceInTransactionValues<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(replacements: [Value]) -> (YapDatabaseReadWriteTransaction) -> [Value] {
+    return { $0.replaceValues(replacements) }
+}
+
+public func replaceInTransactionValue<VM where VM: Saveable, VM: ValueMetadataPersistable, VM.ArchiverType.ValueType == VM>(replacement: VM) -> (YapDatabaseReadWriteTransaction) -> VM {
+    return { $0.replaceValue(replacement) }
+}
+
+public func replaceInTransactionValues<VM where VM: Saveable, VM: ValueMetadataPersistable, VM.ArchiverType.ValueType == VM>(replacements: [VM]) -> (YapDatabaseReadWriteTransaction) -> [VM] {
+    return { $0.replaceValues(replacements) }
+}
+
+
+// MARK: - YapDatabaseReadWriteTransaction
+
+extension YapDatabaseReadWriteTransaction {
+
+    public func saveValue<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(value: Value) -> Value {
+        setObject(value.archive, forKey: "\(value.identifier)", inCollection: value.dynamicType.collection)
+        return value
+    }
+
+    public func saveValue<Value where Value: Saveable, Value: ValueMetadataPersistable, Value.ArchiverType.ValueType == Value>(value: Value) -> Value {
+        setObject(value.archive, forKey: "\(value.identifier)", inCollection: value.dynamicType.collection, withMetadata: value.metadata.archive)
+        return value
+    }
+
+    public func saveValues<Values, Value where Values: SequenceType, Values.Generator.Element == Value, Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(values: Values) -> [Value] {
+        return map(values, saveValue)
+    }
+
+    public func saveValues<Values, Value where Values: SequenceType, Values.Generator.Element == Value, Value: Saveable, Value: ValueMetadataPersistable, Value.ArchiverType.ValueType == Value>(values: Values) -> [Value] {
+        return map(values, saveValue)
+    }
+
+}
+
+extension YapDatabaseReadWriteTransaction {
+
+    public func saveObject<Object where Object: NSCoding, Object: Persistable>(object: Object) -> Object {
+        setObject(object, forKey: "\(object.identifier)", inCollection: object.dynamicType.collection)
+        return object
+    }
+
+    public func saveObject<Object where Object: NSCoding, Object: ObjectMetadataPersistable>(object: Object) -> Object {
+        setObject(object, forKey: "\(object.identifier)", inCollection: object.dynamicType.collection, withMetadata: object.metadata)
+        return object
+    }
+
+    public func saveObjects<Objects, Object where Objects: SequenceType, Objects.Generator.Element == Object, Object: NSCoding, Object: Persistable>(objects: Objects) -> [Object] {
+        return map(objects, saveObject)
+    }
+
+    public func saveObjects<Objects, Object where Objects: SequenceType, Objects.Generator.Element == Object, Object: NSCoding, Object: ObjectMetadataPersistable>(objects: Objects) -> [Object] {
+        return map(objects, saveObject)
+    }
+}
+
+extension YapDatabaseReadWriteTransaction {
+
+    public func removeValue<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(value: Value) {
+        removeObjectForKey("\(value.identifier)", inCollection: value.dynamicType.collection)
+    }
+
+    public func removeValues<S where S: SequenceType, S.Generator.Element: Persistable>(values: S) {
+        removeObjectsForKeys(map(values, { "\($0.identifier)" }), inCollection: S.Generator.Element.collection)
+    }
+}
+
+extension YapDatabaseReadWriteTransaction {
+
+    public func replaceValue<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(replacement: Value) -> Value {
+        replaceObject(replacement.archive, forKey: "\(replacement.identifier)", inCollection: replacement.dynamicType.collection)
+        return replacement
+    }
+
+    public func replaceValues<Values, Value where Values: SequenceType, Values.Generator.Element == Value, Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(replacements: Values) -> [Value] {
+        return map(replacements, replaceValue)
+    }
+
+    public func replaceValue<Value where Value: Saveable, Value: ValueMetadataPersistable, Value.ArchiverType.ValueType == Value>(replacement: Value) -> Value {
+        replaceObject(replacement.archive, forKey: "\(replacement.identifier)", inCollection: replacement.dynamicType.collection)
+        replaceMetadata(replacement.metadata.archive, forKey: "\(replacement.identifier)", inCollection: replacement.dynamicType.collection)
+        return replacement
+    }
+
+    public func replaceValues<Values, Value where Values: SequenceType, Values.Generator.Element == Value, Value: Saveable, Value: ValueMetadataPersistable, Value.ArchiverType.ValueType == Value>(replacements: Values) -> [Value] {
+        return map(replacements, replaceValue)
+    }
+}
+
+// MARK: - YapDatabaseReadTransaction
+
+extension YapDatabaseReadTransaction {
+
+    public func readValueForKey<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(key: String) -> Value? {
+        return valueFromArchive(objectForKey(key, inCollection: Value.collection))
+    }
+
+    public func readValuesForKeys<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(keys: [String]) -> [Value] {
+        return keys.mapOptionals(readValueForKey)
+    }
+
+    public func readValueAtIndex<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(index: YapDatabase.Index) -> Value? {
+        return valueFromArchive(readObjectAtIndex(index))
+    }
+
+    public func readValuesAtIndexes<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(indexes: [YapDatabase.Index]) -> [Value] {
+        return indexes.mapOptionals(readValueAtIndex)
+    }
+
+    public func readAllValuesInCollection<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(collection: String) -> [Value] {
+        let keys = allKeysInCollection(collection) as? [String]
+        return readValuesForKeys(keys ?? [])
+    }
+
+    public func filterExistingValuesForKeys<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(keys: [String]) -> (existing: [Value], missing: [String]) {
+        let values: [Value] = readValuesForKeys(keys)
+        let existingKeys = values.map { "\($0.identifier)" }
+        let missingKeys = filter(keys) { !contains(existingKeys, $0) }
+        return (values, missingKeys)
+    }
+
+    public func readObjectForKey<O where O: Persistable>(key: String) -> O? {
+        return objectForKey(key, inCollection: O.collection) as? O
+    }
+
+    public func readObjectsForKeys<O where O: Persistable>(keys: [String]) -> [O] {
+        return keys.mapOptionals(readObjectForKey)
+    }
+
+    public func readObjectAtIndex(index: YapDatabase.Index) -> AnyObject? {
+        return objectForKey(index.key, inCollection: index.collection)
+    }
+
+    public func readObjectsAtIndexes(indexes: [YapDatabase.Index]) -> [AnyObject] {
+        return indexes.mapOptionals(readObjectAtIndex)
+    }
+}
+
 extension YapDatabase {
 
-    public func readValueForKey<V where V: Saveable, V: Persistable, V.ArchiverType.ValueType == V>(key: String) -> V? {
+    public func readValueForKey<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(key: String) -> Value? {
         return newConnection().readValueForKey(key)
     }
 
-    public func readValuesForKeys<V where V: Saveable, V: Persistable, V.ArchiverType.ValueType == V>(keys: [String]) -> [V] {
+    public func readValuesForKeys<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(keys: [String]) -> [Value] {
         return newConnection().readValuesForKeys(keys)
     }
 
-    public func readValueAtIndex<V where V: Saveable, V: Persistable, V.ArchiverType.ValueType == V>(index: YapDatabase.Index) -> V? {
+    public func readValueAtIndex<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(index: YapDatabase.Index) -> Value? {
         return newConnection().readValueAtIndex(index)
     }
 
-    public func readValuesAtIndexes<V where V: Saveable, V: Persistable, V.ArchiverType.ValueType == V>(indexes: [YapDatabase.Index]) -> [V] {
+    public func readValuesAtIndexes<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(indexes: [YapDatabase.Index]) -> [Value] {
         return newConnection().readValuesAtIndexes(indexes)
     }
     
-    public func readAllValuesInCollection<V where V: Saveable, V: Persistable, V.ArchiverType.ValueType == V>(collection: String) -> [V] {
+    public func readAllValuesInCollection<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(collection: String) -> [Value] {
         return newConnection().readAllValuesInCollection(collection)
     }
 
-    public func filterExistingValuesForKeys<V where V: Saveable, V: Persistable, V.ArchiverType.ValueType == V>(keys: [String]) -> (existing: [V], missing: [String]) {
+    public func filterExistingValuesForKeys<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(keys: [String]) -> (existing: [Value], missing: [String]) {
         return newConnection().filterExistingValuesForKeys(keys)
     }
 
@@ -113,19 +335,19 @@ extension YapDatabase {
         return newConnection().readObjectsForKeys(keys)
     }
 
-    public func saveValue<V where V: Saveable, V: Persistable, V.ArchiverType.ValueType == V>(value: V) -> V {
+    public func saveValue<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(value: Value) -> Value {
         return newConnection().saveValue(value)
     }
 
-    public func saveValues<V where V: Saveable, V: Persistable, V.ArchiverType.ValueType == V>(values: [V]) -> [V] {
+    public func saveValues<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(values: [Value]) -> [Value] {
         return newConnection().saveValues(values)
     }
 
-    public func saveValue<VM where VM: Saveable, VM: ValueMetadataPersistable, VM.ArchiverType.ValueType == VM>(value: VM) -> VM {
+    public func saveValue<Value where Value: Saveable, Value: ValueMetadataPersistable, Value.ArchiverType.ValueType == Value>(value: Value) -> Value {
         return newConnection().saveValue(value)
     }
 
-    public func saveValues<VM where VM: Saveable, VM: ValueMetadataPersistable, VM.ArchiverType.ValueType == VM>(values: [VM]) -> [VM] {
+    public func saveValues<Value where Value: Saveable, Value: ValueMetadataPersistable, Value.ArchiverType.ValueType == Value>(values: [Value]) -> [Value] {
         return newConnection().saveValues(values)
     }
 
@@ -137,73 +359,73 @@ extension YapDatabase {
         return newConnection().saveObject(object)
     }
 
-    public func removeValue<V where V: Saveable, V: Persistable, V.ArchiverType.ValueType == V>(value: V) {
+    public func removeValue<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(value: Value) {
         newConnection().removeValue(value)
     }
 
-    public func removeValues<V where V: Saveable, V: Persistable, V.ArchiverType.ValueType == V>(values: [V]) {
+    public func removeValues<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(values: [Value]) {
         newConnection().removeValues(values)
     }
 
-    public func replaceValue<V where V: Saveable, V: Persistable, V.ArchiverType.ValueType == V>(replacement: V) -> V {
+    public func replaceValue<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(replacement: Value) -> Value {
         return newConnection().replaceValue(replacement)
     }
 
-    public func replaceValues<V where V: Saveable, V: Persistable, V.ArchiverType.ValueType == V>(replacements: [V]) -> [V] {
+    public func replaceValues<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(replacements: [Value]) -> [Value] {
         return newConnection().replaceValues(replacements)
     }
 
-    public func replaceValue<VM where VM: Saveable, VM: ValueMetadataPersistable, VM.ArchiverType.ValueType == VM>(replacement: VM) -> VM {
+    public func replaceValue<Value where Value: Saveable, Value: ValueMetadataPersistable, Value.ArchiverType.ValueType == Value>(replacement: Value) -> Value {
         return newConnection().replaceValue(replacement)
     }
 
-    public func replaceValues<VM where VM: Saveable, VM: ValueMetadataPersistable, VM.ArchiverType.ValueType == VM>(replacements: [VM]) -> [VM] {
+    public func replaceValues<Value where Value: Saveable, Value: ValueMetadataPersistable, Value.ArchiverType.ValueType == Value>(replacements: [Value]) -> [Value] {
         return newConnection().replaceValues(replacements)
     }
 }
 
 extension YapDatabase {
 
-    public func asyncSaveValue<V where V: Saveable, V: Persistable, V.ArchiverType.ValueType == V>(value: V, completion: (V) -> Void) {
+    public func asyncSaveValue<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(value: Value, completion: (Value) -> Void) {
         newConnection().asyncSaveValue(value, completion: completion)
     }
 
-    func asyncSaveValues<V where V: Saveable, V: Persistable, V.ArchiverType.ValueType == V>(values: [V], completion: ([V]) -> Void) {
+    func asyncSaveValues<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(values: [Value], completion: ([Value]) -> Void) {
         newConnection().asyncSaveValues(values, completion: completion)
     }
 
-    func asyncSaveValue<VM where VM: Saveable, VM: ValueMetadataPersistable, VM.ArchiverType.ValueType == VM>(value: VM, completion: (VM) -> Void) {
+    func asyncSaveValue<Value where Value: Saveable, Value: ValueMetadataPersistable, Value.ArchiverType.ValueType == Value>(value: Value, completion: (Value) -> Void) {
         newConnection().asyncSaveValue(value, completion: completion)
     }
 
-    func asyncSaveValues<VM where VM: Saveable, VM: ValueMetadataPersistable, VM.ArchiverType.ValueType == VM>(values: [VM], completion: ([VM]) -> Void) {
+    func asyncSaveValues<Value where Value: Saveable, Value: ValueMetadataPersistable, Value.ArchiverType.ValueType == Value>(values: [Value], completion: ([Value]) -> Void) {
         newConnection().asyncSaveValues(values, completion: completion)
     }
 
-    func asyncSaveObject<O where O: NSCoding, O: Persistable>(object: O, completion: (O) -> Void) {
+    func asyncSaveObject<Object where Object: NSCoding, Object: Persistable>(object: Object, completion: (Object) -> Void) {
         newConnection().asyncSaveObject(object, completion: completion)
     }
 
-    func asyncSaveObject<OM where OM: NSCoding, OM: ObjectMetadataPersistable>(object: OM, completion: (OM) -> Void) {
+    func asyncSaveObject<Object where Object: NSCoding, Object: ObjectMetadataPersistable>(object: Object, completion: (Object) -> Void) {
         newConnection().asyncSaveObject(object, completion: completion)
     }
 }
 
 extension YapDatabase {
 
-    public func asyncReplaceValue<V where V: Saveable, V: Persistable, V.ArchiverType.ValueType == V>(replacement: V, completion: (V) -> Void) {
+    public func asyncReplaceValue<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(replacement: Value, completion: (Value) -> Void) {
         newConnection().asyncReplaceValue(replacement, completion: completion)
     }
 
-    public func asyncReplaceValues<V where V: Saveable, V: Persistable, V.ArchiverType.ValueType == V>(replacements: [V], completion: ([V]) -> Void) {
+    public func asyncReplaceValues<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(replacements: [Value], completion: ([Value]) -> Void) {
         newConnection().asyncReplaceValues(replacements, completion: completion)
     }
 
-    public func asyncReplaceValue<VM where VM: Saveable, VM: ValueMetadataPersistable, VM.ArchiverType.ValueType == VM>(replacement: VM, completion: (VM) -> Void) {
+    public func asyncReplaceValue<Value where Value: Saveable, Value: ValueMetadataPersistable, Value.ArchiverType.ValueType == Value>(replacement: Value, completion: (Value) -> Void) {
         newConnection().asyncReplaceValue(replacement, completion: completion)
     }
 
-    public func asyncReplaceValues<VM where VM: Saveable, VM: ValueMetadataPersistable, VM.ArchiverType.ValueType == VM>(replacements: [VM], completion: ([VM]) -> Void) {
+    public func asyncReplaceValues<Value where Value: Saveable, Value: ValueMetadataPersistable, Value.ArchiverType.ValueType == Value>(replacements: [Value], completion: ([Value]) -> Void) {
         newConnection().asyncReplaceValues(replacements, completion: completion)
     }
 }
@@ -228,319 +450,130 @@ extension YapDatabaseConnection {
         return result
     }
 
-    public func readValueForKey<V where V: Saveable, V: Persistable, V.ArchiverType.ValueType == V>(key: String) -> V? {
+    public func readValueForKey<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(key: String) -> Value? {
         return read(readInTransactionValueForKey(key))
     }
 
-    public func readValuesForKeys<V where V: Saveable, V: Persistable, V.ArchiverType.ValueType == V>(keys: [String]) -> [V] {
+    public func readValuesForKeys<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(keys: [String]) -> [Value] {
         return read(readInTransactionValuesForKeys(keys))
     }
 
-    public func readValueAtIndex<V where V: Saveable, V: Persistable, V.ArchiverType.ValueType == V>(index: YapDatabase.Index) -> V? {
+    public func readValueAtIndex<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(index: YapDatabase.Index) -> Value? {
         return read(readInTransactionValueAtIndex(index))
     }
 
-    public func readValuesAtIndexes<V where V: Saveable, V: Persistable, V.ArchiverType.ValueType == V>(indexes: [YapDatabase.Index]) -> [V] {
+    public func readValuesAtIndexes<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(indexes: [YapDatabase.Index]) -> [Value] {
         return read(readInTransactionValuesAtIndexes(indexes))
     }
 
-    public func readAllValuesInCollection<V where V: Saveable, V: Persistable, V.ArchiverType.ValueType == V>(collection: String) -> [V] {
+    public func readAllValuesInCollection<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(collection: String) -> [Value] {
         return read { $0.readAllValuesInCollection(collection) }
     }
     
-    public func filterExistingValuesForKeys<V where V: Saveable, V: Persistable, V.ArchiverType.ValueType == V>(keys: [String]) -> (existing: [V], missing: [String]) {
+    public func filterExistingValuesForKeys<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(keys: [String]) -> (existing: [Value], missing: [String]) {
         return read(filterInTransactionValuesForKeys(keys))
     }
 
-    public func readObjectForKey<O where O: Persistable>(key: String) -> O? {
+    public func readObjectForKey<Object where Object: Persistable>(key: String) -> Object? {
         return read(readInTransactionObjectForKey(key))
     }
 
-    public func readObjectsForKeys<O where O: Persistable>(keys: [String]) -> [O] {
+    public func readObjectsForKeys<Object where Object: Persistable>(keys: [String]) -> [Object] {
         return read(readInTransactionObjectsForKeys(keys))
     }
 
-    public func saveValue<V where V: Saveable, V: Persistable, V.ArchiverType.ValueType == V>(value: V) -> V {
+    public func saveValue<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(value: Value) -> Value {
         return write(saveInTransationValue(value))
     }
 
-    public func saveValues<V where V: Saveable, V: Persistable, V.ArchiverType.ValueType == V>(values: [V]) -> [V] {
+    public func saveValues<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(values: [Value]) -> [Value] {
         return write(saveInTransationValues(values))
     }
 
-    public func saveValue<VM where VM: Saveable, VM: ValueMetadataPersistable, VM.ArchiverType.ValueType == VM>(value: VM) -> VM {
+    public func saveValue<Value where Value: Saveable, Value: ValueMetadataPersistable, Value.ArchiverType.ValueType == Value>(value: Value) -> Value {
         return write(saveInTransationValue(value))
     }
 
-    public func saveValues<VM where VM: Saveable, VM: ValueMetadataPersistable, VM.ArchiverType.ValueType == VM>(values: [VM]) -> [VM] {
+    public func saveValues<Value where Value: Saveable, Value: ValueMetadataPersistable, Value.ArchiverType.ValueType == Value>(values: [Value]) -> [Value] {
         return write(saveInTransationValues(values))
     }
 
-    public func saveObject<O where O: NSCoding, O: Persistable>(object: O) -> O {
+    public func saveObject<Object where Object: NSCoding, Object: Persistable>(object: Object) -> Object {
         return write(saveInTransationObject(object))
     }
 
-    public func saveObject<OM where OM: NSCoding, OM: ObjectMetadataPersistable>(object: OM) -> OM {
+    public func saveObject<Object where Object: NSCoding, Object: ObjectMetadataPersistable>(object: Object) -> Object {
         return write(saveInTransationObject(object))
     }
 
-    public func removeValue<V where V: Saveable, V: Persistable, V.ArchiverType.ValueType == V>(value: V) {
+    public func removeValue<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(value: Value) {
         write(removeInTransactionValue(value))
     }
 
-    public func removeValues<V where V: Saveable, V: Persistable, V.ArchiverType.ValueType == V>(values: [V]) {
+    public func removeValues<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(values: [Value]) {
         write(removeInTransactionValues(values))
     }
 
-    public func replaceValue<V where V: Saveable, V: Persistable, V.ArchiverType.ValueType == V>(replacement: V) -> V {
+    public func replaceValue<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(replacement: Value) -> Value {
         return write(replaceInTransactionValue(replacement))
     }
 
-    public func replaceValues<V where V: Saveable, V: Persistable, V.ArchiverType.ValueType == V>(replacements: [V]) -> [V] {
+    public func replaceValues<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(replacements: [Value]) -> [Value] {
         return write(replaceInTransactionValues(replacements))
     }
 
-    public func replaceValue<VM where VM: Saveable, VM: ValueMetadataPersistable, VM.ArchiverType.ValueType == VM>(replacement: VM) -> VM {
+    public func replaceValue<Value where Value: Saveable, Value: ValueMetadataPersistable, Value.ArchiverType.ValueType == Value>(replacement: Value) -> Value {
         return write(replaceInTransactionValue(replacement))
     }
 
-    public func replaceValues<VM where VM: Saveable, VM: ValueMetadataPersistable, VM.ArchiverType.ValueType == VM>(replacements: [VM]) -> [VM] {
+    public func replaceValues<Value where Value: Saveable, Value: ValueMetadataPersistable, Value.ArchiverType.ValueType == Value>(replacements: [Value]) -> [Value] {
         return write(replaceInTransactionValues(replacements))
     }
 }
 
 extension YapDatabaseConnection {
 
-    public func asyncSaveValue<V where V: Saveable, V: Persistable, V.ArchiverType.ValueType == V>(value: V, completion: (V) -> Void) {
+    public func asyncSaveValue<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(value: Value, completion: (Value) -> Void) {
         asyncReadWriteWithBlock({ transaction in let _ = transaction.saveValue(value) }, completionBlock: { completion(value) })
     }
 
-    public func asyncSaveValues<V where V: Saveable, V: Persistable, V.ArchiverType.ValueType == V>(values: [V], completion: ([V]) -> Void) {
+    public func asyncSaveValues<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(values: [Value], completion: ([Value]) -> Void) {
         asyncReadWriteWithBlock({ transaction in let _ = transaction.saveValues(values) }, completionBlock: { completion(values) })
     }
 
-    public func asyncSaveValue<VM where VM: Saveable, VM: ValueMetadataPersistable, VM.ArchiverType.ValueType == VM>(value: VM, completion: (VM) -> Void) {
+    public func asyncSaveValue<Value where Value: Saveable, Value: ValueMetadataPersistable, Value.ArchiverType.ValueType == Value>(value: Value, completion: (Value) -> Void) {
         asyncReadWriteWithBlock({ transaction in let _ = transaction.saveValue(value) }, completionBlock: { completion(value) })
     }
 
-    public func asyncSaveValues<VM where VM: Saveable, VM: ValueMetadataPersistable, VM.ArchiverType.ValueType == VM>(values: [VM], completion: ([VM]) -> Void) {
+    public func asyncSaveValues<Value where Value: Saveable, Value: ValueMetadataPersistable, Value.ArchiverType.ValueType == Value>(values: [Value], completion: ([Value]) -> Void) {
         asyncReadWriteWithBlock({ transaction in let _ = transaction.saveValues(values) }, completionBlock: { completion(values) })
     }
 
-    public func asyncSaveObject<O where O: NSCoding, O: Persistable>(object: O, completion: (O) -> Void) {
+    public func asyncSaveObject<Object where Object: NSCoding, Object: Persistable>(object: Object, completion: (Object) -> Void) {
         asyncReadWriteWithBlock({ transaction in let _ = transaction.saveObject(object) }, completionBlock: { completion(object) })
     }
 
-    public func asyncSaveObject<OM where OM: NSCoding, OM: ObjectMetadataPersistable>(object: OM, completion: (OM) -> Void) {
+    public func asyncSaveObject<Object where Object: NSCoding, Object: ObjectMetadataPersistable>(object: Object, completion: (Object) -> Void) {
         asyncReadWriteWithBlock({ transaction in let _ = transaction.saveObject(object) }, completionBlock: { completion(object) })
     }
 }
 
 extension YapDatabaseConnection {
 
-    public func asyncReplaceValue<V where V: Saveable, V: Persistable, V.ArchiverType.ValueType == V>(replacement: V, completion: (V) -> Void) {
+    public func asyncReplaceValue<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(replacement: Value, completion: (Value) -> Void) {
         asyncReadWriteWithBlock({ transaction in let _ = transaction.replaceValue(replacement) }, completionBlock: { completion(replacement) })
     }
 
-    public func asyncReplaceValues<V where V: Saveable, V: Persistable, V.ArchiverType.ValueType == V>(replacements: [V], completion: ([V]) -> Void) {
+    public func asyncReplaceValues<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(replacements: [Value], completion: ([Value]) -> Void) {
         asyncReadWriteWithBlock({ transaction in let _ = transaction.replaceValues(replacements) }, completionBlock: { completion(replacements) })
     }
 
-    public func asyncReplaceValue<VM where VM: Saveable, VM: ValueMetadataPersistable, VM.ArchiverType.ValueType == VM>(replacement: VM, completion: (VM) -> Void) {
+    public func asyncReplaceValue<Value where Value: Saveable, Value: ValueMetadataPersistable, Value.ArchiverType.ValueType == Value>(replacement: Value, completion: (Value) -> Void) {
         asyncReadWriteWithBlock({ transaction in let _ = transaction.replaceValue(replacement) }, completionBlock: { completion(replacement) })
     }
 
-    public func asyncReplaceValues<VM where VM: Saveable, VM: ValueMetadataPersistable, VM.ArchiverType.ValueType == VM>(replacements: [VM], completion: ([VM]) -> Void) {
+    public func asyncReplaceValues<Value where Value: Saveable, Value: ValueMetadataPersistable, Value.ArchiverType.ValueType == Value>(replacements: [Value], completion: ([Value]) -> Void) {
         asyncReadWriteWithBlock({ transaction in let _ = transaction.replaceValues(replacements) }, completionBlock: { completion(replacements) })
-    }
-}
-
-func readInTransactionValueForKey<V where V: Saveable, V: Persistable, V.ArchiverType.ValueType == V>(key: String) -> (YapDatabaseReadTransaction) -> V? {
-    return { transaction in transaction.readValueForKey(key) }
-}
-
-func readInTransactionValuesForKeys<V where V: Saveable, V: Persistable, V.ArchiverType.ValueType == V>(keys: [String]) -> (YapDatabaseReadTransaction) -> [V] {
-    return { transaction in transaction.readValuesForKeys(keys) }
-}
-
-func readInTransactionValueAtIndex<V where V: Saveable, V: Persistable, V.ArchiverType.ValueType == V>(index: YapDatabase.Index) -> (YapDatabaseReadTransaction) -> V? {
-    return { transaction in transaction.readValueAtIndex(index) }
-}
-
-func readInTransactionValuesAtIndexes<V where V: Saveable, V: Persistable, V.ArchiverType.ValueType == V>(indexes: [YapDatabase.Index]) -> (YapDatabaseReadTransaction) -> [V] {
-    return { transaction in transaction.readValuesAtIndexes(indexes) }
-}
-
-func filterInTransactionValuesForKeys<V where V: Saveable, V: Persistable, V.ArchiverType.ValueType == V>(keys: [String]) -> (YapDatabaseReadTransaction) -> (existing: [V], missing: [String]) {
-    return { transaction in transaction.filterExistingValuesForKeys(keys) }
-}
-
-func readInTransactionObjectForKey<O where O: Persistable>(key: String) -> (YapDatabaseReadTransaction) -> O? {
-    return { transaction in transaction.readObjectForKey(key) }
-}
-
-func readInTransactionObjectsForKeys<O where O: Persistable>(keys: [String]) -> (YapDatabaseReadTransaction) -> [O] {
-    return { transaction in transaction.readObjectsForKeys(keys) }
-}
-
-func saveInTransationValue<V where V: Saveable, V: Persistable, V.ArchiverType.ValueType == V>(value: V) -> (YapDatabaseReadWriteTransaction) -> V {
-    return { transaction in transaction.saveValue(value) }
-}
-
-func saveInTransationValues<V where V: Saveable, V: Persistable, V.ArchiverType.ValueType == V>(values: [V]) -> (YapDatabaseReadWriteTransaction) -> [V] {
-    return { transaction in transaction.saveValues(values) }
-}
-
-func saveInTransationValue<V where V: Saveable, V: ValueMetadataPersistable, V.ArchiverType.ValueType == V>(value: V) -> (YapDatabaseReadWriteTransaction) -> V {
-    return { transaction in transaction.saveValue(value) }
-}
-
-func saveInTransationValues<VM where VM: Saveable, VM: ValueMetadataPersistable, VM.ArchiverType.ValueType == VM>(values: [VM]) -> (YapDatabaseReadWriteTransaction) -> [VM] {
-    return { transaction in transaction.saveValues(values) }
-}
-
-func saveInTransationObject<O where O: NSCoding, O: Persistable>(object: O) -> (YapDatabaseReadWriteTransaction) -> O {
-    return { transaction in transaction.saveObject(object) }
-}
-
-func saveInTransationValues<OM where OM: NSCoding, OM: ObjectMetadataPersistable>(object: OM) -> (YapDatabaseReadWriteTransaction) -> OM {
-    return { transaction in transaction.saveObject(object) }
-}
-
-func removeInTransactionValue<V where V: Saveable, V: Persistable, V.ArchiverType.ValueType == V>(value: V) -> (YapDatabaseReadWriteTransaction) -> Void {
-    return { transaction in transaction.removeValue(value) }
-}
-
-func removeInTransactionValues<V where V: Saveable, V: Persistable, V.ArchiverType.ValueType == V>(values: [V]) -> (YapDatabaseReadWriteTransaction) -> Void {
-    return { transaction in transaction.removeValues(values) }
-}
-
-func replaceInTransactionValue<V where V: Saveable, V: Persistable, V.ArchiverType.ValueType == V>(replacement: V) -> (YapDatabaseReadWriteTransaction) -> V {
-    return { transaction in transaction.replaceValue(replacement) }
-}
-
-func replaceInTransactionValues<V where V: Saveable, V: Persistable, V.ArchiverType.ValueType == V>(replacements: [V]) -> (YapDatabaseReadWriteTransaction) -> [V] {
-    return { transaction in transaction.replaceValues(replacements) }
-}
-
-func replaceInTransactionValue<VM where VM: Saveable, VM: ValueMetadataPersistable, VM.ArchiverType.ValueType == VM>(replacement: VM) -> (YapDatabaseReadWriteTransaction) -> VM {
-    return { transaction in transaction.replaceValue(replacement) }
-}
-
-func replaceInTransactionValues<VM where VM: Saveable, VM: ValueMetadataPersistable, VM.ArchiverType.ValueType == VM>(replacements: [VM]) -> (YapDatabaseReadWriteTransaction) -> [VM] {
-    return { transaction in transaction.replaceValues(replacements) }
-}
-
-// MARK: - YapDatabaseReadTransaction
-
-extension YapDatabaseReadTransaction {
-
-    public func readValueForKey<V where V: Saveable, V: Persistable, V.ArchiverType.ValueType == V>(key: String) -> V? {
-        return valueFromArchive(objectForKey(key, inCollection: V.collection))
-    }
-
-    public func readValuesForKeys<V where V: Saveable, V: Persistable, V.ArchiverType.ValueType == V>(keys: [String]) -> [V] {
-        return keys.mapOptionals(readValueForKey)
-    }
-
-    public func readValueAtIndex<V where V: Saveable, V: Persistable, V.ArchiverType.ValueType == V>(index: YapDatabase.Index) -> V? {
-        return valueFromArchive(readObjectAtIndex(index))
-    }
-
-    public func readValuesAtIndexes<V where V: Saveable, V: Persistable, V.ArchiverType.ValueType == V>(indexes: [YapDatabase.Index]) -> [V] {
-        return indexes.mapOptionals(readValueAtIndex)
-    }
-    
-    public func readAllValuesInCollection<V where V: Saveable, V: Persistable, V.ArchiverType.ValueType == V>(collection: String) -> [V] {
-        let keys = allKeysInCollection(collection) as? [String]
-        return readValuesForKeys(keys ?? [])
-    }
-
-    public func filterExistingValuesForKeys<V where V: Saveable, V: Persistable, V.ArchiverType.ValueType == V>(keys: [String]) -> (existing: [V], missing: [String]) {
-        let values: [V] = readValuesForKeys(keys)
-        let existingKeys = values.map { "\($0.identifier)" }
-        let missingKeys = filter(keys) { !contains(existingKeys, $0) }
-        return (values, missingKeys)
-    }
-
-    public func readObjectForKey<O where O: Persistable>(key: String) -> O? {
-        return objectForKey(key, inCollection: O.collection) as? O
-    }
-
-    public func readObjectsForKeys<O where O: Persistable>(keys: [String]) -> [O] {
-        return keys.mapOptionals(readObjectForKey)
-    }
-
-    public func readObjectAtIndex(index: YapDatabase.Index) -> AnyObject? {
-        return objectForKey(index.key, inCollection: index.collection)
-    }
-
-    public func readObjectsAtIndexes(indexes: [YapDatabase.Index]) -> [AnyObject] {
-        return indexes.mapOptionals(readObjectAtIndex)
-    }
-}
-
-// MARK: - YapDatabaseReadWriteTransaction
-
-extension YapDatabaseReadWriteTransaction {
-
-    public func saveValue<V where V: Saveable, V: Persistable, V.ArchiverType.ValueType == V>(value: V) -> V {
-        setObject(value.archive, forKey: "\(value.identifier)", inCollection: value.dynamicType.collection)
-        return value
-    }
-
-    public func saveValues<V where V: Saveable, V: Persistable, V.ArchiverType.ValueType == V>(values: [V]) -> [V] {
-        values.map(saveValue)
-        return values
-    }
-
-    public func saveValue<VM where VM: Saveable, VM: ValueMetadataPersistable, VM.ArchiverType.ValueType == VM>(value: VM) -> VM {
-        setObject(value.archive, forKey: "\(value.identifier)", inCollection: value.dynamicType.collection, withMetadata: value.metadata.archive)
-        return value
-    }
-
-    public func saveValues<VM where VM: Saveable, VM: ValueMetadataPersistable, VM.ArchiverType.ValueType == VM>(values: [VM]) -> [VM] {
-        values.map(saveValue)
-        return values
-    }
-
-    public func saveObject<O where O: NSCoding, O: Persistable>(object: O) -> O {
-        setObject(object, forKey: "\(object.identifier)", inCollection: object.dynamicType.collection)
-        return object
-    }
-
-    public func saveObject<OM where OM: NSCoding, OM: ObjectMetadataPersistable>(object: OM) -> OM {
-        setObject(object, forKey: "\(object.identifier)", inCollection: object.dynamicType.collection, withMetadata: object.metadata)
-        return object
-    }
-
-    public func removeValue<V where V: Saveable, V: Persistable, V.ArchiverType.ValueType == V>(value: V) {
-        removeObjectForKey("\(value.identifier)", inCollection: value.dynamicType.collection)
-    }
-
-    public func removeValues<V where V: Saveable, V: Persistable, V.ArchiverType.ValueType == V>(values: [V]) {
-        removeObjectsForKeys(values.map { "\($0.identifier)" }, inCollection: V.collection)
-    }
-
-    public func replaceValue<V where V: Saveable, V: Persistable, V.ArchiverType.ValueType == V>(replacement: V) -> V {
-        replaceObject(replacement.archive, forKey: "\(replacement.identifier)", inCollection: replacement.dynamicType.collection)
-        return replacement
-    }
-
-    public func replaceValues<V where V: Saveable, V: Persistable, V.ArchiverType.ValueType == V>(replacements: [V]) -> [V] {
-        replacements.map(replaceValue)
-        return replacements
-    }
-
-    public func replaceValue<VM where VM: Saveable, VM: ValueMetadataPersistable, VM.ArchiverType.ValueType == VM>(replacement: VM) -> VM {
-        replaceObject(replacement.archive, forKey: "\(replacement.identifier)", inCollection: replacement.dynamicType.collection)
-        replaceMetadata(replacement.metadata.archive, forKey: "\(replacement.identifier)", inCollection: replacement.dynamicType.collection)
-        return replacement
-    }
-
-    public func replaceValues<VM where VM: Saveable, VM: ValueMetadataPersistable, VM.ArchiverType.ValueType == VM>(replacements: [VM]) -> [VM] {
-        replacements.map(replaceValue)
-        return replacements
     }
 }
 

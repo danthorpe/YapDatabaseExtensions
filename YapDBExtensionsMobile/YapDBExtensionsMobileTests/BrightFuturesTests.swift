@@ -15,7 +15,7 @@ import YapDBExtensionsMobile
 extension YapDatabaseValueTests {
 
     func testSavingValueAsynchronouslyWithBrightFutures() {
-        let db = createYapDatabase(suffix: __FUNCTION__)
+        let db = createYapDatabase(__FILE__, suffix: __FUNCTION__)
         let expectation = expectationWithDescription("Finished async bright futures saving.")
 
         (db.asyncSaveValue(barcode) as Future<Barcode>).onSuccess { saved in
@@ -30,7 +30,7 @@ extension YapDatabaseValueTests {
 extension YapDatabaseValueWithMetadataTests {
 
     func testSavingValueAsynchronouslyWithBrightFutures() {
-        let db = createYapDatabase(suffix: __FUNCTION__)
+        let db = createYapDatabase(__FILE__, suffix: __FUNCTION__)
         let expectation = expectationWithDescription("Finished async bright futures saving.")
 
         (db.asyncSaveValue(product) as Future<Product>).onSuccess { saved in
@@ -45,7 +45,7 @@ extension YapDatabaseValueWithMetadataTests {
 extension YapDatabaseReplaceValueWithMetadataTests {
 
     func testReplaceingValueAsynchronouslyWithBrightFutures() {
-        let db = createYapDatabase(suffix: __FUNCTION__)
+        let db = createYapDatabase(__FILE__, suffix: __FUNCTION__)
         db.saveValue(a)
 
         let expectation = expectationWithDescription("Finished async bright futures replace.")

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		65D732381AE7C667003E0882 /* ReadWriteTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65D732371AE7C667003E0882 /* ReadWriteTests.swift */; };
 		65E5A24A1ADEA2030073A50E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E5A2491ADEA2030073A50E /* AppDelegate.swift */; };
 		65E5A24C1ADEA2030073A50E /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E5A24B1ADEA2030073A50E /* ViewController.swift */; };
 		65E5A24F1ADEA2030073A50E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 65E5A24D1ADEA2030073A50E /* Main.storyboard */; };
@@ -34,6 +35,7 @@
 
 /* Begin PBXFileReference section */
 		514E4B427D56578B81B4761A /* Pods-YapDBExtensionsMobileTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-YapDBExtensionsMobileTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-YapDBExtensionsMobileTests/Pods-YapDBExtensionsMobileTests.release.xcconfig"; sourceTree = "<group>"; };
+		65D732371AE7C667003E0882 /* ReadWriteTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReadWriteTests.swift; sourceTree = "<group>"; };
 		65E5A2441ADEA2030073A50E /* YapDBExtensionsMobile.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = YapDBExtensionsMobile.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		65E5A2481ADEA2030073A50E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		65E5A2491ADEA2030073A50E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -125,6 +127,7 @@
 				65E5A26B1ADEA4200073A50E /* Helpers.swift */,
 				65E5A26D1ADEA4760073A50E /* PromiseKitTests.swift */,
 				65E5A2711ADEA4940073A50E /* SwiftTaskTests.swift */,
+				65D732371AE7C667003E0882 /* ReadWriteTests.swift */,
 				65E5A25F1ADEA2030073A50E /* YapDBExtensionsMobileTests.swift */,
 				65E5A25D1ADEA2030073A50E /* Supporting Files */,
 			);
@@ -371,6 +374,7 @@
 				65E5A2701ADEA4840073A50E /* BrightFuturesTests.swift in Sources */,
 				65E5A26E1ADEA4760073A50E /* PromiseKitTests.swift in Sources */,
 				65E5A2601ADEA2030073A50E /* YapDBExtensionsMobileTests.swift in Sources */,
+				65D732381AE7C667003E0882 /* ReadWriteTests.swift in Sources */,
 				65E5A2721ADEA4940073A50E /* SwiftTaskTests.swift in Sources */,
 				65E5A26C1ADEA4200073A50E /* Helpers.swift in Sources */,
 			);

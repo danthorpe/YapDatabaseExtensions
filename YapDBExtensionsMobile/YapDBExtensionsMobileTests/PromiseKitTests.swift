@@ -15,7 +15,7 @@ import YapDBExtensionsMobile
 extension YapDatabaseValueTests {
 
     func testSavingValueAsynchronouslyWithPromises() {
-        let db = createYapDatabase(suffix: __FUNCTION__)
+        let db = createYapDatabase(__FILE__, suffix: __FUNCTION__)
         let expectation = expectationWithDescription("Finished async promise saving.")
 
         (db.asyncSaveValue(barcode) as PromiseKit.Promise<Barcode>)
@@ -31,7 +31,7 @@ extension YapDatabaseValueTests {
 extension YapDatabaseValueWithMetadataTests {
 
     func testSavingValueAsynchronouslyWithPromises() {
-        let db = createYapDatabase(suffix: __FUNCTION__)
+        let db = createYapDatabase(__FILE__, suffix: __FUNCTION__)
         let expectation = expectationWithDescription("Finished async promise saving.")
 
         (db.asyncSaveValue(product) as Promise<Product>)
@@ -47,7 +47,7 @@ extension YapDatabaseValueWithMetadataTests {
 extension YapDatabaseReplaceValueWithMetadataTests {
 
     func testReplaceingValueAsynchronouslyWithPromise() {
-        let db = createYapDatabase(suffix: __FUNCTION__)
+        let db = createYapDatabase(__FILE__, suffix: __FUNCTION__)
         db.saveValue(a)
 
         let expectation = expectationWithDescription("Finished async replacing using promises.")
