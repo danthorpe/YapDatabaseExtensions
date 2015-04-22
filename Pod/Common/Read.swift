@@ -107,8 +107,6 @@ extension YapDatabaseReadTransaction {
 }
 
 
-
-
 // MARK: - YapDatabaseConnection
 
 extension YapDatabaseConnection {
@@ -182,6 +180,62 @@ extension YapDatabaseConnection {
     }
 }
 
+// MARK: Async Methods
+
+extension YapDatabaseConnection {
+
+    public func asyncReadAtIndex<Object where Object: Persistable>(index: YapDatabase.Index, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: (Object?) -> Void) {
+        asyncRead({ $0.readAtIndex(index) }, queue: queue, completion: completion)
+    }
+
+    public func asyncReadAtIndex<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(index: YapDatabase.Index, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: (Value?) -> Void) {
+        asyncRead({ $0.readAtIndex(index) }, queue: queue, completion: completion)
+    }
+}
+
+extension YapDatabaseConnection {
+
+    public func asyncReadAtIndexes<Object where Object: Persistable>(indexes: [YapDatabase.Index], queue: dispatch_queue_t = dispatch_get_main_queue(), completion: ([Object]) -> Void) {
+        asyncRead({ $0.readAtIndexes(indexes) }, queue: queue, completion: completion)
+    }
+
+    public func asyncReadAtIndexes<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(indexes: [YapDatabase.Index], queue: dispatch_queue_t = dispatch_get_main_queue(), completion: ([Value]) -> Void) {
+        asyncRead({ $0.readAtIndexes(indexes) }, queue: queue, completion: completion)
+    }
+}
+
+extension YapDatabaseConnection {
+
+    public func asyncRead<Object where Object: Persistable>(key: String, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: (Object?) -> Void) {
+        asyncRead({ $0.read(key) }, queue: queue, completion: completion)
+    }
+
+    public func asyncRead<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(key: String, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: (Value?) -> Void) {
+        asyncRead({ $0.read(key) }, queue: queue, completion: completion)
+    }
+}
+
+extension YapDatabaseConnection {
+
+    public func asyncRead<Object where Object: Persistable>(keys: [String], queue: dispatch_queue_t = dispatch_get_main_queue(), completion: ([Object]) -> Void) {
+        asyncRead({ $0.read(keys) }, queue: queue, completion: completion)
+    }
+
+    public func asyncRead<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(keys: [String], queue: dispatch_queue_t = dispatch_get_main_queue(), completion: ([Value]) -> Void) {
+        asyncRead({ $0.read(keys) }, queue: queue, completion: completion)
+    }
+}
+
+extension YapDatabaseConnection {
+
+    public func asyncReadAll<Object where Object: Persistable>(queue: dispatch_queue_t = dispatch_get_main_queue(), completion: ([Object]) -> Void) {
+        asyncRead({ $0.readAll() }, queue: queue, completion: completion)
+    }
+
+    public func asyncReadAll<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(queue: dispatch_queue_t = dispatch_get_main_queue(), completion: ([Value]) -> Void) {
+        asyncRead({ $0.readAll() }, queue: queue, completion: completion)
+    }
+}
 
 
 // MARK: - YapDatabase
@@ -253,4 +307,49 @@ extension YapDatabase {
 }
 
 
+// MARK: Async Methods
+
+extension YapDatabase {
+
+    public func asyncReadAtIndex<Object where Object: Persistable>(index: YapDatabase.Index, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: (Object?) -> Void) {
+        newConnection().asyncReadAtIndex(index, queue: queue, completion: completion)
+    }
+
+    public func asyncReadAtIndex<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(index: YapDatabase.Index, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: (Value?) -> Void) {
+        newConnection().asyncReadAtIndex(index, queue: queue, completion: completion)
+    }
+}
+
+extension YapDatabase {
+
+    public func asyncRead<Object where Object: Persistable>(key: String, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: (Object?) -> Void) {
+        newConnection().asyncRead(key, queue: queue, completion: completion)
+    }
+
+    public func asyncRead<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(key: String, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: (Value?) -> Void) {
+        newConnection().asyncRead(key, queue: queue, completion: completion)
+    }
+}
+
+extension YapDatabase {
+
+    public func asyncRead<Object where Object: Persistable>(keys: [String], queue: dispatch_queue_t = dispatch_get_main_queue(), completion: ([Object]) -> Void) {
+        newConnection().asyncRead(keys, queue: queue, completion: completion)
+    }
+
+    public func asyncRead<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(keys: [String], queue: dispatch_queue_t = dispatch_get_main_queue(), completion: ([Value]) -> Void) {
+        newConnection().asyncRead(keys, queue: queue, completion: completion)
+    }
+}
+
+extension YapDatabase {
+
+    public func asyncReadAll<Object where Object: Persistable>(queue: dispatch_queue_t = dispatch_get_main_queue(), completion: ([Object]) -> Void) {
+        newConnection().asyncReadAll(queue: queue, completion: completion)
+    }
+
+    public func asyncReadAll<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(queue: dispatch_queue_t = dispatch_get_main_queue(), completion: ([Value]) -> Void) {
+        newConnection().asyncReadAll(queue: queue, completion: completion)
+    }
+}
 
