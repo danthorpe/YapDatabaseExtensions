@@ -43,8 +43,23 @@ public func archivesFromValues<Values, Value where Values: SequenceType, Values.
 
 // MARK: - Persistable
 
-extension YapDatabase {
+/**
 
+This is an empty struct used as a namespace for new types to
+avoid any possible future clashes with `YapDatabase` types.
+
+*/
+public struct YapDB { }
+
+extension YapDB {
+
+    /**
+
+    A database index value type.
+    
+    :param: collection A String
+    :param: key A String
+    */
     public struct Index {
         public let collection: String
         public let key: String
@@ -75,8 +90,8 @@ public protocol ValueMetadataPersistable: Persistable {
     var metadata: MetadataType { get }
 }
 
-public func indexForPersistable<P: Persistable>(persistable: P) -> YapDatabase.Index {
-    return YapDatabase.Index(collection: persistable.dynamicType.collection, key: "\(persistable.identifier)")
+public func indexForPersistable<P: Persistable>(persistable: P) -> YapDB.Index {
+    return YapDB.Index(collection: persistable.dynamicType.collection, key: "\(persistable.identifier)")
 }
 
 internal func map<S: SequenceType, T>(source: S, transform: (S.Generator.Element) -> T?) -> [T] {

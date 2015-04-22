@@ -14,18 +14,18 @@ extension YapDatabaseReadWriteTransaction {
     /**
     Removes the object stored at this index.
 
-    :param: index A YapDatabase.Index
+    :param: index A YapDB.Index
     */
-    public func removeAtIndex(index: YapDatabase.Index) {
+    public func removeAtIndex(index: YapDB.Index) {
         removeObjectForKey(index.key, inCollection: index.collection)
     }
 
     /**
     Removes the object stored at these indexes.
 
-    :param: indexes An Array<YapDatabase.Index>
+    :param: indexes An Array<YapDB.Index>
     */
-    public func removeAtIndexes(indexes: [YapDatabase.Index]) {
+    public func removeAtIndexes(indexes: [YapDB.Index]) {
         indexes.map(removeAtIndex)
     }
 
@@ -55,18 +55,18 @@ extension YapDatabaseConnection {
     /**
     Synchonously removes the object stored at this index.
 
-    :param: index A YapDatabase.Index
+    :param: index A YapDB.Index
     */
-    public func removeAtIndex(index: YapDatabase.Index) {
+    public func removeAtIndex(index: YapDB.Index) {
         write({ $0.removeAtIndex(index) })
     }
 
     /**
     Synchonously removes the object stored at this index.
 
-    :param: indexes An Array<YapDatabase.Index>
+    :param: indexes An Array<YapDB.Index>
     */
-    public func removeAtIndexes(indexes: [YapDatabase.Index]) {
+    public func removeAtIndexes(indexes: [YapDB.Index]) {
         write({ $0.removeAtIndexes(indexes) })
     }
 
@@ -94,22 +94,22 @@ extension YapDatabaseConnection {
     /**
         Asynchonously removes the object stored at this index.
 
-        :param: index A YapDatabase.Index
+        :param: index A YapDB.Index
         :param: queue The dispatch queue to run the completion closure on, defaults to the main queue
         :param: completion A void closure
     */
-    public func asyncRemoveAtIndex(index: YapDatabase.Index, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: () -> Void) {
+    public func asyncRemoveAtIndex(index: YapDB.Index, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: () -> Void) {
         asyncReadWriteWithBlock({ $0.removeAtIndex(index) }, completionQueue: queue, completionBlock: completion)
     }
 
     /**
         Asynchonously removes the object stored at this index.
 
-        :param: indexes An Array<YapDatabase.Index>
+        :param: indexes An Array<YapDB.Index>
         :param: queue The dispatch queue to run the completion closure on, defaults to the main queue
         :param: completion A void closure
     */
-    public func asyncRemoveAtIndexes(indexes: [YapDatabase.Index], queue: dispatch_queue_t = dispatch_get_main_queue(), completion: () -> Void) {
+    public func asyncRemoveAtIndexes(indexes: [YapDB.Index], queue: dispatch_queue_t = dispatch_get_main_queue(), completion: () -> Void) {
         asyncReadWriteWithBlock({ $0.removeAtIndexes(indexes) }, completionQueue: queue, completionBlock: completion)
     }
 
@@ -143,18 +143,18 @@ extension YapDatabase {
     /**
     Synchonously removes the object stored at this index.
 
-    :param: index A YapDatabase.Index
+    :param: index A YapDB.Index
     */
-    public func removeAtIndex(index: YapDatabase.Index) {
+    public func removeAtIndex(index: YapDB.Index) {
         newConnection().removeAtIndex(index)
     }
 
     /**
     Synchonously removes the object stored at this index.
 
-    :param: indexes An Array<YapDatabase.Index>
+    :param: indexes An Array<YapDB.Index>
     */
-    public func removeAtIndexes(indexes: [YapDatabase.Index]) {
+    public func removeAtIndexes(indexes: [YapDB.Index]) {
         newConnection().removeAtIndexes(indexes)
     }
 
@@ -182,22 +182,22 @@ extension YapDatabase {
     /**
     Asynchonously removes the object stored at this index.
 
-    :param: index A YapDatabase.Index
+    :param: index A YapDB.Index
     :param: queue The dispatch queue to run the completion closure on, defaults to the main queue
     :param: completion A void closure
     */
-    public func asyncRemoveAtIndex(index: YapDatabase.Index, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: () -> Void) {
+    public func asyncRemoveAtIndex(index: YapDB.Index, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: () -> Void) {
         newConnection().asyncRemoveAtIndex(index, queue: queue, completion: completion)
     }
 
     /**
     Asynchonously removes the object stored at this index.
 
-    :param: indexes An Array<YapDatabase.Index>
+    :param: indexes An Array<YapDB.Index>
     :param: queue The dispatch queue to run the completion closure on, defaults to the main queue
     :param: completion A void closure
     */
-    public func asyncRemoveAtIndexes(indexes: [YapDatabase.Index], queue: dispatch_queue_t = dispatch_get_main_queue(), completion: () -> Void) {
+    public func asyncRemoveAtIndexes(indexes: [YapDB.Index], queue: dispatch_queue_t = dispatch_get_main_queue(), completion: () -> Void) {
         newConnection().asyncRemoveAtIndexes(indexes, queue: queue, completion: completion)
     }
 

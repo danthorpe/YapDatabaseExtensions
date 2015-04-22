@@ -9,7 +9,7 @@ import YapDatabase
 
 extension YapDatabaseReadWriteTransaction {
 
-    func writeAtIndex(index: YapDatabase.Index, object: AnyObject, metadata: AnyObject? = .None) {
+    func writeAtIndex(index: YapDB.Index, object: AnyObject, metadata: AnyObject? = .None) {
         if let metadata: AnyObject = metadata {
             setObject(object, forKey: index.key, inCollection: index.collection, withMetadata: metadata)
         }
