@@ -96,7 +96,6 @@ func validateWrite<ObjectWithValueMetadata where ObjectWithValueMetadata: ValueM
 
 
 
-
 func validateSavedValue<V where V: Saveable, V: Persistable, V: Equatable, V.ArchiverType.ValueType == V>(saved: V, original: V, usingDatabase db: YapDatabase) {
     XCTAssertEqual(saved, original, "The value returned from a save value function should equal the argument.")
 

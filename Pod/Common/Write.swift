@@ -125,22 +125,22 @@ extension YapDatabaseConnection {
 
 extension YapDatabaseConnection {
 
-    public func write<Object where Object: NSCoding, Object: Persistable>(object: Object, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: (Object) -> Void) {
+    public func asyncWrite<Object where Object: NSCoding, Object: Persistable>(object: Object, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: (Object) -> Void) {
         asyncReadWriteWithBlock({ $0.write(object) }, completionQueue: queue) { completion(object) }
     }
 
-    public func write<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(value: Value, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: (Value) -> Void) {
+    public func asyncWrite<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(value: Value, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: (Value) -> Void) {
         asyncReadWriteWithBlock({ $0.write(value) }, completionQueue: queue) { completion(value) }
     }
 }
 
 extension YapDatabaseConnection {
 
-    public func write<Objects, Object where Objects: SequenceType, Objects.Generator.Element == Object, Object: NSCoding, Object: Persistable>(objects: Objects, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: ([Object]) -> Void) {
+    public func asyncWrite<Objects, Object where Objects: SequenceType, Objects.Generator.Element == Object, Object: NSCoding, Object: Persistable>(objects: Objects, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: ([Object]) -> Void) {
         asyncReadWriteWithBlock({ $0.write(objects) }, completionQueue: queue) { completion(Array(objects)) }
     }
 
-    public func write<Values, Value where Values: SequenceType, Values.Generator.Element == Value, Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(values: Values, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: ([Value]) -> Void) {
+    public func asyncWrite<Values, Value where Values: SequenceType, Values.Generator.Element == Value, Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(values: Values, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: ([Value]) -> Void) {
         asyncReadWriteWithBlock({ $0.write(values) }, completionQueue: queue) { completion(Array(values)) }
     }
 }
@@ -171,23 +171,23 @@ extension YapDatabase {
 
 extension YapDatabase {
 
-    public func write<Object where Object: NSCoding, Object: Persistable>(object: Object, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: (Object) -> Void) {
-        newConnection().write(object, queue: queue, completion: completion)
+    public func asyncWrite<Object where Object: NSCoding, Object: Persistable>(object: Object, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: (Object) -> Void) {
+        newConnection().asyncWrite(object, queue: queue, completion: completion)
     }
 
-    public func write<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(value: Value, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: (Value) -> Void) {
-        newConnection().write(value, queue: queue, completion: completion)
+    public func asyncWrite<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(value: Value, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: (Value) -> Void) {
+        newConnection().asyncWrite(value, queue: queue, completion: completion)
     }
 }
 
 extension YapDatabase {
 
-    public func write<Objects, Object where Objects: SequenceType, Objects.Generator.Element == Object, Object: NSCoding, Object: Persistable>(objects: Objects, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: ([Object]) -> Void) {
-        newConnection().write(objects, queue: queue, completion: completion)
+    public func asyncWrite<Objects, Object where Objects: SequenceType, Objects.Generator.Element == Object, Object: NSCoding, Object: Persistable>(objects: Objects, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: ([Object]) -> Void) {
+        newConnection().asyncWrite(objects, queue: queue, completion: completion)
     }
 
-    public func write<Values, Value where Values: SequenceType, Values.Generator.Element == Value, Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(values: Values, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: ([Value]) -> Void) {
-        newConnection().write(values, queue: queue, completion: completion)
+    public func asyncWrite<Values, Value where Values: SequenceType, Values.Generator.Element == Value, Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(values: Values, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: ([Value]) -> Void) {
+        newConnection().asyncWrite(values, queue: queue, completion: completion)
     }
 }
 

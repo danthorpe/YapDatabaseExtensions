@@ -98,7 +98,7 @@ extension YapDatabaseConnection {
         :param: queue The dispatch queue to run the completion closure on, defaults to the main queue
         :param: completion A void closure
     */
-    public func removeAtIndex(index: YapDatabase.Index, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: () -> Void) {
+    public func asyncRemoveAtIndex(index: YapDatabase.Index, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: () -> Void) {
         asyncReadWriteWithBlock({ $0.removeAtIndex(index) }, completionQueue: queue, completionBlock: completion)
     }
 
@@ -109,7 +109,7 @@ extension YapDatabaseConnection {
         :param: queue The dispatch queue to run the completion closure on, defaults to the main queue
         :param: completion A void closure
     */
-    public func removeAtIndexes(indexes: [YapDatabase.Index], queue: dispatch_queue_t = dispatch_get_main_queue(), completion: () -> Void) {
+    public func asyncRemoveAtIndexes(indexes: [YapDatabase.Index], queue: dispatch_queue_t = dispatch_get_main_queue(), completion: () -> Void) {
         asyncReadWriteWithBlock({ $0.removeAtIndexes(indexes) }, completionQueue: queue, completionBlock: completion)
     }
 
@@ -120,7 +120,7 @@ extension YapDatabaseConnection {
         :param: queue The dispatch queue to run the completion closure on, defaults to the main queue
         :param: completion A void closure
     */
-    public func remove<Item where Item: Persistable>(item: Item, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: () -> Void) {
+    public func asyncRemove<Item where Item: Persistable>(item: Item, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: () -> Void) {
         asyncReadWriteWithBlock({ $0.remove(item) }, completionQueue: queue, completionBlock: completion)
     }
 
@@ -131,7 +131,7 @@ extension YapDatabaseConnection {
         :param: queue The dispatch queue to run the completion closure on, defaults to the main queue
         :param: completion A void closure
     */
-    public func remove<Items where Items: SequenceType, Items.Generator.Element: Persistable>(items: Items, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: () -> Void) {
+    public func asyncRemove<Items where Items: SequenceType, Items.Generator.Element: Persistable>(items: Items, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: () -> Void) {
         asyncReadWriteWithBlock({ $0.remove(items) }, completionQueue: queue, completionBlock: completion)
     }
 }
@@ -164,7 +164,7 @@ extension YapDatabase {
     :param: item A Persistable item.
     */
     public func remove<Item where Item: Persistable>(item: Item) {
-        newConnection().remove(item)
+        return newConnection().remove(item)
     }
 
     /**
@@ -173,7 +173,7 @@ extension YapDatabase {
     :param: items A sequence of Persistable items.
     */
     public func remove<Items where Items: SequenceType, Items.Generator.Element: Persistable>(items: Items) {
-        newConnection().remove(items)
+        return newConnection().remove(items)
     }
 }
 
@@ -186,8 +186,8 @@ extension YapDatabase {
     :param: queue The dispatch queue to run the completion closure on, defaults to the main queue
     :param: completion A void closure
     */
-    public func removeAtIndex(index: YapDatabase.Index, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: () -> Void) {
-        newConnection().removeAtIndex(index, queue: queue, completion: completion)
+    public func asyncRemoveAtIndex(index: YapDatabase.Index, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: () -> Void) {
+        newConnection().asyncRemoveAtIndex(index, queue: queue, completion: completion)
     }
 
     /**
@@ -197,8 +197,8 @@ extension YapDatabase {
     :param: queue The dispatch queue to run the completion closure on, defaults to the main queue
     :param: completion A void closure
     */
-    public func removeAtIndexes(indexes: [YapDatabase.Index], queue: dispatch_queue_t = dispatch_get_main_queue(), completion: () -> Void) {
-        newConnection().removeAtIndexes(indexes, queue: queue, completion: completion)
+    public func asyncRemoveAtIndexes(indexes: [YapDatabase.Index], queue: dispatch_queue_t = dispatch_get_main_queue(), completion: () -> Void) {
+        newConnection().asyncRemoveAtIndexes(indexes, queue: queue, completion: completion)
     }
 
     /**
@@ -208,8 +208,8 @@ extension YapDatabase {
     :param: queue The dispatch queue to run the completion closure on, defaults to the main queue
     :param: completion A void closure
     */
-    public func remove<Item where Item: Persistable>(item: Item, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: () -> Void) {
-        newConnection().remove(item, queue: queue, completion: completion)
+    public func asyncRemove<Item where Item: Persistable>(item: Item, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: () -> Void) {
+        newConnection().asyncRemove(item, queue: queue, completion: completion)
     }
 
     /**
@@ -219,8 +219,8 @@ extension YapDatabase {
     :param: queue The dispatch queue to run the completion closure on, defaults to the main queue
     :param: completion A void closure
     */
-    public func remove<Items where Items: SequenceType, Items.Generator.Element: Persistable>(items: Items, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: () -> Void) {
-        newConnection().remove(items, queue: queue, completion: completion)
+    public func asyncRemove<Items where Items: SequenceType, Items.Generator.Element: Persistable>(items: Items, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: () -> Void) {
+        newConnection().asyncRemove(items, queue: queue, completion: completion)
     }
 }
 
