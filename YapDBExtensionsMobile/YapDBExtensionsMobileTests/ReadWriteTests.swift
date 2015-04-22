@@ -53,26 +53,28 @@ class SynchronousReadWriteTests: BaseTestCase {
 
     func test_ReadingAndWriting_ManyObjects() {
         let db = createYapDatabase(__FILE__, suffix: __FUNCTION__)
-        let objects = people()
 
+        let objects = people()
         db.write(objects)
+
         let read: [Person] = db.readAll()
         XCTAssertEqual(objects, read, "Expecting all keys in collection to return all items.")
     }
 
     func test_ReadingAndWriting_ManyValues() {
         let db = createYapDatabase(__FILE__, suffix: __FUNCTION__)
-        let values = barcodes()
 
+        let values = barcodes()
         db.write(values)
+
         let read: Set<Barcode> = Set(db.readAll())
         XCTAssertEqual(values, read, "Expecting all keys in collection to return all items.")
     }
 }
 
-class AsynchronousReadWriteTests: BaseTestCase {
+class AsynchronousWriteTests: BaseTestCase {
 
-    func test_ReadingAndWriting_Object() {
+    func test_Writing_Object() {
         let db = createYapDatabase(__FILE__, suffix: __FUNCTION__)
         let expectation = expectationWithDescription("Finished async writing of object.")
 
@@ -84,7 +86,7 @@ class AsynchronousReadWriteTests: BaseTestCase {
         waitForExpectationsWithTimeout(5.0, handler: nil)
     }
 
-    func test_ReadingAndWriting_Value() {
+    func test_Writing_Value() {
         let db = createYapDatabase(__FILE__, suffix: __FUNCTION__)
         let expectation = expectationWithDescription("Finished async writing of value.")
 
@@ -96,12 +98,131 @@ class AsynchronousReadWriteTests: BaseTestCase {
         waitForExpectationsWithTimeout(5.0, handler: nil)
     }
 
-    func test_ReadingAndWriting_ValueWithValueMetadata() {
+    func test_Writing_ValueWithValueMetadata() {
         let db = createYapDatabase(__FILE__, suffix: __FUNCTION__)
         let expectation = expectationWithDescription("Finished async writing of value with value metadata.")
 
         db.asyncWrite(product) {
             validateWrite($0, self.product, usingDatabase: db)
+            expectation.fulfill()
+        }
+
+        waitForExpectationsWithTimeout(5.0, handler: nil)
+    }
+}
+
+class AsynchronousReadTests: BaseTestCase {
+
+    func test_Reading_Index_Value() {
+        let db = createYapDatabase(__FILE__, suffix: __FUNCTION__)
+        let expectation = expectationWithDescription("Finished async reading of value at index.")
+
+        db.write(barcode)
+        db.asyncReadAtIndex(indexForPersistable(barcode)) { (saved: Barcode?) -> Void in
+            XCTAssertTrue(saved != nil, "There should be an item returned.")
+            validateWrite(saved!, self.barcode, usingDatabase: db)
+            expectation.fulfill()
+        }
+
+        waitForExpectationsWithTimeout(5.0, handler: nil)
+    }
+
+    func test_Reading_Index_Object() {
+        let db = createYapDatabase(__FILE__, suffix: __FUNCTION__)
+        let expectation = expectationWithDescription("Finished async reading of object at index")
+
+        db.write(person)
+        db.asyncReadAtIndex(indexForPersistable(person)) { (saved: Person?) -> Void in
+            XCTAssertTrue(saved != nil, "There should be an item returned.")
+            validateWrite(saved!, self.person, usingDatabase: db)
+            expectation.fulfill()
+        }
+
+        waitForExpectationsWithTimeout(5.0, handler: nil)
+    }
+
+    func test_Reading_Value() {
+        let db = createYapDatabase(__FILE__, suffix: __FUNCTION__)
+        let expectation = expectationWithDescription("Finished async reading of value by key.")
+
+        db.write(barcode)
+        db.asyncRead(indexForPersistable(barcode).key) { (read: Barcode?) in
+            XCTAssertTrue(read != nil, "There should be an object in the database.")
+            XCTAssertEqual(read!, self.barcode, "The value returned from a save value function should equal the argument.")
+            expectation.fulfill()
+        }
+
+        waitForExpectationsWithTimeout(5.0, handler: nil)
+    }
+
+    func test_Reading_Object() {
+        let db = createYapDatabase(__FILE__, suffix: __FUNCTION__)
+        let expectation = expectationWithDescription("Finished async reading of object by key.")
+
+        db.write(person)
+        db.asyncRead(indexForPersistable(person).key) { (read: Person?) in
+            XCTAssertTrue(read != nil, "There should be an object in the database.")
+            XCTAssertEqual(read!, self.person, "The value returned from a save value function should equal the argument.")
+            expectation.fulfill()            
+        }
+
+        waitForExpectationsWithTimeout(5.0, handler: nil)
+    }
+
+    func test_Reading_Values() {
+        let db = createYapDatabase(__FILE__, suffix: __FUNCTION__)
+        let expectation = expectationWithDescription("Finished async reading of value by key.")
+
+        let values = barcodes()
+        db.write(values)
+
+        db.asyncRead(map(values) { indexForPersistable($0).key }) { (read: [Barcode]) in
+            XCTAssertEqual(values, Set(read), "Expecting all keys in collection to return all items.")
+            expectation.fulfill()
+        }
+
+        waitForExpectationsWithTimeout(5.0, handler: nil)
+    }
+
+    func test_Reading_Objects() {
+        let db = createYapDatabase(__FILE__, suffix: __FUNCTION__)
+        let expectation = expectationWithDescription("Finished async reading of object by key.")
+
+        let objects = people()
+        db.write(objects)
+
+        db.asyncRead(objects.map { indexForPersistable($0).key }) { (read: [Person]) in
+            XCTAssertEqual(objects, read, "Expecting all keys in collection to return all items.")
+            expectation.fulfill()
+        }
+
+        waitForExpectationsWithTimeout(5.0, handler: nil)
+    }
+
+    func test_ReadingAll_Values() {
+        let db = createYapDatabase(__FILE__, suffix: __FUNCTION__)
+        let expectation = expectationWithDescription("Finished async reading of all values.")
+
+        let values = barcodes()
+        db.write(values)
+
+        db.asyncReadAll() { (read: [Barcode]) in
+            XCTAssertEqual(values, Set(read), "Expecting all keys in collection to return all items.")
+            expectation.fulfill()
+        }
+
+        waitForExpectationsWithTimeout(5.0, handler: nil)
+    }
+
+    func test_ReadingAll_Objects() {
+        let db = createYapDatabase(__FILE__, suffix: __FUNCTION__)
+        let expectation = expectationWithDescription("Finished async reading of all values.")
+
+        let objects = people()
+        db.write(objects)
+
+        db.asyncReadAll() { (read: [Person]) in
+            XCTAssertEqual(objects, read, "Expecting all keys in collection to return all items.")
             expectation.fulfill()
         }
 

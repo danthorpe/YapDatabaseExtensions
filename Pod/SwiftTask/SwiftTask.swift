@@ -8,6 +8,36 @@ import SwiftTask
 
 extension YapDatabaseConnection {
 
+    public func asyncRead<Object where Object: Persistable>(key: String) -> Task<Void, Object?, Void> {
+        return Task { _, fulfill, _, _ in
+            self.asyncRead(key, completion: fulfill)
+        }
+    }
+
+    public func asyncRead<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(key: String) -> Task<Void, Value?, Void> {
+        return Task { _, fulfill, _, _ in
+            self.asyncRead(key, completion: fulfill)
+        }
+    }
+}
+
+extension YapDatabaseConnection {
+
+    public func asyncRead<Object where Object: Persistable>(keys: [String]) -> Task<Void, [Object], Void> {
+        return Task { _, fulfill, _, _ in
+            self.asyncRead(keys, completion: fulfill)
+        }
+    }
+
+    public func asyncRead<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(keys: [String]) -> Task<Void, [Value], Void> {
+        return Task { _, fulfill, _, _ in
+            self.asyncRead(keys, completion: fulfill)
+        }
+    }
+}
+
+extension YapDatabaseConnection {
+
     public func asyncWrite<Object where Object: NSCoding, Object: Persistable>(object: Object) -> Task<Void, Object, Void> {
         return Task { _, fulfill, _, _ in
             self.asyncWrite(object, completion: fulfill)
@@ -54,6 +84,38 @@ extension YapDatabaseConnection {
     }
 }
 
+
+// MARK: - YapDatabase
+
+extension YapDatabase {
+
+    public func asyncRead<Object where Object: Persistable>(key: String) -> Task<Void, Object?, Void> {
+        return Task { _, fulfill, _, _ in
+            self.asyncRead(key, completion: fulfill)
+        }
+    }
+
+    public func asyncRead<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(key: String) -> Task<Void, Value?, Void> {
+        return Task { _, fulfill, _, _ in
+            self.asyncRead(key, completion: fulfill)
+        }
+    }
+}
+
+extension YapDatabase {
+
+    public func asyncRead<Object where Object: Persistable>(keys: [String]) -> Task<Void, [Object], Void> {
+        return Task { _, fulfill, _, _ in
+            self.asyncRead(keys, completion: fulfill)
+        }
+    }
+
+    public func asyncRead<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(keys: [String]) -> Task<Void, [Value], Void> {
+        return Task { _, fulfill, _, _ in
+            self.asyncRead(keys, completion: fulfill)
+        }
+    }
+}
 
 
 extension YapDatabase {

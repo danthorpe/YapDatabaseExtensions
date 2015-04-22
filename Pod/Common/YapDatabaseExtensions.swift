@@ -105,6 +105,11 @@ extension YapDatabaseConnection {
         }
         return result
     }
+
+    public func asyncRead<T>(block: (YapDatabaseReadTransaction) -> T, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: (T) -> Void) {
+        var result: T! = .None
+        asyncReadWithBlock({ transaction in result = block(transaction) }, completionQueue: queue) { completion(result) }
+    }
 }
 
 
