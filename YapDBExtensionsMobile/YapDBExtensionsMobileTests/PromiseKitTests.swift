@@ -84,5 +84,4 @@ extension AsynchronousRemoveTests {
 
         waitForExpectationsWithTimeout(5.0, handler: nil)
     }
-
 }
