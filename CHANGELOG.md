@@ -1,4 +1,8 @@
-# 1.1
+# 1.1.1
+
+1. [[YAP-11](https://github.com/danthorpe/YapDatabaseExtensions/pull/11)]: Renames `YapDatabase.Index` to `YapDB.Index`. 
+
+# 1.1.0
 
 1. [[YAP-7](https://github.com/danthorpe/YapDatabaseExtensions/pull/7)]: Support `SequenceType` in arguments where appropriate. This became a bit of a significant refactor.
     - [x] `read` at index(es), by key(s) for value(s), object(s)
@@ -22,7 +26,7 @@
     	- [x] BrightFutures
     	- [x] SwiftTask
 
-# 1.0
+# 1.0.0
 - [x] Persistable & Saveable protocols
 - [x] Metadata protocols
 - [x] YapDatabase.Index
