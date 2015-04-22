@@ -4,8 +4,6 @@
 
 import YapDatabase
 
-public typealias YapDB = YapDatabase
-
 protocol YapDatabaseViewProducer {
     func createDatabaseView() -> YapDatabaseView
 }
