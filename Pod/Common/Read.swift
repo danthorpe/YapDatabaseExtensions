@@ -8,27 +8,33 @@ import YapDatabase
 extension YapDatabaseReadTransaction {
 
     /**
-        Reads the object sored at this index using the transaction.
-        :param: index The YapDB.Index value.
-        :returns: An optional AnyObject.
+    Reads the object sored at this index using the transaction.
+    
+    :param: index The YapDB.Index value.
+    
+    :returns: An optional AnyObject.
     */
     public func readAtIndex(index: YapDB.Index) -> AnyObject? {
         return objectForKey(index.key, inCollection: index.collection)
     }
 
     /**
-        Reads the object sored at this index using the transaction.
-        :param: index The YapDB.Index value.
-        :returns: An optional Object.
+    Reads the object sored at this index using the transaction.
+    
+    :param: index The YapDB.Index value.
+    
+    :returns: An optional Object.
     */
     public func readAtIndex<Object where Object: Persistable>(index: YapDB.Index) -> Object? {
         return readAtIndex(index) as? Object
     }
 
     /**
-        Unarchives a value type if stored at this index
-        :param: index The YapDB.Index value.
-        :returns: An optional Value.
+    Unarchives a value type if stored at this index
+    
+    :param: index The YapDB.Index value.
+    
+    :returns: An optional Value.
     */
     public func readAtIndex<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(index: YapDB.Index) -> Value? {
         return valueFromArchive(readAtIndex(index))
@@ -38,18 +44,22 @@ extension YapDatabaseReadTransaction {
 extension YapDatabaseReadTransaction {
 
     /**
-        Reads the object sored at these indexes using the transaction.
-        :param: indexes An array of YapDB.Index values.
-        :returns: An array of Object instances.
+    Reads the object sored at these indexes using the transaction.
+    
+    :param: indexes An array of YapDB.Index values.
+    
+    :returns: An array of Object instances.
     */
     public func readAtIndexes<Object where Object: Persistable>(indexes: [YapDB.Index]) -> [Object] {
         return map(indexes, readAtIndex)
     }
 
     /**
-        Reads the value sored at these indexes using the transaction.
-        :param: indexes An array of YapDB.Index values.
-        :returns: An array of Value instances.
+    Reads the value sored at these indexes using the transaction.
+    
+    :param: indexes An array of YapDB.Index values.
+    
+    :returns: An array of Value instances.
     */
     public func readAtIndexes<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(indexes: [YapDB.Index]) -> [Value] {
         return map(indexes, readAtIndex)
@@ -58,10 +68,24 @@ extension YapDatabaseReadTransaction {
 
 extension YapDatabaseReadTransaction {
 
+    /**
+    Reads the object sored by key in this transaction.
+
+    :param: key A String
+
+    :returns: An optional Object
+    */
     public func read<Object where Object: Persistable>(key: String) -> Object? {
         return objectForKey(key, inCollection: Object.collection) as? Object
     }
 
+    /**
+    Reads the value sored by key in this transaction.
+
+    :param: key A String
+
+    :returns: An optional Value
+    */
     public func read<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(key: String) -> Value? {
         return valueFromArchive(objectForKey(key, inCollection: Value.collection))
     }
@@ -69,10 +93,26 @@ extension YapDatabaseReadTransaction {
 
 extension YapDatabaseReadTransaction {
 
+    /**
+    Reads the objects at the given keys in this transaction. Keys which 
+    have no corresponding objects will be filtered out.
+
+    :param: keys An array of String instances
+
+    :returns: An array of Object types.
+    */
     public func read<Object where Object: Persistable>(keys: [String]) -> [Object] {
         return map(keys, read)
     }
 
+    /**
+    Reads the values at the given keys in this transaction. Keys which 
+    have no corresponding values will be filtered out.
+
+    :param: keys An array of String instances
+
+    :returns: An array of Value types.
+    */
     public func read<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(keys: [String]) -> [Value] {
         return map(keys, read)
     }
@@ -80,10 +120,30 @@ extension YapDatabaseReadTransaction {
 
 extension YapDatabaseReadTransaction {
 
+    /**
+    Reads all the items in the database for a particular Persistable Object.
+    Example usage:
+    
+        let people: [Person] = transaction.readAll()
+
+    :param: keys An array of String instances
+
+    :returns: An array of Object types.
+    */
     public func readAll<Object where Object: Persistable>() -> [Object] {
         return map(allKeysInCollection(Object.collection) as! [String], read)
     }
 
+    /**
+    Reads all the items in the database for a particular Persistable Value.
+    Example usage:
+
+        let barcodes: [Barcode] = transaction.readAll()
+
+    :param: keys An array of String instances
+
+    :returns: An array of Value types.
+    */
     public func readAll<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>() -> [Value] {
         return map(allKeysInCollection(Value.collection) as! [String], read)
     }
@@ -91,14 +151,34 @@ extension YapDatabaseReadTransaction {
 
 extension YapDatabaseReadTransaction {
 
-    public func filterExisting<Object where Object: Persistable>(keys: [String]) -> (existing: [Object], missing: [String]) {
+    /**
+    Returns an array of Object type for the given keys, with an array of keys which don't have
+    corresponding objects in the database.
+
+        let (people: [Person], missing) = transaction.filterExisting(keys)
+
+    :param: keys An array of String instances
+
+    :returns: An ([Object], [String]) tuple.
+    */
+    public func filterExisting<Object where Object: Persistable>(keys: [String]) -> ([Object], [String]) {
         let existing: [Object] = read(keys)
         let existingKeys = existing.map { indexForPersistable($0).key }
         let missingKeys = filter(keys) { !contains(existingKeys, $0) }
         return (existing, missingKeys)
     }
 
-    public func filterExisting<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(keys: [String]) -> (existing: [Value], missing: [String]) {
+    /**
+    Returns an array of Value type for the given keys, with an array of keys which don't have
+    corresponding values in the database.
+
+        let (barcode: [Barcode], missing) = transaction.filterExisting(keys)
+
+    :param: keys An array of String instances
+
+    :returns: An ([Value], [String]) tuple.
+    */
+    public func filterExisting<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(keys: [String]) -> ([Value], [String]) {
         let existing: [Value] = read(keys)
         let existingKeys = existing.map { indexForPersistable($0).key }
         let missingKeys = filter(keys) { !contains(existingKeys, $0) }
