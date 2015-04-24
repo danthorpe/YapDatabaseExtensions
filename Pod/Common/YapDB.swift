@@ -15,6 +15,11 @@ protocol YapDatabaseViewRegistrar {
 
 extension YapDB {
 
+    /**
+    A Swift enum wraps YapDatabaseView wrappers. It can be thought of being a Fetch
+    Request type, as it defines what will be fetched out of the database. The Fetch
+    instance should be used by injecting it into a FetchConfiguration.
+    */
     public enum Fetch: YapDatabaseViewRegistrar {
 
         case View(YapDB.View)
@@ -37,10 +42,22 @@ extension YapDB {
             }
         }
 
+        /**
+        Utility function which can check if the extension is already registed in YapDatabase.
+        
+        :param: database A YapDatabase instance
+        :returns: A Bool
+        */
         public func isRegisteredInDatabase(database: YapDatabase) -> Bool {
             return registrar.isRegisteredInDatabase(database)
         }
 
+        /**
+        Utility function can register the extensions in YapDatabase, optionally using the supplied connection.
+
+        :param: database A YapDatabase instance
+        :param: connection An optiona YapDatabaseConnection, defaults to .None
+        */
         public func registerInDatabase(database: YapDatabase, withConnection connection: YapDatabaseConnection? = .None) {
             registrar.registerInDatabase(database, withConnection: connection)
         }
@@ -54,6 +71,9 @@ extension YapDB {
 
 extension YapDB {
 
+    /**
+    The base class for other YapDatabaseView wrapper types.
+    */
     public class BaseView {
         let name: String
         let version: String
@@ -76,6 +96,12 @@ extension YapDB {
             collections = c.map { Set($0) }
         }
 
+        /**
+        Utility function which can check if the extension is already registed in YapDatabase.
+
+        :param: database A YapDatabase instance
+        :returns: A Bool
+        */
         public func isRegisteredInDatabase(database: YapDatabase) -> Bool {
             return (database.registeredExtension(name) as? YapDatabaseView) != .None
         }
@@ -84,15 +110,27 @@ extension YapDB {
 
 extension YapDB {
 
+    /**
+    A wrapper around YapDatabaseView. It can be constructed with a name, which is
+    the name the extension is registered under, a grouping enum type and a sorting enum type.
+    */
     public class View: BaseView, YapDatabaseViewProducer, YapDatabaseViewRegistrar {
 
+        /**
+        An enum to make creating YapDatabaseViewGrouping easier. E.g.
+        
+            let grouping: YapDB.View.Grouping = .ByKey({ (collection, key) -> String! in
+                // return a group or nil to exclude from the view.
+            })
+
+        */
         public enum Grouping {
             case ByKey(YapDatabaseViewGroupingWithKeyBlock)
             case ByObject(YapDatabaseViewGroupingWithObjectBlock)
             case ByMetadata(YapDatabaseViewGroupingWithMetadataBlock)
             case ByRow(YapDatabaseViewGroupingWithRowBlock)
 
-            public var object: YapDatabaseViewGrouping {
+            var object: YapDatabaseViewGrouping {
                 switch self {
                 case let .ByKey(block):         return YapDatabaseViewGrouping.withKeyBlock(block)
                 case let .ByObject(block):      return YapDatabaseViewGrouping.withObjectBlock(block)
@@ -102,13 +140,16 @@ extension YapDB {
             }
         }
 
+        /**
+        An enum to make creating YapDatabaseViewSorting easier.
+        */
         public enum Sorting {
             case ByKey(YapDatabaseViewSortingWithKeyBlock)
             case ByObject(YapDatabaseViewSortingWithObjectBlock)
             case ByMetadata(YapDatabaseViewSortingWithMetadataBlock)
             case ByRow(YapDatabaseViewSortingWithRowBlock)
 
-            public var object: YapDatabaseViewSorting {
+            var object: YapDatabaseViewSorting {
                 switch self {
                 case let .ByKey(block):         return YapDatabaseViewSorting.withKeyBlock(block)
                 case let .ByObject(block):      return YapDatabaseViewSorting.withObjectBlock(block)
@@ -121,6 +162,16 @@ extension YapDB {
         let grouping: Grouping
         let sorting: Sorting
 
+        /**
+        Initializer for a View. 
+        
+        :param: name A String, the name of the extension
+        :param: grouping A Grouping instance - how should the view group the database items?
+        :param: sorting A Sorting instance - inside each group, how should the view sort the items?
+        :param: version A String, defaults to "1.0"
+        :param: persistent A Bool, defaults to true - meaning that the contents of the view will be stored in YapDatabase between launches.
+        :param: collections An optional array of collections which is used to white list the collections searched when populating the view.
+        */
         public init(name: String, grouping g: Grouping, sorting s: Sorting, version: String = "1.0", persistent: Bool = true, collections: [String]? = .None) {
             grouping = g
             sorting = s
@@ -146,15 +197,26 @@ extension YapDB {
 
 extension YapDB {
 
+    /**
+    A wrapper around YapDatabaseFilteredView. 
+    
+    A FilteredView is a view extension which consists of
+    a parent view extension and a filtering block. In this case, the parent
+    is a YapDB.Fetch type. This allows for filtering of other filters, and 
+    even filtering of search results.
+    */
     public class Filter: BaseView, YapDatabaseViewProducer, YapDatabaseViewRegistrar {
 
+        /**
+        An enum to make creating YapDatabaseViewFiltering easier.
+        */
         public enum Filtering {
             case ByKey(YapDatabaseViewFilteringWithKeyBlock)
             case ByObject(YapDatabaseViewFilteringWithObjectBlock)
             case ByMetadata(YapDatabaseViewFilteringWithMetadataBlock)
             case ByRow(YapDatabaseViewFilteringWithRowBlock)
 
-            public var object: YapDatabaseViewFiltering {
+            var object: YapDatabaseViewFiltering {
                 switch self {
                 case let .ByKey(block):         return YapDatabaseViewFiltering.withKeyBlock(block)
                 case let .ByObject(block):      return YapDatabaseViewFiltering.withObjectBlock(block)
@@ -167,6 +229,16 @@ extension YapDB {
         let parent: YapDB.Fetch
         let filtering: Filtering
 
+        /**
+        Initializer for a Filter
+        
+        :param: name A String, the name of the extension
+        :param: parent A YapDB.Fetch instance, the parent extensions which will be filtered.
+        :param: filtering A Filtering, simple filtering of each item in the parent view.
+        :param: version A String, defaults to "1.0"
+        :param: persistent A Bool, defaults to true - meaning that the contents of the view will be stored in YapDatabase between launches.
+        :param: collections An optional array of collections which is used to white list the collections searched when populating the view.
+        */
         public init(name: String, parent p: YapDB.Fetch, filtering f: Filtering, version: String = "1.0", persistent: Bool = true, collections: [String]? = .None) {
             parent = p
             filtering = f
@@ -193,8 +265,19 @@ extension YapDB {
 
 extension YapDB {
 
+    /**
+    A wrapper around YapDatabaseFullTextSearch. 
+    
+    A YapDatabaseFullTextSearch is a view extension which consists of
+    a parent view extension, column names to query and a search handler.
+    In this case, the parent is a YapDB.Fetch type. This
+    allows for searching of other filters, and even searching inside search results.
+    */
     public class Search: BaseView, YapDatabaseViewProducer, YapDatabaseViewRegistrar {
 
+        /**
+        An enum to make creating YapDatabaseFullTextSearchHandler easier.
+        */
         public enum Handler {
             case ByKey(YapDatabaseFullTextSearchWithKeyBlock)
             case ByObject(YapDatabaseFullTextSearchWithObjectBlock)
@@ -216,6 +299,18 @@ extension YapDB {
         let columnNames: [String]
         let handler: Handler
 
+        /**
+        Initializer for a Search
+
+        :param: name A String, the name of the search results view extension
+        :param: parent A YapDB.Fetch instance, the parent extensions which will be filtered.
+        :param: search A String, this is the name of full text search handler extension
+        :param: columnNames An array of String instances, the column names are the dictionary keys used by the handler.
+        :param: handler A Handler instance.
+        :param: version A String, defaults to "1.0"
+        :param: persistent A Bool, defaults to true - meaning that the contents of the view will be stored in YapDatabase between launches.
+        :param: collections An optional array of collections which is used to white list the collections searched when populating the view.
+        */
         public init(name: String, parent p: YapDB.Fetch, search: String, columnNames cn: [String], handler h: Handler, version: String = "1.0", persistent: Bool = true, collections: [String]? = .None) {
             parent = p
             searchName = search
