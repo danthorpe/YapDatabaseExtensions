@@ -174,6 +174,10 @@ extension YapDatabaseReadTransaction {
 }
 
 
+
+
+
+
 // MARK: - YapDatabaseConnection
 
 extension YapDatabaseConnection {
@@ -421,12 +425,12 @@ extension YapDatabaseConnection {
     }
 
     /**
-    Asynchronously reads all the items in the database for a particular Persistable Object.
+    Asynchronously reads all the items in the database for a particular Persistable Value.
     Example usage:
 
         connection.readAll() { (barcodes: [Barcode] in }
 
-    :returns: An array of Object types.
+    :returns: An array of Value types.
     */
     public func asyncReadAll<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(queue: dispatch_queue_t = dispatch_get_main_queue(), completion: ([Value]) -> Void) {
         asyncRead({ $0.readAll() }, queue: queue, completion: completion)
@@ -439,7 +443,7 @@ extension YapDatabaseConnection {
     Synchronously returns an array of Object type for the given keys, with an array of keys which don't have
     corresponding objects in the database.
 
-        let (people: [Person], missing) = transaction.filterExisting(keys)
+        let (people: [Person], missing) = connection.filterExisting(keys)
 
     :param: keys An array of String instances
     :returns: An ([Object], [String]) tuple.
@@ -452,7 +456,7 @@ extension YapDatabaseConnection {
     Synchronously returns an array of Value type for the given keys, with an array of keys which don't have
     corresponding values in the database.
 
-        let (barcode: [Barcode], missing) = transaction.filterExisting(keys)
+        let (barcode: [Barcode], missing) = connection.filterExisting(keys)
 
     :param: keys An array of String instances
     :returns: An ([Value], [String]) tuple.
@@ -464,14 +468,29 @@ extension YapDatabaseConnection {
 
 
 
+
+
+
 // MARK: - YapDatabase
 
 extension YapDatabase {
 
+    /**
+    Synchronously reads the Object sored at this index using a new connection.
+
+    :param: index The YapDB.Index value.
+    :returns: An optional Object.
+    */
     public func readAtIndex<Object where Object: Persistable>(index: YapDB.Index) -> Object? {
         return newConnection().readAtIndex(index)
     }
 
+    /**
+    Synchronously reads the Value sored at this index using a new connection.
+
+    :param: index The YapDB.Index value.
+    :returns: An optional Value.
+    */
     public func readAtIndex<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(index: YapDB.Index) -> Value? {
         return newConnection().readAtIndex(index)
     }
@@ -479,68 +498,24 @@ extension YapDatabase {
 
 extension YapDatabase {
 
-    public func readAtIndexes<Object where Object: Persistable>(indexes: [YapDB.Index]) -> [Object] {
-        return newConnection().readAtIndexes(indexes)
-    }
+    /**
+    Asynchronously reads the Object sored at this index using a new connection.
 
-    public func readAtIndexes<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(indexes: [YapDB.Index]) -> [Value] {
-        return newConnection().readAtIndexes(indexes)
-    }
-}
-
-extension YapDatabase {
-
-    public func read<Object where Object: Persistable>(key: String) -> Object? {
-        return newConnection().read(key)
-    }
-
-    public func read<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(key: String) -> Value? {
-        return newConnection().read(key)
-    }
-}
-
-extension YapDatabase {
-
-    public func read<Object where Object: Persistable>(keys: [String]) -> [Object] {
-        return newConnection().read(keys)
-    }
-
-    public func read<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(keys: [String]) -> [Value] {
-        return newConnection().read(keys)
-    }
-}
-
-extension YapDatabase {
-
-    public func readAll<Object where Object: Persistable>() -> [Object] {
-        return newConnection().readAll()
-    }
-
-    public func readAll<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>() -> [Value] {
-        return newConnection().readAll()
-    }
-}
-
-extension YapDatabase {
-
-    public func filterExisting<Object where Object: Persistable>(keys: [String]) -> (existing: [Object], missing: [String]) {
-        return newConnection().filterExisting(keys)
-    }
-
-    public func filterExisting<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(keys: [String]) -> (existing: [Value], missing: [String]) {
-        return newConnection().filterExisting(keys)
-    }
-}
-
-
-// MARK: Async Methods
-
-extension YapDatabase {
-
+    :param: index The YapDB.Index value.
+    :param: queue A dispatch_queue_t, defaults to the main queue.
+    :param: completion A closure which receives an optional Object
+    */
     public func asyncReadAtIndex<Object where Object: Persistable>(index: YapDB.Index, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: (Object?) -> Void) {
         newConnection().asyncReadAtIndex(index, queue: queue, completion: completion)
     }
 
+    /**
+    Asynchronously reads the Value sored at this index using a new connection.
+
+    :param: index The YapDB.Index value.
+    :param: queue A dispatch_queue_t, defaults to the main queue.
+    :param: completion A closure which receives an optional Value
+    */
     public func asyncReadAtIndex<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(index: YapDB.Index, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: (Value?) -> Void) {
         newConnection().asyncReadAtIndex(index, queue: queue, completion: completion)
     }
@@ -548,10 +523,95 @@ extension YapDatabase {
 
 extension YapDatabase {
 
+    /**
+    Synchronously reads the objects sored at these indexes using a new connection.
+
+    :param: indexes An array of YapDB.Index values.
+    :returns: An array of Object instances.
+    */
+    public func readAtIndexes<Object where Object: Persistable>(indexes: [YapDB.Index]) -> [Object] {
+        return newConnection().readAtIndexes(indexes)
+    }
+
+    /**
+    Synchronously reads the values sored at these indexes using a new connection.
+
+    :param: indexes An array of YapDB.Index values.
+    :returns: An array of Value instances.
+    */
+    public func readAtIndexes<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(indexes: [YapDB.Index]) -> [Value] {
+        return newConnection().readAtIndexes(indexes)
+    }
+}
+
+extension YapDatabase {
+
+    /**
+    Asynchronously  reads the objects sored at these indexes using a new connection.
+
+    :param: indexes An array of YapDB.Index values.
+    :param: queue A dispatch_queue_t, defaults to the main queue.
+    :param: completion A closure which receives an array of Object instances
+    */
+    public func asyncReadAtIndexes<Object where Object: Persistable>(indexes: [YapDB.Index], queue: dispatch_queue_t = dispatch_get_main_queue(), completion: ([Object]) -> Void) {
+        return newConnection().asyncReadAtIndexes(indexes, queue: queue, completion: completion)
+    }
+
+    /**
+    Asynchronously  reads the values sored at these indexes using a new connection.
+
+    :param: indexes An array of YapDB.Index values.
+    :param: queue A dispatch_queue_t, defaults to the main queue.
+    :param: completion A closure which receives an array of Value instances
+    */
+    public func asyncReadAtIndexes<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(indexes: [YapDB.Index], queue: dispatch_queue_t = dispatch_get_main_queue(), completion: ([Value]) -> Void) {
+        return newConnection().asyncReadAtIndexes(indexes, queue: queue, completion: completion)
+    }
+}
+
+extension YapDatabase {
+
+    /**
+    Synchronously reads the Object sored by key in a new connection.
+
+    :param: key A String
+    :returns: An optional Object
+    */
+    public func read<Object where Object: Persistable>(key: String) -> Object? {
+        return newConnection().read(key)
+    }
+
+    /**
+    Synchronously reads the Value sored by key in a new connection.
+
+    :param: key A String
+    :returns: An optional Value
+    */
+    public func read<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(key: String) -> Value? {
+        return newConnection().read(key)
+    }
+}
+
+extension YapDatabase {
+
+    /**
+    Asynchronously reads the Object sored by key in a new connection.
+
+    :param: keys An array of String instances
+    :param: queue A dispatch_queue_t, defaults to the main queue.
+    :param: completion A closure which receives an optional Object
+    */
     public func asyncRead<Object where Object: Persistable>(key: String, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: (Object?) -> Void) {
         newConnection().asyncRead(key, queue: queue, completion: completion)
     }
 
+    /**
+    Asynchronously reads the Value sored by key in a new connection.
+
+    :param: keys An array of String instances
+    :param: queue A dispatch_queue_t, defaults to the main queue.
+    :param: completion A closure which receives an optional Value
+    */
     public func asyncRead<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(key: String, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: (Value?) -> Void) {
         newConnection().asyncRead(key, queue: queue, completion: completion)
     }
@@ -559,10 +619,47 @@ extension YapDatabase {
 
 extension YapDatabase {
 
+    /**
+    Synchronously reads the Object instances sored by the keys in a new connection.
+
+    :param: keys An array of String instances
+    :returns: An array of Object instances
+    */
+    public func read<Object where Object: Persistable>(keys: [String]) -> [Object] {
+        return newConnection().read(keys)
+    }
+
+    /**
+    Synchronously reads the Value instances sored by the keys in a new connection.
+
+    :param: keys An array of String instances
+    :returns: An array of Value instances
+    */
+    public func read<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(keys: [String]) -> [Value] {
+        return newConnection().read(keys)
+    }
+}
+
+extension YapDatabase {
+
+    /**
+    Asynchronously reads the Object instances sored by the keys in a new connection.
+
+    :param: keys An array of String instances
+    :param: queue A dispatch_queue_t, defaults to the main queue.
+    :param: completion A closure which receives an array of Object instances
+    */
     public func asyncRead<Object where Object: Persistable>(keys: [String], queue: dispatch_queue_t = dispatch_get_main_queue(), completion: ([Object]) -> Void) {
         newConnection().asyncRead(keys, queue: queue, completion: completion)
     }
 
+    /**
+    Asynchronously reads the Value instances sored by the keys in a new connection.
+
+    :param: keys An array of String instances
+    :param: queue A dispatch_queue_t, defaults to the main queue.
+    :param: completion A closure which receives an array of Value instances
+    */
     public func asyncRead<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(keys: [String], queue: dispatch_queue_t = dispatch_get_main_queue(), completion: ([Value]) -> Void) {
         newConnection().asyncRead(keys, queue: queue, completion: completion)
     }
@@ -570,12 +667,84 @@ extension YapDatabase {
 
 extension YapDatabase {
 
+    /**
+    Synchronously reads all the items in the database for a particular Persistable Object in a new connection.
+    Example usage:
+
+        let people: [Person] = database.readAll()
+
+    :returns: An array of Object types.
+    */
+    public func readAll<Object where Object: Persistable>() -> [Object] {
+        return newConnection().readAll()
+    }
+
+    /**
+    Synchronously reads all the items in the database for a particular Persistable Value in a new connection.
+    Example usage:
+
+    let barcodes: [Barcode] = database.readAll()
+
+    :returns: An array of Value types.
+    */
+    public func readAll<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>() -> [Value] {
+        return newConnection().readAll()
+    }
+}
+
+extension YapDatabase {
+
+    /**
+    Asynchronously reads all the items in the database for a particular Persistable Object in a new connection.
+    Example usage:
+
+        database.readAll() { (people: [Person] in }
+
+    :returns: An array of Object types.
+    */
     public func asyncReadAll<Object where Object: Persistable>(queue: dispatch_queue_t = dispatch_get_main_queue(), completion: ([Object]) -> Void) {
         newConnection().asyncReadAll(queue: queue, completion: completion)
     }
 
+    /**
+    Asynchronously reads all the items in the database for a particular Persistable Value in a new connection.
+    Example usage:
+
+        database.readAll() { (barcodes: [Barcode] in }
+
+    :returns: An array of Object types.
+    */
     public func asyncReadAll<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(queue: dispatch_queue_t = dispatch_get_main_queue(), completion: ([Value]) -> Void) {
         newConnection().asyncReadAll(queue: queue, completion: completion)
+    }
+}
+
+extension YapDatabase {
+
+    /**
+    Synchronously returns an array of Object type for the given keys, with an array of keys which don't have
+    corresponding objects in the database, using a new connection.
+
+        let (people: [Person], missing) = database.filterExisting(keys)
+
+    :param: keys An array of String instances
+    :returns: An ([Object], [String]) tuple.
+    */
+    public func filterExisting<Object where Object: Persistable>(keys: [String]) -> (existing: [Object], missing: [String]) {
+        return newConnection().filterExisting(keys)
+    }
+
+    /**
+    Synchronously returns an array of Value type for the given keys, with an array of keys which don't have
+    corresponding values in the database, using a new connection.
+
+        let (barcode: [Barcode], missing) = database.filterExisting(keys)
+
+    :param: keys An array of String instances
+    :returns: An ([Value], [String]) tuple.
+    */
+    public func filterExisting<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(keys: [String]) -> (existing: [Value], missing: [String]) {
+        return newConnection().filterExisting(keys)
     }
 }
 
