@@ -36,6 +36,30 @@ class BaseTestCase: XCTestCase {
 
 class SynchronousReadWriteTests: BaseTestCase {
 
+    func test_ReadingNonexisting_Object_ByIndex() {
+        let db = createYapDatabase(__FILE__, suffix: __FUNCTION__)
+        let read: Person? = db.readAtIndex(indexForPersistable(person))
+        XCTAssertNil(read, "In an empty database, this should return nil.")
+    }
+
+    func test_ReadingNonexisting_Value_ByIndex() {
+        let db = createYapDatabase(__FILE__, suffix: __FUNCTION__)
+        let read: Barcode? = db.readAtIndex(indexForPersistable(barcode))
+        XCTAssertTrue(read == nil, "In an empty database, this should return nil.")
+    }
+
+    func test_ReadingNonexisting_Object_ByKey() {
+        let db = createYapDatabase(__FILE__, suffix: __FUNCTION__)
+        let read: Person? = db.read(keyForPersistable(person))
+        XCTAssertNil(read, "In an empty database, this should return nil.")
+    }
+
+    func test_ReadingNonexisting_Value_ByKey() {
+        let db = createYapDatabase(__FILE__, suffix: __FUNCTION__)
+        let read: Barcode? = db.read(keyForPersistable(barcode))
+        XCTAssertTrue(read == nil, "In an empty database, this should return nil.")
+    }
+
     func test_ReadingAndWriting_Object() {
         let db = createYapDatabase(__FILE__, suffix: __FUNCTION__)
         validateWrite(db.write(person), person, usingDatabase: db)
@@ -68,6 +92,36 @@ class SynchronousReadWriteTests: BaseTestCase {
         db.write(values)
 
         let read: Set<Barcode> = Set(db.readAll())
+        XCTAssertEqual(values, read, "Expecting all keys in collection to return all items.")
+    }
+
+    func test_ReadingAnyWriting_ManyObjects_SomeNonexistent() {
+        let db = createYapDatabase(__FILE__, suffix: __FUNCTION__)
+
+        let objects = people()
+        db.write(objects)
+
+        var keys = map(objects, keyForPersistable)
+        keys += ["beatle-4", "beatle-5"]
+
+        XCTAssertEqual(keys.count, objects.count + 2, "We should be attempting to read more keys than are stored in the database")
+
+        let read: [Person] = db.read(keys)
+        XCTAssertEqual(read, objects, "Should have got the same number of objects back.")
+    }
+
+    func test_ReadingAnyWriting_ManyValues_SomeNonexistent() {
+        let db = createYapDatabase(__FILE__, suffix: __FUNCTION__)
+
+        let values = barcodes()
+        db.write(values)
+
+        var keys = map(values, keyForPersistable)
+        keys += ["some other barcode", "and another one"]
+
+        XCTAssertEqual(keys.count, values.count + 2, "We should be attempting to read more keys than are stored in the database")
+
+        let read: Set<Barcode> = Set(db.read(keys))
         XCTAssertEqual(values, read, "Expecting all keys in collection to return all items.")
     }
 }
@@ -146,7 +200,7 @@ class AsynchronousReadTests: BaseTestCase {
         let expectation = expectationWithDescription("Finished async reading of value by key.")
 
         db.write(barcode)
-        db.asyncRead(indexForPersistable(barcode).key) { (read: Barcode?) in
+        db.asyncRead(keyForPersistable(barcode)) { (read: Barcode?) in
             XCTAssertTrue(read != nil, "There should be an object in the database.")
             XCTAssertEqual(read!, self.barcode, "The value returned from a save value function should equal the argument.")
             expectation.fulfill()
@@ -160,7 +214,7 @@ class AsynchronousReadTests: BaseTestCase {
         let expectation = expectationWithDescription("Finished async reading of object by key.")
 
         db.write(person)
-        db.asyncRead(indexForPersistable(person).key) { (read: Person?) in
+        db.asyncRead(keyForPersistable(person)) { (read: Person?) in
             XCTAssertTrue(read != nil, "There should be an object in the database.")
             XCTAssertEqual(read!, self.person, "The value returned from a save value function should equal the argument.")
             expectation.fulfill()            
@@ -191,8 +245,8 @@ class AsynchronousReadTests: BaseTestCase {
         let objects = people()
         db.write(objects)
 
-        db.asyncRead(objects.map { indexForPersistable($0).key }) { (read: [Person]) in
-            XCTAssertEqual(objects, read, "Expecting all keys in collection to return all items.")
+        db.asyncRead(map(objects, keyForPersistable)) { (read: [Person]) in
+            XCTAssertEqual(objects.count, read.count, "Expecting all keys in collection to return all items.")
             expectation.fulfill()
         }
 

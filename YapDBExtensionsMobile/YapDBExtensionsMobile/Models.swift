@@ -92,6 +92,12 @@ public func == (a: Person, b: Person) -> Bool {
     return (a.identifier == b.identifier) && (a.name == b.name)
 }
 
+extension Person: Printable {
+    public override var description: String {
+        return "id: \(identifier), name: \(name)"
+    }
+}
+
 // MARK: - Persistable
 
 extension Barcode: Persistable {

@@ -49,7 +49,7 @@ extension YapDatabaseReadTransaction {
     :returns: An array of Object instances.
     */
     public func readAtIndexes<Object where Object: Persistable>(indexes: [YapDB.Index]) -> [Object] {
-        return map(indexes, readAtIndex)
+        return map(unique(indexes), readAtIndex)
     }
 
     /**
@@ -59,7 +59,7 @@ extension YapDatabaseReadTransaction {
     :returns: An array of Value instances.
     */
     public func readAtIndexes<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(indexes: [YapDB.Index]) -> [Value] {
-        return map(indexes, readAtIndex)
+        return map(unique(indexes), readAtIndex)
     }
 }
 
@@ -96,7 +96,7 @@ extension YapDatabaseReadTransaction {
     :returns: An array of Object types.
     */
     public func read<Object where Object: Persistable>(keys: [String]) -> [Object] {
-        return map(keys, read)
+        return map(unique(keys), read)
     }
 
     /**
@@ -107,7 +107,7 @@ extension YapDatabaseReadTransaction {
     :returns: An array of Value types.
     */
     public func read<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(keys: [String]) -> [Value] {
-        return map(keys, read)
+        return map(unique(keys), read)
     }
 }
 

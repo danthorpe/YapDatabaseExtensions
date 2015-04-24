@@ -207,6 +207,16 @@ internal func map<S: SequenceType, T>(source: S, transform: (S.Generator.Element
     })
 }
 
+internal func unique<S: SequenceType where S.Generator.Element: Hashable>(items: S) -> [S.Generator.Element] {
+    let initial: [S.Generator.Element] = []
+    return reduce(items, initial) { (var accumulator, item) -> [S.Generator.Element] in
+        if !contains(accumulator, item) {
+            accumulator.append(item)
+        }
+        return accumulator
+    }
+}
+
 extension YapDatabaseConnection {
 
     /**
@@ -278,4 +288,21 @@ extension YapDatabaseConnection {
     }
 }
 
+
+// MARK: Hashable etc
+
+extension YapDB.Index: Printable, Hashable {
+
+    public var description: String {
+        return "\(collection):\(key)"
+    }
+
+    public var hashValue: Int {
+        return description.hashValue
+    }
+}
+
+public func == (a: YapDB.Index, b: YapDB.Index) -> Bool {
+    return (a.collection == b.collection) && (a.key == b.key)
+}
 
