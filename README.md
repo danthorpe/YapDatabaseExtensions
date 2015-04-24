@@ -4,7 +4,7 @@
 
 ## Requirements
 
-YapDatabase :)
+[YapDatabase](https://github.com/yapstudios/YapDatabase) :)
 
 ## Installation
 
@@ -76,12 +76,12 @@ extension Barcode: Persistable {
         return "Barcodes"
     }
 
-    var identifier: Int {
+    var identifier: Identifier {
         switch self {
         case let .UPCA(numberSystem, manufacturer, product, check):
-            return "\(numberSystem).\(manufacturer).\(product).\(check)".hashValue
+            return "\(numberSystem).\(manufacturer).\(product).\(check)"
         case let .QRCode(code):
-            return code.hashValue
+            return code
         }
     }
 }
@@ -144,24 +144,45 @@ class BarcodeArchiver: NSObject, NSCoding, Archiver {
 
 ```
 
-This may look like quite a bit of code, but it's really just NSCoding, which you probably already have inside on your classes, so it's actually just moving code from being directly in the type interface off to one side. This can help keep your domain types clean and easy to comprehend. See the example project for more examples of implementations of `Saveable`, including nesting value types.
+This may look like quite a bit of code, but it's really just NSCoding. And it’s likely this already exists inside on your classes. Therefore, it’s easy just to move it into an Archiver class. This can help keep your domain types clean and easy to comprehend. See the example project for more examples of implementations of `Saveable`, including nesting value types.
+
+## The Functions
+The framework provides a number of generic functions in extensions on `YapDatabaseReadTransaction`, `YapDatabaseReadWriteTransaction`, `YapDatabaseConnection` and `YapDatabase`. The latter set are provided mostly for ease of use and testing however, and it is strongly recommended that `YapDatabaseConnection` references are owned and operated on.
+
+The functions support synchronous or asynchronous reading of item by index or key, either individually or in arrays. For example:
+
+```swift
+if let barcode: Barcode = connection.read(key) {
+	println(“the barcode: \(barcode)”)
+}
+
+connection.asyncRead(key) { (barcode: Barcode) in 
+	println(“the barcode: \(barcode)”)
+}
+```
 
 ### Asynchronous save, PromiseKit, BrightFutures etc
-The default subspec provides asynchronous methods using callback closures. 
+The default subspec provides asynchronous methods using callback closures, see above.
 
-Additionally, use the appropriate subspec for your favourite FRP library for appropriate asynchronous return types. For example:
+In addition, there is support for asynchronous APIs using some popular 3rd party functional reactive programming libraries. These are available as CocoaPods subspecs, e.g.
 
 ```ruby
 pod 'YapDatabaseExtensions/PromiseKit'
 ```
 
-will make APIs such as the following available:
+will make APIs such as the following possible:
 
 ```swift
-public func asyncSaveValue<V where V: Saveable, V: Persistable, V.ArchiverType.ValueType == V>(value: V) -> Promise<V>
+connection.asyncRead(key).then { (barcode: Barcode) -> Void in
+  println(“the barcode: \(barcode)”)
+}
 ```
 
-Currently supported are PromiseKit, BrightFutures & SwiftTask. RAC 3.0 support is forthcoming, please create issues or submit pull requests if I'm missing support for your favourite library.
+The following are supported:
+- [x] [PromiseKit](http://promisekit.org)
+- [x] [Bright Futures](https://github.com/Thomvis/BrightFutures)
+- [x] [SwiftTask](https://github.com/ReactKit/SwiftTask)
+- [ ] [ReactiveCocoa 3.0](https://github.com/ReactiveCocoa/ReactiveCocoa/releases/tag/v3.0-beta.1)
 
 ## Author
 

@@ -4,45 +4,6 @@
 
 import YapDatabase
 
-// MARK: Identifier
-
-public typealias Identifier = String
-
-extension Identifier: Printable {
-    public var description: String { return self }
-}
-
-// MARK: - Archiver & Saveable
-
-public protocol Archiver: NSCoding {
-    typealias ValueType
-    var value: ValueType { get }
-    init(_: ValueType)
-}
-
-public protocol Saveable {
-    typealias ArchiverType: Archiver
-    var archive: ArchiverType { get }
-}
-
-public func valueFromArchive<Value where Value: Saveable, Value.ArchiverType.ValueType == Value>(archive: AnyObject?) -> Value? {
-    return archive.map { ($0 as! Value.ArchiverType).value }
-}
-
-public func valuesFromArchives<Archives, Value where Archives: SequenceType, Archives.Generator.Element == AnyObject, Value: Saveable, Value.ArchiverType.ValueType == Value>(archives: Archives?) -> [Value]? {
-    return archives.map { map($0, valueFromArchive) }
-}
-
-public func archiveFromValue<Value where Value: Saveable, Value.ArchiverType.ValueType == Value>(value: Value?) -> Value.ArchiverType? {
-    return value.map { $0.archive }
-}
-
-public func archivesFromValues<Values, Value where Values: SequenceType, Values.Generator.Element == Value, Value: Saveable, Value.ArchiverType.ValueType == Value>(values: Values?) -> [Value.ArchiverType]? {
-    return values.map { map($0, { archiveFromValue($0) }) }
-}
-
-// MARK: - Persistable
-
 /**
 
 This is an empty struct used as a namespace for new types to
@@ -56,7 +17,7 @@ extension YapDB {
     /**
 
     A database index value type.
-    
+
     :param: collection A String
     :param: key A String
     */
@@ -71,27 +32,170 @@ extension YapDB {
     }
 }
 
+// MARK: - Identifiable
+
+/**
+A generic protocol which is used to return a unique identifier
+for the type. To use `String` type identifiers, use the aliased
+Identifier type.
+*/
 public protocol Identifiable {
     typealias IdentifierType: Printable
     var identifier: IdentifierType { get }
 }
 
+/**
+A typealias of String, which implements the Printable
+protocol. When implementing the Identifiable protocol, use
+Identifier for your String identifiers.
+
+    extension Person: Identifiable {
+      let identifier: Identifier
+    }
+
+*/
+public typealias Identifier = String
+
+extension Identifier: Printable {
+    public var description: String { return self }
+}
+
+// MARK: - Persistable
+
+/**
+Types which implement Persistable can be used in the functions
+defined in this framework. It assumes that all instances of a type
+are stored in the same YapDatabase collection.
+*/
 public protocol Persistable: Identifiable {
+
+    /// The YapDatabase collection name the type is stored in.
     static var collection: String { get }
 }
 
+/**
+A simple function which generates a String key from a Persistable
+instance. 
+
+Note that it is preferable to use this exclusively to ensure
+a consistent key structure.
+
+:param: persistable A Persistable type instance
+:returns: A String
+*/
+public func keyForPersistable<P: Persistable>(persistable: P) -> String {
+    return "\(persistable.identifier)"
+}
+
+/**
+A simple function which generates a YapDB.Index from a Persistable
+instance. All write(_:) store objects in the database using this function.
+
+:param: persistable A Persistable type instance
+:returns: A YapDB.Index
+*/
+public func indexForPersistable<P: Persistable>(persistable: P) -> YapDB.Index {
+    return YapDB.Index(collection: persistable.dynamicType.collection, key: keyForPersistable(persistable))
+}
+
+/**
+A generic protocol which extends Persistable. It allows types to
+expose their own metadata object type for use in YapDatabase. 
+The object metadata must conform to NSCoding.
+*/
 public protocol ObjectMetadataPersistable: Persistable {
     typealias MetadataType: NSCoding
+
+    /// The metadata object for this Persistable type.
     var metadata: MetadataType { get }
 }
 
+/**
+A generic protocol which extends Persistable. It allows types to
+expose their own metadata value type for use in YapDatabase.
+The metadata value must conform to Saveable.
+*/
 public protocol ValueMetadataPersistable: Persistable {
     typealias MetadataType: Saveable
+
+    /// The metadata value for this Persistable type.
     var metadata: MetadataType { get }
 }
 
-public func indexForPersistable<P: Persistable>(persistable: P) -> YapDB.Index {
-    return YapDB.Index(collection: persistable.dynamicType.collection, key: "\(persistable.identifier)")
+// MARK: - Archiver & Saveable
+
+/**
+A generic protocol which acts as an archiver for value types.
+*/
+public protocol Archiver: NSCoding {
+    typealias ValueType
+
+    /// The value type which is being encoded/decoded
+    var value: ValueType { get }
+
+    /// Required initializer receiving the wrapped value type.
+    init(_: ValueType)
+}
+
+/**
+A generic protocol which can be implemented to vends another
+object capable of archiving the receiver.
+*/
+public protocol Saveable {
+    typealias ArchiverType: Archiver
+
+    /// The archive(r)
+    var archive: ArchiverType { get }
+}
+
+/**
+Extracts a value type from an archive, if possible. 
+
+It accepts an
+optional AnyObject argument, this makes suitable when implementing
+initWithCoder(_: NSCoder)
+
+   let barcode: Barcode? = valueFromArchive(aDecoder.decodeObjectForKey("barcode"))
+
+:param: archive An optional AnyObject
+:returns: an optional Value
+*/
+public func valueFromArchive<Value where Value: Saveable, Value.ArchiverType.ValueType == Value>(archive: AnyObject?) -> Value? {
+    return archive.map { ($0 as! Value.ArchiverType).value }
+}
+
+/**
+Extracts an array of Value types from a sequence of archives.
+
+:param: archives An optional SequenceType of AnyObject
+:returns: an optional array of Value instances
+*/
+public func valuesFromArchives<Archives, Value where Archives: SequenceType, Archives.Generator.Element == AnyObject, Value: Saveable, Value.ArchiverType.ValueType == Value>(archives: Archives?) -> [Value]? {
+    return archives.map { map($0, valueFromArchive) }
+}
+
+/**
+Creates an archive from an optional Value.
+
+Again, primarily useful when implmementing encodeWithCoder(_: NSCoder)
+
+    aCoder.encodeObject(archiveFromValue(value.address), forKey: "address")
+
+:param: value An optional Value
+:returns: An optional ArchiverType instance.
+*/
+public func archiveFromValue<Value where Value: Saveable, Value.ArchiverType.ValueType == Value>(value: Value?) -> Value.ArchiverType? {
+    return value.map { $0.archive }
+}
+
+/**
+Creates an array of archives from an optional sequence of Value instances.
+
+:param: values An optional SequenceType of Value instances.
+:returns: An optional Array of ArchiverType instance.
+*/
+public func archivesFromValues<Values, Value where Values: SequenceType, Values.Generator.Element == Value, Value: Saveable, Value.ArchiverType.ValueType == Value>(values: Values?) -> [Value.ArchiverType]? {
+    return values.map { map($0, { archiveFromValue($0) }) }
 }
 
 internal func map<S: SequenceType, T>(source: S, transform: (S.Generator.Element) -> T?) -> [T] {
@@ -103,28 +207,102 @@ internal func map<S: SequenceType, T>(source: S, transform: (S.Generator.Element
     })
 }
 
-extension YapDatabaseConnection {
-
-    public func read<T>(block: (YapDatabaseReadTransaction) -> T) -> T {
-        var result: T! = .None
-        readWithBlock { transaction in
-            result = block(transaction)
+internal func unique<S: SequenceType where S.Generator.Element: Hashable>(items: S) -> [S.Generator.Element] {
+    let initial: [S.Generator.Element] = []
+    return reduce(items, initial) { (var accumulator, item) -> [S.Generator.Element] in
+        if !contains(accumulator, item) {
+            accumulator.append(item)
         }
-        return result
-    }
-
-    public func write<T>(block: (YapDatabaseReadWriteTransaction) -> T) -> T {
-        var result: T! = .None
-        readWriteWithBlock { transaction in
-            result = block(transaction)
-        }
-        return result
-    }
-
-    public func asyncRead<T>(block: (YapDatabaseReadTransaction) -> T, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: (T) -> Void) {
-        var result: T! = .None
-        asyncReadWithBlock({ transaction in result = block(transaction) }, completionQueue: queue) { completion(result) }
+        return accumulator
     }
 }
 
+extension YapDatabaseConnection {
+
+    /**
+    Synchronously reads from the database on the connection. The closure receives
+    the read transaction, and the function returns the result of the closure. This
+    makes it very suitable as a building block for more functional methods.
+    
+    The majority of the wrapped functions provided by these extensions use this as 
+    their basis.
+
+    :param: block A closure which receives YapDatabaseReadTransaction and returns T
+    :returns: An instance of T
+    */
+    public func read<T>(block: (YapDatabaseReadTransaction) -> T) -> T {
+        var result: T! = .None
+        readWithBlock { result = block($0) }
+        return result
+    }
+
+    /**
+    Synchronously writes to the database on the connection. The closure receives
+    the read write transaction, and the function returns the result of the closure.
+    This makes it very suitable as a building block for more functional methods.
+
+    The majority of the wrapped functions provided by these extensions use this as
+    their basis.
+
+    :param: block A closure which receives YapDatabaseReadWriteTransaction and returns T
+    :returns: An instance of T
+    */
+    public func write<T>(block: (YapDatabaseReadWriteTransaction) -> T) -> T {
+        var result: T! = .None
+        readWriteWithBlock { result = block($0) }
+        return result
+    }
+
+    /**
+    Asynchronously reads from the database on the connection. The closure receives
+    the read transaction, and completion block receives the result of the closure.
+    This makes it very suitable as a building block for more functional methods.
+
+    The majority of the wrapped functions provided by these extensions use this as
+    their basis.
+
+    :param: block A closure which receives YapDatabaseReadTransaction and returns T
+    :param: queue A dispatch_queue_t, defaults to main queue, can be ommitted in most cases.
+    :param: completion A closure which receives T and returns Void.
+    */
+    public func asyncRead<T>(block: (YapDatabaseReadTransaction) -> T, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: (T) -> Void) {
+        var result: T! = .None
+        asyncReadWithBlock({ result = block($0) }, completionQueue: queue) { completion(result) }
+    }
+
+    /**
+    Asynchronously writes to the database on the connection. The closure receives
+    the read write transaction, and completion block receives the result of the closure.
+    This makes it very suitable as a building block for more functional methods.
+
+    The majority of the wrapped functions provided by these extensions use this as
+    their basis.
+
+    :param: block A closure which receives YapDatabaseReadWriteTransaction and returns T
+    :param: queue A dispatch_queue_t, defaults to main queue, can be ommitted in most cases.
+    :param: completion A closure which receives T and returns Void.
+    */
+    public func asyncWrite<T>(block: (YapDatabaseReadWriteTransaction) -> T, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: (T) -> Void) {
+        var result: T! = .None
+        asyncReadWriteWithBlock({ result = block($0) }, completionQueue: queue) { completion(result) }
+    }
+}
+
+
+// MARK: Hashable etc
+
+extension YapDB.Index: Printable, Hashable {
+
+    public var description: String {
+        return "\(collection):\(key)"
+    }
+
+    public var hashValue: Int {
+        return description.hashValue
+    }
+}
+
+public func == (a: YapDB.Index, b: YapDB.Index) -> Bool {
+    return (a.collection == b.collection) && (a.key == b.key)
+}
 

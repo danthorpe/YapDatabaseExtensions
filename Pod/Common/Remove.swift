@@ -92,44 +92,44 @@ extension YapDatabaseConnection {
 extension YapDatabaseConnection {
 
     /**
-        Asynchonously removes the object stored at this index.
+    Asynchonously removes the object stored at this index.
 
-        :param: index A YapDB.Index
-        :param: queue The dispatch queue to run the completion closure on, defaults to the main queue
-        :param: completion A void closure
+    :param: index A YapDB.Index
+    :param: queue The dispatch queue to run the completion closure on, defaults to the main queue
+    :param: completion A void closure
     */
     public func asyncRemoveAtIndex(index: YapDB.Index, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: () -> Void) {
         asyncReadWriteWithBlock({ $0.removeAtIndex(index) }, completionQueue: queue, completionBlock: completion)
     }
 
     /**
-        Asynchonously removes the object stored at this index.
+    Asynchonously removes the object stored at this index.
 
-        :param: indexes An Array<YapDB.Index>
-        :param: queue The dispatch queue to run the completion closure on, defaults to the main queue
-        :param: completion A void closure
+    :param: indexes An Array<YapDB.Index>
+    :param: queue The dispatch queue to run the completion closure on, defaults to the main queue
+    :param: completion A void closure
     */
     public func asyncRemoveAtIndexes(indexes: [YapDB.Index], queue: dispatch_queue_t = dispatch_get_main_queue(), completion: () -> Void) {
         asyncReadWriteWithBlock({ $0.removeAtIndexes(indexes) }, completionQueue: queue, completionBlock: completion)
     }
 
     /**
-        Synchonously removes any Persistable item.
+    Synchonously removes any Persistable item.
 
-        :param: item A Persistable item.
-        :param: queue The dispatch queue to run the completion closure on, defaults to the main queue
-        :param: completion A void closure
+    :param: item A Persistable item.
+    :param: queue The dispatch queue to run the completion closure on, defaults to the main queue
+    :param: completion A void closure
     */
     public func asyncRemove<Item where Item: Persistable>(item: Item, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: () -> Void) {
         asyncReadWriteWithBlock({ $0.remove(item) }, completionQueue: queue, completionBlock: completion)
     }
 
     /**
-        Synchonously removes a sequence of Persistable items.
+    Synchonously removes a sequence of Persistable items.
 
-        :param: items A sequence of Persistable items.
-        :param: queue The dispatch queue to run the completion closure on, defaults to the main queue
-        :param: completion A void closure
+    :param: items A sequence of Persistable items.
+    :param: queue The dispatch queue to run the completion closure on, defaults to the main queue
+    :param: completion A void closure
     */
     public func asyncRemove<Items where Items: SequenceType, Items.Generator.Element: Persistable>(items: Items, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: () -> Void) {
         asyncReadWriteWithBlock({ $0.remove(items) }, completionQueue: queue, completionBlock: completion)
