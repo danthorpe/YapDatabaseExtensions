@@ -62,7 +62,13 @@ extension YapDB {
             registrar.registerInDatabase(database, withConnection: connection)
         }
 
-        func createViewMappings(mappings: Mappings, inDatabase database: YapDatabase, withConnection connection: YapDatabaseConnection? = .None) -> YapDatabaseViewMappings {
+        /**
+        Creates the YapDatabaseViewMappings object. Ensures that any database extensions are registered before returning.
+
+        :param: database A YapDatabase instance
+        :param: connection An optiona YapDatabaseConnection, defaults to .None
+        */
+        public func createViewMappings(mappings: Mappings, inDatabase database: YapDatabase, withConnection connection: YapDatabaseConnection? = .None) -> YapDatabaseViewMappings {
             registerInDatabase(database, withConnection: connection)
             return YapDatabaseViewMappings(groupFilterBlock: mappings.filter, sortBlock: mappings.sort, view: name)
         }
@@ -402,7 +408,7 @@ extension YapDB {
             self.init(fetch: .Search(search))
         }
 
-        func createMappingsRegisteredInDatabase(database: YapDatabase, withConnection connection: YapDatabaseConnection? = .None) -> YapDatabaseViewMappings {
+        public func createMappingsRegisteredInDatabase(database: YapDatabase, withConnection connection: YapDatabaseConnection? = .None) -> YapDatabaseViewMappings {
             let databaseViewMappings = fetch.createViewMappings(mappings, inDatabase: database, withConnection: connection)
             block?(databaseViewMappings)
             return databaseViewMappings
