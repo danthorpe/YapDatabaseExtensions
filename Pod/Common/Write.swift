@@ -126,22 +126,22 @@ extension YapDatabaseConnection {
 extension YapDatabaseConnection {
 
     public func asyncWrite<Object where Object: NSCoding, Object: Persistable>(object: Object, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: (Object) -> Void) {
-        asyncReadWriteWithBlock({ $0.write(object) }, completionQueue: queue) { completion(object) }
+        asyncWrite({ $0.write(object) }, queue: queue, completion: completion)
     }
 
     public func asyncWrite<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(value: Value, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: (Value) -> Void) {
-        asyncReadWriteWithBlock({ $0.write(value) }, completionQueue: queue) { completion(value) }
+        asyncWrite({ $0.write(value) }, queue: queue, completion: completion)
     }
 }
 
 extension YapDatabaseConnection {
 
     public func asyncWrite<Objects, Object where Objects: SequenceType, Objects.Generator.Element == Object, Object: NSCoding, Object: Persistable>(objects: Objects, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: ([Object]) -> Void) {
-        asyncReadWriteWithBlock({ $0.write(objects) }, completionQueue: queue) { completion(Array(objects)) }
+        asyncWrite({ $0.write(objects) }, queue: queue, completion: completion)
     }
 
     public func asyncWrite<Values, Value where Values: SequenceType, Values.Generator.Element == Value, Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(values: Values, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: ([Value]) -> Void) {
-        asyncReadWriteWithBlock({ $0.write(values) }, completionQueue: queue) { completion(Array(values)) }
+        asyncWrite({ $0.write(values) }, queue: queue, completion: completion)
     }
 }
 
