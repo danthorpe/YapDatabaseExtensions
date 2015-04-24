@@ -59,7 +59,7 @@ extension AsynchronousReadTests {
         let expectation = expectationWithDescription("Finished async reading of value by key.")
 
         db.write(barcode)
-        db.asyncRead(indexForPersistable(barcode).key).then { (read: Barcode?) -> Void in
+        db.asyncRead(keyForPersistable(barcode)).then { (read: Barcode?) -> Void in
             XCTAssertTrue(read != nil, "There should be an object in the database.")
             XCTAssertEqual(read!, self.barcode, "The value returned from a save value function should equal the argument.")
             expectation.fulfill()
@@ -73,7 +73,7 @@ extension AsynchronousReadTests {
         let expectation = expectationWithDescription("Finished async reading of value by key.")
 
         db.write(person)
-        db.asyncRead(indexForPersistable(person).key).then { (read: Person?) -> Void in
+        db.asyncRead(keyForPersistable(person)).then { (read: Person?) -> Void in
             XCTAssertTrue(read != nil, "There should be an object in the database.")
             XCTAssertEqual(read!, self.person, "The value returned from a save value function should equal the argument.")
             expectation.fulfill()
@@ -89,7 +89,7 @@ extension AsynchronousReadTests {
         let values = barcodes()
         db.write(values)
 
-        db.asyncRead(map(values) { indexForPersistable($0).key }).then { (read: [Barcode]) -> Void in
+        db.asyncRead(map(values, keyForPersistable)).then { (read: [Barcode]) -> Void in
             XCTAssertEqual(values, Set(read), "Expecting all keys in collection to return all items.")
             expectation.fulfill()
         }
@@ -104,7 +104,7 @@ extension AsynchronousReadTests {
         let objects = people()
         db.write(objects)
 
-        db.asyncRead(objects.map { indexForPersistable($0).key }).then { (read: [Person]) -> Void in
+        db.asyncRead(map(objects, keyForPersistable)).then { (read: [Person]) -> Void in
             XCTAssertEqual(objects, read, "Expecting all keys in collection to return all items.")
             expectation.fulfill()
         }
