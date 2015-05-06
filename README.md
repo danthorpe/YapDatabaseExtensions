@@ -21,7 +21,7 @@ pod 'YapDatabaseExtensions'
 
 This framework extends a `YapDatabaseTransaction` and `YapDatabaseConnection` with type-safe `read`, `write` and `remove` APIs with both synchronous and asynchronous variants. However, to leverage such APIs, your own domain types must conform to some generic protocols.
 
-### Persistable
+### Persistable & Identifiable 
 
 The `Persistable` protocol defines how the object will be indexed in YapDatabase. It extends the generic `Identifiable` protocol.
 
@@ -66,8 +66,8 @@ For example, this is the Barcode enum from "The Swift Programming Language" book
 ```swift
 
 enum Barcode {
-	case UPCA(Int, Int, Int, Int)
-	case QRCode(String)
+    case UPCA(Int, Int, Int, Int)
+    case QRCode(String)
 }
 
 ```
@@ -150,7 +150,7 @@ class BarcodeArchiver: NSObject, NSCoding, Archiver {
 
 ```
 
-This may look like quite a bit of code, but it's really just NSCoding. And it’s likely this already exists inside on your classes. Therefore, it’s easy just to move it into an Archiver class. This can help keep your domain types clean and easy to comprehend. See the example project for more examples of implementations of `Saveable`, including nesting value types.
+This may look like quite a bit of code, but it's really just NSCoding. And it’s likely this already exists on your classes. Therefore, it’s easy to move it into a bespoke Archiver class. This can help keep your domain types clean and easy to comprehend. See the example project for more examples of implementations of `Saveable`, including nesting value types.
 
 ## The Functions
 The framework provides a number of generic functions in extensions on `YapDatabaseReadTransaction`, `YapDatabaseReadWriteTransaction`, `YapDatabaseConnection` and `YapDatabase`. The latter set are provided mostly for ease of use and testing however, and it is strongly recommended that `YapDatabaseConnection` references are owned and operated on.
@@ -167,7 +167,7 @@ connection.asyncRead(key) { (barcode: Barcode) in
 }
 ```
 
-### Asynchronous save, PromiseKit, BrightFutures etc
+### FRP Library support for PromiseKit, BrightFutures etc
 The default subspec provides asynchronous methods using callback closures, see above.
 
 In addition, there is support for asynchronous APIs using some popular 3rd party functional reactive programming libraries. These are available as CocoaPods subspecs, e.g.
