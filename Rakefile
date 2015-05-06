@@ -79,10 +79,10 @@ namespace :xcode do
 		manifest = "#{podsRoot()}/Manifest.lock"
 		if File.file? manifest
 			message("Updating Cocoapods")
-			sh "pod --no-repo-update update"
+			sh "pod update"
 		else
 			message("Installing Cocoapods")		
-			sh "pod --no-repo-update install"
+			sh "pod install"
 		end
 	end
 

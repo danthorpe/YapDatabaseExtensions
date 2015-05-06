@@ -1,6 +1,7 @@
 # 1.3.0
 
 1. [[YAP-1](https://github.com/danthorpe/YapDatabaseExtensions/pull/1)]: Adds API for reading metadata, additionally fixes bugs where writing types with metadata would fail when using database or connections.
+1. [[YAP-15](https://github.com/danthorpe/YapDatabaseExtensions/pull/15)]: Updates README documentation.
 
 # 1.2.0
 
