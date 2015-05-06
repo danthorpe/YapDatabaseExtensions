@@ -190,6 +190,10 @@ The following are supported:
 - [x] [SwiftTask](https://github.com/ReactKit/SwiftTask)
 - [ ] [ReactiveCocoa 3.0](https://github.com/ReactiveCocoa/ReactiveCocoa/releases/tag/v3.0-beta.1)
 
+## API Documentation
+
+API documentation is available on [CocoaDocs.org](http://cocoadocs.org/docsets/YapDatabaseExtensions).
+
 ## Author
 
 Daniel Thorpe, @danthorpe
