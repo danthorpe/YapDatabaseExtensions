@@ -2,6 +2,8 @@
 
 [![Build status](https://badge.buildkite.com/95784c169af7db5e36cefe146d5d3f3899c8339d46096a6349.svg)](https://buildkite.com/danthorpe/yapdatabaseextensions)
 
+Read my introductory blog post about [YapDatabase & YapDatabaseExtensions](http://danthorpe.me/posts/yap-database.html).
+
 ## Requirements
 
 [YapDatabase](https://github.com/yapstudios/YapDatabase) :)
