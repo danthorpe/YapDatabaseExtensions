@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name              = "YapDatabaseExtensions"
-  s.version           = "1.2.2"
+  s.version           = "1.3.0"
   s.summary           = "Helpers for using value types with YapDatabase."
   s.description       = <<-DESC
   
@@ -35,7 +35,7 @@ Pod::Spec.new do |s|
   s.subspec 'BrightFutures' do |ss|
     ss.source_files   = 'Pod/BrightFutures/*.swift'
     ss.dependency 'YapDatabaseExtensions/Common'
-    ss.dependency 'BrightFutures', '~> 1.0.0-beta'
+    ss.dependency 'BrightFutures', '~> 1.0'
   end
 
   s.subspec 'SwiftTask' do |ss|

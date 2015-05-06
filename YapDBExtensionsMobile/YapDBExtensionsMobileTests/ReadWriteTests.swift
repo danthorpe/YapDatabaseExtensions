@@ -60,6 +60,12 @@ class SynchronousReadWriteTests: BaseTestCase {
         XCTAssertTrue(read == nil, "In an empty database, this should return nil.")
     }
 
+    func test_ReadingNonexisting_Metadata_ByIndex() {
+        let db = createYapDatabase(__FILE__, suffix: __FUNCTION__)
+        let metadata: Product.Metadata? = db.readMetadataAtIndex(indexForPersistable(product))
+        XCTAssertTrue(metadata == nil, "In an empty database, this should return nil.")
+    }
+
     func test_ReadingAndWriting_Object() {
         let db = createYapDatabase(__FILE__, suffix: __FUNCTION__)
         validateWrite(db.write(person), person, usingDatabase: db)
