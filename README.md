@@ -19,7 +19,11 @@ pod 'YapDatabaseExtensions'
 
 ## Usage
 
-This framework defines a `Persistable` protocol which should be implemented on your types which get stored in YapDatabase.
+This framework extends a `YapDatabaseTransaction` and `YapDatabaseConnection` with type-safe `read`, `write` and `remove` APIs with both synchronous and asynchronous variants. However, to leverage such APIs, your own domain types must conform to some generic protocols.
+
+### Persistable
+
+The `Persistable` protocol defines how the object will be indexed in YapDatabase. It extends the generic `Identifiable` protocol.
 
 ```swift
 
@@ -39,7 +43,7 @@ Typically, it would be implemented like so:
 ```swift
 extension User: Persistable, Identifiable {
 
-	static var collection: String { 
+    static var collection: String { 
     	return "Users"
     }
     
@@ -49,9 +53,9 @@ extension User: Persistable, Identifiable {
 }
 ```
 
-assuming that `userId` is a unique identifier for the type. There is also `MetadataPersistable` protocols which can be used to expose metadata on the type. Note that `String` doesn't actually conform to `Printable` but it's implemented in an extension on a typealias called `Identifier`.
+Assuming that `userId` is a unique identifier for the type. Note that `String` doesn't actually conform to `Printable` but it's implemented in an extension on a typealias called `Identifier`.
 
-Provided in extensions on `YapDatabase`, `YapDatabaseConnection`, `YapDatabaseReadTransaction` and `YapDatabaseWriteTransaction` are methods to read, save, remove and replace persistable items.
+There is also `MetadataPersistable` protocols which can be used to expose metadata on the type.
 
 ### Using value types in YapDatabase
 
