@@ -43,6 +43,39 @@ extension YapDatabaseReadTransaction {
 extension YapDatabaseReadTransaction {
 
     /**
+    Reads any metadata sored at this index using the transaction.
+
+    :param: index The YapDB.Index value.
+    :returns: An optional AnyObject.
+    */
+    public func readMetadataAtIndex(index: YapDB.Index) -> AnyObject? {
+        return metadataForKey(index.key, inCollection: index.collection)
+    }
+
+    /**
+    Reads metadata which is an object type sored at this index using the transaction.
+
+    :param: index The YapDB.Index value.
+    :returns: An optional MetadataObject.
+    */
+    public func readMetadataAtIndex<MetadataObject where MetadataObject: NSCoding>(index: YapDB.Index) -> MetadataObject? {
+        return readMetadataAtIndex(index) as? MetadataObject
+    }
+
+    /**
+    Unarchives metadata which is a value type if stored at this index using the transaction.
+
+    :param: index The YapDB.Index value.
+    :returns: An optional MetadataValue.
+    */
+    public func readMetadataAtIndex<MetadataValue where MetadataValue: Saveable, MetadataValue.ArchiverType.ValueType == MetadataValue>(index: YapDB.Index) -> MetadataValue? {
+        return valueFromArchive(readMetadataAtIndex(index))
+    }
+}
+
+extension YapDatabaseReadTransaction {
+
+    /**
     Reads the objects sored at these indexes using the transaction.
     
     :param: indexes An array of YapDB.Index values.
@@ -192,7 +225,6 @@ extension YapDatabaseConnection {
         return read({ $0.readAtIndex(index) })
     }
 
-
     /**
     Synchronously reads the Object sored at this index using the connection.
 
@@ -236,6 +268,39 @@ extension YapDatabaseConnection {
     */
     public func asyncReadAtIndex<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(index: YapDB.Index, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: (Value?) -> Void) {
         asyncRead({ $0.readAtIndex(index) }, queue: queue, completion: completion)
+    }
+}
+
+extension YapDatabaseConnection {
+
+    /**
+    Synchronously reads the metadata sored at this index using the connection.
+
+    :param: index The YapDB.Index value.
+    :returns: An optional AnyObject.
+    */
+    public func readMetadataAtIndex(index: YapDB.Index) -> AnyObject? {
+        return read { $0.readMetadataAtIndex(index) }
+    }
+
+    /**
+    Synchronously reads the object metadata sored at this index using the connection.
+
+    :param: index The YapDB.Index value.
+    :returns: An optional MetadataObject.
+    */
+    public func readMetadataAtIndex<MetadataObject where MetadataObject: NSCoding>(index: YapDB.Index) -> MetadataObject? {
+        return read { $0.readMetadataAtIndex(index) as? MetadataObject }
+    }
+
+    /**
+    Synchronously metadata which is a value type if stored at this index using the transaction.
+
+    :param: index The YapDB.Index value.
+    :returns: An optional MetadataValue.
+    */
+    public func readMetadataAtIndex<MetadataValue where MetadataValue: Saveable, MetadataValue.ArchiverType.ValueType == MetadataValue>(index: YapDB.Index) -> MetadataValue? {
+        return read { $0.readMetadataAtIndex(index) as? MetadataValue }
     }
 }
 
@@ -518,6 +583,29 @@ extension YapDatabase {
     */
     public func asyncReadAtIndex<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(index: YapDB.Index, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: (Value?) -> Void) {
         newConnection().asyncReadAtIndex(index, queue: queue, completion: completion)
+    }
+}
+
+extension YapDatabase {
+
+    /**
+    Synchronously reads the object metadata sored at this index using the connection.
+
+    :param: index The YapDB.Index value.
+    :returns: An optional MetadataObject.
+    */
+    public func readMetadataAtIndex<MetadataObject where MetadataObject: NSCoding>(index: YapDB.Index) -> MetadataObject? {
+        return newConnection().readMetadataAtIndex(index) as? MetadataObject
+    }
+
+    /**
+    Synchronously metadata which is a value type if stored at this index using the transaction.
+
+    :param: index The YapDB.Index value.
+    :returns: An optional MetadataValue.
+    */
+    public func readMetadataAtIndex<MetadataValue where MetadataValue: Saveable, MetadataValue.ArchiverType.ValueType == MetadataValue>(index: YapDB.Index) -> MetadataValue? {
+        return valueFromArchive(newConnection().readMetadataAtIndex(index))
     }
 }
 

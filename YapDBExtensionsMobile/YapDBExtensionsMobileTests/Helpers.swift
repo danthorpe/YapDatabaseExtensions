@@ -41,23 +41,58 @@ func validateWrite<Value where Value: Saveable, Value: Persistable, Value: Equat
 }
 
 /// Value type with Object metadata
-func validateWrite<ValueWithObjectMetadata where ValueWithObjectMetadata: Saveable, ValueWithObjectMetadata: ObjectMetadataPersistable, ValueWithObjectMetadata: Equatable, ValueWithObjectMetadata.ArchiverType.ValueType == ValueWithObjectMetadata>(saved: ValueWithObjectMetadata, original: ValueWithObjectMetadata, usingDatabase db: YapDatabase) {
+func validateWrite<
+    ValueWithObjectMetadata
+    where
+    ValueWithObjectMetadata: Saveable,
+    ValueWithObjectMetadata: ObjectMetadataPersistable,
+    ValueWithObjectMetadata: Equatable,
+    ValueWithObjectMetadata.MetadataType: Equatable,
+    ValueWithObjectMetadata.ArchiverType.ValueType == ValueWithObjectMetadata>(saved: ValueWithObjectMetadata, original: ValueWithObjectMetadata, usingDatabase db: YapDatabase) {
     XCTAssertEqual(saved, original, "The value returned from a save value function should equal the argument.")
 
     if let read: ValueWithObjectMetadata = db.readAtIndex(indexForPersistable(original)) {
         XCTAssertEqual(read, original, "The value returned from a save value function should equal the argument.")
     }
-    else { XCTFail("Value was not saved correctly to the database.") }
+    else {
+        XCTFail("Value was not saved correctly to the database.")
+    }
+
+    if let meta: ValueWithObjectMetadata.MetadataType = db.readMetadataAtIndex(indexForPersistable(original)) {
+        XCTAssertEqual(meta, original.metadata, "The value returned from a save value function should equal the argument.")
+    }
+    else {
+        XCTFail("Value was not saved correctly to the database.")
+    }
 }
 
 /// Value type with Value metadata
-func validateWrite<ValueWithValueMetadata where ValueWithValueMetadata: Saveable, ValueWithValueMetadata: ValueMetadataPersistable, ValueWithValueMetadata: Equatable, ValueWithValueMetadata.ArchiverType.ValueType == ValueWithValueMetadata>(saved: ValueWithValueMetadata, original: ValueWithValueMetadata, usingDatabase db: YapDatabase) {
-    XCTAssertEqual(saved, original, "The value returned from a save value function should equal the argument.")
+func validateWrite<
+    ValueWithValueMetadata
+    where
+    ValueWithValueMetadata: Saveable,
+    ValueWithValueMetadata: ValueMetadataPersistable,
+    ValueWithValueMetadata: Equatable,
+    ValueWithValueMetadata.MetadataType: Equatable,
+    ValueWithValueMetadata.ArchiverType.ValueType == ValueWithValueMetadata,
+    ValueWithValueMetadata.MetadataType.ArchiverType.ValueType == ValueWithValueMetadata.MetadataType>(saved: ValueWithValueMetadata, original: ValueWithValueMetadata, usingDatabase db: YapDatabase) {
 
-    if let read: ValueWithValueMetadata = db.readAtIndex(indexForPersistable(original)) {
-        XCTAssertEqual(read, original, "The value returned from a save value function should equal the argument.")
-    }
-    else { XCTFail("Value was not saved correctly to the database.") }
+
+        XCTAssertEqual(saved, original, "The value returned from a save value function should equal the argument.")
+
+        if let read: ValueWithValueMetadata = db.readAtIndex(indexForPersistable(original)) {
+            XCTAssertEqual(read, original, "The value returned from a save value function should equal the argument.")
+        }
+        else {
+            XCTFail("Value was not saved correctly to the database.")
+        }
+
+        if let meta: ValueWithValueMetadata.MetadataType = db.readMetadataAtIndex(indexForPersistable(original)) {
+            XCTAssertEqual(meta, original.metadata, "The value returned from a save value function should equal the argument.")
+        }
+        else {
+            XCTFail("Value was not saved correctly to the database.")
+        }
 }
 
 /// Object type with no metadata
