@@ -22,7 +22,7 @@ public struct Product: Identifiable, Equatable {
         let name: String
     }
 
-    public struct Metadata {
+    public struct Metadata: Equatable {
         let categoryIdentifier: Int
 
         public init(categoryIdentifier: Int) {
@@ -84,8 +84,11 @@ public func == (a: Barcode, b: Barcode) -> Bool {
 }
 
 public func == (a: Product, b: Product) -> Bool {
-    // Note - this is not a very good Equatable implementation.
     return a.identifier == b.identifier
+}
+
+public func == (a: Product.Metadata, b: Product.Metadata) -> Bool {
+    return a.categoryIdentifier == b.categoryIdentifier
 }
 
 public func == (a: Person, b: Person) -> Bool {
