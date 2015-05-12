@@ -21,7 +21,7 @@ public struct YapDB {
     
     :returns: a String
     */
-    public func pathToDatabase(directory: NSSearchPathDirectory, name: String, suffix: String? = .None) -> String {
+    public static func pathToDatabase(directory: NSSearchPathDirectory, name: String, suffix: String? = .None) -> String {
         let paths = NSSearchPathForDirectoriesInDomains(directory, .UserDomainMask, true)
         let directory: String = (paths.first as? String) ?? NSTemporaryDirectory()
         let filename: String = {
@@ -73,8 +73,7 @@ public struct YapDB {
     :returns: the YapDatabase instance.
     */
     public static func databaseNamed(name: String, operations: DatabaseOperationsBlock? = .None) -> YapDatabase {
-        let path = pathToDatabase(.DocumentDirectory, name, suffix: .None)
-        let db =  YapDatabase(path: path)
+        let db =  YapDatabase(path: pathToDatabase(.DocumentDirectory, name: name, suffix: .None))
         operations?(db)
         return db
     }
@@ -107,7 +106,7 @@ public struct YapDB {
     :returns: the YapDatabase instance.
     */
     public static func testDatabaseForFile(file: String, test: String, operations: DatabaseOperationsBlock? = .None) -> YapDatabase {
-        let path = pathToDatabase(.CachesDirectory, file.lastPathComponent, suffix: test.stringByTrimmingCharactersInSet(NSCharacterSet(charactersInString: "()")))
+        let path = pathToDatabase(.CachesDirectory, name: file.lastPathComponent, suffix: test.stringByTrimmingCharactersInSet(NSCharacterSet(charactersInString: "()")))
         assert(!path.isEmpty, "Path should not be empty.")
         NSFileManager.defaultManager().removeItemAtPath(path, error: nil)
         let db =  YapDatabase(path: path)
