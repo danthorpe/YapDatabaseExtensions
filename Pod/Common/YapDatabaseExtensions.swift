@@ -40,10 +40,10 @@ public struct YapDB {
     /**
     Conveniently create or read a YapDatabase with the given name in the application's documents directory.
     
-    Optionally, pass a block which receives the database instanced, which is called
+    Optionally, pass a block which receives the database instance, which is called
     before being returned. This block allows for things like registering extensions.
     
-    Typicaly usage in a production environment would be to use this inside a singleton pattern, eg
+    Typical usage in a production environment would be to use this inside a singleton pattern, eg
     
         extension YapDB {
             public static var userDefaults: YapDatabase {
@@ -63,7 +63,7 @@ public struct YapDB {
     
         let userDefaultDatabase = YapDB.userDefaults
     
-    Note that if you can only use this convenience if you only require the default serializers 
+    Note that you can only use this convenience if you use the default serializers
     and sanitizers etc.
 
     :param: name a String, which will be the name of the SQLite database in the documents folder.
