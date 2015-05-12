@@ -10,26 +10,6 @@ import XCTest
 import YapDatabase
 import YapDatabaseExtensions
 
-func createYapDatabase(file: String, suffix: String? = .None) -> YapDatabase {
-
-    func pathToDatabase(name: String, suffix: String? = .None) -> String {
-        let paths = NSSearchPathForDirectoriesInDomains(.CachesDirectory, NSSearchPathDomainMask.UserDomainMask, true)
-        let directory: String = (paths.first as? String) ?? NSTemporaryDirectory()
-        let filename: String = {
-            if let suffix = suffix {
-                return "\(name)-\(suffix).sqlite"
-            }
-            return "\(name).sqlite"
-            }()
-        return directory.stringByAppendingPathComponent(filename)
-    }
-
-    let path = pathToDatabase(file.lastPathComponent, suffix: suffix?.stringByTrimmingCharactersInSet(NSCharacterSet(charactersInString: "()")))
-    NSFileManager.defaultManager().removeItemAtPath(path, error: nil)
-
-    return YapDatabase(path: path)
-}
-
 /// Value type with no metadata
 func validateWrite<Value where Value: Saveable, Value: Persistable, Value: Equatable, Value.ArchiverType.ValueType == Value>(saved: Value, original: Value, usingDatabase db: YapDatabase) {
     XCTAssertEqual(saved, original, "The value returned from a save value function should equal the argument.")
