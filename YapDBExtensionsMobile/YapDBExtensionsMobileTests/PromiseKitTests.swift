@@ -16,7 +16,7 @@ import YapDBExtensionsMobile
 extension AsynchronousWriteTests {
 
     func test_ReadingAndWriting_Object_PromiseKit() {
-        let db = createYapDatabase(__FILE__, suffix: __FUNCTION__)
+        let db = YapDB.testDatabaseForFile(__FILE__, test: __FUNCTION__)
         let expectation = expectationWithDescription("Finished async writing of object.")
 
         (db.asyncWrite(person) as PromiseKit.Promise<Person>).then { saved -> Void in
@@ -28,7 +28,7 @@ extension AsynchronousWriteTests {
     }
 
     func test_ReadingAndWriting_Value_PromiseKit() {
-        let db = createYapDatabase(__FILE__, suffix: __FUNCTION__)
+        let db = YapDB.testDatabaseForFile(__FILE__, test: __FUNCTION__)
         let expectation = expectationWithDescription("Finished async writing of value.")
 
         (db.asyncWrite(barcode) as PromiseKit.Promise<Barcode>).then { saved -> Void in
@@ -40,7 +40,7 @@ extension AsynchronousWriteTests {
     }
 
     func test_ReadingAndWriting_ValueWithValueMetadata_PromiseKit() {
-        let db = createYapDatabase(__FILE__, suffix: __FUNCTION__)
+        let db = YapDB.testDatabaseForFile(__FILE__, test: __FUNCTION__)
         let expectation = expectationWithDescription("Finished async writing of value with value metadata.")
 
         (db.asyncWrite(product) as PromiseKit.Promise<Product>).then { saved -> Void in
@@ -55,7 +55,7 @@ extension AsynchronousWriteTests {
 extension AsynchronousReadTests {
 
     func test_Reading_Value_PromiseKit() {
-        let db = createYapDatabase(__FILE__, suffix: __FUNCTION__)
+        let db = YapDB.testDatabaseForFile(__FILE__, test: __FUNCTION__)
         let expectation = expectationWithDescription("Finished async reading of value by key.")
 
         db.write(barcode)
@@ -69,7 +69,7 @@ extension AsynchronousReadTests {
     }
 
     func test_Reading_Object_PromiseKit() {
-        let db = createYapDatabase(__FILE__, suffix: __FUNCTION__)
+        let db = YapDB.testDatabaseForFile(__FILE__, test: __FUNCTION__)
         let expectation = expectationWithDescription("Finished async reading of value by key.")
 
         db.write(person)
@@ -83,7 +83,7 @@ extension AsynchronousReadTests {
     }
 
     func test_Reading_Values_PromiseKit() {
-        let db = createYapDatabase(__FILE__, suffix: __FUNCTION__)
+        let db = YapDB.testDatabaseForFile(__FILE__, test: __FUNCTION__)
         let expectation = expectationWithDescription("Finished async reading of value by key.")
 
         let values = barcodes()
@@ -98,7 +98,7 @@ extension AsynchronousReadTests {
     }
 
     func test_Reading_Objects_PromiseKit() {
-        let db = createYapDatabase(__FILE__, suffix: __FUNCTION__)
+        let db = YapDB.testDatabaseForFile(__FILE__, test: __FUNCTION__)
         let expectation = expectationWithDescription("Finished async reading of object by key.")
 
         let objects = people()
@@ -116,7 +116,7 @@ extension AsynchronousReadTests {
 extension AsynchronousRemoveTests {
 
     func test_RemovePersistable_PromiseKit() {
-        let db = createYapDatabase(__FILE__, suffix: __FUNCTION__)
+        let db = YapDB.testDatabaseForFile(__FILE__, test: __FUNCTION__)
         let expectation = expectationWithDescription("Finished async writing of object.")
 
         db.write(barcode)
@@ -131,7 +131,7 @@ extension AsynchronousRemoveTests {
     }
 
     func test_RemovePersistables_PromiseKit() {
-        let db = createYapDatabase(__FILE__, suffix: __FUNCTION__)
+        let db = YapDB.testDatabaseForFile(__FILE__, test: __FUNCTION__)
         let expectation = expectationWithDescription("Finished async writing of object.")
 
         let _people = people()

@@ -6,11 +6,114 @@ import YapDatabase
 
 /**
 
-This is an empty struct used as a namespace for new types to
+This is a struct used as a namespace for new types to
 avoid any possible future clashes with `YapDatabase` types.
 
 */
-public struct YapDB { }
+public struct YapDB {
+
+    /**
+    Helper function for evaluating the path to a database for easy use in the YapDatabase constructor.
+    
+    :param: directory a NSSearchPathDirectory value, use .DocumentDirectory for production.
+    :param: name a String, the name of the sqlite file.
+    :param: suffix a String, will be appended to the name of the file.
+    
+    :returns: a String
+    */
+    public static func pathToDatabase(directory: NSSearchPathDirectory, name: String, suffix: String? = .None) -> String {
+        let paths = NSSearchPathForDirectoriesInDomains(directory, .UserDomainMask, true)
+        let directory: String = (paths.first as? String) ?? NSTemporaryDirectory()
+        let filename: String = {
+            if let suffix = suffix {
+                return "\(name)-\(suffix).sqlite"
+            }
+            return "\(name).sqlite"
+            }()
+
+        return directory.stringByAppendingPathComponent(filename)
+    }
+
+    /// Type of closure which can perform operations on newly created/opened database instances.
+    public typealias DatabaseOperationsBlock = (YapDatabase) -> Void
+
+    /**
+    Conveniently create or read a YapDatabase with the given name in the application's documents directory.
+    
+    Optionally, pass a block which receives the database instance, which is called
+    before being returned. This block allows for things like registering extensions.
+    
+    Typical usage in a production environment would be to use this inside a singleton pattern, eg
+    
+        extension YapDB {
+            public static var userDefaults: YapDatabase {
+                get {
+                    struct DatabaseSingleton {
+                        static func database() -> YapDatabase {
+                            return YapDB.databaseNamed("User Defaults")
+                        }
+                        static let instance = DatabaseSingleton.database()
+                    }
+                    return DatabaseSingleton.instance
+                }
+            }
+        }
+
+    which would allow the following behavior in your app:
+    
+        let userDefaultDatabase = YapDB.userDefaults
+    
+    Note that you can only use this convenience if you use the default serializers
+    and sanitizers etc.
+
+    :param: name a String, which will be the name of the SQLite database in the documents folder.
+    :param: operations a DatabaseOperationsBlock closure, which receives the database,
+    but is executed before the database is returned.
+    
+    :returns: the YapDatabase instance.
+    */
+    public static func databaseNamed(name: String, operations: DatabaseOperationsBlock? = .None) -> YapDatabase {
+        let db =  YapDatabase(path: pathToDatabase(.DocumentDirectory, name: name, suffix: .None))
+        operations?(db)
+        return db
+    }
+
+
+    /**
+    Conveniently create an empty database for testing purposes in the app's Caches directory.
+    
+    This function should only be used in unit tests, as it will delete any previously existing 
+    SQLite file with the same path.
+    
+    It should only be used like this inside your test case.
+    
+        func test_MyUnitTest() {
+            let db = YapDB.testDatabaseForFile(__FILE__, test: __FUNCTION__)
+            // etc etc
+        }
+    
+        func test_GivenInitialData_MyUnitTest(initialDataImport: YapDB.DatabaseOperationsBlock) {
+            let db = YapDB.testDatabaseForFile(__FILE__, test: __FUNCTION__, operations: initialDataImport)
+            // etc etc
+        }
+    
+    :param: file a String, which should be the swift special macro __FILE__
+    :param: test a String, which should be the swift special macro __FUNCTION__
+    :param: operations a DatabaseOperationsBlock closure, which receives the database,
+    but is executed before the database is returned. This is very useful if you want to 
+    populate the database with some objects before running the test.
+    
+    :returns: the YapDatabase instance.
+    */
+    public static func testDatabaseForFile(file: String, test: String, operations: DatabaseOperationsBlock? = .None) -> YapDatabase {
+        let path = pathToDatabase(.CachesDirectory, name: file.lastPathComponent, suffix: test.stringByTrimmingCharactersInSet(NSCharacterSet(charactersInString: "()")))
+        assert(!path.isEmpty, "Path should not be empty.")
+        NSFileManager.defaultManager().removeItemAtPath(path, error: nil)
+        let db =  YapDatabase(path: path)
+        operations?(db)
+        return db
+    }
+}
 
 extension YapDB {
 
