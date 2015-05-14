@@ -1,5 +1,7 @@
 # YapDatabaseExtensions
 
+[![Join the chat at https://gitter.im/danthorpe/YapDatabaseExtensions](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/danthorpe/YapDatabaseExtensions?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 [![Build status](https://badge.buildkite.com/95784c169af7db5e36cefe146d5d3f3899c8339d46096a6349.svg)](https://buildkite.com/danthorpe/yapdatabaseextensions)
 [![CocoaPods version](https://img.shields.io/cocoapods/v/YapDatabaseExtensions.svg)](https://cocoapods.org/pods/YapDatabaseExtensions) 
 [![MIT License](https://img.shields.io/cocoapods/l/YapDatabaseExtensions.svg)](LICENSE) 
