@@ -1,32 +1,32 @@
 PODS:
-  - BrightFutures (1.0.0)
+  - BrightFutures (1.0.1)
   - CocoaLumberjack (1.9.2):
     - CocoaLumberjack/Extensions (= 1.9.2)
   - CocoaLumberjack/Core (1.9.2)
   - CocoaLumberjack/Extensions (1.9.2):
     - CocoaLumberjack/Core
   - PromiseKit/Swift/Promise (1.5.3)
-  - SwiftTask (3.0.0)
-  - YapDatabase (2.6.2):
-    - YapDatabase/standard (= 2.6.2)
-  - YapDatabase/standard (2.6.2):
+  - SwiftTask (3.1.0)
+  - YapDatabase (2.6.4):
+    - YapDatabase/standard (= 2.6.4)
+  - YapDatabase/standard (2.6.4):
     - CocoaLumberjack (~> 1)
-  - YapDatabaseExtensions/All (1.3.0):
+  - YapDatabaseExtensions/All (1.4.0):
     - YapDatabase (~> 2.6)
     - YapDatabaseExtensions/BrightFutures
     - YapDatabaseExtensions/PromiseKit
     - YapDatabaseExtensions/SwiftTask
-  - YapDatabaseExtensions/BrightFutures (1.3.0):
+  - YapDatabaseExtensions/BrightFutures (1.4.0):
     - BrightFutures (~> 1.0)
     - YapDatabase (~> 2.6)
     - YapDatabaseExtensions/Common
-  - YapDatabaseExtensions/Common (1.3.0):
+  - YapDatabaseExtensions/Common (1.4.0):
     - YapDatabase (~> 2.6)
-  - YapDatabaseExtensions/PromiseKit (1.3.0):
+  - YapDatabaseExtensions/PromiseKit (1.4.0):
     - PromiseKit/Swift/Promise (~> 1.5)
     - YapDatabase (~> 2.6)
     - YapDatabaseExtensions/Common
-  - YapDatabaseExtensions/SwiftTask (1.3.0):
+  - YapDatabaseExtensions/SwiftTask (1.4.0):
     - SwiftTask (~> 3.0)
     - YapDatabase (~> 2.6)
     - YapDatabaseExtensions/Common
@@ -39,11 +39,11 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  BrightFutures: 8ecfe2548f7d717107f74351119e89979a888b40
+  BrightFutures: 76c1b0f2ff9694959c8359dad80f42c6e60c4a59
   CocoaLumberjack: 628fca2e88ef06f7cf6817309aa405f325d9a6fa
   PromiseKit: 7ecae7c190ab92ae00aae6ba7f88942107532b8f
-  SwiftTask: 2f2c0a7db83def1d1e3bad518169be3f61c603f4
-  YapDatabase: 2898ddb5dfbef699539a2a673bf900831f4eca8b
-  YapDatabaseExtensions: a0f232f023f1121666c1f11342195a627152d6e3
+  SwiftTask: e742b3d1fbacc27134600ab383d6a5fe53bb7ea5
+  YapDatabase: f9051e178a38f48d0f3a78562423a5bc969f1ca3
+  YapDatabaseExtensions: 8b91008a89d78236aef83c9dbd1178f849881988
 
-COCOAPODS: 0.37.0
+COCOAPODS: 0.37.1
