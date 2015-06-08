@@ -35,5 +35,12 @@ class YapDBTests: XCTestCase {
             XCTAssertNotNil(transaction.ext(fetch.name) as? YapDatabaseViewTransaction, "The view should be accessible inside a read transaction.")
         }
     }
+
+    func test_YapDBIndex_EncodingAndDecoding() {
+        let index = YapDB.Index(collection: "Foo", key: "Bar")
+        let _index: YapDB.Index? = valueFromArchive(archiveFromValue(index))
+        XCTAssertTrue(_index != nil, "Unarchived archive should not be nil")
+        XCTAssertEqual(index, _index!, "Unarchived archive should equal the original.")
+    }
 }
 
