@@ -409,3 +409,37 @@ public func == (a: YapDB.Index, b: YapDB.Index) -> Bool {
     return (a.collection == b.collection) && (a.key == b.key)
 }
 
+
+
+// MARK: Saveable
+
+extension YapDB.Index: Saveable {
+    public typealias Archiver = YapDBIndexArchiver
+
+    public var archive: Archiver {
+        return Archiver(self)
+    }
+}
+
+// MARK: Archivers
+
+public final class YapDBIndexArchiver: NSObject, NSCoding, Archiver {
+    public let value: YapDB.Index
+
+    public init(_ v: YapDB.Index) {
+        value = v
+    }
+
+
+    public required init(coder aDecoder: NSCoder) {
+        let collection = aDecoder.decodeObjectForKey("collection") as! String
+        let key = aDecoder.decodeObjectForKey("key") as! String
+        value = YapDB.Index(collection: collection, key: key)
+    }
+
+    public func encodeWithCoder(aCoder: NSCoder) {
+        aCoder.encodeObject(value.collection, forKey: "collection")
+        aCoder.encodeObject(value.key, forKey: "key")
+    }
+}
+
