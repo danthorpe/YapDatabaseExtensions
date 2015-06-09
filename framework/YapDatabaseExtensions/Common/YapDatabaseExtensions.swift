@@ -23,7 +23,7 @@ public struct YapDB {
     */
     public static func pathToDatabase(directory: NSSearchPathDirectory, name: String, suffix: String? = .None) -> String {
         let paths = NSSearchPathForDirectoriesInDomains(directory, .UserDomainMask, true)
-        let directory: String = (paths.first as? String) ?? NSTemporaryDirectory()
+        let directory: String = paths.first ?? NSTemporaryDirectory()
         let filename: String = {
             if let suffix = suffix {
                 return "\(name)-\(suffix).sqlite"
@@ -108,7 +108,11 @@ public struct YapDB {
     public static func testDatabaseForFile(file: String, test: String, operations: DatabaseOperationsBlock? = .None) -> YapDatabase {
         let path = pathToDatabase(.CachesDirectory, name: file.lastPathComponent, suffix: test.stringByTrimmingCharactersInSet(NSCharacterSet(charactersInString: "()")))
         assert(!path.isEmpty, "Path should not be empty.")
-        NSFileManager.defaultManager().removeItemAtPath(path, error: nil)
+        do {
+            try NSFileManager.defaultManager().removeItemAtPath(path)
+        }
+        catch { }
+
         let db =  YapDatabase(path: path)
         operations?(db)
         return db
@@ -143,7 +147,7 @@ for the type. To use `String` type identifiers, use the aliased
 Identifier type.
 */
 public protocol Identifiable {
-    typealias IdentifierType: Printable
+    typealias IdentifierType: CustomStringConvertible
     var identifier: IdentifierType { get }
 }
 
@@ -159,7 +163,7 @@ Identifier for your String identifiers.
 */
 public typealias Identifier = String
 
-extension Identifier: Printable {
+extension Identifier: CustomStringConvertible {
     public var description: String { return self }
 }
 
@@ -251,72 +255,49 @@ public protocol Saveable {
     var archive: ArchiverType { get }
 }
 
-/**
-Extracts a value type from an archive, if possible. 
 
-It accepts an
-optional AnyObject argument, this makes suitable when implementing
-initWithCoder(_: NSCoder)
+extension Archiver {
 
-   let barcode: Barcode? = valueFromArchive(aDecoder.decodeObjectForKey("barcode"))
-
-:param: archive An optional AnyObject
-:returns: an optional Value
-*/
-public func valueFromArchive<Value where Value: Saveable, Value.ArchiverType.ValueType == Value>(archive: AnyObject?) -> Value? {
-    return archive.map { ($0 as! Value.ArchiverType).value }
+    public static func unarchive(object: AnyObject?) -> ValueType? {
+        return (object as? Self)?.value
+    }
 }
 
-/**
-Extracts an array of Value types from a sequence of archives.
+extension Saveable where ArchiverType.ValueType == Self {
 
-:param: archives An optional SequenceType of AnyObject
-:returns: an optional array of Value instances
-*/
-public func valuesFromArchives<Archives, Value where Archives: SequenceType, Archives.Generator.Element == AnyObject, Value: Saveable, Value.ArchiverType.ValueType == Value>(archives: Archives?) -> [Value]? {
-    return archives.map { map($0, valueFromArchive) }
-}
+    public static func unarchive(object: AnyObject?) -> Self? {
+        return ArchiverType.unarchive(object)
+    }
 
-/**
-Creates an archive from an optional Value.
-
-Again, primarily useful when implmementing encodeWithCoder(_: NSCoder)
-
-    aCoder.encodeObject(archiveFromValue(value.address), forKey: "address")
-
-:param: value An optional Value
-:returns: An optional ArchiverType instance.
-*/
-public func archiveFromValue<Value where Value: Saveable, Value.ArchiverType.ValueType == Value>(value: Value?) -> Value.ArchiverType? {
-    return value.map { $0.archive }
-}
-
-/**
-Creates an array of archives from an optional sequence of Value instances.
-
-:param: values An optional SequenceType of Value instances.
-:returns: An optional Array of ArchiverType instance.
-*/
-public func archivesFromValues<Values, Value where Values: SequenceType, Values.Generator.Element == Value, Value: Saveable, Value.ArchiverType.ValueType == Value>(values: Values?) -> [Value.ArchiverType]? {
-    return values.map { map($0, { archiveFromValue($0) }) }
-}
-
-internal func map<S: SequenceType, T>(source: S, transform: (S.Generator.Element) -> T?) -> [T] {
-    return reduce(source, [T](), { (var accumulator, element) -> [T] in
-        if let transformed = transform(element) {
-            accumulator.append(transformed)
+    public init?(_ object: AnyObject?) {
+        if let tmp = ArchiverType.unarchive(object) {
+            self = tmp
         }
-        return accumulator
-    })
+        else {
+            return nil
+        }
+    }
 }
 
-internal func unique<S: SequenceType where S.Generator.Element: Hashable>(items: S) -> [S.Generator.Element] {
-    let initial: [S.Generator.Element] = []
-    return reduce(items, initial) { (var accumulator, item) -> [S.Generator.Element] in
-        if !contains(accumulator, item) {
-            accumulator.append(item)
-        }
-        return accumulator
+
+extension SequenceType where Generator.Element: Archiver {
+
+    public var values: [Generator.Element.ValueType] {
+        return map { $0.value }
+    }
+}
+
+extension SequenceType where Generator.Element: Saveable {
+
+    public var archives: [Generator.Element.ArchiverType] {
+        return map { $0.archive }
+    }
+}
+
+extension SequenceType where Generator.Element: Hashable {
+
+    public func unique() -> [Generator.Element] {
+        return Array(Set(self))
     }
 }
 
@@ -394,7 +375,7 @@ extension YapDatabaseConnection {
 
 // MARK: Hashable etc
 
-extension YapDB.Index: Printable, Hashable {
+extension YapDB.Index: CustomStringConvertible, Hashable {
 
     public var description: String {
         return "\(collection):\(key)"

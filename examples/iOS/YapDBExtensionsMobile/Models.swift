@@ -43,7 +43,7 @@ public struct Product: Identifiable, Equatable {
     }
 }
 
-public class Person: NSObject, NSCoding, Equatable {
+public class Person: NSObject, NSCoding {
 
     public let identifier: Identifier
     public let name: String
@@ -95,7 +95,8 @@ public func == (a: Person, b: Person) -> Bool {
     return (a.identifier == b.identifier) && (a.name == b.name)
 }
 
-extension Person: CustomStringConvertible {
+extension Person {
+
     public override var description: String {
         return "id: \(identifier), name: \(name)"
     }
@@ -273,18 +274,18 @@ public class ProductArchiver: NSObject, NSCoding, Archiver {
     }
 
     public required init?(coder aDecoder: NSCoder) {
-        let metadata: Product.Metadata? = valueFromArchive(aDecoder.decodeObjectForKey("metadata"))
+        let metadata = Product.Metadata(aDecoder.decodeObjectForKey("metadata"))
         let identifier = aDecoder.decodeObjectForKey("identifier") as! String
         let name = aDecoder.decodeObjectForKey("name") as! String
-        let barcode: Barcode? = valueFromArchive(aDecoder.decodeObjectForKey("barcode"))
+        let barcode = Barcode(aDecoder.decodeObjectForKey("barcode"))
         value = Product(metadata: metadata!, identifier: identifier, name: name, barcode: barcode!)
     }
 
     public func encodeWithCoder(aCoder: NSCoder) {
-        aCoder.encodeObject(archiveFromValue(value.metadata), forKey: "metadata")
+        aCoder.encodeObject(value.metadata.archive, forKey: "metadata")
         aCoder.encodeObject(value.identifier, forKey: "identifier")
         aCoder.encodeObject(value.name, forKey: "name")
-        aCoder.encodeObject(archiveFromValue(value.barcode), forKey: "barcode")
+        aCoder.encodeObject(value.barcode.archive, forKey: "barcode")
     }
 }
 
@@ -294,7 +295,7 @@ public func products() -> YapDB.Fetch {
 
     let grouping: YapDB.View.Grouping = .ByMetadata({ (collection, key, metadata) -> String! in
         if collection == Product.collection {
-            if let metadata: Product.Metadata = valueFromArchive(metadata) {
+            if let metadata = Product.Metadata(metadata) {
                 return "category: \(metadata.categoryIdentifier)"
             }
         }
@@ -302,8 +303,8 @@ public func products() -> YapDB.Fetch {
     })
 
     let sorting: YapDB.View.Sorting = .ByObject({ (group, collection1, key1, object1, collection2, key2, object2) -> NSComparisonResult in
-        if let product1: Product = valueFromArchive(object1) {
-            if let product2: Product = valueFromArchive(object2) {
+        if let product1 = Product.unarchive(object1) {
+            if let product2 = Product.unarchive(object2) {
                 return product1.name.caseInsensitiveCompare(product2.name)
             }
         }

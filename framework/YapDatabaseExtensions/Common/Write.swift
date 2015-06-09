@@ -97,7 +97,7 @@ extension YapDatabaseReadWriteTransaction {
     :returns: An array of Object instances.
     */
     public func write<Objects, Object where Objects: SequenceType, Objects.Generator.Element == Object, Object: NSCoding, Object: Persistable>(objects: Objects) -> [Object] {
-        return map(objects, write)
+        return objects.map { self.write($0) }
     }
 
     /**
@@ -107,7 +107,7 @@ extension YapDatabaseReadWriteTransaction {
     :returns: An array of ObjectWithObjectMetadata instances.
     */
     public func write<Objects, ObjectWithObjectMetadata where Objects: SequenceType, Objects.Generator.Element == ObjectWithObjectMetadata, ObjectWithObjectMetadata: NSCoding, ObjectWithObjectMetadata: ObjectMetadataPersistable>(objects: Objects) -> [ObjectWithObjectMetadata] {
-        return map(objects, write)
+        return objects.map { self.write($0) }
     }
 
     /**
@@ -117,7 +117,7 @@ extension YapDatabaseReadWriteTransaction {
     :returns: An array of ObjectWithValueMetadata instances.
     */
     public func write<Objects, ObjectWithValueMetadata where Objects: SequenceType, Objects.Generator.Element == ObjectWithValueMetadata, ObjectWithValueMetadata: NSCoding, ObjectWithValueMetadata: ValueMetadataPersistable>(objects: Objects) -> [ObjectWithValueMetadata] {
-        return map(objects, write)
+        return objects.map { self.write($0) }
     }
 
     /**
@@ -127,7 +127,7 @@ extension YapDatabaseReadWriteTransaction {
     :returns: An array of Value instances.
     */
     public func write<Values, Value where Values: SequenceType, Values.Generator.Element == Value, Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(values: Values) -> [Value] {
-        return map(values, write)
+        return values.map { self.write($0) }
     }
 
     /**
@@ -137,7 +137,7 @@ extension YapDatabaseReadWriteTransaction {
     :returns: An array of ValueWithValueMetadata instances.
     */
     public func write<Values, ValueWithValueMetadata where Values: SequenceType, Values.Generator.Element == ValueWithValueMetadata, ValueWithValueMetadata: Saveable, ValueWithValueMetadata: ValueMetadataPersistable, ValueWithValueMetadata.ArchiverType.ValueType == ValueWithValueMetadata>(values: Values) -> [ValueWithValueMetadata] {
-        return map(values, write)
+        return values.map { self.write($0) }
     }
 
     /**
@@ -147,7 +147,7 @@ extension YapDatabaseReadWriteTransaction {
     :returns: An array of ValueWithObjectMetadata instances.
     */
     public func write<Values, ValueWithObjectMetadata where Values: SequenceType, Values.Generator.Element == ValueWithObjectMetadata, ValueWithObjectMetadata: Saveable, ValueWithObjectMetadata: ObjectMetadataPersistable, ValueWithObjectMetadata.ArchiverType.ValueType == ValueWithObjectMetadata>(values: Values) -> [ValueWithObjectMetadata] {
-        return map(values, write)
+        return values.map { self.write($0) }
     }
 }
 

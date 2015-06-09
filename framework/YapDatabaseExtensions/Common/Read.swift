@@ -36,7 +36,7 @@ extension YapDatabaseReadTransaction {
     :returns: An optional Value.
     */
     public func readAtIndex<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(index: YapDB.Index) -> Value? {
-        return valueFromArchive(readAtIndex(index))
+        return Value.ArchiverType.unarchive(readAtIndex(index))
     }
 }
 
@@ -69,7 +69,7 @@ extension YapDatabaseReadTransaction {
     :returns: An optional MetadataValue.
     */
     public func readMetadataAtIndex<MetadataValue where MetadataValue: Saveable, MetadataValue.ArchiverType.ValueType == MetadataValue>(index: YapDB.Index) -> MetadataValue? {
-        return valueFromArchive(readMetadataAtIndex(index))
+        return MetadataValue.ArchiverType.unarchive(readMetadataAtIndex(index))
     }
 }
 
@@ -82,7 +82,7 @@ extension YapDatabaseReadTransaction {
     :returns: An array of Object instances.
     */
     public func readAtIndexes<Object where Object: Persistable>(indexes: [YapDB.Index]) -> [Object] {
-        return map(unique(indexes), readAtIndex)
+        return indexes.unique().flatMap { self.readAtIndex($0) }
     }
 
     /**
@@ -92,7 +92,7 @@ extension YapDatabaseReadTransaction {
     :returns: An array of Value instances.
     */
     public func readAtIndexes<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(indexes: [YapDB.Index]) -> [Value] {
-        return map(unique(indexes), readAtIndex)
+        return indexes.unique().flatMap { self.readAtIndex($0) }
     }
 }
 
@@ -115,7 +115,7 @@ extension YapDatabaseReadTransaction {
     :returns: An optional Value
     */
     public func read<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(key: String) -> Value? {
-        return valueFromArchive(objectForKey(key, inCollection: Value.collection))
+        return Value.ArchiverType.unarchive(objectForKey(key, inCollection: Value.collection))
     }
 }
 
@@ -129,7 +129,7 @@ extension YapDatabaseReadTransaction {
     :returns: An array of Object types.
     */
     public func read<Object where Object: Persistable>(keys: [String]) -> [Object] {
-        return map(unique(keys), read)
+        return keys.unique().flatMap { self.read($0) }
     }
 
     /**
@@ -140,7 +140,7 @@ extension YapDatabaseReadTransaction {
     :returns: An array of Value types.
     */
     public func read<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(keys: [String]) -> [Value] {
-        return map(unique(keys), read)
+        return keys.unique().flatMap { self.read($0) }
     }
 }
 
@@ -155,7 +155,7 @@ extension YapDatabaseReadTransaction {
     :returns: An array of Object types.
     */
     public func readAll<Object where Object: Persistable>() -> [Object] {
-        return map(allKeysInCollection(Object.collection) as! [String], read)
+        return (allKeysInCollection(Object.collection) as! [String]).flatMap { self.read($0) }
     }
 
     /**
@@ -167,7 +167,7 @@ extension YapDatabaseReadTransaction {
     :returns: An array of Value types.
     */
     public func readAll<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>() -> [Value] {
-        return map(allKeysInCollection(Value.collection) as! [String], read)
+        return (allKeysInCollection(Value.collection) as! [String]).flatMap { self.read($0) }
     }
 }
 
@@ -185,7 +185,7 @@ extension YapDatabaseReadTransaction {
     public func filterExisting<Object where Object: Persistable>(keys: [String]) -> ([Object], [String]) {
         let existing: [Object] = read(keys)
         let existingKeys = existing.map { indexForPersistable($0).key }
-        let missingKeys = filter(keys) { !contains(existingKeys, $0) }
+        let missingKeys = keys.filter { !existingKeys.contains($0) }
         return (existing, missingKeys)
     }
 
@@ -201,7 +201,7 @@ extension YapDatabaseReadTransaction {
     public func filterExisting<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(keys: [String]) -> ([Value], [String]) {
         let existing: [Value] = read(keys)
         let existingKeys = existing.map { indexForPersistable($0).key }
-        let missingKeys = filter(keys) { !contains(existingKeys, $0) }
+        let missingKeys = keys.filter { !existingKeys.contains($0) }
         return (existing, missingKeys)
     }
 }
@@ -605,7 +605,7 @@ extension YapDatabase {
     :returns: An optional MetadataValue.
     */
     public func readMetadataAtIndex<MetadataValue where MetadataValue: Saveable, MetadataValue.ArchiverType.ValueType == MetadataValue>(index: YapDB.Index) -> MetadataValue? {
-        return valueFromArchive(newConnection().readMetadataAtIndex(index))
+        return MetadataValue.ArchiverType.unarchive(newConnection().readMetadataAtIndex(index))
     }
 }
 
@@ -791,7 +791,7 @@ extension YapDatabase {
     :returns: An array of Object types.
     */
     public func asyncReadAll<Object where Object: Persistable>(queue: dispatch_queue_t = dispatch_get_main_queue(), completion: ([Object]) -> Void) {
-        newConnection().asyncReadAll(queue: queue, completion: completion)
+        newConnection().asyncReadAll(queue, completion: completion)
     }
 
     /**
@@ -803,7 +803,7 @@ extension YapDatabase {
     :returns: An array of Object types.
     */
     public func asyncReadAll<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(queue: dispatch_queue_t = dispatch_get_main_queue(), completion: ([Value]) -> Void) {
-        newConnection().asyncReadAll(queue: queue, completion: completion)
+        newConnection().asyncReadAll(queue, completion: completion)
     }
 }
 
