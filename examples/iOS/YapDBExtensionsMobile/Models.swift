@@ -53,7 +53,7 @@ public class Person: NSObject, NSCoding, Equatable {
         name = n
     }
 
-    public required init(coder aDecoder: NSCoder) {
+    public required init?(coder aDecoder: NSCoder) {
         identifier = aDecoder.decodeObjectForKey("identifier") as! Identifier
         name = aDecoder.decodeObjectForKey("name") as! String
     }
@@ -95,7 +95,7 @@ public func == (a: Person, b: Person) -> Bool {
     return (a.identifier == b.identifier) && (a.name == b.name)
 }
 
-extension Person: Printable {
+extension Person: CustomStringConvertible {
     public override var description: String {
         return "id: \(identifier), name: \(name)"
     }
@@ -196,7 +196,7 @@ public class BarcodeArchiver: NSObject, NSCoding, Archiver {
         value = v
     }
 
-    public required init(coder aDecoder: NSCoder) {
+    public required init?(coder aDecoder: NSCoder) {
         if let kind = Barcode.Kind(rawValue: aDecoder.decodeIntegerForKey("kind")) {
             switch kind {
             case .UPCA:
@@ -236,7 +236,7 @@ public class ProductCategoryArchiver: NSObject, NSCoding, Archiver {
         value = v
     }
 
-    public required init(coder aDecoder: NSCoder) {
+    public required init?(coder aDecoder: NSCoder) {
         let identifier = aDecoder.decodeIntegerForKey("identifier")
         let name = aDecoder.decodeObjectForKey("name") as? String
         value = Product.Category(identifier: identifier, name: name!)
@@ -255,7 +255,7 @@ public class ProductMetadataArchiver: NSObject, NSCoding, Archiver {
         value = v
     }
 
-    public required init(coder aDecoder: NSCoder) {
+    public required init?(coder aDecoder: NSCoder) {
         let categoryIdentifier = aDecoder.decodeIntegerForKey("categoryIdentifier")
         value = Product.Metadata(categoryIdentifier: categoryIdentifier)
     }
@@ -272,7 +272,7 @@ public class ProductArchiver: NSObject, NSCoding, Archiver {
         value = v
     }
 
-    public required init(coder aDecoder: NSCoder) {
+    public required init?(coder aDecoder: NSCoder) {
         let metadata: Product.Metadata? = valueFromArchive(aDecoder.decodeObjectForKey("metadata"))
         let identifier = aDecoder.decodeObjectForKey("identifier") as! String
         let name = aDecoder.decodeObjectForKey("name") as! String
