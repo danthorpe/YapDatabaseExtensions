@@ -7,13 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		652AAFB71B28C43900D40BB0 /* BrightFuturesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 652AAFB41B28C43900D40BB0 /* BrightFuturesTests.swift */; };
-		652AAFB81B28C43900D40BB0 /* PromiseKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 652AAFB51B28C43900D40BB0 /* PromiseKitTests.swift */; };
-		652AAFB91B28C43900D40BB0 /* SwiftTaskTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 652AAFB61B28C43900D40BB0 /* SwiftTaskTests.swift */; };
 		652AAFBB1B28C44E00D40BB0 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 652AAFBA1B28C44E00D40BB0 /* Models.swift */; };
-		65EF89F61B28C50F0039FC08 /* BrightFutures.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EF89F11B28C50F0039FC08 /* BrightFutures.swift */; };
-		65EF89F71B28C50F0039FC08 /* PromiseKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EF89F31B28C50F0039FC08 /* PromiseKit.swift */; };
-		65EF89F81B28C50F0039FC08 /* SwiftTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EF89F51B28C50F0039FC08 /* SwiftTask.swift */; };
 		65F748C81B28A922007E90B2 /* YapDatabaseExtensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 65F748C71B28A922007E90B2 /* YapDatabaseExtensions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		65F748CE1B28A922007E90B2 /* YapDatabaseExtensions.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65F748C21B28A922007E90B2 /* YapDatabaseExtensions.framework */; };
 		65F748D51B28A922007E90B2 /* YapDatabaseExtensionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F748D41B28A922007E90B2 /* YapDatabaseExtensionsTests.swift */; };
@@ -269,7 +263,8 @@
 		65F748B91B28A922007E90B2 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0630;
+				LastSwiftUpdateCheck = 0700;
+				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = "Daniel Thorpe";
 				TargetAttributes = {
 					65F748C11B28A922007E90B2 = {
@@ -398,13 +393,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				65EF89F71B28C50F0039FC08 /* PromiseKit.swift in Sources */,
 				65F748E41B28AB77007E90B2 /* Read.swift in Sources */,
-				65EF89F81B28C50F0039FC08 /* SwiftTask.swift in Sources */,
 				65F748E81B28AB77007E90B2 /* YapDB.swift in Sources */,
 				65F748E71B28AB77007E90B2 /* YapDatabaseExtensions.swift in Sources */,
 				65F748E61B28AB77007E90B2 /* Write.swift in Sources */,
-				65EF89F61B28C50F0039FC08 /* BrightFutures.swift in Sources */,
 				65F748E51B28AB77007E90B2 /* Remove.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -413,9 +405,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				652AAFB91B28C43900D40BB0 /* SwiftTaskTests.swift in Sources */,
-				652AAFB71B28C43900D40BB0 /* BrightFuturesTests.swift in Sources */,
-				652AAFB81B28C43900D40BB0 /* PromiseKitTests.swift in Sources */,
 				65F748D51B28A922007E90B2 /* YapDatabaseExtensionsTests.swift in Sources */,
 				65F748EC1B28ABE0007E90B2 /* Helpers.swift in Sources */,
 				65F748EB1B28ABE0007E90B2 /* ReadWriteTests.swift in Sources */,
@@ -456,6 +445,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -534,6 +524,7 @@
 				INFOPLIST_FILE = YapDatabaseExtensions/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "me.danthorpe.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 			};
@@ -550,6 +541,7 @@
 				INFOPLIST_FILE = YapDatabaseExtensions/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "me.danthorpe.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 			};
@@ -569,6 +561,7 @@
 				);
 				INFOPLIST_FILE = YapDatabaseExtensionsTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "me.danthorpe.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -583,6 +576,7 @@
 				);
 				INFOPLIST_FILE = YapDatabaseExtensionsTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "me.danthorpe.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
