@@ -1,0 +1,15 @@
+source 'https://github.com/CocoaPods/Specs.git'
+
+inhibit_all_warnings!
+use_frameworks!
+
+platform :ios, "8.0"
+
+target 'YapDBExtensionsMobile' do
+  pod "YapDatabaseExtensions/All", :path => "../../"
+end
+
+target 'YapDBExtensionsMobileTests' do
+  pod "YapDatabaseExtensions/All", :path => "../../"
+end
+

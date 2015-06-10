@@ -1,0 +1,6 @@
+framework module BrightFutures {
+  umbrella header "Pods-YapDBExtensionsMobile-BrightFutures-umbrella.h"
+
+  export *
+  module * { export * }
+}
