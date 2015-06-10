@@ -1,6 +1,0 @@
-framework module SwiftTask {
-  umbrella header "Pods-YapDBExtensionsMobile-SwiftTask-umbrella.h"
-
-  export *
-  module * { export * }
-}
