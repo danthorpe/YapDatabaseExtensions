@@ -11,7 +11,7 @@ Read my introductory blog post about [YapDatabase & YapDatabaseExtensions](http:
 
 ## Updates r.e. Xcode 7 & Swift 2.0
 
-The core elements of YapDatabaseExtensions supports Swift 2.0 on the branch `swift-2.0`. Install it using CocoaPods like so:
+The core elements of YapDatabaseExtensions supports Swift 2.0 on the branch `swift_2.0`. Install it using CocoaPods like so:
 
 ```ruby
 pod ‘YapDatabaseExtensions’, :git => ‘https://github.com/danthorpe/YapDatabaseExtensions.git', :branch => ‘swift_2.0’
@@ -19,10 +19,9 @@ pod ‘YapDatabaseExtensions’, :git => ‘https://github.com/danthorpe/YapData
 
 If you need to use YapDatabaseExtensions in a Swift 2.0 framework using CocoaPods, make sure that you include the line above in the application target’s Podfile to override podspec dependencies.
 
-At the moment, Swift 2.0 support for extensions on FRP libraries  is pending support in those libraries, so it will follow in due course. I won’t merge any Swift 2.0.
+At the moment, Swift 2.0 support for extensions on FRP libraries  is pending support in those libraries, so it will follow in due course. I won’t merge this branch until it is at feature parity with `master`.
 
-Lastly, until `xctool` is updated, continuous integration is not working, however I do have Xcode bots configured, so the quality of the `master`, `development` and `swift-2.0` branches is maintained. Additionally, I can now remote the test coverage of this library, which is currently at 53%, something which I fully intend to improve over the coming month.  
-
+Lastly, until `xctool` is updated, continuous integration is not working, however I do have Xcode bots configured, so the quality of the `master`, `development` and `swift-2.0` branches is maintained. Additionally, I can now remote the test coverage of this library, which is currently at 53%, something which I fully intend to improve over the coming month.
 
 ## Requirements
 
