@@ -7,7 +7,6 @@ import UIKit
 import XCTest
 import YapDatabase
 import YapDatabaseExtensions
-import YapDBExtensionsMobile
 
 class BaseTestCase: XCTestCase {
 

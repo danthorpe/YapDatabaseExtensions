@@ -48,10 +48,16 @@ code_sign() {
 
 
 if [[ "$CONFIGURATION" == "Debug" ]]; then
+  install_framework 'BrightFutures.framework'
   install_framework 'CocoaLumberjack.framework'
+  install_framework 'PromiseKit.framework'
+  install_framework 'SwiftTask.framework'
   install_framework 'YapDatabase.framework'
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
+  install_framework 'BrightFutures.framework'
   install_framework 'CocoaLumberjack.framework'
+  install_framework 'PromiseKit.framework'
+  install_framework 'SwiftTask.framework'
   install_framework 'YapDatabase.framework'
 fi

@@ -7,6 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		652AAFB71B28C43900D40BB0 /* BrightFuturesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 652AAFB41B28C43900D40BB0 /* BrightFuturesTests.swift */; };
+		652AAFB81B28C43900D40BB0 /* PromiseKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 652AAFB51B28C43900D40BB0 /* PromiseKitTests.swift */; };
+		652AAFB91B28C43900D40BB0 /* SwiftTaskTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 652AAFB61B28C43900D40BB0 /* SwiftTaskTests.swift */; };
+		652AAFBB1B28C44E00D40BB0 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 652AAFBA1B28C44E00D40BB0 /* Models.swift */; };
+		65EF89F61B28C50F0039FC08 /* BrightFutures.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EF89F11B28C50F0039FC08 /* BrightFutures.swift */; };
+		65EF89F71B28C50F0039FC08 /* PromiseKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EF89F31B28C50F0039FC08 /* PromiseKit.swift */; };
+		65EF89F81B28C50F0039FC08 /* SwiftTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EF89F51B28C50F0039FC08 /* SwiftTask.swift */; };
 		65F748C81B28A922007E90B2 /* YapDatabaseExtensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 65F748C71B28A922007E90B2 /* YapDatabaseExtensions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		65F748CE1B28A922007E90B2 /* YapDatabaseExtensions.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65F748C21B28A922007E90B2 /* YapDatabaseExtensions.framework */; };
 		65F748D51B28A922007E90B2 /* YapDatabaseExtensionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F748D41B28A922007E90B2 /* YapDatabaseExtensionsTests.swift */; };
@@ -34,6 +41,13 @@
 /* Begin PBXFileReference section */
 		43DA81892DAA1D5E0BC21593 /* Pods-YapDatabaseExtensions.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-YapDatabaseExtensions.release.xcconfig"; path = "Pods/Target Support Files/Pods-YapDatabaseExtensions/Pods-YapDatabaseExtensions.release.xcconfig"; sourceTree = "<group>"; };
 		48240A83CEC968CA66DAAF3B /* Pods-YapDatabaseExtensionsTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-YapDatabaseExtensionsTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-YapDatabaseExtensionsTests/Pods-YapDatabaseExtensionsTests.release.xcconfig"; sourceTree = "<group>"; };
+		652AAFB41B28C43900D40BB0 /* BrightFuturesTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BrightFuturesTests.swift; sourceTree = "<group>"; };
+		652AAFB51B28C43900D40BB0 /* PromiseKitTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PromiseKitTests.swift; sourceTree = "<group>"; };
+		652AAFB61B28C43900D40BB0 /* SwiftTaskTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftTaskTests.swift; sourceTree = "<group>"; };
+		652AAFBA1B28C44E00D40BB0 /* Models.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Models.swift; path = ../../examples/iOS/YapDBExtensionsMobile/Models.swift; sourceTree = "<group>"; };
+		65EF89F11B28C50F0039FC08 /* BrightFutures.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BrightFutures.swift; sourceTree = "<group>"; };
+		65EF89F31B28C50F0039FC08 /* PromiseKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PromiseKit.swift; sourceTree = "<group>"; };
+		65EF89F51B28C50F0039FC08 /* SwiftTask.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftTask.swift; sourceTree = "<group>"; };
 		65F748C21B28A922007E90B2 /* YapDatabaseExtensions.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = YapDatabaseExtensions.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		65F748C61B28A922007E90B2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		65F748C71B28A922007E90B2 /* YapDatabaseExtensions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = YapDatabaseExtensions.h; sourceTree = "<group>"; };
@@ -83,6 +97,30 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		65EF89F01B28C50F0039FC08 /* BrightFutures */ = {
+			isa = PBXGroup;
+			children = (
+				65EF89F11B28C50F0039FC08 /* BrightFutures.swift */,
+			);
+			path = BrightFutures;
+			sourceTree = "<group>";
+		};
+		65EF89F21B28C50F0039FC08 /* PromiseKit */ = {
+			isa = PBXGroup;
+			children = (
+				65EF89F31B28C50F0039FC08 /* PromiseKit.swift */,
+			);
+			path = PromiseKit;
+			sourceTree = "<group>";
+		};
+		65EF89F41B28C50F0039FC08 /* SwiftTask */ = {
+			isa = PBXGroup;
+			children = (
+				65EF89F51B28C50F0039FC08 /* SwiftTask.swift */,
+			);
+			path = SwiftTask;
+			sourceTree = "<group>";
+		};
 		65F748B81B28A922007E90B2 = {
 			isa = PBXGroup;
 			children = (
@@ -106,9 +144,12 @@
 		65F748C41B28A922007E90B2 /* YapDatabaseExtensions */ = {
 			isa = PBXGroup;
 			children = (
-				65F748DE1B28AB77007E90B2 /* Common */,
 				65F748C71B28A922007E90B2 /* YapDatabaseExtensions.h */,
+				65EF89F01B28C50F0039FC08 /* BrightFutures */,
+				65F748DE1B28AB77007E90B2 /* Common */,
+				65EF89F21B28C50F0039FC08 /* PromiseKit */,
 				65F748C51B28A922007E90B2 /* Supporting Files */,
+				65EF89F41B28C50F0039FC08 /* SwiftTask */,
 			);
 			path = YapDatabaseExtensions;
 			sourceTree = "<group>";
@@ -124,8 +165,12 @@
 		65F748D11B28A922007E90B2 /* YapDatabaseExtensionsTests */ = {
 			isa = PBXGroup;
 			children = (
-				65F748E91B28ABE0007E90B2 /* ReadWriteTests.swift */,
+				652AAFB41B28C43900D40BB0 /* BrightFuturesTests.swift */,
 				65F748EA1B28ABE0007E90B2 /* Helpers.swift */,
+				652AAFBA1B28C44E00D40BB0 /* Models.swift */,
+				652AAFB51B28C43900D40BB0 /* PromiseKitTests.swift */,
+				65F748E91B28ABE0007E90B2 /* ReadWriteTests.swift */,
+				652AAFB61B28C43900D40BB0 /* SwiftTaskTests.swift */,
 				65F748D41B28A922007E90B2 /* YapDatabaseExtensionsTests.swift */,
 				65F748D21B28A922007E90B2 /* Supporting Files */,
 			);
@@ -353,10 +398,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				65EF89F71B28C50F0039FC08 /* PromiseKit.swift in Sources */,
 				65F748E41B28AB77007E90B2 /* Read.swift in Sources */,
+				65EF89F81B28C50F0039FC08 /* SwiftTask.swift in Sources */,
 				65F748E81B28AB77007E90B2 /* YapDB.swift in Sources */,
 				65F748E71B28AB77007E90B2 /* YapDatabaseExtensions.swift in Sources */,
 				65F748E61B28AB77007E90B2 /* Write.swift in Sources */,
+				65EF89F61B28C50F0039FC08 /* BrightFutures.swift in Sources */,
 				65F748E51B28AB77007E90B2 /* Remove.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -365,9 +413,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				652AAFB91B28C43900D40BB0 /* SwiftTaskTests.swift in Sources */,
+				652AAFB71B28C43900D40BB0 /* BrightFuturesTests.swift in Sources */,
+				652AAFB81B28C43900D40BB0 /* PromiseKitTests.swift in Sources */,
 				65F748D51B28A922007E90B2 /* YapDatabaseExtensionsTests.swift in Sources */,
 				65F748EC1B28ABE0007E90B2 /* Helpers.swift in Sources */,
 				65F748EB1B28ABE0007E90B2 /* ReadWriteTests.swift in Sources */,
+				652AAFBB1B28C44E00D40BB0 /* Models.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

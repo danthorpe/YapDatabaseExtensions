@@ -6,6 +6,12 @@
 // project.
 
 
+// BrightFutures
+#define COCOAPODS_POD_AVAILABLE_BrightFutures
+#define COCOAPODS_VERSION_MAJOR_BrightFutures 1
+#define COCOAPODS_VERSION_MINOR_BrightFutures 0
+#define COCOAPODS_VERSION_PATCH_BrightFutures 1
+
 // CocoaLumberjack
 #define COCOAPODS_POD_AVAILABLE_CocoaLumberjack
 #define COCOAPODS_VERSION_MAJOR_CocoaLumberjack 1
@@ -23,6 +29,24 @@
 #define COCOAPODS_VERSION_MAJOR_CocoaLumberjack_Extensions 1
 #define COCOAPODS_VERSION_MINOR_CocoaLumberjack_Extensions 9
 #define COCOAPODS_VERSION_PATCH_CocoaLumberjack_Extensions 2
+
+// PromiseKit/CorePromise
+#define COCOAPODS_POD_AVAILABLE_PromiseKit_CorePromise
+#define COCOAPODS_VERSION_MAJOR_PromiseKit_CorePromise 2
+#define COCOAPODS_VERSION_MINOR_PromiseKit_CorePromise 0
+#define COCOAPODS_VERSION_PATCH_PromiseKit_CorePromise 2
+
+// PromiseKit/Swift/Promise
+#define COCOAPODS_POD_AVAILABLE_PromiseKit_Swift_Promise
+#define COCOAPODS_VERSION_MAJOR_PromiseKit_Swift_Promise 2
+#define COCOAPODS_VERSION_MINOR_PromiseKit_Swift_Promise 0
+#define COCOAPODS_VERSION_PATCH_PromiseKit_Swift_Promise 2
+
+// SwiftTask
+#define COCOAPODS_POD_AVAILABLE_SwiftTask
+#define COCOAPODS_VERSION_MAJOR_SwiftTask 3
+#define COCOAPODS_VERSION_MINOR_SwiftTask 3
+#define COCOAPODS_VERSION_PATCH_SwiftTask 0
 
 // YapDatabase
 #define COCOAPODS_POD_AVAILABLE_YapDatabase
