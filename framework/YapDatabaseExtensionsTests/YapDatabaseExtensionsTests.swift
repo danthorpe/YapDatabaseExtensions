@@ -8,29 +8,37 @@
 
 import UIKit
 import XCTest
+import YapDatabase
+import YapDatabaseExtensions
 
 class YapDatabaseExtensionsTests: XCTestCase {
-    
-    override func setUp() {
-        super.setUp()
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+
+    func test_ViewRegistration_NotRegisteredInEmptyDatabase() {
+        let db = YapDB.testDatabaseForFile(__FILE__, test: __FUNCTION__)
+        let fetch: YapDB.Fetch = products()
+        XCTAssertFalse(fetch.isRegisteredInDatabase(db), "Extension should not be registered in fresh database.")
     }
-    
-    override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-        super.tearDown()
+
+    func test_ViewRegistration_RegistersCorrectly() {
+        let db = YapDB.testDatabaseForFile(__FILE__, test: __FUNCTION__)
+        let fetch: YapDB.Fetch = products()
+        fetch.registerInDatabase(db)
+        XCTAssertTrue(fetch.isRegisteredInDatabase(db), "Extension should be registered in database.")
     }
-    
-    func testExample() {
-        // This is an example of a functional test case.
-        XCTAssert(true, "Pass")
-    }
-    
-    func testPerformanceExample() {
-        // This is an example of a performance test case.
-        self.measureBlock() {
-            // Put the code you want to measure the time of here.
+
+    func test_AfterRegistration_ViewIsAccessible() {
+        let db = YapDB.testDatabaseForFile(__FILE__, test: __FUNCTION__)
+        let fetch: YapDB.Fetch = products()
+        fetch.registerInDatabase(db)
+        db.newConnection().read { transaction in
+            XCTAssertNotNil(transaction.ext(fetch.name) as? YapDatabaseViewTransaction, "The view should be accessible inside a read transaction.")
         }
     }
-    
+
+    func test_YapDBIndex_EncodingAndDecoding() {
+        let index = YapDB.Index(collection: "Foo", key: "Bar")
+        let _index: YapDB.Index? = valueFromArchive(archiveFromValue(index))
+        XCTAssertTrue(_index != nil, "Unarchived archive should not be nil")
+        XCTAssertEqual(index, _index!, "Unarchived archive should equal the original.")
+    }
 }
