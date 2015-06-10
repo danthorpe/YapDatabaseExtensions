@@ -1,0 +1,5 @@
+#import <Foundation/Foundation.h>
+@interface PodsDummy_Pods_YapDBExtensionsMobile_YapDatabaseExtensions : NSObject
+@end
+@implementation PodsDummy_Pods_YapDBExtensionsMobile_YapDatabaseExtensions
+@end
