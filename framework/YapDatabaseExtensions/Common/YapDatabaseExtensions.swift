@@ -284,6 +284,10 @@ extension Saveable where ArchiverType.ValueType == Self {
         return ArchiverType.unarchive(object)
     }
 
+    public static func unarchive(objects: [AnyObject]) -> [Self] {
+        return ArchiverType.unarchive(objects)
+    }
+
     public init?(_ object: AnyObject?) {
         if let tmp = ArchiverType.unarchive(object) {
             self = tmp
