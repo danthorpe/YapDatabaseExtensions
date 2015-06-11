@@ -237,6 +237,12 @@ A generic protocol which acts as an archiver for value types.
 public protocol Archiver: NSCoding {
     typealias ValueType
 
+    /// Simple helper to unarchive any object, has a default implementation
+    static func unarchive(object: AnyObject?) -> ValueType?
+
+    /// Simple helper to unarchive many objects, has a default implementation
+    static func unarchive(objects: [AnyObject]) -> [ValueType]
+
     /// The value type which is being encoded/decoded
     var value: ValueType { get }
 
@@ -260,6 +266,15 @@ extension Archiver {
 
     public static func unarchive(object: AnyObject?) -> ValueType? {
         return (object as? Self)?.value
+    }
+
+    public static func unarchive(objects: [AnyObject]) -> [ValueType] {
+        return objects.reduce([ValueType]()) { (var acc, object) -> [ValueType] in
+            if let value = unarchive(object) {
+                acc.append(value)
+            }
+            return acc
+        }
     }
 }
 
@@ -389,7 +404,6 @@ extension YapDB.Index: CustomStringConvertible, Hashable {
 public func == (a: YapDB.Index, b: YapDB.Index) -> Bool {
     return (a.collection == b.collection) && (a.key == b.key)
 }
-
 
 
 // MARK: Saveable
