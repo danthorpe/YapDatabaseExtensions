@@ -198,7 +198,6 @@ class AsynchronousReadTests: BaseTestCase {
         db.write(person)
         db.asyncReadAtIndex(indexForPersistable(person)) { (saved: Person?) -> Void in
             XCTAssertTrue(saved != nil, "There should be an item returned.")
-//            validateWrite(saved!, original: self.person, usingDatabase: db)
             expectation.fulfill()
         }
 
@@ -389,8 +388,6 @@ class AsynchronousRemoveTests: BaseTestCase {
         waitForExpectationsWithTimeout(5.0, handler: nil)
     }
 }
-
-
 
 
 

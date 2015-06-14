@@ -234,14 +234,8 @@ public protocol ValueMetadataPersistable: Persistable {
 /**
 A generic protocol which acts as an archiver for value types.
 */
-public protocol Archiver: NSCoding {
+public protocol Archiver {
     typealias ValueType
-
-    /// Simple helper to unarchive any object, has a default implementation
-    static func unarchive(object: AnyObject?) -> ValueType?
-
-    /// Simple helper to unarchive many objects, has a default implementation
-    static func unarchive(objects: [AnyObject]) -> [ValueType]
 
     /// The value type which is being encoded/decoded
     var value: ValueType { get }
@@ -257,17 +251,19 @@ object capable of archiving the receiver.
 public protocol Saveable {
     typealias ArchiverType: Archiver
 
-    /// The archive(r)
     var archive: ArchiverType { get }
 }
 
 
-extension Archiver {
+/// Default implementations of archiving/unarchiving.
+extension Archiver where ValueType: Saveable, ValueType.ArchiverType == Self {
 
+    /// Simple helper to unarchive any object, has a default implementation
     public static func unarchive(object: AnyObject?) -> ValueType? {
         return (object as? Self)?.value
     }
 
+    /// Simple helper to unarchive objects, has a default implementation
     public static func unarchive(objects: [AnyObject]) -> [ValueType] {
         return objects.reduce([ValueType]()) { (var acc, object) -> [ValueType] in
             if let value = unarchive(object) {
@@ -276,9 +272,20 @@ extension Archiver {
             return acc
         }
     }
+
+    /// Simple helper to archive a value, has a default implementation
+    public static func archive(value: ValueType?) -> Self? {
+        return value?.archive
+    }
+
+    /// Simple helper to archive a values, has a default implementation
+    public static func archive(values: [ValueType]) -> [Self] {
+        return values.map { $0.archive }
+    }
 }
 
-extension Saveable where ArchiverType.ValueType == Self {
+/// Default implementations of archiving/unarchiving.
+extension Saveable where ArchiverType: NSCoding, ArchiverType.ValueType == Self {
 
     public static func unarchive(object: AnyObject?) -> Self? {
         return ArchiverType.unarchive(object)
@@ -286,6 +293,19 @@ extension Saveable where ArchiverType.ValueType == Self {
 
     public static func unarchive(objects: [AnyObject]) -> [Self] {
         return ArchiverType.unarchive(objects)
+    }
+
+    public static func archive(value: Self?) -> AnyObject? {
+        return ArchiverType.archive(value)
+    }
+
+    public static func archive(values: [Self]) -> [AnyObject] {
+        return values.map { $0.archive }
+    }
+
+    /// The archive(r)
+    public var archive: ArchiverType {
+        return ArchiverType(self)
     }
 
     public init?(_ object: AnyObject?) {
@@ -297,7 +317,6 @@ extension Saveable where ArchiverType.ValueType == Self {
         }
     }
 }
-
 
 extension SequenceType where Generator.Element: Archiver {
 
@@ -390,7 +409,6 @@ extension YapDatabaseConnection {
         asyncReadWriteWithBlock({ result = block($0) }, completionQueue: queue) { completion(result) }
     }
 }
-
 
 // MARK: Hashable etc
 
