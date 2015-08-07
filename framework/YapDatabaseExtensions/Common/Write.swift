@@ -49,8 +49,8 @@ extension YapDatabaseReadWriteTransaction {
     :param: object An ObjectWithValueMetadata.
     :returns: The ObjectWithValueMetadata.
     */
-    public func write<ObjectWithValueMetadata where ObjectWithValueMetadata: NSCoding, ObjectWithValueMetadata: ValueMetadataPersistable>(object: ObjectWithValueMetadata) -> ObjectWithValueMetadata {
-        writeAtIndex(indexForPersistable(object), object: object, metadata: object.metadata.archive)
+    public func write<ObjectWithValueMetadata where ObjectWithValueMetadata: NSCoding, ObjectWithValueMetadata: ValueMetadataPersistable, ObjectWithValueMetadata.MetadataType.ArchiverType.ValueType == ObjectWithValueMetadata.MetadataType>(object: ObjectWithValueMetadata) -> ObjectWithValueMetadata {
+        writeAtIndex(indexForPersistable(object), object: object, metadata: ObjectWithValueMetadata.MetadataType.ArchiverType(object.metadata))
         return object
     }
 
@@ -61,7 +61,7 @@ extension YapDatabaseReadWriteTransaction {
     :returns: The Value.
     */
     public func write<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(value: Value) -> Value {
-        writeAtIndex(indexForPersistable(value), object: value.archive)
+        writeAtIndex(indexForPersistable(value), object: Value.ArchiverType(value))
         return value
     }
 
@@ -71,8 +71,8 @@ extension YapDatabaseReadWriteTransaction {
     :param: value A ValueWithValueMetadata.
     :returns: The ValueWithValueMetadata.
     */
-    public func write<ValueWithValueMetadata where ValueWithValueMetadata: Saveable, ValueWithValueMetadata: ValueMetadataPersistable, ValueWithValueMetadata.ArchiverType.ValueType == ValueWithValueMetadata>(value: ValueWithValueMetadata) -> ValueWithValueMetadata {
-        writeAtIndex(indexForPersistable(value), object: value.archive, metadata: value.metadata.archive)
+    public func write<ValueWithValueMetadata where ValueWithValueMetadata: Saveable, ValueWithValueMetadata: ValueMetadataPersistable, ValueWithValueMetadata.ArchiverType.ValueType == ValueWithValueMetadata, ValueWithValueMetadata.MetadataType.ArchiverType.ValueType == ValueWithValueMetadata.MetadataType>(value: ValueWithValueMetadata) -> ValueWithValueMetadata {
+        writeAtIndex(indexForPersistable(value), object: ValueWithValueMetadata.ArchiverType(value), metadata: ValueWithValueMetadata.MetadataType.ArchiverType(value.metadata))
         return value
     }
 
@@ -83,7 +83,7 @@ extension YapDatabaseReadWriteTransaction {
     :returns: The ValueWithObjectMetadata.
     */
     public func write<ValueWithObjectMetadata where ValueWithObjectMetadata: Saveable, ValueWithObjectMetadata: ObjectMetadataPersistable, ValueWithObjectMetadata.ArchiverType.ValueType == ValueWithObjectMetadata>(value: ValueWithObjectMetadata) -> ValueWithObjectMetadata {
-        writeAtIndex(indexForPersistable(value), object: value.archive, metadata: value.metadata)
+        writeAtIndex(indexForPersistable(value), object: ValueWithObjectMetadata.ArchiverType(value), metadata: value.metadata)
         return value
     }
 }
@@ -197,7 +197,10 @@ extension YapDatabaseConnection {
     :returns: The Value.
     */
     public func write<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(value: Value) -> Value {
-        return write { $0.write(value) }
+//        return write { $0.write(value) }
+        return write { (transaction: YapDatabaseReadWriteTransaction) -> Value in
+            return transaction.write(value)
+        }
     }
 
     /**
