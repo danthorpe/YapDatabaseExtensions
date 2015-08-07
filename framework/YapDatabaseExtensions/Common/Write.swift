@@ -49,8 +49,8 @@ extension YapDatabaseReadWriteTransaction {
     :param: object An ObjectWithValueMetadata.
     :returns: The ObjectWithValueMetadata.
     */
-    public func write<ObjectWithValueMetadata where ObjectWithValueMetadata: NSCoding, ObjectWithValueMetadata: ValueMetadataPersistable>(object: ObjectWithValueMetadata) -> ObjectWithValueMetadata {
-        writeAtIndex(indexForPersistable(object), object: object, metadata: object.metadata.archive)
+    public func write<ObjectWithValueMetadata where ObjectWithValueMetadata: NSCoding, ObjectWithValueMetadata: ValueMetadataPersistable, ObjectWithValueMetadata.MetadataType.ArchiverType.ValueType == ObjectWithValueMetadata.MetadataType>(object: ObjectWithValueMetadata) -> ObjectWithValueMetadata {
+        writeAtIndex(indexForPersistable(object), object: object, metadata: ObjectWithValueMetadata.MetadataType.ArchiverType(object.metadata))
         return object
     }
 
@@ -61,7 +61,7 @@ extension YapDatabaseReadWriteTransaction {
     :returns: The Value.
     */
     public func write<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(value: Value) -> Value {
-        writeAtIndex(indexForPersistable(value), object: value.archive)
+        writeAtIndex(indexForPersistable(value), object: Value.ArchiverType(value))
         return value
     }
 
@@ -71,8 +71,8 @@ extension YapDatabaseReadWriteTransaction {
     :param: value A ValueWithValueMetadata.
     :returns: The ValueWithValueMetadata.
     */
-    public func write<ValueWithValueMetadata where ValueWithValueMetadata: Saveable, ValueWithValueMetadata: ValueMetadataPersistable, ValueWithValueMetadata.ArchiverType.ValueType == ValueWithValueMetadata>(value: ValueWithValueMetadata) -> ValueWithValueMetadata {
-        writeAtIndex(indexForPersistable(value), object: value.archive, metadata: value.metadata.archive)
+    public func write<ValueWithValueMetadata where ValueWithValueMetadata: Saveable, ValueWithValueMetadata: ValueMetadataPersistable, ValueWithValueMetadata.ArchiverType.ValueType == ValueWithValueMetadata, ValueWithValueMetadata.MetadataType.ArchiverType.ValueType == ValueWithValueMetadata.MetadataType>(value: ValueWithValueMetadata) -> ValueWithValueMetadata {
+        writeAtIndex(indexForPersistable(value), object: ValueWithValueMetadata.ArchiverType(value), metadata: ValueWithValueMetadata.MetadataType.ArchiverType(value.metadata))
         return value
     }
 
@@ -83,7 +83,7 @@ extension YapDatabaseReadWriteTransaction {
     :returns: The ValueWithObjectMetadata.
     */
     public func write<ValueWithObjectMetadata where ValueWithObjectMetadata: Saveable, ValueWithObjectMetadata: ObjectMetadataPersistable, ValueWithObjectMetadata.ArchiverType.ValueType == ValueWithObjectMetadata>(value: ValueWithObjectMetadata) -> ValueWithObjectMetadata {
-        writeAtIndex(indexForPersistable(value), object: value.archive, metadata: value.metadata)
+        writeAtIndex(indexForPersistable(value), object: ValueWithObjectMetadata.ArchiverType(value), metadata: value.metadata)
         return value
     }
 }
@@ -136,7 +136,7 @@ extension YapDatabaseReadWriteTransaction {
     :param: objects A SequenceType of ValueWithValueMetadata instances.
     :returns: An array of ValueWithValueMetadata instances.
     */
-    public func write<Values, ValueWithValueMetadata where Values: SequenceType, Values.Generator.Element == ValueWithValueMetadata, ValueWithValueMetadata: Saveable, ValueWithValueMetadata: ValueMetadataPersistable, ValueWithValueMetadata.ArchiverType.ValueType == ValueWithValueMetadata>(values: Values) -> [ValueWithValueMetadata] {
+    public func write<Values, ValueWithValueMetadata where Values: SequenceType, Values.Generator.Element == ValueWithValueMetadata, ValueWithValueMetadata: Saveable, ValueWithValueMetadata: ValueMetadataPersistable, ValueWithValueMetadata.ArchiverType.ValueType == ValueWithValueMetadata, ValueWithValueMetadata.MetadataType.ArchiverType.ValueType == ValueWithValueMetadata.MetadataType>(values: Values) -> [ValueWithValueMetadata] {
         return map(values, write)
     }
 
@@ -197,7 +197,10 @@ extension YapDatabaseConnection {
     :returns: The Value.
     */
     public func write<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(value: Value) -> Value {
-        return write { $0.write(value) }
+//        return write { $0.write(value) }
+        return write { (transaction: YapDatabaseReadWriteTransaction) -> Value in
+            return transaction.write(value)
+        }
     }
 
     /**
@@ -206,7 +209,7 @@ extension YapDatabaseConnection {
     :param: value A ValueWithValueMetadata.
     :returns: The ValueWithValueMetadata.
     */
-    public func write<ValueWithValueMetadata where ValueWithValueMetadata: Saveable, ValueWithValueMetadata: ValueMetadataPersistable, ValueWithValueMetadata.ArchiverType.ValueType == ValueWithValueMetadata>(value: ValueWithValueMetadata) -> ValueWithValueMetadata {
+    public func write<ValueWithValueMetadata where ValueWithValueMetadata: Saveable, ValueWithValueMetadata: ValueMetadataPersistable, ValueWithValueMetadata.ArchiverType.ValueType == ValueWithValueMetadata, ValueWithValueMetadata.MetadataType.ArchiverType.ValueType == ValueWithValueMetadata.MetadataType>(value: ValueWithValueMetadata) -> ValueWithValueMetadata {
         return write { $0.write(value) }
     }
 
@@ -274,7 +277,7 @@ extension YapDatabaseConnection {
     :param: queue A dispatch_queue_t, defaults to the main queue.
     :param: completion A closure which receives the ValueWithValueMetadata.
     */
-    public func asyncWrite<ValueWithValueMetadata where ValueWithValueMetadata: Saveable, ValueWithValueMetadata: ValueMetadataPersistable, ValueWithValueMetadata.ArchiverType.ValueType == ValueWithValueMetadata>(value: ValueWithValueMetadata, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: (ValueWithValueMetadata) -> Void) {
+    public func asyncWrite<ValueWithValueMetadata where ValueWithValueMetadata: Saveable, ValueWithValueMetadata: ValueMetadataPersistable, ValueWithValueMetadata.ArchiverType.ValueType == ValueWithValueMetadata, ValueWithValueMetadata.MetadataType.ArchiverType.ValueType == ValueWithValueMetadata.MetadataType>(value: ValueWithValueMetadata, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: (ValueWithValueMetadata) -> Void) {
         asyncWrite({ $0.write(value) }, queue: queue, completion: completion)
     }
 
@@ -338,7 +341,7 @@ extension YapDatabaseConnection {
     :param: objects A SequenceType of ValueWithValueMetadata instances.
     :returns: An array of ValueWithValueMetadata instances.
     */
-    public func write<Values, ValueWithValueMetadata where Values: SequenceType, Values.Generator.Element == ValueWithValueMetadata, ValueWithValueMetadata: Saveable, ValueWithValueMetadata: ValueMetadataPersistable, ValueWithValueMetadata.ArchiverType.ValueType == ValueWithValueMetadata>(values: Values) -> [ValueWithValueMetadata] {
+    public func write<Values, ValueWithValueMetadata where Values: SequenceType, Values.Generator.Element == ValueWithValueMetadata, ValueWithValueMetadata: Saveable, ValueWithValueMetadata: ValueMetadataPersistable, ValueWithValueMetadata.ArchiverType.ValueType == ValueWithValueMetadata, ValueWithValueMetadata.MetadataType.ArchiverType.ValueType == ValueWithValueMetadata.MetadataType>(values: Values) -> [ValueWithValueMetadata] {
         return write { $0.write(values) }
     }
 
@@ -415,7 +418,7 @@ extension YapDatabaseConnection {
     :param: objects A SequenceType of ValueWithValueMetadata instances.
     :returns: An array of ValueWithValueMetadata instances.
     */
-    public func asyncWrite<Values, ValueWithValueMetadata where Values: SequenceType, Values.Generator.Element == ValueWithValueMetadata, ValueWithValueMetadata: Saveable, ValueWithValueMetadata: ValueMetadataPersistable, ValueWithValueMetadata.ArchiverType.ValueType == ValueWithValueMetadata>(values: Values, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: ([ValueWithValueMetadata]) -> Void) {
+    public func asyncWrite<Values, ValueWithValueMetadata where Values: SequenceType, Values.Generator.Element == ValueWithValueMetadata, ValueWithValueMetadata: Saveable, ValueWithValueMetadata: ValueMetadataPersistable, ValueWithValueMetadata.ArchiverType.ValueType == ValueWithValueMetadata, ValueWithValueMetadata.MetadataType.ArchiverType.ValueType == ValueWithValueMetadata.MetadataType>(values: Values, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: ([ValueWithValueMetadata]) -> Void) {
         asyncWrite({ $0.write(values) }, queue: queue, completion: completion)
     }
 }
@@ -475,7 +478,7 @@ extension YapDatabase {
     :param: value A ValueWithValueMetadata.
     :returns: The ValueWithValueMetadata.
     */
-    public func write<ValueWithValueMetadata where ValueWithValueMetadata: Saveable, ValueWithValueMetadata: ValueMetadataPersistable, ValueWithValueMetadata.ArchiverType.ValueType == ValueWithValueMetadata>(value: ValueWithValueMetadata) -> ValueWithValueMetadata {
+    public func write<ValueWithValueMetadata where ValueWithValueMetadata: Saveable, ValueWithValueMetadata: ValueMetadataPersistable, ValueWithValueMetadata.ArchiverType.ValueType == ValueWithValueMetadata, ValueWithValueMetadata.MetadataType.ArchiverType.ValueType == ValueWithValueMetadata.MetadataType>(value: ValueWithValueMetadata) -> ValueWithValueMetadata {
         return newConnection().write(value)
     }
 
@@ -543,7 +546,7 @@ extension YapDatabase {
     :param: queue A dispatch_queue_t, defaults to the main queue.
     :param: completion A closure which receives the ValueWithValueMetadata.
     */
-    public func asyncWrite<ValueWithValueMetadata where ValueWithValueMetadata: Saveable, ValueWithValueMetadata: ValueMetadataPersistable, ValueWithValueMetadata.ArchiverType.ValueType == ValueWithValueMetadata>(value: ValueWithValueMetadata, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: (ValueWithValueMetadata) -> Void) {
+    public func asyncWrite<ValueWithValueMetadata where ValueWithValueMetadata: Saveable, ValueWithValueMetadata: ValueMetadataPersistable, ValueWithValueMetadata.ArchiverType.ValueType == ValueWithValueMetadata, ValueWithValueMetadata.MetadataType.ArchiverType.ValueType == ValueWithValueMetadata.MetadataType>(value: ValueWithValueMetadata, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: (ValueWithValueMetadata) -> Void) {
         newConnection().asyncWrite(value, queue: queue, completion: completion)
     }
 
@@ -607,7 +610,7 @@ extension YapDatabase {
     :param: objects A SequenceType of ValueWithValueMetadata instances.
     :returns: An array of ValueWithValueMetadata instances.
     */
-    public func write<Values, ValueWithValueMetadata where Values: SequenceType, Values.Generator.Element == ValueWithValueMetadata, ValueWithValueMetadata: Saveable, ValueWithValueMetadata: ValueMetadataPersistable, ValueWithValueMetadata.ArchiverType.ValueType == ValueWithValueMetadata>(values: Values) -> [ValueWithValueMetadata] {
+    public func write<Values, ValueWithValueMetadata where Values: SequenceType, Values.Generator.Element == ValueWithValueMetadata, ValueWithValueMetadata: Saveable, ValueWithValueMetadata: ValueMetadataPersistable, ValueWithValueMetadata.ArchiverType.ValueType == ValueWithValueMetadata, ValueWithValueMetadata.MetadataType.ArchiverType.ValueType == ValueWithValueMetadata.MetadataType>(values: Values) -> [ValueWithValueMetadata] {
         return newConnection().write(values)
     }
 
@@ -672,7 +675,7 @@ extension YapDatabase {
     :param: objects A SequenceType of ValueWithValueMetadata instances.
     :returns: An array of ValueWithValueMetadata instances.
     */
-    public func asyncWrite<Values, ValueWithValueMetadata where Values: SequenceType, Values.Generator.Element == ValueWithValueMetadata, ValueWithValueMetadata: Saveable, ValueWithValueMetadata: ValueMetadataPersistable, ValueWithValueMetadata.ArchiverType.ValueType == ValueWithValueMetadata>(values: Values, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: ([ValueWithValueMetadata]) -> Void) {
+    public func asyncWrite<Values, ValueWithValueMetadata where Values: SequenceType, Values.Generator.Element == ValueWithValueMetadata, ValueWithValueMetadata: Saveable, ValueWithValueMetadata: ValueMetadataPersistable, ValueWithValueMetadata.ArchiverType.ValueType == ValueWithValueMetadata, ValueWithValueMetadata.MetadataType.ArchiverType.ValueType == ValueWithValueMetadata.MetadataType>(values: Values, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: ([ValueWithValueMetadata]) -> Void) {
         newConnection().asyncWrite(values, queue: queue, completion: completion)
     }
 

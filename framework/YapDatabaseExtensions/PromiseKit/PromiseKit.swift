@@ -91,7 +91,7 @@ extension YapDatabaseConnection {
     :param: value A ValueWithValueMetadata.
     :return: a Promise Value.
     */
-    public func asyncWrite<ValueWithValueMetadata where ValueWithValueMetadata: Saveable, ValueWithValueMetadata: ValueMetadataPersistable, ValueWithValueMetadata.ArchiverType.ValueType == ValueWithValueMetadata>(value: ValueWithValueMetadata) -> Promise<ValueWithValueMetadata> {
+    public func asyncWrite<ValueWithValueMetadata where ValueWithValueMetadata: Saveable, ValueWithValueMetadata: ValueMetadataPersistable, ValueWithValueMetadata.ArchiverType.ValueType == ValueWithValueMetadata, ValueWithValueMetadata.MetadataType.ArchiverType.ValueType == ValueWithValueMetadata.MetadataType>(value: ValueWithValueMetadata) -> Promise<ValueWithValueMetadata> {
         return Promise { (fulfiller, _) in
             self.asyncWrite(value, completion: fulfiller)
         }
@@ -292,7 +292,7 @@ extension YapDatabase {
     :param: value A ValueWithValueMetadata.
     :return: a Promise Value.
     */
-    public func asyncWrite<ValueWithValueMetadata where ValueWithValueMetadata: Saveable, ValueWithValueMetadata: ValueMetadataPersistable, ValueWithValueMetadata.ArchiverType.ValueType == ValueWithValueMetadata>(value: ValueWithValueMetadata) -> Promise<ValueWithValueMetadata> {
+    public func asyncWrite<ValueWithValueMetadata where ValueWithValueMetadata: Saveable, ValueWithValueMetadata: ValueMetadataPersistable, ValueWithValueMetadata.ArchiverType.ValueType == ValueWithValueMetadata, ValueWithValueMetadata.MetadataType.ArchiverType.ValueType == ValueWithValueMetadata.MetadataType>(value: ValueWithValueMetadata) -> Promise<ValueWithValueMetadata> {
         return newConnection().asyncWrite(value)
     }
 }
