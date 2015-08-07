@@ -425,8 +425,6 @@ extension YapDB {
             }
         }
     }
-
-
 }
 
 extension YapDB {
