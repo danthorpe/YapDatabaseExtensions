@@ -197,10 +197,7 @@ extension YapDatabaseConnection {
     :returns: The Value.
     */
     public func write<Value where Value: Saveable, Value: Persistable, Value.ArchiverType.ValueType == Value>(value: Value) -> Value {
-//        return write { $0.write(value) }
-        return write { (transaction: YapDatabaseReadWriteTransaction) -> Value in
-            return transaction.write(value)
-        }
+        return write { $0.write(value) }
     }
 
     /**
