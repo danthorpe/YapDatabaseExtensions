@@ -105,7 +105,7 @@ extension YapDatabaseConnection {
     :param: value A ValueWithValueMetadata.
     :return: a Task ValueWithValueMetadata.
     */
-    public func asyncWrite<ValueWithValueMetadata where ValueWithValueMetadata: Saveable, ValueWithValueMetadata: ValueMetadataPersistable, ValueWithValueMetadata.ArchiverType.ValueType == ValueWithValueMetadata>(value: ValueWithValueMetadata) -> Task<Void, ValueWithValueMetadata, Void> {
+    public func asyncWrite<ValueWithValueMetadata where ValueWithValueMetadata: Saveable, ValueWithValueMetadata: ValueMetadataPersistable, ValueWithValueMetadata.ArchiverType.ValueType == ValueWithValueMetadata, ValueWithValueMetadata.MetadataType.ArchiverType.ValueType == ValueWithValueMetadata.MetadataType>(value: ValueWithValueMetadata) -> Task<Void, ValueWithValueMetadata, Void> {
         return Task { _, fulfill, _, _ in
             self.asyncWrite(value, completion: fulfill)
         }
@@ -307,7 +307,7 @@ extension YapDatabase {
     :param: value A ValueWithValueMetadata.
     :return: a Task ValueWithValueMetadata.
     */
-    public func asyncWrite<ValueWithValueMetadata where ValueWithValueMetadata: Saveable, ValueWithValueMetadata: ValueMetadataPersistable, ValueWithValueMetadata.ArchiverType.ValueType == ValueWithValueMetadata>(value: ValueWithValueMetadata) -> Task<Void, ValueWithValueMetadata, Void> {
+    public func asyncWrite<ValueWithValueMetadata where ValueWithValueMetadata: Saveable, ValueWithValueMetadata: ValueMetadataPersistable, ValueWithValueMetadata.ArchiverType.ValueType == ValueWithValueMetadata, ValueWithValueMetadata.MetadataType.ArchiverType.ValueType == ValueWithValueMetadata.MetadataType>(value: ValueWithValueMetadata) -> Task<Void, ValueWithValueMetadata, Void> {
         return Task { _, fulfill, _, _ in
             self.asyncWrite(value, completion: fulfill)
         }
