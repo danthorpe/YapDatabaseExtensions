@@ -1,6 +1,0 @@
-framework module PromiseKit {
-  umbrella header "Pods-YapDBExtensionsMobile-PromiseKit-umbrella.h"
-
-  export *
-  module * { export * }
-}

@@ -34,6 +34,7 @@
 #else
   static const int ydbLogLevel = YDB_LOG_LEVEL_WARN;
 #endif
+#pragma unused(ydbLogLevel)
 
 static NSUInteger const UNLIMITED_CACHE_LIMIT = 0;
 static NSUInteger const MIN_KEY_CACHE_LIMIT   = 500;
@@ -785,7 +786,7 @@ NS_INLINE BOOL YDBIsMainThread()
 	sqlite3_stmt **statement = &beginTransactionStatement;
 	if (*statement == NULL)
 	{
-		char *stmt = "BEGIN TRANSACTION;";
+		const char *stmt = "BEGIN TRANSACTION;";
 		int stmtLen = (int)strlen(stmt);
 		
 		int status = sqlite3_prepare_v2(db, stmt, stmtLen+1, statement, NULL);
@@ -803,7 +804,7 @@ NS_INLINE BOOL YDBIsMainThread()
 	sqlite3_stmt **statement = &commitTransactionStatement;
 	if (*statement == NULL)
 	{
-		char *stmt = "COMMIT TRANSACTION;";
+		const char *stmt = "COMMIT TRANSACTION;";
 		int stmtLen = (int)strlen(stmt);
 		
 		int status = sqlite3_prepare_v2(db, stmt, stmtLen+1, statement, NULL);
@@ -821,7 +822,7 @@ NS_INLINE BOOL YDBIsMainThread()
 	sqlite3_stmt **statement = &rollbackTransactionStatement;
 	if (*statement == NULL)
 	{
-		char *stmt = "ROLLBACK TRANSACTION;";
+		const char *stmt = "ROLLBACK TRANSACTION;";
 		int stmtLen = (int)strlen(stmt);
 		
 		int status = sqlite3_prepare_v2(db, stmt, stmtLen+1, statement, NULL);
@@ -839,7 +840,7 @@ NS_INLINE BOOL YDBIsMainThread()
 	sqlite3_stmt **statement = &yapGetDataForKeyStatement;
 	if (*statement == NULL)
 	{
-		char *stmt = "SELECT \"data\" FROM \"yap2\" WHERE \"extension\" = ? AND \"key\" = ?;";
+		const char *stmt = "SELECT \"data\" FROM \"yap2\" WHERE \"extension\" = ? AND \"key\" = ?;";
 		int stmtLen = (int)strlen(stmt);
 		
 		int status = sqlite3_prepare_v2(db, stmt, stmtLen+1, statement, NULL);
@@ -857,7 +858,7 @@ NS_INLINE BOOL YDBIsMainThread()
 	sqlite3_stmt **statement = &yapSetDataForKeyStatement;
 	if (*statement == NULL)
 	{
-		char *stmt = "INSERT OR REPLACE INTO \"yap2\" (\"extension\", \"key\", \"data\") VALUES (?, ?, ?);";
+		const char *stmt = "INSERT OR REPLACE INTO \"yap2\" (\"extension\", \"key\", \"data\") VALUES (?, ?, ?);";
 		int stmtLen = (int)strlen(stmt);
 		
 		int status = sqlite3_prepare_v2(db, stmt, stmtLen+1, statement, NULL);
@@ -875,7 +876,7 @@ NS_INLINE BOOL YDBIsMainThread()
 	sqlite3_stmt **statement = &yapRemoveForKeyStatement;
 	if (*statement == NULL)
 	{
-		char *stmt = "DELETE FROM \"yap2\" WHERE \"extension\" = ? AND \"key\" = ?;";
+		const char *stmt = "DELETE FROM \"yap2\" WHERE \"extension\" = ? AND \"key\" = ?;";
 		int stmtLen = (int)strlen(stmt);
 		
 		int status = sqlite3_prepare_v2(db, stmt, stmtLen+1, statement, NULL);
@@ -893,7 +894,7 @@ NS_INLINE BOOL YDBIsMainThread()
 	sqlite3_stmt **statement = &yapRemoveExtensionStatement;
 	if (*statement == NULL)
 	{
-		char *stmt = "DELETE FROM \"yap2\" WHERE \"extension\" = ?;";
+		const char *stmt = "DELETE FROM \"yap2\" WHERE \"extension\" = ?;";
 		int stmtLen = (int)strlen(stmt);
 		
 		int status = sqlite3_prepare_v2(db, stmt, stmtLen+1, statement, NULL);
@@ -911,7 +912,7 @@ NS_INLINE BOOL YDBIsMainThread()
 	sqlite3_stmt **statement = &getCollectionCountStatement;
 	if (*statement == NULL)
 	{
-		char *stmt = "SELECT COUNT(DISTINCT collection) AS NumberOfRows FROM \"database2\";";
+		const char *stmt = "SELECT COUNT(DISTINCT collection) AS NumberOfRows FROM \"database2\";";
 		int stmtLen = (int)strlen(stmt);
 		
 		int status = sqlite3_prepare_v2(db, stmt, stmtLen+1, statement, NULL);
@@ -929,7 +930,7 @@ NS_INLINE BOOL YDBIsMainThread()
 	sqlite3_stmt **statement = &getKeyCountForCollectionStatement;
 	if (*statement == NULL)
 	{
-		char *stmt = "SELECT COUNT(*) AS NumberOfRows FROM \"database2\" WHERE \"collection\" = ?;";
+		const char *stmt = "SELECT COUNT(*) AS NumberOfRows FROM \"database2\" WHERE \"collection\" = ?;";
 		int stmtLen = (int)strlen(stmt);
 		
 		int status = sqlite3_prepare_v2(db, stmt, stmtLen+1, statement, NULL);
@@ -947,7 +948,7 @@ NS_INLINE BOOL YDBIsMainThread()
 	sqlite3_stmt **statement = &getKeyCountForAllStatement;
 	if (*statement == NULL)
 	{
-		char *stmt = "SELECT COUNT(*) AS NumberOfRows FROM \"database2\";";
+		const char *stmt = "SELECT COUNT(*) AS NumberOfRows FROM \"database2\";";
 		int stmtLen = (int)strlen(stmt);
 		
 		int status = sqlite3_prepare_v2(db, stmt, stmtLen+1, statement, NULL);
@@ -965,7 +966,7 @@ NS_INLINE BOOL YDBIsMainThread()
 	sqlite3_stmt **statement = &getCountForRowidStatement;
 	if (*statement == NULL)
 	{
-		char *stmt = "SELECT COUNT(*) AS NumberOfRows FROM \"database2\" WHERE \"rowid\" = ?;";
+		const char *stmt = "SELECT COUNT(*) AS NumberOfRows FROM \"database2\" WHERE \"rowid\" = ?;";
 		int stmtLen = (int)strlen(stmt);
 		
 		int status = sqlite3_prepare_v2(db, stmt, stmtLen+1, statement, NULL);
@@ -983,7 +984,7 @@ NS_INLINE BOOL YDBIsMainThread()
 	sqlite3_stmt **statement = &getRowidForKeyStatement;
 	if (*statement == NULL)
 	{
-		char *stmt = "SELECT \"rowid\" FROM \"database2\" WHERE \"collection\" = ? AND \"key\" = ?;";
+		const char *stmt = "SELECT \"rowid\" FROM \"database2\" WHERE \"collection\" = ? AND \"key\" = ?;";
 		int stmtLen = (int)strlen(stmt);
 		
 		int status = sqlite3_prepare_v2(db, stmt, stmtLen+1, statement, NULL);
@@ -1001,7 +1002,7 @@ NS_INLINE BOOL YDBIsMainThread()
 	sqlite3_stmt **statement = &getKeyForRowidStatement;
 	if (*statement == NULL)
 	{
-		char *stmt = "SELECT \"collection\", \"key\" FROM \"database2\" WHERE \"rowid\" = ?;";
+		const char *stmt = "SELECT \"collection\", \"key\" FROM \"database2\" WHERE \"rowid\" = ?;";
 		int stmtLen = (int)strlen(stmt);
 		
 		int status = sqlite3_prepare_v2(db, stmt, stmtLen+1, statement, NULL);
@@ -1019,7 +1020,7 @@ NS_INLINE BOOL YDBIsMainThread()
 	sqlite3_stmt **statement = &getDataForRowidStatement;
 	if (*statement == NULL)
 	{
-		char *stmt = "SELECT \"data\" FROM \"database2\" WHERE \"rowid\" = ?;";
+		const char *stmt = "SELECT \"data\" FROM \"database2\" WHERE \"rowid\" = ?;";
 		int stmtLen = (int)strlen(stmt);
 		
 		int status = sqlite3_prepare_v2(db, stmt, stmtLen+1, statement, NULL);
@@ -1037,7 +1038,7 @@ NS_INLINE BOOL YDBIsMainThread()
 	sqlite3_stmt **statement = &getMetadataForRowidStatement;
 	if (*statement == NULL)
 	{
-		char *stmt = "SELECT \"metadata\" FROM \"database2\" WHERE \"rowid\" = ?;";
+		const char *stmt = "SELECT \"metadata\" FROM \"database2\" WHERE \"rowid\" = ?;";
 		int stmtLen = (int)strlen(stmt);
 		
 		int status = sqlite3_prepare_v2(db, stmt, stmtLen+1, statement, NULL);
@@ -1055,7 +1056,7 @@ NS_INLINE BOOL YDBIsMainThread()
 	sqlite3_stmt **statement = &getAllForRowidStatement;
 	if (*statement == NULL)
 	{
-		char *stmt = "SELECT \"data\", \"metadata\" FROM \"database2\" WHERE \"rowid\" = ?;";
+		const char *stmt = "SELECT \"data\", \"metadata\" FROM \"database2\" WHERE \"rowid\" = ?;";
 		int stmtLen = (int)strlen(stmt);
 		
 		int status = sqlite3_prepare_v2(db, stmt, stmtLen+1, statement, NULL);
@@ -1073,7 +1074,7 @@ NS_INLINE BOOL YDBIsMainThread()
 	sqlite3_stmt **statement = &getDataForKeyStatement;
 	if (*statement == NULL)
 	{
-		char *stmt = "SELECT \"data\" FROM \"database2\" WHERE \"collection\" = ? AND \"key\" = ?;";
+		const char *stmt = "SELECT \"data\" FROM \"database2\" WHERE \"collection\" = ? AND \"key\" = ?;";
 		int stmtLen = (int)strlen(stmt);
 		
 		int status = sqlite3_prepare_v2(db, stmt, stmtLen+1, statement, NULL);
@@ -1091,7 +1092,7 @@ NS_INLINE BOOL YDBIsMainThread()
 	sqlite3_stmt **statement = &getMetadataForKeyStatement;
 	if (*statement == NULL)
 	{
-		char *stmt = "SELECT \"metadata\" FROM \"database2\" WHERE \"collection\" = ? AND \"key\" = ?;";
+		const char *stmt = "SELECT \"metadata\" FROM \"database2\" WHERE \"collection\" = ? AND \"key\" = ?;";
 		int stmtLen = (int)strlen(stmt);
 		
 		int status = sqlite3_prepare_v2(db, stmt, stmtLen+1, statement, NULL);
@@ -1109,7 +1110,7 @@ NS_INLINE BOOL YDBIsMainThread()
 	sqlite3_stmt **statement = &getAllForKeyStatement;
 	if (*statement == NULL)
 	{
-		char *stmt = "SELECT \"data\", \"metadata\" FROM \"database2\" WHERE \"collection\" = ? AND \"key\" = ?;";
+		const char *stmt = "SELECT \"data\", \"metadata\" FROM \"database2\" WHERE \"collection\" = ? AND \"key\" = ?;";
 		int stmtLen = (int)strlen(stmt);
 		
 		int status = sqlite3_prepare_v2(db, stmt, stmtLen+1, statement, NULL);
@@ -1127,8 +1128,8 @@ NS_INLINE BOOL YDBIsMainThread()
 	sqlite3_stmt **statement = &insertForRowidStatement;
 	if (*statement == NULL)
 	{
-		char *stmt = "INSERT INTO \"database2\""
-		             " (\"collection\", \"key\", \"data\", \"metadata\") VALUES (?, ?, ?, ?);";
+		const char *stmt = "INSERT INTO \"database2\""
+		                   " (\"collection\", \"key\", \"data\", \"metadata\") VALUES (?, ?, ?, ?);";
 		int stmtLen = (int)strlen(stmt);
 		
 		int status = sqlite3_prepare_v2(db, stmt, stmtLen+1, statement, NULL);
@@ -1146,7 +1147,7 @@ NS_INLINE BOOL YDBIsMainThread()
 	sqlite3_stmt **statement = &updateAllForRowidStatement;
 	if (*statement == NULL)
 	{
-		char *stmt = "UPDATE \"database2\" SET \"data\" = ?, \"metadata\" = ? WHERE \"rowid\" = ?;";
+		const char *stmt = "UPDATE \"database2\" SET \"data\" = ?, \"metadata\" = ? WHERE \"rowid\" = ?;";
 		int stmtLen = (int)strlen(stmt);
 		
 		int status = sqlite3_prepare_v2(db, stmt, stmtLen+1, statement, NULL);
@@ -1164,7 +1165,7 @@ NS_INLINE BOOL YDBIsMainThread()
 	sqlite3_stmt **statement = &updateObjectForRowidStatement;
 	if (*statement == NULL)
 	{
-		char *stmt = "UPDATE \"database2\" SET \"data\" = ? WHERE \"rowid\" = ?;";
+		const char *stmt = "UPDATE \"database2\" SET \"data\" = ? WHERE \"rowid\" = ?;";
 		int stmtLen = (int)strlen(stmt);
 		
 		int status = sqlite3_prepare_v2(db, stmt, stmtLen+1, statement, NULL);
@@ -1182,7 +1183,7 @@ NS_INLINE BOOL YDBIsMainThread()
 	sqlite3_stmt **statement = &updateMetadataForRowidStatement;
 	if (*statement == NULL)
 	{
-		char *stmt = "UPDATE \"database2\" SET \"metadata\" = ? WHERE \"rowid\" = ?;";
+		const char *stmt = "UPDATE \"database2\" SET \"metadata\" = ? WHERE \"rowid\" = ?;";
 		int stmtLen = (int)strlen(stmt);
 		
 		int status = sqlite3_prepare_v2(db, stmt, stmtLen+1, statement, NULL);
@@ -1200,7 +1201,7 @@ NS_INLINE BOOL YDBIsMainThread()
 	sqlite3_stmt **statement = &removeForRowidStatement;
 	if (*statement == NULL)
 	{
-		char *stmt = "DELETE FROM \"database2\" WHERE \"rowid\" = ?;";
+		const char *stmt = "DELETE FROM \"database2\" WHERE \"rowid\" = ?;";
 		int stmtLen = (int)strlen(stmt);
 		
 		int status = sqlite3_prepare_v2(db, stmt, stmtLen+1, statement, NULL);
@@ -1218,7 +1219,7 @@ NS_INLINE BOOL YDBIsMainThread()
 	sqlite3_stmt **statement = &removeCollectionStatement;
 	if (*statement == NULL)
 	{
-		char *stmt = "DELETE FROM \"database2\" WHERE \"collection\" = ?;";
+		const char *stmt = "DELETE FROM \"database2\" WHERE \"collection\" = ?;";
 		int stmtLen = (int)strlen(stmt);
 		
 		int status = sqlite3_prepare_v2(db, stmt, stmtLen+1, statement, NULL);
@@ -1236,7 +1237,7 @@ NS_INLINE BOOL YDBIsMainThread()
 	sqlite3_stmt **statement = &removeAllStatement;
 	if (*statement == NULL)
 	{
-		char *stmt = "DELETE FROM \"database2\";";
+		const char *stmt = "DELETE FROM \"database2\";";
 		int stmtLen = (int)strlen(stmt);
 		
 		int status = sqlite3_prepare_v2(db, stmt, stmtLen+1, statement, NULL);
@@ -1254,7 +1255,7 @@ NS_INLINE BOOL YDBIsMainThread()
 	sqlite3_stmt **statement = &enumerateCollectionsStatement;
 	if (*statement == NULL)
 	{
-		char *stmt = "SELECT DISTINCT \"collection\" FROM \"database2\";";
+		const char *stmt = "SELECT DISTINCT \"collection\" FROM \"database2\";";
 		int stmtLen = (int)strlen(stmt);
 		
 		int status = sqlite3_prepare_v2(db, stmt, stmtLen+1, statement, NULL);
@@ -1272,7 +1273,7 @@ NS_INLINE BOOL YDBIsMainThread()
 	sqlite3_stmt **statement = &enumerateCollectionsForKeyStatement;
 	if (*statement == NULL)
 	{
-		char *stmt = "SELECT \"collection\" FROM \"database2\" WHERE \"key\" = ?;";
+		const char *stmt = "SELECT \"collection\" FROM \"database2\" WHERE \"key\" = ?;";
 		int stmtLen = (int)strlen(stmt);
 		
 		int status = sqlite3_prepare_v2(db, stmt, stmtLen+1, statement, NULL);
@@ -1290,7 +1291,7 @@ NS_INLINE BOOL YDBIsMainThread()
 	sqlite3_stmt **statement = &enumerateKeysInCollectionStatement;
 	if (*statement == NULL)
 	{
-		char *stmt = "SELECT \"rowid\", \"key\" FROM \"database2\" WHERE \"collection\" = ?;";
+		const char *stmt = "SELECT \"rowid\", \"key\" FROM \"database2\" WHERE \"collection\" = ?;";
 		int stmtLen = (int)strlen(stmt);
 		
 		int status = sqlite3_prepare_v2(db, stmt, stmtLen+1, statement, NULL);
@@ -1308,7 +1309,7 @@ NS_INLINE BOOL YDBIsMainThread()
 	sqlite3_stmt **statement = &enumerateKeysInAllCollectionsStatement;
 	if (*statement == NULL)
 	{
-		char *stmt = "SELECT \"rowid\", \"collection\", \"key\" FROM \"database2\";";
+		const char *stmt = "SELECT \"rowid\", \"collection\", \"key\" FROM \"database2\";";
 		int stmtLen = (int)strlen(stmt);
 		
 		int status = sqlite3_prepare_v2(db, stmt, stmtLen+1, statement, NULL);
@@ -1326,7 +1327,7 @@ NS_INLINE BOOL YDBIsMainThread()
 	sqlite3_stmt **statement = &enumerateKeysAndMetadataInCollectionStatement;
 	if (*statement == NULL)
 	{
-		char *stmt = "SELECT \"rowid\", \"key\", \"metadata\" FROM \"database2\" WHERE collection = ?;";
+		const char *stmt = "SELECT \"rowid\", \"key\", \"metadata\" FROM \"database2\" WHERE collection = ?;";
 		int stmtLen = (int)strlen(stmt);
 		
 		int status = sqlite3_prepare_v2(db, stmt, stmtLen+1, statement, NULL);
@@ -1344,8 +1345,8 @@ NS_INLINE BOOL YDBIsMainThread()
 	sqlite3_stmt **statement = &enumerateKeysAndMetadataInAllCollectionsStatement;
 	if (*statement == NULL)
 	{
-		char *stmt = "SELECT \"rowid\", \"collection\", \"key\", \"metadata\""
-		             " FROM \"database2\" ORDER BY \"collection\" ASC;";
+		const char *stmt = "SELECT \"rowid\", \"collection\", \"key\", \"metadata\""
+		                   " FROM \"database2\" ORDER BY \"collection\" ASC;";
 		int stmtLen = (int)strlen(stmt);
 		
 		int status = sqlite3_prepare_v2(db, stmt, stmtLen+1, statement, NULL);
@@ -1363,7 +1364,7 @@ NS_INLINE BOOL YDBIsMainThread()
 	sqlite3_stmt **statement = &enumerateKeysAndObjectsInCollectionStatement;
 	if (*statement == NULL)
 	{
-		char *stmt = "SELECT \"rowid\", \"key\", \"data\" FROM \"database2\" WHERE \"collection\" = ?;";
+		const char *stmt = "SELECT \"rowid\", \"key\", \"data\" FROM \"database2\" WHERE \"collection\" = ?;";
 		int stmtLen = (int)strlen(stmt);
 		
 		int status = sqlite3_prepare_v2(db, stmt, stmtLen+1, statement, NULL);
@@ -1381,8 +1382,8 @@ NS_INLINE BOOL YDBIsMainThread()
 	sqlite3_stmt **statement = &enumerateKeysAndObjectsInAllCollectionsStatement;
 	if (*statement == NULL)
 	{
-		char *stmt = "SELECT \"rowid\", \"collection\", \"key\", \"data\""
-		             " FROM \"database2\" ORDER BY \"collection\" ASC;";
+		const char *stmt = "SELECT \"rowid\", \"collection\", \"key\", \"data\""
+		                   " FROM \"database2\" ORDER BY \"collection\" ASC;";
 		int stmtLen = (int)strlen(stmt);
 		
 		int status = sqlite3_prepare_v2(db, stmt, stmtLen+1, statement, NULL);
@@ -1400,7 +1401,8 @@ NS_INLINE BOOL YDBIsMainThread()
 	sqlite3_stmt **statement = &enumerateRowsInCollectionStatement;
 	if (*statement == NULL)
 	{
-		char *stmt = "SELECT \"rowid\", \"key\", \"data\", \"metadata\" FROM \"database2\" WHERE \"collection\" = ?;";
+		const char *stmt = "SELECT \"rowid\", \"key\", \"data\", \"metadata\""
+		                   " FROM \"database2\" WHERE \"collection\" = ?;";
 		int stmtLen = (int)strlen(stmt);
 		
 		int status = sqlite3_prepare_v2(db, stmt, stmtLen+1, statement, NULL);
@@ -1418,9 +1420,8 @@ NS_INLINE BOOL YDBIsMainThread()
 	sqlite3_stmt **statement = &enumerateRowsInAllCollectionsStatement;
 	if (*statement == NULL)
 	{
-		char *stmt =
-		    "SELECT \"rowid\", \"collection\", \"key\", \"data\", \"metadata\""
-		    " FROM \"database2\" ORDER BY \"collection\" ASC;";
+		const char *stmt = "SELECT \"rowid\", \"collection\", \"key\", \"data\", \"metadata\""
+		                   " FROM \"database2\" ORDER BY \"collection\" ASC;";
 		int stmtLen = (int)strlen(stmt);
 		
 		int status = sqlite3_prepare_v2(db, stmt, stmtLen+1, statement, NULL);
@@ -1553,7 +1554,7 @@ NS_INLINE BOOL YDBIsMainThread()
 }
 
 /**
- * Read-write access to the database.
+ * Read-only access to the database.
  *
  * The given block can run concurrently with sibling connections,
  * regardless of whether the sibling connections are executing read-only or read-write transactions.
@@ -1570,7 +1571,7 @@ NS_INLINE BOOL YDBIsMainThread()
 }
 
 /**
- * Read-write access to the database.
+ * Read-only access to the database.
  *
  * The given block can run concurrently with sibling connections,
  * regardless of whether the sibling connections are executing read-only or read-write transactions.
@@ -2608,10 +2609,10 @@ NS_INLINE BOOL YDBIsMainThread()
 	int const bind_idx_extension = SQLITE_BIND_START + 0;
 	int const bind_idx_key       = SQLITE_BIND_START + 1;
 	
-	char *extension = "";
+	const char *extension = "";
 	sqlite3_bind_text(statement, bind_idx_extension, extension, (int)strlen(extension), SQLITE_STATIC);
 	
-	char *key = "snapshot";
+	const char *key = "snapshot";
 	sqlite3_bind_text(statement, bind_idx_key, key, (int)strlen(key), SQLITE_STATIC);
 	
 	int status = sqlite3_step(statement);
@@ -2647,10 +2648,10 @@ NS_INLINE BOOL YDBIsMainThread()
 	int const bind_idx_key       = SQLITE_BIND_START + 1;
 	int const bind_idx_data      = SQLITE_BIND_START + 2;
 	
-	char *extension = "";
+	const char *extension = "";
 	sqlite3_bind_text(statement, bind_idx_extension, extension, (int)strlen(extension), SQLITE_STATIC);
 	
-	char *key = "snapshot";
+	const char *key = "snapshot";
 	sqlite3_bind_text(statement, bind_idx_key, key, (int)strlen(key), SQLITE_STATIC);
 	
 	sqlite3_bind_int64(statement, bind_idx_data, (sqlite3_int64)newSnapshot);
