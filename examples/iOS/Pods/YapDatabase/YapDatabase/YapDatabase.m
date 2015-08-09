@@ -27,6 +27,7 @@
 #else
   static const int ydbLogLevel = YDB_LOG_LEVEL_WARN;
 #endif
+#pragma unused(ydbLogLevel)
 
 NSString *const YapDatabaseClosedNotification = @"YapDatabaseClosedNotification";
 
@@ -221,6 +222,7 @@ NSString *const YapDatabaseNotificationKey           = @"notification";
 
 @dynamic options;
 @dynamic sqliteVersion;
+@dynamic sqlitePageSize;
 
 - (NSString *)databasePath_wal
 {
@@ -243,6 +245,17 @@ NSString *const YapDatabaseNotificationKey           = @"notification";
 	
 	dispatch_sync(snapshotQueue, ^{
 		result = sqliteVersion;
+	});
+	
+	return result;
+}
+
+- (NSInteger)sqlitePageSize
+{
+	__block NSInteger result = 0;
+	
+	dispatch_sync(snapshotQueue, ^{
+		result = pageSize;
 	});
 	
 	return result;
@@ -653,6 +666,18 @@ NSString *const YapDatabaseNotificationKey           = @"notification";
 	
 	// Set mandatory pragmas
 	
+	if (isNewDatabaseFile && (options.pragmaPageSize > 0))
+	{
+		NSString *pragma_page_size =
+		  [NSString stringWithFormat:@"PRAGMA page_size = %ld;", (long)options.pragmaPageSize];
+		
+		status = sqlite3_exec(db, [pragma_page_size UTF8String], NULL, NULL, NULL);
+		if (status != SQLITE_OK)
+		{
+			YDBLogError(@"Error setting PRAGMA page_size: %d %s", status, sqlite3_errmsg(db));
+		}
+	}
+	
 	status = sqlite3_exec(db, "PRAGMA journal_mode = WAL;", NULL, NULL, NULL);
 	if (status != SQLITE_OK)
 	{
@@ -695,10 +720,10 @@ NSString *const YapDatabaseNotificationKey           = @"notification";
 	// We only need to do set this pragma for THIS connection,
 	// because it is the only connection that performs checkpoints.
 	
-	NSString *stmt =
+	NSString *pragma_journal_size_limit =
 	  [NSString stringWithFormat:@"PRAGMA journal_size_limit = %ld;", (long)options.pragmaJournalSizeLimit];
 	
-	status = sqlite3_exec(db, [stmt UTF8String], NULL, NULL, NULL);
+	status = sqlite3_exec(db, [pragma_journal_size_limit UTF8String], NULL, NULL, NULL);
 	if (status != SQLITE_OK)
 	{
 		YDBLogError(@"Error setting PRAGMA journal_size_limit: %d %s", status, sqlite3_errmsg(db));
@@ -792,7 +817,7 @@ NSString *const YapDatabaseNotificationKey           = @"notification";
 	status = sqlite3_exec(db, createIndexStatement, NULL, NULL, NULL);
 	if (status != SQLITE_OK)
 	{
-		YDBLogError(@"Failed creating index on 'database' table: %d %s", status, sqlite3_errmsg(db));
+		YDBLogError(@"Failed creating index on 'database2' table: %d %s", status, sqlite3_errmsg(db));
 		return NO;
 	}
 	
@@ -2588,7 +2613,9 @@ NSString *const YapDatabaseNotificationKey           = @"notification";
 #pragma mark Manual Checkpointing
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+#if (YapDatabaseLoggingTechnique != YapDatabaseLoggingTechnique_Disabled)
 static BOOL const YDB_PRINT_WAL_SIZE = YES;
+#endif
 
 /**
  * This method should be called whenever the maximum checkpointable snapshot is incremented.
@@ -2611,6 +2638,7 @@ static BOOL const YDB_PRINT_WAL_SIZE = YES;
 		
 		YDBLogVerbose(@"Checkpointing up to snapshot %llu", maxCheckpointableSnapshot);
 		
+	#if (YapDatabaseLoggingTechnique != YapDatabaseLoggingTechnique_Disabled)
 		if (YDB_LOG_VERBOSE && YDB_PRINT_WAL_SIZE)
 		{
 			NSString *walFilePath = [strongSelf.databasePath stringByAppendingString:@"-wal"];
@@ -2622,6 +2650,7 @@ static BOOL const YDB_PRINT_WAL_SIZE = YES;
 			  [NSByteCountFormatter stringFromByteCount:(long long)walFileSize
 			                                 countStyle:NSByteCountFormatterCountStyleFile]);
 		}
+	#endif
 		
 		// We're ready to checkpoint more frames.
 		//
@@ -2655,6 +2684,7 @@ static BOOL const YDB_PRINT_WAL_SIZE = YES;
 		YDBLogVerbose(@"Post-checkpoint (mode=passive) (snapshot=%llu): frames(%d) checkpointed(%d)",
 		              maxCheckpointableSnapshot, toalFrameCount, checkpointedFrameCount);
 		
+	#if (YapDatabaseLoggingTechnique != YapDatabaseLoggingTechnique_Disabled)
 		if (YDB_LOG_VERBOSE && YDB_PRINT_WAL_SIZE)
 		{
 			NSString *walFilePath = [strongSelf.databasePath stringByAppendingString:@"-wal"];
@@ -2666,6 +2696,7 @@ static BOOL const YDB_PRINT_WAL_SIZE = YES;
 			  [NSByteCountFormatter stringFromByteCount:(long long)walFileSize
 			                                 countStyle:NSByteCountFormatterCountStyleFile]);
 		}
+	#endif
 		
 		// Have we checkpointed the entire WAL yet?
 		
@@ -2687,10 +2718,13 @@ static BOOL const YDB_PRINT_WAL_SIZE = YES;
 			
 			dispatch_async(strongSelf->snapshotQueue, ^{
 				
-				for (YapDatabaseConnectionState *state in strongSelf->connectionStates)
+				__strong YapDatabase *strongSelf2 = weakSelf;
+				if (strongSelf2 == nil) return;
+				
+				for (YapDatabaseConnectionState *state in strongSelf2->connectionStates)
 				{
 					if (state->longLivedReadTransaction &&
-						state->lastTransactionSnapshot == strongSelf->snapshot)
+						state->lastTransactionSnapshot == strongSelf2->snapshot)
 					{
 						[state->connection maybeResetLongLivedReadTransaction];
 					}
@@ -2826,6 +2860,7 @@ static BOOL const YDB_PRINT_WAL_SIZE = YES;
 				[strongSelf commitTransaction];
 			}
 			
+		#if (YapDatabaseLoggingTechnique != YapDatabaseLoggingTechnique_Disabled)
 			if (YDB_LOG_VERBOSE && YDB_PRINT_WAL_SIZE)
 			{
 				NSString *walFilePath = [strongSelf.databasePath stringByAppendingString:@"-wal"];
@@ -2838,7 +2873,7 @@ static BOOL const YDB_PRINT_WAL_SIZE = YES;
 				    [NSByteCountFormatter stringFromByteCount:(long long)walFileSize
 				                                   countStyle:NSByteCountFormatterCountStyleFile]);
 			}
-
+		#endif
 			
 		#pragma clang diagnostic pop
 		}});
