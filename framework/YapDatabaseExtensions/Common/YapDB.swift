@@ -493,14 +493,14 @@ extension YapDB {
 extension YapDB {
 
     public class Search {
-        public typealias Query = String -> String
+        public typealias Query = (searchTerm: String) -> String
 
         let database: YapDatabase
         let connection: YapDatabaseConnection
         let queues: [(String, YapDatabaseSearchQueue)]
         let query: Query
 
-        public init(db: YapDatabase, views: [YapDB.Fetch], query q: Query = { $0 }) {
+        public init(db: YapDatabase, views: [YapDB.Fetch], query q: Query) {
             database = db
             connection = db.newConnection()
             let _views = views.filter { fetch in
@@ -516,13 +516,13 @@ extension YapDB {
             query = q
         }
 
-        public convenience init(db: YapDatabase, view: YapDB.Fetch, query: Query = { $0 }) {
+        public convenience init(db: YapDatabase, view: YapDB.Fetch, query: Query) {
             self.init(db: db, views: [view], query: query)
         }
 
         public func usingTerm(term: String) {
             for (name, queue) in queues {
-                queue.enqueueQuery(query(term))
+                queue.enqueueQuery(query(searchTerm: term))
             }
             connection.asyncReadWriteWithBlock { [queues = self.queues] transaction in
                 for (name, queue) in queues {
