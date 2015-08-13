@@ -24,7 +24,7 @@ extension YapDB {
 
         case View(YapDB.View)
         case Filter(YapDB.Filter)
-        case Search(YapDB.Search)
+        case Search(YapDB.SearchResults)
         case Index(YapDB.SecondaryIndex)
 
         public var name: String {
@@ -285,7 +285,7 @@ extension YapDB {
     In this case, the parent is a YapDB.Fetch type. This
     allows for searching of other filters, and even searching inside search results.
     */
-    public class Search: BaseView, YapDatabaseViewProducer, YapDatabaseExtensionRegistrar {
+    public class SearchResults: BaseView, YapDatabaseViewProducer, YapDatabaseExtensionRegistrar {
 
         /**
         An enum to make creating YapDatabaseFullTextSearchHandler easier.
@@ -477,7 +477,7 @@ extension YapDB {
             self.init(fetch: .Filter(filter))
         }
 
-        public init(search: YapDB.Search) {
+        public init(search: YapDB.SearchResults) {
             self.init(fetch: .Search(search))
         }
 
@@ -490,5 +490,51 @@ extension YapDB {
 }
 
 
+extension YapDB {
 
+    public class Search {
+        public typealias Query = String -> String
+
+        let database: YapDatabase
+        let connection: YapDatabaseConnection
+        let queues: [(String, YapDatabaseSearchQueue)]
+        let query: Query
+
+        public init(db: YapDatabase, views: [YapDB.Fetch], query q: Query = { $0 }) {
+            database = db
+            connection = db.newConnection()
+            let _views = views.filter { fetch in
+                switch fetch {
+                case .Index(_): return false
+                default: return true
+                }
+            }
+            queues = _views.map { view in
+                view.registerInDatabase(db)
+                return (view.name, YapDatabaseSearchQueue())
+            }
+            query = q
+        }
+
+        public convenience init(db: YapDatabase, view: YapDB.Fetch, query: Query = { $0 }) {
+            self.init(db: db, views: [view], query: query)
+        }
+
+        public func usingTerm(term: String) {
+            for (name, queue) in queues {
+                queue.enqueueQuery(query(term))
+            }
+            connection.asyncReadWriteWithBlock { [queues = self.queues] transaction in
+                for (name, queue) in queues {
+                    if let searchResultsViewTransaction = transaction.ext(name) as? YapDatabaseSearchResultsViewTransaction {
+                        searchResultsViewTransaction.performSearchWithQueue(queue)
+                    }
+                    else {
+                        assertionFailure("Error: Attempting search using results view with name: \(name) which isn't a registered database extension.")
+                    }
+                }
+            }
+        }
+    }
+}
 
