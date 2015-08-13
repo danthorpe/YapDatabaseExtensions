@@ -399,10 +399,10 @@ extension YapDB {
             }
         }
 
-        public init(name n: String, handler h: Handler, columnTypes ct: [String: YapDatabaseSecondaryIndexType], version v: String, persistent p: Bool, collections c: [String]?) {
+        public init(name n: String, handler h: Handler, columnTypes ct: [String: YapDatabaseSecondaryIndexType], version: String = "1.0", persistent: Bool = true, collections c: [String]?) {
             handler = h
             columnTypes = ct
-            super.init(name: n, version: v, persistent: p, collections: c)
+            super.init(name: n, version: version, persistent: persistent, collections: c)
         }
 
         func setup() -> YapDatabaseSecondaryIndexSetup {
