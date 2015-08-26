@@ -10,14 +10,20 @@ private func when<T>(promises: [Promise<T>]) -> Promise<Void> {
     var progress: (completedUnitCount: Int, totalUnitCount: Int) = (0, 0)
 #endif
     var countdown = promises.count
+    if countdown == 0 {
+        fulfill()
+        return rootPromise
+    }
+    let barrier = dispatch_queue_create("org.promisekit.barrier.when", DISPATCH_QUEUE_CONCURRENT)
 
     for (index, promise) in enumerate(promises) {
         promise.pipe { resolution in
-            if rootPromise.pending {
+            if !rootPromise.pending { return }
+
+            dispatch_barrier_sync(barrier) {
                 switch resolution {
                 case .Rejected(let error):
                     progress.completedUnitCount = progress.totalUnitCount
-                    //TODO PMKFailingPromiseIndexKey
                     reject(error)
                 case .Fulfilled:
                     progress.completedUnitCount++
@@ -51,3 +57,6 @@ public func when<U, V>(pu: Promise<U>, pv: Promise<V>) -> Promise<(U, V)> {
 public func when<U, V, X>(pu: Promise<U>, pv: Promise<V>, px: Promise<X>) -> Promise<(U, V, X)> {
     return when(pu.asVoid(), pv.asVoid(), px.asVoid()).then(on: zalgo) { (pu.value!, pv.value!, px.value!) }
 }
+
+@availability(*, unavailable, message="Use `when`")
+public func join<T>(promises: Promise<T>...) {}

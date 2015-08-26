@@ -1,3 +1,4 @@
+import Dispatch
 import Foundation.NSError
 
 /**
@@ -18,8 +19,10 @@ import Foundation.NSError
  @return The previous unhandled error handler.
 */
 public var PMKUnhandledErrorHandler = { (error: NSError) -> Void in
-    if !error.cancelled {
-        NSLog("PromiseKit: Unhandled error: %@", error)
+    dispatch_async(dispatch_get_main_queue()) {
+        if !error.cancelled {
+            NSLog("PromiseKit: Unhandled error: %@", error)
+        }
     }
 }
 
@@ -44,8 +47,14 @@ private class Consumable: NSObject {
 private var handle: UInt8 = 0
 
 func consume(error: NSError) {
-    let pmke = objc_getAssociatedObject(error, &handle) as! Consumable
-    pmke.consumed = true
+    // The association could be nil if the objc_setAssociatedObject
+    // has taken a *really* long time. Or perhaps the user has
+    // overused `zalgo`. Thus we ignore it. This is an unlikely edge
+    // case and the unhandled-error feature is not mission-critical.
+
+    if let pmke = objc_getAssociatedObject(error, &handle) as? Consumable {
+        pmke.consumed = true
+    }
 }
 
 extension AnyPromise {
@@ -62,7 +71,7 @@ func unconsume(error: NSError) {
     } else {
         // this is how we know when the error is deallocated
         // because we will be deallocated at the same time
-        objc_setAssociatedObject(error, &handle, Consumable(parent: error), objc_AssociationPolicy(OBJC_ASSOCIATION_RETAIN_NONATOMIC))
+        objc_setAssociatedObject(error, &handle, Consumable(parent: error), objc_AssociationPolicy(OBJC_ASSOCIATION_RETAIN))
     }
 }
 
@@ -101,6 +110,9 @@ extension NSError {
         cancelledErrorIdentifiers.insert(ErrorPair(domain, code))
     }
 
+    /**
+     You may only call this on the main thread.
+    */
     public var cancelled: Bool {
         return cancelledErrorIdentifiers.contains(ErrorPair(domain, code))
     }
