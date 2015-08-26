@@ -8,7 +8,6 @@ PODS:
     - CocoaLumberjack/Core
   - CocoaLumberjack/Extensions (2.0.1):
     - CocoaLumberjack/Default
-  - Operations (0.10.1)
   - PromiseKit/CorePromise (2.2.1)
   - PromiseKit/Swift/Promise (2.2.1):
     - PromiseKit/CorePromise
@@ -20,7 +19,6 @@ PODS:
 
 DEPENDENCIES:
   - BrightFutures (~> 1.0)
-  - Operations
   - PromiseKit/Swift/Promise (~> 2)
   - SwiftTask (~> 3)
   - YapDatabase (~> 2.6)
@@ -28,7 +26,6 @@ DEPENDENCIES:
 SPEC CHECKSUMS:
   BrightFutures: 76c1b0f2ff9694959c8359dad80f42c6e60c4a59
   CocoaLumberjack: 019d1361244274a6138c788c6cb80baabc13fb8f
-  Operations: 932f90f1910c76c2151d376b572bddd693f79cbb
   PromiseKit: 9c92257e39abf4b634533d44268592dfc6e4b5c2
   SwiftTask: 0baec4571e2ea235e73817c399cde12056c81f6f
   YapDatabase: e9ff9a189e99268a331575411e8462e4c6df2bc3
