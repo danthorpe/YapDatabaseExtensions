@@ -28,6 +28,7 @@
 #else
   static const int ydbLogLevel = YDB_LOG_LEVEL_WARN;
 #endif
+#pragma unused(ydbLogLevel)
 
 /**
  * The view is tasked with storing ordered arrays of keys.
@@ -670,7 +671,7 @@
 			__unsafe_unretained YapDatabaseViewGroupingWithKeyBlock groupingBlock =
 		        (YapDatabaseViewGroupingWithKeyBlock)groupingBlock_generic;
 			
-			return groupingBlock(collection, key);
+			return groupingBlock(databaseTransaction, collection, key);
 		};
 	}
 	else if (groupingBlockType == YapDatabaseViewBlockTypeWithObject)
@@ -680,7 +681,7 @@
 			__unsafe_unretained YapDatabaseViewGroupingWithObjectBlock groupingBlock =
 		        (YapDatabaseViewGroupingWithObjectBlock)groupingBlock_generic;
 			
-			return groupingBlock(collection, key, object);
+			return groupingBlock(databaseTransaction, collection, key, object);
 		};
 	}
 	else if (groupingBlockType == YapDatabaseViewBlockTypeWithMetadata)
@@ -690,7 +691,7 @@
 			__unsafe_unretained YapDatabaseViewGroupingWithMetadataBlock groupingBlock =
 		        (YapDatabaseViewGroupingWithMetadataBlock)groupingBlock_generic;
 			
-			return groupingBlock(collection, key, metadata);
+			return groupingBlock(databaseTransaction, collection, key, metadata);
 		};
 	}
 	else
@@ -700,7 +701,7 @@
 			__unsafe_unretained YapDatabaseViewGroupingWithRowBlock groupingBlock =
 		        (YapDatabaseViewGroupingWithRowBlock)groupingBlock_generic;
 			
-			return groupingBlock(collection, key, object, metadata);
+			return groupingBlock(databaseTransaction, collection, key, object, metadata);
 		};
 	}
 	
@@ -1312,9 +1313,9 @@
 			for (NSUInteger i = 0; i < count; i++)
 			{
 				if (i == 0)
-					[query appendFormat:@"?"];
+					[query appendString:@"?"];
 				else
-					[query appendFormat:@", ?"];
+					[query appendString:@", ?"];
 			}
 			
 			[query appendString:@");"];
@@ -1899,8 +1900,9 @@
 			
 			YapCollectionKey *another = [databaseTransaction collectionKeyForRowid:anotherRowid];
 			
-			return sortingBlock(group, collectionKey.collection, collectionKey.key,
-			                                 another.collection,       another.key);
+			return sortingBlock(databaseTransaction, group,
+			                      collectionKey.collection, collectionKey.key,
+			                            another.collection,       another.key);
 		}
 		else if (sortingBlockType == YapDatabaseViewBlockTypeWithObject)
 		{
@@ -1913,8 +1915,9 @@
 			                               object:&anotherObject
 			                             forRowid:anotherRowid];
 			
-			return sortingBlock(group, collectionKey.collection, collectionKey.key,        object,
-			                                 another.collection,       another.key, anotherObject);
+			return sortingBlock(databaseTransaction, group,
+			                      collectionKey.collection, collectionKey.key,        object,
+			                            another.collection,       another.key, anotherObject);
 		}
 		else if (sortingBlockType == YapDatabaseViewBlockTypeWithMetadata)
 		{
@@ -1927,8 +1930,9 @@
 			                             metadata:&anotherMetadata
 			                             forRowid:anotherRowid];
 			
-			return sortingBlock(group, collectionKey.collection, collectionKey.key,        metadata,
-			                                 another.collection,       another.key, anotherMetadata);
+			return sortingBlock(databaseTransaction, group,
+			                      collectionKey.collection, collectionKey.key,        metadata,
+			                            another.collection,       another.key, anotherMetadata);
 		}
 		else
 		{
@@ -1943,8 +1947,9 @@
 			                             metadata:&anotherMetadata
 			                             forRowid:anotherRowid];
 			
-			return sortingBlock(group, collectionKey.collection, collectionKey.key,        object,        metadata,
-			                                 another.collection,       another.key, anotherObject, anotherMetadata);
+			return sortingBlock(databaseTransaction, group,
+			                      collectionKey.collection, collectionKey.key,        object,        metadata,
+			                            another.collection,       another.key, anotherObject, anotherMetadata);
 		}
 	};
 	
@@ -3399,28 +3404,28 @@
 			__unsafe_unretained YapDatabaseViewGroupingWithKeyBlock groupingBlock =
 			    (YapDatabaseViewGroupingWithKeyBlock)groupingBlock_generic;
 			
-			group = groupingBlock(collection, key);
+			group = groupingBlock(databaseTransaction, collection, key);
 		}
 		else if (groupingBlockType == YapDatabaseViewBlockTypeWithObject)
 		{
 			__unsafe_unretained YapDatabaseViewGroupingWithObjectBlock groupingBlock =
 			    (YapDatabaseViewGroupingWithObjectBlock)groupingBlock_generic;
 			
-			group = groupingBlock(collection, key, object);
+			group = groupingBlock(databaseTransaction, collection, key, object);
 		}
 		else if (groupingBlockType == YapDatabaseViewBlockTypeWithMetadata)
 		{
 			__unsafe_unretained YapDatabaseViewGroupingWithMetadataBlock groupingBlock =
 			    (YapDatabaseViewGroupingWithMetadataBlock)groupingBlock_generic;
 			
-			group = groupingBlock(collection, key, metadata);
+			group = groupingBlock(databaseTransaction, collection, key, metadata);
 		}
 		else
 		{
 			__unsafe_unretained YapDatabaseViewGroupingWithRowBlock groupingBlock =
 			    (YapDatabaseViewGroupingWithRowBlock)groupingBlock_generic;
 			
-			group = groupingBlock(collection, key, object, metadata);
+			group = groupingBlock(databaseTransaction, collection, key, object, metadata);
 		}
 	}
 	
@@ -3479,28 +3484,28 @@
 			__unsafe_unretained YapDatabaseViewGroupingWithKeyBlock groupingBlock =
 			    (YapDatabaseViewGroupingWithKeyBlock)groupingBlock_generic;
 			
-			group = groupingBlock(collection, key);
+			group = groupingBlock(databaseTransaction, collection, key);
 		}
 		else if (groupingBlockType == YapDatabaseViewBlockTypeWithObject)
 		{
 			__unsafe_unretained YapDatabaseViewGroupingWithObjectBlock groupingBlock =
 			    (YapDatabaseViewGroupingWithObjectBlock)groupingBlock_generic;
 			
-			group = groupingBlock(collection, key, object);
+			group = groupingBlock(databaseTransaction, collection, key, object);
 		}
 		else if (groupingBlockType == YapDatabaseViewBlockTypeWithMetadata)
 		{
 			__unsafe_unretained YapDatabaseViewGroupingWithMetadataBlock groupingBlock =
 			    (YapDatabaseViewGroupingWithMetadataBlock)groupingBlock_generic;
 			
-			group = groupingBlock(collection, key, metadata);
+			group = groupingBlock(databaseTransaction, collection, key, metadata);
 		}
 		else
 		{
 			__unsafe_unretained YapDatabaseViewGroupingWithRowBlock groupingBlock =
 			    (YapDatabaseViewGroupingWithRowBlock)groupingBlock_generic;
 			
-			group = groupingBlock(collection, key, object, metadata);
+			group = groupingBlock(databaseTransaction, collection, key, object, metadata);
 		}
 	}
 	
@@ -3621,7 +3626,7 @@
 				__unsafe_unretained YapDatabaseViewGroupingWithObjectBlock groupingBlock =
 			        (YapDatabaseViewGroupingWithObjectBlock)groupingBlock_generic;
 				
-				group = groupingBlock(collection, key, object);
+				group = groupingBlock(databaseTransaction, collection, key, object);
 			}
 			else
 			{
@@ -3629,7 +3634,7 @@
 			        (YapDatabaseViewGroupingWithRowBlock)groupingBlock_generic;
 				
 				metadata = [databaseTransaction metadataForCollectionKey:collectionKey withRowid:rowid];
-				group = groupingBlock(collection, key, object, metadata);
+				group = groupingBlock(databaseTransaction, collection, key, object, metadata);
 			}
 		}
 		
@@ -3784,7 +3789,7 @@
 				__unsafe_unretained YapDatabaseViewGroupingWithMetadataBlock groupingBlock =
 			        (YapDatabaseViewGroupingWithMetadataBlock)groupingBlock_generic;
 				
-				group = groupingBlock(collection, key, metadata);
+				group = groupingBlock(databaseTransaction, collection, key, metadata);
 			}
 			else
 			{
@@ -3792,7 +3797,7 @@
 			        (YapDatabaseViewGroupingWithRowBlock)groupingBlock_generic;
 				
 				object = [databaseTransaction objectForCollectionKey:collectionKey withRowid:rowid];
-				group = groupingBlock(collection, key, object, metadata);
+				group = groupingBlock(databaseTransaction, collection, key, object, metadata);
 			}
 		}
 		
@@ -3994,7 +3999,7 @@
 
 - (NSUInteger)numberOfGroups
 {
-	// Note: We don't remove pages or groups until preCommitReadWriteTransaction.
+	// Note: We don't remove pages or groups until flushPendingChangesToExtensionTables.
 	// This allows us to recycle pages whenever possible, which reduces disk IO during the commit.
 	
 	__block NSUInteger count = 0;
@@ -4016,7 +4021,7 @@
 
 - (NSArray *)allGroups
 {
-	// Note: We don't remove pages or groups until preCommitReadWriteTransaction.
+	// Note: We don't remove pages or groups until flushPendingChangesToExtensionTables.
 	// This allows us to recycle pages whenever possible, which reduces disk IO during the commit.
 	
 	NSMutableArray *allGroups = [NSMutableArray arrayWithCapacity:[viewConnection->state numberOfGroups]];
@@ -4042,7 +4047,7 @@
 **/
 - (BOOL)hasGroup:(NSString *)group
 {
-	// Note: We don't remove pages or groups until preCommitReadWriteTransaction.
+	// Note: We don't remove pages or groups until flushPendingChangesToExtensionTables.
 	// This allows us to recycle pages whenever possible, which reduces disk IO during the commit.
 	
 	NSArray *pagesMetadataForGroup = [viewConnection->state pagesMetadataForGroup:group];
@@ -4306,16 +4311,9 @@
 /**
  * See header file for extensive documentation for this method.
 **/
-- (NSRange)findRangeInGroup:(NSString *)group
-                 usingBlock:(YapDatabaseViewFindBlock)block
-                  blockType:(YapDatabaseViewBlockType)blockType
+- (NSRange)findRangeInGroup:(NSString *)group using:(YapDatabaseViewFind *)find quitAfterOne:(BOOL)quitAfterOne
 {
-	BOOL invalidBlockType = blockType != YapDatabaseViewBlockTypeWithKey      &&
-	                        blockType != YapDatabaseViewBlockTypeWithObject   &&
-	                        blockType != YapDatabaseViewBlockTypeWithMetadata &&
-	                        blockType != YapDatabaseViewBlockTypeWithRow;
-	
-	if (group == nil || block == NULL || invalidBlockType)
+	if (group == nil || find == NULL)
 	{
 		return NSMakeRange(NSNotFound, 0);
 	}
@@ -4333,9 +4331,11 @@
 		return NSMakeRange(NSNotFound, 0);
 	}
 	
-	NSComparisonResult (^compare)(NSUInteger) = ^NSComparisonResult (NSUInteger index){
-		
-		int64_t rowid = 0;
+	// Helper block:
+	//
+	// Finds the rowid for a given index (within the view.group).
+	
+	int64_t (^findRowid)(NSUInteger) = ^int64_t (NSUInteger index){
 		
 		NSUInteger pageOffset = 0;
 		for (YapDatabaseViewPageMetadata *pageMetadata in pagesMetadataForGroup)
@@ -4344,8 +4344,7 @@
 			{
 				YapDatabaseViewPage *page = [self pageForPageKey:pageMetadata->pageKey];
 				
-				rowid = [page rowidAtIndex:(index - pageOffset)];
-				break;
+				return [page rowidAtIndex:(index - pageOffset)];
 			}
 			else
 			{
@@ -4353,50 +4352,90 @@
 			}
 		}
 		
-		if (blockType == YapDatabaseViewBlockTypeWithKey)
+		NSAssert(NO, @"index(%lu) not found !!!", (unsigned long)index);
+		return (int64_t)0;
+	};
+	
+	// Helper block:
+	//
+	// Executes the findBlock against the row represented by the given index (within the view.group).
+	
+	NSComparisonResult (^compare)(NSUInteger);
+		
+	switch (find.findBlockType)
+	{
+		case YapDatabaseViewBlockTypeWithKey :
 		{
 			__unsafe_unretained YapDatabaseViewFindWithKeyBlock findBlock =
-			    (YapDatabaseViewFindWithKeyBlock)block;
+			  (YapDatabaseViewFindWithKeyBlock)find.findBlock;
 			
-			YapCollectionKey *ck = [databaseTransaction collectionKeyForRowid:rowid];
+			compare = ^NSComparisonResult (NSUInteger index){
+				
+				int64_t rowid = findRowid(index);
+				
+				YapCollectionKey *ck = [databaseTransaction collectionKeyForRowid:rowid];
+				
+				return findBlock(ck.collection, ck.key);
+			};
 			
-			return findBlock(ck.collection, ck.key);
+			break;
 		}
-		else if (blockType == YapDatabaseViewBlockTypeWithObject)
+		case YapDatabaseViewBlockTypeWithObject :
 		{
 			__unsafe_unretained YapDatabaseViewFindWithObjectBlock findBlock =
-			    (YapDatabaseViewFindWithObjectBlock)block;
+			    (YapDatabaseViewFindWithObjectBlock)find.findBlock;
 			
-			YapCollectionKey *ck = nil;
-			id object = nil;
-			[databaseTransaction getCollectionKey:&ck object:&object forRowid:rowid];
+			compare = ^NSComparisonResult (NSUInteger index){
+				
+				int64_t rowid = findRowid(index);
+				
+				YapCollectionKey *ck = nil;
+				id object = nil;
+				[databaseTransaction getCollectionKey:&ck object:&object forRowid:rowid];
+				
+				return findBlock(ck.collection, ck.key, object);
+			};
 			
-			return findBlock(ck.collection, ck.key, object);
+			break;
 		}
-		else if (blockType == YapDatabaseViewBlockTypeWithMetadata)
+		case YapDatabaseViewBlockTypeWithMetadata :
 		{
 			__unsafe_unretained YapDatabaseViewFindWithMetadataBlock findBlock =
-			    (YapDatabaseViewFindWithMetadataBlock)block;
+			    (YapDatabaseViewFindWithMetadataBlock)find.findBlock;
 			
-			YapCollectionKey *ck = nil;
-			id metadata = nil;
-			[databaseTransaction getCollectionKey:&ck metadata:&metadata forRowid:rowid];
+			compare = ^NSComparisonResult (NSUInteger index){
+				
+				int64_t rowid = findRowid(index);
+				
+				YapCollectionKey *ck = nil;
+				id metadata = nil;
+				[databaseTransaction getCollectionKey:&ck metadata:&metadata forRowid:rowid];
+				
+				return findBlock(ck.collection, ck.key, metadata);
+			};
 			
-			return findBlock(ck.collection, ck.key, metadata);
+			break;
 		}
-		else
+		default :
 		{
 			__unsafe_unretained YapDatabaseViewFindWithRowBlock findBlock =
-			    (YapDatabaseViewFindWithRowBlock)block;
+			    (YapDatabaseViewFindWithRowBlock)find.findBlock;
 			
-			YapCollectionKey *ck = nil;
-			id object = nil;
-			id metadata = nil;
-			[databaseTransaction getCollectionKey:&ck object:&object metadata:&metadata forRowid:rowid];
-			
-			return findBlock(ck.collection, ck.key, object, metadata);
+			compare = ^NSComparisonResult (NSUInteger index){
+				
+				int64_t rowid = findRowid(index);
+				
+				YapCollectionKey *ck = nil;
+				id object = nil;
+				id metadata = nil;
+				[databaseTransaction getCollectionKey:&ck object:&object metadata:&metadata forRowid:rowid];
+				
+				return findBlock(ck.collection, ck.key, object, metadata);
+			};
 		}
-	};
+		
+	} // end switch (blockType)
+		
 	
 	NSUInteger loopCount = 0;
 	
@@ -4427,6 +4466,11 @@
 	if (!found)
 	{
 		return NSMakeRange(NSNotFound, 0);
+	}
+	
+	if (quitAfterOne)
+	{
+		return NSMakeRange(mMid, 1);
 	}
 	
 	// Find start of range
@@ -4472,6 +4516,47 @@
 	YDBLogVerbose(@"Find range in group(%@) took %lu comparisons", group, (unsigned long)loopCount);
 	
 	return NSMakeRange(sMin, (eMax - sMin));
+}
+
+/**
+ * See header file for extensive documentation for this method.
+**/
+- (NSRange)findRangeInGroup:(NSString *)group using:(YapDatabaseViewFind *)find
+{
+	return [self findRangeInGroup:group using:find quitAfterOne:NO];
+}
+
+/**
+ * This method is deprecated.
+ * Use findRangeInGroup:using: instead.
+**/
+- (NSRange)findRangeInGroup:(NSString *)group
+                 usingBlock:(YapDatabaseViewFindBlock)block
+                  blockType:(YapDatabaseViewBlockType)blockType
+{
+	return [self findRangeInGroup:group using:[YapDatabaseViewFind withBlock:block blockType:blockType]];
+}
+
+/**
+ * This method uses a binary search algorithm to find an item within the view that matches the given criteria.
+ * 
+ * It works similarly to findRangeInGroup:using:, but immediately returns once a single match has been found.
+ * This makes it more efficient when you only care about the existence of a match,
+ * or you know there will never be more than a single match.
+ *
+ * See the documentation for findRangeInGroup:using: for more information.
+ * @see findRangeInGroup:using:
+ *
+ * @return
+ *   If found, the index of the first match discovered.
+ *   That is, an item where the find block returned NSOrderedSame.
+ *   If not found, returns NSNotFound.
+**/
+- (NSUInteger)findFirstMatchInGroup:(NSString *)group using:(YapDatabaseViewFind *)find
+{
+	NSRange range = [self findRangeInGroup:group using:find quitAfterOne:YES];
+	
+	return range.location;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

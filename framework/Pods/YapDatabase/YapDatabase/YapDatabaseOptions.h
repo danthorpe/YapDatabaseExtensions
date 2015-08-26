@@ -76,6 +76,80 @@ typedef NSData* (^YapDatabaseCipherKeyBlock)(void);
 **/
 @property (nonatomic, assign, readwrite) NSInteger pragmaJournalSizeLimit;
 
+/**
+ * Allows you to configure the sqlite "PRAGMA page_size" option.
+ * 
+ * For more information, see the sqlite docs:
+ * https://www.sqlite.org/pragma.html#pragma_page_size
+ * 
+ * The default page_size is traditionally 4096 on Apple systems.
+ * 
+ * Important: "It is not possible to change the database page size after entering WAL mode".
+ * https://www.sqlite.org/wal.html
+ *
+ * And YapDatabase uses sqlite in WAL mode.
+ * This means that if you intend to use a non-default page_size, you MUST configure the pragmaPageSize
+ * before you first create the sqlite database file.
+ * 
+ * Example 1:
+ * - sqlite database file does not exist
+ * - configure pragmaPageSize
+ * - initialize YapDatabase with corresponding YapDatabaseOptions
+ * - page_size will be set according to configuration
+ * 
+ * Example 2:
+ * - sqlite database file already exists
+ * - configure pragmaPageSize
+ * - initialize YapDatabase with corresponding YapDatabaseOptions
+ * - page_size cannot be changed - it remains as it was before
+ * 
+ * The default value is zero, meaning the default page size will be used.
+ * E.g. YapDatabase will not attempt to set an explicit page_size.
+ * 
+ * You can verify whether or not sqlite accepted your page_size configuration request via:
+ * - [yapdbConnection pragmaPageSize]
+**/
+@property (nonatomic, assign, readwrite) NSInteger pragmaPageSize;
+
+/**
+ * Allows you to configure the sqlite "PRAGMA mmap_size" option.
+ * 
+ * For more information, see the sqlite docs:
+ * https://www.sqlite.org/pragma.html#pragma_mmap_size
+ * 
+ * This option allows you to enable Memory Mapped I/O.
+ * https://www.sqlite.org/mmap.html
+ * 
+ * The default value is zero, meaning that Memory Mapped I/O is not used.
+ * It is likely that you can achieve improved performance by setting this to a large value.
+ * 
+ * Note that memory mapping may not be available.
+ * The feature was added to sqlite in version 3.7.17.
+ * If using the built-in version of sqlite (with the OS), then this requires a minimum of:
+ * - iOS 8.2
+ * - Max OS X 10.10
+ * 
+ * For more information on SQLite versions that come pre-installed with the OS:
+ * https://github.com/yapstudios/YapDatabase/wiki/SQLite-version-(bundled-with-OS)
+ * 
+ * Additionally, it appears that memory mapping is explicitly disabled in sqlite for iOS.
+ * This can be seen by inspecting the sqlite.c source code file:
+ * 
+ * > #ifdef __APPLE__
+ * > # include <TargetConditionals.h>
+ * > # if TARGET_OS_IPHONE
+ * > #   undef SQLITE_MAX_MMAP_SIZE
+ * > #   define SQLITE_MAX_MMAP_SIZE 0
+ * > # endif
+ * > #endif
+ *
+ * It does, however, currently work for Mac OS X.
+ * 
+ * You can verify whether or not sqlite accepted your mmap_size configuration request via:
+ * - [yapdbConnection pragmaMMapSize]
+**/
+@property (nonatomic, assign, readwrite) NSInteger pragmaMMapSize;
+
 #ifdef SQLITE_HAS_CODEC
 /**
  * Set a block here that returns the key for the SQLCipher database.

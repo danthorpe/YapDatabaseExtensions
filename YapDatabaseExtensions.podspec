@@ -43,11 +43,11 @@ Pod::Spec.new do |s|
     ss.dependency 'YapDatabaseExtensions/Common'
     ss.dependency 'SwiftTask', '~> 3.0'
   end
-
+  
   s.subspec 'All' do |ss|
     ss.dependency 'YapDatabaseExtensions/PromiseKit'
     ss.dependency 'YapDatabaseExtensions/BrightFutures'
-    ss.dependency 'YapDatabaseExtensions/SwiftTask'    
+    ss.dependency 'YapDatabaseExtensions/SwiftTask'
   end
 end
 
