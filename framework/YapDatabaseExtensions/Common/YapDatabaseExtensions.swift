@@ -31,7 +31,7 @@ public struct YapDB {
             return "\(name).sqlite"
             }()
 
-        return directory.stringByAppendingPathComponent(filename)
+        return (directory as NSString).stringByAppendingPathComponent(filename)
     }
 
     /// Type of closure which can perform operations on newly created/opened database instances.
@@ -106,7 +106,7 @@ public struct YapDB {
     :returns: the YapDatabase instance.
     */
     public static func testDatabaseForFile(file: String, test: String, operations: DatabaseOperationsBlock? = .None) -> YapDatabase {
-        let path = pathToDatabase(.CachesDirectory, name: file.lastPathComponent, suffix: test.stringByTrimmingCharactersInSet(NSCharacterSet(charactersInString: "()")))
+        let path = pathToDatabase(.CachesDirectory, name: (file as NSString).lastPathComponent, suffix: test.stringByTrimmingCharactersInSet(NSCharacterSet(charactersInString: "()")))
         assert(!path.isEmpty, "Path should not be empty.")
         do {
             try NSFileManager.defaultManager().removeItemAtPath(path)
