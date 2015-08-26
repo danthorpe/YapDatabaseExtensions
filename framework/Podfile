@@ -8,7 +8,6 @@ target 'YapDatabaseExtensions' do
   pod 'PromiseKit/Swift/Promise', '~> 2'
   pod 'BrightFutures', '~> 1.0'
   pod 'SwiftTask', '~> 3'
-  pod 'Operations'
 end
 
 target 'YapDatabaseExtensionsTests' do
@@ -16,6 +15,5 @@ target 'YapDatabaseExtensionsTests' do
   pod 'PromiseKit/Swift/Promise', '~> 2'  
   pod 'BrightFutures', '~> 1.0'  
   pod 'SwiftTask', '~> 3'  
-  pod 'Operations'  
 end
 
