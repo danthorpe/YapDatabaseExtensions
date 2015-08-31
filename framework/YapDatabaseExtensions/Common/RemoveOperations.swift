@@ -8,7 +8,6 @@
 
 import Foundation
 import YapDatabase
-import Operations
 
 extension YapDatabaseConnection {
 
