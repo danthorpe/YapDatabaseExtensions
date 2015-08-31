@@ -73,7 +73,7 @@ extension YapDB {
         */
         public func createViewMappings(mappings: Mappings, inDatabase database: YapDatabase, withConnection connection: YapDatabaseConnection? = .None) -> YapDatabaseViewMappings {
             registerInDatabase(database, withConnection: connection)
-            return YapDatabaseViewMappings(groupFilterBlock: mappings.filter, sortBlock: mappings.sort, view: name)
+            return mappings.createMappingsWithViewName(name)
         }
     }
 }
@@ -431,20 +431,43 @@ extension YapDB {
 
     public struct Mappings {
 
-        static var passThroughFilter: YapDatabaseViewMappingGroupFilter {
+        public enum Kind {
+            case Composed(YapDatabaseViewMappings)
+            case Groups([String])
+            case Dynamic((filter: YapDatabaseViewMappingGroupFilter, sorter: YapDatabaseViewMappingGroupSort))
+        }
+
+        public static var passThroughFilter: YapDatabaseViewMappingGroupFilter {
             return { (_, _) in true }
         }
 
-        static var caseInsensitiveGroupSort: YapDatabaseViewMappingGroupSort {
+        public static var caseInsensitiveGroupSort: YapDatabaseViewMappingGroupSort {
             return { (group1, group2, _) in group1.caseInsensitiveCompare(group2) }
         }
 
-        let filter: YapDatabaseViewMappingGroupFilter
-        let sort: YapDatabaseViewMappingGroupSort
+        let kind: Kind
 
         public init(filter f: YapDatabaseViewMappingGroupFilter = Mappings.passThroughFilter, sort s: YapDatabaseViewMappingGroupSort = Mappings.caseInsensitiveGroupSort) {
-            filter = f
-            sort = s
+            kind = .Dynamic((f, s))
+        }
+
+        public init(groups: [String]) {
+            kind = .Groups(groups)
+        }
+
+        public init(composed: YapDatabaseViewMappings) {
+            kind = .Composed(composed)
+        }
+
+        func createMappingsWithViewName(viewName: String) -> YapDatabaseViewMappings {
+            switch kind {
+            case .Composed(let mappings):
+                return mappings
+            case .Groups(let groups):
+                return YapDatabaseViewMappings(groups: groups, view: viewName)
+            case .Dynamic(let (filter: filter, sorter: sorter)):
+                return YapDatabaseViewMappings(groupFilterBlock: filter, sortBlock: sorter, view: viewName)
+            }
         }
     }
 }
