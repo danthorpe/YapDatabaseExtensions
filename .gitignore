@@ -42,3 +42,5 @@ YapDBExtensionsMobile/Pods
 
 Carthage/Build
 
+.fastlane/report.xml
+.fastlane/xcodebuild-data
