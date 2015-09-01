@@ -24,7 +24,7 @@ extension YapDB {
 
         case View(YapDB.View)
         case Filter(YapDB.Filter)
-        case Search(YapDB.Search)
+        case Search(YapDB.SearchResults)
         case Index(YapDB.SecondaryIndex)
 
         public var name: String {
@@ -73,7 +73,7 @@ extension YapDB {
         */
         public func createViewMappings(mappings: Mappings, inDatabase database: YapDatabase, withConnection connection: YapDatabaseConnection? = .None) -> YapDatabaseViewMappings {
             registerInDatabase(database, withConnection: connection)
-            return YapDatabaseViewMappings(groupFilterBlock: mappings.filter, sortBlock: mappings.sort, view: name)
+            return mappings.createMappingsWithViewName(name)
         }
     }
 }
@@ -285,7 +285,7 @@ extension YapDB {
     In this case, the parent is a YapDB.Fetch type. This
     allows for searching of other filters, and even searching inside search results.
     */
-    public class Search: BaseView, YapDatabaseViewProducer, YapDatabaseExtensionRegistrar {
+    public class SearchResults: BaseView, YapDatabaseViewProducer, YapDatabaseExtensionRegistrar {
 
         /**
         An enum to make creating YapDatabaseFullTextSearchHandler easier.
@@ -399,10 +399,10 @@ extension YapDB {
             }
         }
 
-        public init(name n: String, handler h: Handler, columnTypes ct: [String: YapDatabaseSecondaryIndexType], version v: String, persistent p: Bool, collections c: [String]?) {
+        public init(name n: String, handler h: Handler, columnTypes ct: [String: YapDatabaseSecondaryIndexType], version: String = "1.0", persistent: Bool = true, collections c: [String]?) {
             handler = h
             columnTypes = ct
-            super.init(name: n, version: v, persistent: p, collections: c)
+            super.init(name: n, version: version, persistent: persistent, collections: c)
         }
 
         func setup() -> YapDatabaseSecondaryIndexSetup {
@@ -431,20 +431,43 @@ extension YapDB {
 
     public struct Mappings {
 
-        static var passThroughFilter: YapDatabaseViewMappingGroupFilter {
+        public enum Kind {
+            case Composed(YapDatabaseViewMappings)
+            case Groups([String])
+            case Dynamic((filter: YapDatabaseViewMappingGroupFilter, sorter: YapDatabaseViewMappingGroupSort))
+        }
+
+        public static var passThroughFilter: YapDatabaseViewMappingGroupFilter {
             return { (_, _) in true }
         }
 
-        static var caseInsensitiveGroupSort: YapDatabaseViewMappingGroupSort {
+        public static var caseInsensitiveGroupSort: YapDatabaseViewMappingGroupSort {
             return { (group1, group2, _) in group1.caseInsensitiveCompare(group2) }
         }
 
-        let filter: YapDatabaseViewMappingGroupFilter
-        let sort: YapDatabaseViewMappingGroupSort
+        let kind: Kind
 
         public init(filter f: YapDatabaseViewMappingGroupFilter = Mappings.passThroughFilter, sort s: YapDatabaseViewMappingGroupSort = Mappings.caseInsensitiveGroupSort) {
-            filter = f
-            sort = s
+            kind = .Dynamic((f, s))
+        }
+
+        public init(groups: [String]) {
+            kind = .Groups(groups)
+        }
+
+        public init(composed: YapDatabaseViewMappings) {
+            kind = .Composed(composed)
+        }
+
+        func createMappingsWithViewName(viewName: String) -> YapDatabaseViewMappings {
+            switch kind {
+            case .Composed(let mappings):
+                return mappings
+            case .Groups(let groups):
+                return YapDatabaseViewMappings(groups: groups, view: viewName)
+            case .Dynamic(let (filter: filter, sorter: sorter)):
+                return YapDatabaseViewMappings(groupFilterBlock: filter, sortBlock: sorter, view: viewName)
+            }
         }
     }
 }
@@ -477,7 +500,7 @@ extension YapDB {
             self.init(fetch: .Filter(filter))
         }
 
-        public init(search: YapDB.Search) {
+        public init(search: YapDB.SearchResults) {
             self.init(fetch: .Search(search))
         }
 
@@ -490,5 +513,51 @@ extension YapDB {
 }
 
 
+extension YapDB {
 
+    public class Search {
+        public typealias Query = (searchTerm: String) -> String
+
+        let database: YapDatabase
+        let connection: YapDatabaseConnection
+        let queues: [(String, YapDatabaseSearchQueue)]
+        let query: Query
+
+        public init(db: YapDatabase, views: [YapDB.Fetch], query q: Query) {
+            database = db
+            connection = db.newConnection()
+            let _views = views.filter { fetch in
+                switch fetch {
+                case .Index(_): return false
+                default: return true
+                }
+            }
+            queues = _views.map { view in
+                view.registerInDatabase(db)
+                return (view.name, YapDatabaseSearchQueue())
+            }
+            query = q
+        }
+
+        public convenience init(db: YapDatabase, view: YapDB.Fetch, query: Query) {
+            self.init(db: db, views: [view], query: query)
+        }
+
+        public func usingTerm(term: String) {
+            for (name, queue) in queues {
+                queue.enqueueQuery(query(searchTerm: term))
+            }
+            connection.asyncReadWriteWithBlock { [queues = self.queues] transaction in
+                for (name, queue) in queues {
+                    if let searchResultsViewTransaction = transaction.ext(name) as? YapDatabaseSearchResultsViewTransaction {
+                        searchResultsViewTransaction.performSearchWithQueue(queue)
+                    }
+                    else {
+                        assertionFailure("Error: Attempting search using results view with name: \(name) which isn't a registered database extension.")
+                    }
+                }
+            }
+        }
+    }
+}
 

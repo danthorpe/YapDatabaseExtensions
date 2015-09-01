@@ -18,6 +18,7 @@
 #else
   static const int ydbLogLevel = YDB_LOG_LEVEL_WARN;
 #endif
+#pragma unused(ydbLogLevel)
 
 static NSString *const ext_key__classVersion       = @"classVersion";
 static NSString *const ext_key__versionTag         = @"versionTag";
@@ -437,9 +438,9 @@ static NSString *const ext_key__version_deprecated = @"version";
 	for (i = 0; i < count; i++)
 	{
 		if (i == 0)
-			[query appendFormat:@"?"];
+			[query appendString:@"?"];
 		else
-			[query appendFormat:@", ?"];
+			[query appendString:@", ?"];
 	}
 	
 	[query appendString:@");"];

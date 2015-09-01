@@ -14,6 +14,8 @@
 		65EF89F61B28C50F0039FC08 /* BrightFutures.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EF89F11B28C50F0039FC08 /* BrightFutures.swift */; };
 		65EF89F71B28C50F0039FC08 /* PromiseKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EF89F31B28C50F0039FC08 /* PromiseKit.swift */; };
 		65EF89F81B28C50F0039FC08 /* SwiftTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EF89F51B28C50F0039FC08 /* SwiftTask.swift */; };
+		65F2183D1B8E37AF00F66093 /* RemoveOperations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F2183B1B8E37AF00F66093 /* RemoveOperations.swift */; };
+		65F2183E1B8E37AF00F66093 /* WriteOperations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F2183C1B8E37AF00F66093 /* WriteOperations.swift */; };
 		65F748C81B28A922007E90B2 /* YapDatabaseExtensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 65F748C71B28A922007E90B2 /* YapDatabaseExtensions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		65F748CE1B28A922007E90B2 /* YapDatabaseExtensions.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65F748C21B28A922007E90B2 /* YapDatabaseExtensions.framework */; };
 		65F748D51B28A922007E90B2 /* YapDatabaseExtensionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F748D41B28A922007E90B2 /* YapDatabaseExtensionsTests.swift */; };
@@ -48,6 +50,8 @@
 		65EF89F11B28C50F0039FC08 /* BrightFutures.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BrightFutures.swift; sourceTree = "<group>"; };
 		65EF89F31B28C50F0039FC08 /* PromiseKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PromiseKit.swift; sourceTree = "<group>"; };
 		65EF89F51B28C50F0039FC08 /* SwiftTask.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftTask.swift; sourceTree = "<group>"; };
+		65F2183B1B8E37AF00F66093 /* RemoveOperations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RemoveOperations.swift; sourceTree = "<group>"; };
+		65F2183C1B8E37AF00F66093 /* WriteOperations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WriteOperations.swift; sourceTree = "<group>"; };
 		65F748C21B28A922007E90B2 /* YapDatabaseExtensions.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = YapDatabaseExtensions.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		65F748C61B28A922007E90B2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		65F748C71B28A922007E90B2 /* YapDatabaseExtensions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = YapDatabaseExtensions.h; sourceTree = "<group>"; };
@@ -190,7 +194,9 @@
 			children = (
 				65F748DF1B28AB77007E90B2 /* Read.swift */,
 				65F748E01B28AB77007E90B2 /* Remove.swift */,
+				65F2183B1B8E37AF00F66093 /* RemoveOperations.swift */,
 				65F748E11B28AB77007E90B2 /* Write.swift */,
+				65F2183C1B8E37AF00F66093 /* WriteOperations.swift */,
 				65F748E21B28AB77007E90B2 /* YapDatabaseExtensions.swift */,
 				65F748E31B28AB77007E90B2 /* YapDB.swift */,
 			);
@@ -400,6 +406,8 @@
 			files = (
 				65EF89F71B28C50F0039FC08 /* PromiseKit.swift in Sources */,
 				65F748E41B28AB77007E90B2 /* Read.swift in Sources */,
+				65F2183D1B8E37AF00F66093 /* RemoveOperations.swift in Sources */,
+				65F2183E1B8E37AF00F66093 /* WriteOperations.swift in Sources */,
 				65EF89F81B28C50F0039FC08 /* SwiftTask.swift in Sources */,
 				65F748E81B28AB77007E90B2 /* YapDB.swift in Sources */,
 				65F748E71B28AB77007E90B2 /* YapDatabaseExtensions.swift in Sources */,

@@ -47,8 +47,10 @@ private func unbox(resolution: Resolution) -> AnyObject? {
 }
 
 
+public typealias AnyPromise = PMKPromise
 
-@objc(PMKAnyPromise) public class AnyPromise: NSObject {
+
+@objc(PMKAnyPromise) public class PMKPromise: NSObject {
     var state: State
 
     /**
@@ -79,6 +81,50 @@ private func unbox(resolution: Resolution) -> AnyObject? {
             switch resolution {
             case .Fulfilled:
                 resolve(box(bound.value!))
+            case .Rejected(let error):
+                resolve(box(error))
+            }
+        }
+    }
+
+    /**
+     @return A new AnyPromise bound to a Promise<[T]>.
+
+     The two promises represent the same task, any changes to either
+     will instantly reflect on both.
+    
+     The value is converted to an NSArray so Objective-C can use it.
+    */
+    public init<T: AnyObject>(bound: Promise<[T]>) {
+        //WARNING copy pasta from above. FIXME how?
+        var resolve: ((Resolution) -> Void)!
+        state = UnsealedState(resolver: &resolve)
+        bound.pipe { resolution in
+            switch resolution {
+            case .Fulfilled:
+                resolve(box(NSArray(array: bound.value!)))
+            case .Rejected(let error):
+                resolve(box(error))
+            }
+        }
+    }
+
+    /**
+    @return A new AnyPromise bound to a Promise<[T]>.
+
+    The two promises represent the same task, any changes to either
+    will instantly reflect on both.
+
+    The value is converted to an NSArray so Objective-C can use it.
+    */
+    public init<T: AnyObject, U: AnyObject>(bound: Promise<[T:U]>) {
+        //WARNING copy pasta from above. FIXME how?
+        var resolve: ((Resolution) -> Void)!
+        state = UnsealedState(resolver: &resolve)
+        bound.pipe { resolution in
+            switch resolution {
+            case .Fulfilled:
+                resolve(box(bound.value! as NSDictionary))
             case .Rejected(let error):
                 resolve(box(error))
             }
@@ -185,6 +231,64 @@ private func unbox(resolution: Resolution) -> AnyObject? {
         let oldHandler = PMKUnhandledErrorHandler
         PMKUnhandledErrorHandler = body
         return oldHandler
+    }
+
+    /**
+     Continue a Promise<T> chain from an AnyPromise.
+    */
+    public func then<T>(on q: dispatch_queue_t = dispatch_get_main_queue(), body: (AnyObject?) -> T) -> Promise<T> {
+        return Promise { fulfill, reject in
+            pipe { object in
+                if let error = object as? NSError {
+                    reject(error)
+                } else {
+                    let value: AnyObject? = self.valueForKey("value")
+                    contain_zalgo(q) {
+                        fulfill(body(value))
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     Continue a Promise<T> chain from an AnyPromise.
+    */
+    public func then(on q: dispatch_queue_t = dispatch_get_main_queue(), body: (AnyObject?) -> AnyPromise) -> Promise<AnyObject?> {
+        return Promise { fulfill, reject in
+            pipe { object in
+                if let error = object as? NSError {
+                    reject(error)
+                } else {
+                    contain_zalgo(q) {
+                        body(object).pipe { object in
+                            if let error = object as? NSError {
+                                reject(error)
+                            } else {
+                                fulfill(object)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     Continue a Promise<T> chain from an AnyPromise.
+    */
+    public func then<T>(on q: dispatch_queue_t = dispatch_get_main_queue(), body: (AnyObject?) -> Promise<T>) -> Promise<T> {
+        return Promise(passthru: { resolve in
+            pipe { object in
+                if let error = object as? NSError {
+                    resolve(.Rejected(error))
+                } else {
+                    contain_zalgo(q) {
+                        body(object).pipe(resolve)
+                    }
+                }
+            }
+        })
     }
 }
 

@@ -292,7 +292,7 @@ public class ProductArchiver: NSObject, NSCoding, Archiver {
 
 public func products() -> YapDB.Fetch {
 
-    let grouping: YapDB.View.Grouping = .ByMetadata({ (collection, key, metadata) -> String! in
+    let grouping: YapDB.View.Grouping = .ByMetadata({ (_, collection, key, metadata) -> String! in
         if collection == Product.collection {
             if let metadata: Product.Metadata = valueFromArchive(metadata) {
                 return "category: \(metadata.categoryIdentifier)"
@@ -301,7 +301,7 @@ public func products() -> YapDB.Fetch {
         return nil
     })
 
-    let sorting: YapDB.View.Sorting = .ByObject({ (group, collection1, key1, object1, collection2, key2, object2) -> NSComparisonResult in
+    let sorting: YapDB.View.Sorting = .ByObject({ (_, group, collection1, key1, object1, collection2, key2, object2) -> NSComparisonResult in
         if let product1: Product = valueFromArchive(object1) {
             if let product2: Product = valueFromArchive(object2) {
                 return product1.name.caseInsensitiveCompare(product2.name)

@@ -1,6 +1,0 @@
-framework module BrightFutures {
-  umbrella header "Pods-YapDatabaseExtensionsTests-BrightFutures-umbrella.h"
-
-  export *
-  module * { export * }
-}

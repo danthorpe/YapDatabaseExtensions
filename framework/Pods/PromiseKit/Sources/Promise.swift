@@ -108,7 +108,7 @@ public class Promise<T> {
       public designated unsealed initializer! Making this convenience would be
       inefficient. Not very inefficient, but still it seems distasteful to me.
      */
-    init(passthru: ((Resolution) -> Void) -> Void) {
+    init(@noescape passthru: ((Resolution) -> Void) -> Void) {
         var resolve: ((Resolution) -> Void)!
         state = UnsealedState(resolver: &resolve)
         passthru(resolve)
@@ -270,8 +270,8 @@ public class Promise<T> {
             case .Fulfilled:
                 break
             case .Rejected(let error):
-                if policy == .AllErrors || !error.cancelled {
-                    dispatch_async(dispatch_get_main_queue()) {
+                dispatch_async(dispatch_get_main_queue()) {
+                    if policy == .AllErrors || !error.cancelled {
                         consume(error)
                         body(error)
                     }
@@ -466,4 +466,10 @@ extension Promise: DebugPrintable {
 */
 public func firstly<T>(promise: () -> Promise<T>) -> Promise<T> {
     return promise()
+}
+
+
+public enum ErrorPolicy {
+    case AllErrors
+    case AllErrorsExceptCancellation
 }
