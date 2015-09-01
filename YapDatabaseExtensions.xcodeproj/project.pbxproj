@@ -38,7 +38,7 @@
 		652AAFB41B28C43900D40BB0 /* BrightFuturesTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BrightFuturesTests.swift; sourceTree = "<group>"; };
 		652AAFB51B28C43900D40BB0 /* PromiseKitTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PromiseKitTests.swift; sourceTree = "<group>"; };
 		652AAFB61B28C43900D40BB0 /* SwiftTaskTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftTaskTests.swift; sourceTree = "<group>"; };
-		652AAFBA1B28C44E00D40BB0 /* Models.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Models.swift; path = ../../examples/iOS/YapDBExtensionsMobile/Models.swift; sourceTree = "<group>"; };
+		652AAFBA1B28C44E00D40BB0 /* Models.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Models.swift; path = ../examples/iOS/YapDBExtensionsMobile/Models.swift; sourceTree = "<group>"; };
 		65EF89F11B28C50F0039FC08 /* BrightFutures.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BrightFutures.swift; sourceTree = "<group>"; };
 		65EF89F31B28C50F0039FC08 /* PromiseKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PromiseKit.swift; sourceTree = "<group>"; };
 		65EF89F51B28C50F0039FC08 /* SwiftTask.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftTask.swift; sourceTree = "<group>"; };
