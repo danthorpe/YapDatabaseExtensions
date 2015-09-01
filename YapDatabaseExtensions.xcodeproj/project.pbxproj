@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		652AAFBB1B28C44E00D40BB0 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 652AAFBA1B28C44E00D40BB0 /* Models.swift */; };
+		65EC38EF1B95E85C0022F472 /* WriteOperations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EC38EE1B95E85C0022F472 /* WriteOperations.swift */; settings = {ASSET_TAGS = (); }; };
+		65EC38F11B95EA350022F472 /* RemoveOperations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EC38F01B95EA350022F472 /* RemoveOperations.swift */; settings = {ASSET_TAGS = (); }; };
 		65F748C81B28A922007E90B2 /* YapDatabaseExtensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 65F748C71B28A922007E90B2 /* YapDatabaseExtensions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		65F748CE1B28A922007E90B2 /* YapDatabaseExtensions.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65F748C21B28A922007E90B2 /* YapDatabaseExtensions.framework */; };
 		65F748D51B28A922007E90B2 /* YapDatabaseExtensionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F748D41B28A922007E90B2 /* YapDatabaseExtensionsTests.swift */; };
@@ -39,6 +41,8 @@
 		652AAFB51B28C43900D40BB0 /* PromiseKitTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PromiseKitTests.swift; sourceTree = "<group>"; };
 		652AAFB61B28C43900D40BB0 /* SwiftTaskTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftTaskTests.swift; sourceTree = "<group>"; };
 		652AAFBA1B28C44E00D40BB0 /* Models.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Models.swift; path = ../examples/iOS/YapDBExtensionsMobile/Models.swift; sourceTree = "<group>"; };
+		65EC38EE1B95E85C0022F472 /* WriteOperations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WriteOperations.swift; sourceTree = "<group>"; };
+		65EC38F01B95EA350022F472 /* RemoveOperations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RemoveOperations.swift; sourceTree = "<group>"; };
 		65EF89F11B28C50F0039FC08 /* BrightFutures.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BrightFutures.swift; sourceTree = "<group>"; };
 		65EF89F31B28C50F0039FC08 /* PromiseKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PromiseKit.swift; sourceTree = "<group>"; };
 		65EF89F51B28C50F0039FC08 /* SwiftTask.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftTask.swift; sourceTree = "<group>"; };
@@ -187,6 +191,8 @@
 				65F748E11B28AB77007E90B2 /* Write.swift */,
 				65F748E21B28AB77007E90B2 /* YapDatabaseExtensions.swift */,
 				65F748E31B28AB77007E90B2 /* YapDB.swift */,
+				65EC38EE1B95E85C0022F472 /* WriteOperations.swift */,
+				65EC38F01B95EA350022F472 /* RemoveOperations.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -398,6 +404,8 @@
 				65F748E71B28AB77007E90B2 /* YapDatabaseExtensions.swift in Sources */,
 				65F748E61B28AB77007E90B2 /* Write.swift in Sources */,
 				65F748E51B28AB77007E90B2 /* Remove.swift in Sources */,
+				65EC38EF1B95E85C0022F472 /* WriteOperations.swift in Sources */,
+				65EC38F11B95EA350022F472 /* RemoveOperations.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
