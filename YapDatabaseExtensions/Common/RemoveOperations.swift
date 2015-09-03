@@ -11,11 +11,11 @@ import YapDatabase
 
 extension YapDatabaseConnection {
 
-    public func removeOperation<Item where Item: Persistable>(index: YapDB.Index) -> NSOperation {
+    public func removeOperation(index: YapDB.Index) -> NSOperation {
         return writeBlockOperation { $0.removeAtIndex(index) }
     }
 
-    public func removeOperation<Item where Item: Persistable>(indexes: [YapDB.Index]) -> NSOperation {
+    public func removeOperation(indexes: [YapDB.Index]) -> NSOperation {
         return writeBlockOperation { $0.removeAtIndexes(indexes) }
     }
 
