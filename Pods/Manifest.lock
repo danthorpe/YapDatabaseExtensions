@@ -12,9 +12,9 @@ PODS:
   - PromiseKit/Swift/Promise (2.2.1):
     - PromiseKit/CorePromise
   - SwiftTask (3.3.1)
-  - YapDatabase (2.7.1):
-    - YapDatabase/standard (= 2.7.1)
-  - YapDatabase/standard (2.7.1):
+  - YapDatabase (2.7.2):
+    - YapDatabase/standard (= 2.7.2)
+  - YapDatabase/standard (2.7.2):
     - CocoaLumberjack (~> 2)
 
 DEPENDENCIES:
@@ -28,6 +28,6 @@ SPEC CHECKSUMS:
   CocoaLumberjack: 019d1361244274a6138c788c6cb80baabc13fb8f
   PromiseKit: 9c92257e39abf4b634533d44268592dfc6e4b5c2
   SwiftTask: 0baec4571e2ea235e73817c399cde12056c81f6f
-  YapDatabase: e9ff9a189e99268a331575411e8462e4c6df2bc3
+  YapDatabase: bcf13bd764ab4961fb48bef937becf964e50063d
 
 COCOAPODS: 0.38.2
