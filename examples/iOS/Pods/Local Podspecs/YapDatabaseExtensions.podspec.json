@@ -1,8 +1,8 @@
 {
   "name": "YapDatabaseExtensions",
-  "version": "1.5.0",
+  "version": "1.7.0",
   "summary": "Helpers for using value types with YapDatabase.",
-  "description": "  \n  Defines protocols and APIs via Swift extensions to allow for struct\n  and enum types to be used & stored within YapDatabse.\n\n",
+  "description": "Defines protocols and APIs via Swift extensions to allow for struct\nand enum types to be used & stored within YapDatabse.",
   "homepage": "https://github.com/danthorpe/YapDatabaseExtensions",
   "license": "MIT",
   "authors": {
@@ -10,7 +10,7 @@
   },
   "source": {
     "git": "https://github.com/danthorpe/YapDatabaseExtensions.git",
-    "tag": "1.5.0"
+    "tag": "1.7.0"
   },
   "module_name": "YapDatabaseExtensions",
   "social_media_url": "https://twitter.com/danthorpe",
@@ -28,11 +28,11 @@
   "subspecs": [
     {
       "name": "Common",
-      "source_files": "framework/YapDatabaseExtensions/Common/*.swift"
+      "source_files": "YapDatabaseExtensions/Common/*.swift"
     },
     {
       "name": "PromiseKit",
-      "source_files": "framework/YapDatabaseExtensions/PromiseKit/*.swift",
+      "source_files": "YapDatabaseExtensions/PromiseKit/*.swift",
       "dependencies": {
         "YapDatabaseExtensions/Common": [
 
@@ -44,7 +44,7 @@
     },
     {
       "name": "BrightFutures",
-      "source_files": "framework/YapDatabaseExtensions/BrightFutures/*.swift",
+      "source_files": "YapDatabaseExtensions/BrightFutures/*.swift",
       "dependencies": {
         "YapDatabaseExtensions/Common": [
 
@@ -56,7 +56,7 @@
     },
     {
       "name": "SwiftTask",
-      "source_files": "framework/YapDatabaseExtensions/SwiftTask/*.swift",
+      "source_files": "YapDatabaseExtensions/SwiftTask/*.swift",
       "dependencies": {
         "YapDatabaseExtensions/Common": [
 

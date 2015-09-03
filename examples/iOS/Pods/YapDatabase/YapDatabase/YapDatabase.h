@@ -375,8 +375,10 @@ extern NSString *const YapDatabaseAllKeysRemovedKey;
 
 /**
  * Returns the version of sqlite being used.
+ *
+ * E.g.: SELECT sqlite_version();
 **/
-@property (atomic, strong, readonly) NSString *sqliteVersion;
+@property (atomic, readonly) NSString *sqliteVersion;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark Defaults
