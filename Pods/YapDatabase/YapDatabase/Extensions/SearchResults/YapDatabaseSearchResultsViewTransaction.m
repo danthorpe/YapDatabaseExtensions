@@ -24,6 +24,7 @@
 #else
   static const int ydbLogLevel = YDB_LOG_LEVEL_WARN;
 #endif
+#pragma unused(ydbLogLevel)
 
 static NSString *const ext_key_superclassVersion = @"viewClassVersion";
 static NSString *const ext_key_subclassVersion   = @"searchResultViewClassVersion";
@@ -933,9 +934,9 @@ static NSString *const ext_key_query             = @"query";
 			for (NSUInteger i = 0; i < numParams; i++)
 			{
 				if (i == 0)
-					[query appendFormat:@"?"];
+					[query appendString:@"?"];
 				else
-					[query appendFormat:@", ?"];
+					[query appendString:@", ?"];
 			}
 			
 			[query appendString:@");"];
@@ -1128,28 +1129,28 @@ static NSString *const ext_key_query             = @"query";
 				__unsafe_unretained YapDatabaseViewGroupingWithKeyBlock groupingBlock =
 			      (YapDatabaseViewGroupingWithKeyBlock)groupingBlock_generic;
 				
-				group = groupingBlock(collection, key);
+				group = groupingBlock(databaseTransaction, collection, key);
 			}
 			else if (groupingBlockType == YapDatabaseViewBlockTypeWithObject)
 			{
 				__unsafe_unretained YapDatabaseViewGroupingWithObjectBlock groupingBlock =
 			      (YapDatabaseViewGroupingWithObjectBlock)groupingBlock_generic;
 				
-				group = groupingBlock(collection, key, object);
+				group = groupingBlock(databaseTransaction, collection, key, object);
 			}
 			else if (groupingBlockType == YapDatabaseViewBlockTypeWithMetadata)
 			{
 				__unsafe_unretained YapDatabaseViewGroupingWithMetadataBlock groupingBlock =
 			      (YapDatabaseViewGroupingWithMetadataBlock)groupingBlock_generic;
 				
-				group = groupingBlock(collection, key, metadata);
+				group = groupingBlock(databaseTransaction, collection, key, metadata);
 			}
 			else
 			{
 				__unsafe_unretained YapDatabaseViewGroupingWithRowBlock groupingBlock =
 			      (YapDatabaseViewGroupingWithRowBlock)groupingBlock_generic;
 				
-				group = groupingBlock(collection, key, object, metadata);
+				group = groupingBlock(databaseTransaction, collection, key, object, metadata);
 			}
 		}
 	}
@@ -1266,28 +1267,28 @@ static NSString *const ext_key_query             = @"query";
 				__unsafe_unretained YapDatabaseViewGroupingWithKeyBlock groupingBlock =
 			      (YapDatabaseViewGroupingWithKeyBlock)groupingBlock_generic;
 				
-				group = groupingBlock(collection, key);
+				group = groupingBlock(databaseTransaction, collection, key);
 			}
 			else if (groupingBlockType == YapDatabaseViewBlockTypeWithObject)
 			{
 				__unsafe_unretained YapDatabaseViewGroupingWithObjectBlock groupingBlock =
 			      (YapDatabaseViewGroupingWithObjectBlock)groupingBlock_generic;
 				
-				group = groupingBlock(collection, key, object);
+				group = groupingBlock(databaseTransaction, collection, key, object);
 			}
 			else if (groupingBlockType == YapDatabaseViewBlockTypeWithMetadata)
 			{
 				__unsafe_unretained YapDatabaseViewGroupingWithMetadataBlock groupingBlock =
 			      (YapDatabaseViewGroupingWithMetadataBlock)groupingBlock_generic;
 				
-				group = groupingBlock(collection, key, metadata);
+				group = groupingBlock(databaseTransaction, collection, key, metadata);
 			}
 			else
 			{
 				__unsafe_unretained YapDatabaseViewGroupingWithRowBlock groupingBlock =
 			      (YapDatabaseViewGroupingWithRowBlock)groupingBlock_generic;
 				
-				group = groupingBlock(collection, key, object, metadata);
+				group = groupingBlock(databaseTransaction, collection, key, object, metadata);
 			}
 		}
 	}
@@ -1437,15 +1438,25 @@ static NSString *const ext_key_query             = @"query";
 			YapDatabaseViewChangesBitMask flags = YapDatabaseViewChangedObject;
 			
 			NSString *pageKey = [self pageKeyForRowid:rowid];
-			NSUInteger existingIndex = [self indexForRowid:rowid inGroup:group withPageKey:pageKey];
+			if (pageKey == nil)
+			{
+				// Was previously filtered from this view.
+				// And still filtered from this view.
+				lastHandledGroup = nil;
+			}
+			else
+			{
+				NSUInteger existingIndex = [self indexForRowid:rowid inGroup:group withPageKey:pageKey];
+				
+				[viewConnection->changes addObject:
+				  [YapDatabaseViewRowChange updateCollectionKey:collectionKey
+				                                        inGroup:group
+				                                        atIndex:existingIndex
+				                                    withChanges:flags]];
+				
+				lastHandledGroup = group;
+			}
 			
-			[viewConnection->changes addObject:
-			  [YapDatabaseViewRowChange updateCollectionKey:collectionKey
-			                                        inGroup:group
-			                                        atIndex:existingIndex
-			                                    withChanges:flags]];
-			
-			lastHandledGroup = group;
 			return;
 		}
 		
@@ -1578,7 +1589,7 @@ static NSString *const ext_key_query             = @"query";
 					__unsafe_unretained YapDatabaseViewGroupingWithObjectBlock groupingBlock =
 			          (YapDatabaseViewGroupingWithObjectBlock)groupingBlock_generic;
 					
-					group = groupingBlock(collection, key, object);
+					group = groupingBlock(databaseTransaction, collection, key, object);
 				}
 				else
 				{
@@ -1586,7 +1597,7 @@ static NSString *const ext_key_query             = @"query";
 			          (YapDatabaseViewGroupingWithRowBlock)groupingBlock_generic;
 					
 					metadata = [databaseTransaction metadataForCollectionKey:collectionKey withRowid:rowid];
-					group = groupingBlock(collection, key, object, metadata);
+					group = groupingBlock(databaseTransaction, collection, key, object, metadata);
 				}
 			}
 			
@@ -1741,15 +1752,25 @@ static NSString *const ext_key_query             = @"query";
 			YapDatabaseViewChangesBitMask flags = YapDatabaseViewChangedMetadata;
 			
 			NSString *pageKey = [self pageKeyForRowid:rowid];
-			NSUInteger existingIndex = [self indexForRowid:rowid inGroup:group withPageKey:pageKey];
+			if (pageKey == nil)
+			{
+				// Was previously filtered from this view.
+				// And still filtered from this view.
+				lastHandledGroup = nil;
+			}
+			else
+			{
+				NSUInteger existingIndex = [self indexForRowid:rowid inGroup:group withPageKey:pageKey];
+				
+				[viewConnection->changes addObject:
+				  [YapDatabaseViewRowChange updateCollectionKey:collectionKey
+				                                        inGroup:group
+				                                        atIndex:existingIndex
+				                                    withChanges:flags]];
+				
+				lastHandledGroup = group;
+			}
 			
-			[viewConnection->changes addObject:
-			  [YapDatabaseViewRowChange updateCollectionKey:collectionKey
-			                                        inGroup:group
-			                                        atIndex:existingIndex
-			                                    withChanges:flags]];
-			
-			lastHandledGroup = group;
 			return;
 		}
 		
@@ -1882,7 +1903,7 @@ static NSString *const ext_key_query             = @"query";
 					__unsafe_unretained YapDatabaseViewGroupingWithMetadataBlock groupingBlock =
 			          (YapDatabaseViewGroupingWithMetadataBlock)groupingBlock_generic;
 					
-					group = groupingBlock(collection, key, metadata);
+					group = groupingBlock(databaseTransaction, collection, key, metadata);
 				}
 				else
 				{
@@ -1890,7 +1911,7 @@ static NSString *const ext_key_query             = @"query";
 			          (YapDatabaseViewGroupingWithRowBlock)groupingBlock_generic;
 					
 					object = [databaseTransaction objectForCollectionKey:collectionKey withRowid:rowid];
-					group = groupingBlock(collection, key, object, metadata);
+					group = groupingBlock(databaseTransaction, collection, key, object, metadata);
 				}
 			}
 			
@@ -2355,7 +2376,7 @@ static NSString *const ext_key_query             = @"query";
 				__unsafe_unretained YapDatabaseViewGroupingWithKeyBlock groupingBlock =
 			      (YapDatabaseViewGroupingWithKeyBlock)groupingBlock_generic;
 				
-				group = groupingBlock(ck.collection, ck.key);
+				group = groupingBlock(databaseTransaction, ck.collection, ck.key);
 			}
 			else if (groupingBlockType == YapDatabaseViewBlockTypeWithObject)
 			{
@@ -2364,7 +2385,7 @@ static NSString *const ext_key_query             = @"query";
 				
 				object = [databaseTransaction objectForCollectionKey:ck withRowid:rowid];
 				
-				group = groupingBlock(ck.collection, ck.key, object);
+				group = groupingBlock(databaseTransaction, ck.collection, ck.key, object);
 			}
 			else if (groupingBlockType == YapDatabaseViewBlockTypeWithMetadata)
 			{
@@ -2373,7 +2394,7 @@ static NSString *const ext_key_query             = @"query";
 				
 				metadata = [databaseTransaction metadataForCollectionKey:ck withRowid:rowid];
 				
-				group = groupingBlock(ck.collection, ck.key, metadata);
+				group = groupingBlock(databaseTransaction, ck.collection, ck.key, metadata);
 			}
 			else
 			{
@@ -2382,7 +2403,7 @@ static NSString *const ext_key_query             = @"query";
 				
 				[databaseTransaction getObject:&object metadata:&metadata forCollectionKey:ck withRowid:rowid];
 				
-				group = groupingBlock(ck.collection, ck.key, object, metadata);
+				group = groupingBlock(databaseTransaction, ck.collection, ck.key, object, metadata);
 			}
 		}
 		
