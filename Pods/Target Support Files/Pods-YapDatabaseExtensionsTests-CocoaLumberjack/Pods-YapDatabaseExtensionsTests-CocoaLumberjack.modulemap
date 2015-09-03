@@ -1,6 +1,0 @@
-framework module CocoaLumberjack {
-  umbrella header "Pods-YapDatabaseExtensionsTests-CocoaLumberjack-umbrella.h"
-
-  export *
-  module * { export * }
-}
