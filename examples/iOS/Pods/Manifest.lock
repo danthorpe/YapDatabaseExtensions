@@ -11,10 +11,10 @@ PODS:
     - YapDatabase/standard (= 2.7.2)
   - YapDatabase/standard (2.7.2):
     - CocoaLumberjack (~> 2)
-  - YapDatabaseExtensions (1.5.0):
+  - YapDatabaseExtensions (1.7.0):
     - YapDatabase (~> 2.6)
-    - YapDatabaseExtensions/Common (= 1.5.0)
-  - YapDatabaseExtensions/Common (1.5.0):
+    - YapDatabaseExtensions/Common (= 1.7.0)
+  - YapDatabaseExtensions/Common (1.7.0):
     - YapDatabase (~> 2.6)
 
 DEPENDENCIES:
@@ -27,6 +27,6 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   CocoaLumberjack: 019d1361244274a6138c788c6cb80baabc13fb8f
   YapDatabase: bcf13bd764ab4961fb48bef937becf964e50063d
-  YapDatabaseExtensions: 071af9fad560392d0878c5d4f17f14a3ab7db353
+  YapDatabaseExtensions: ae72d4b5b384d592dba71ab540096327505d9313
 
 COCOAPODS: 0.38.2
