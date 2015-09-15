@@ -1,6 +1,6 @@
 {
   "name": "YapDatabaseExtensions",
-  "version": "1.7.1",
+  "version": "1.8.0",
   "summary": "Helpers for using value types with YapDatabase.",
   "description": "Defines protocols and APIs via Swift extensions to allow for struct\nand enum types to be used & stored within YapDatabse.",
   "homepage": "https://github.com/danthorpe/YapDatabaseExtensions",
@@ -10,7 +10,7 @@
   },
   "source": {
     "git": "https://github.com/danthorpe/YapDatabaseExtensions.git",
-    "tag": "1.7.1"
+    "tag": "1.8.0"
   },
   "module_name": "YapDatabaseExtensions",
   "social_media_url": "https://twitter.com/danthorpe",
@@ -21,7 +21,7 @@
   },
   "dependencies": {
     "YapDatabase": [
-      "~> 2.6"
+      "~> 2"
     ]
   },
   "default_subspecs": "Common",
@@ -38,7 +38,7 @@
 
         ],
         "PromiseKit/Swift/Promise": [
-          "~> 2.0"
+          "~> 2"
         ]
       }
     },
