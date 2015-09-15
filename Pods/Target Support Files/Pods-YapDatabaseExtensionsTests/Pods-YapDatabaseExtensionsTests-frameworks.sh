@@ -52,10 +52,18 @@ code_sign_if_enabled() {
 
 
 if [[ "$CONFIGURATION" == "Debug" ]]; then
+  install_framework 'Pods-YapDatabaseExtensionsTests/BrightFutures.framework'
   install_framework 'Pods-YapDatabaseExtensionsTests/CocoaLumberjack.framework'
+  install_framework 'Pods-YapDatabaseExtensionsTests/PromiseKit.framework'
+  install_framework 'Pods-YapDatabaseExtensionsTests/Result.framework'
+  install_framework 'Pods-YapDatabaseExtensionsTests/SwiftTask.framework'
   install_framework 'Pods-YapDatabaseExtensionsTests/YapDatabase.framework'
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
+  install_framework 'Pods-YapDatabaseExtensionsTests/BrightFutures.framework'
   install_framework 'Pods-YapDatabaseExtensionsTests/CocoaLumberjack.framework'
+  install_framework 'Pods-YapDatabaseExtensionsTests/PromiseKit.framework'
+  install_framework 'Pods-YapDatabaseExtensionsTests/Result.framework'
+  install_framework 'Pods-YapDatabaseExtensionsTests/SwiftTask.framework'
   install_framework 'Pods-YapDatabaseExtensionsTests/YapDatabase.framework'
 fi

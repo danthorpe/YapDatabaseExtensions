@@ -18,7 +18,7 @@ Pod::Spec.new do |s|
   s.ios.deployment_target = '8.0'
   s.osx.deployment_target = '10.10'
 
-  s.dependency 'YapDatabase', '~> 2.6'
+  s.dependency 'YapDatabase', '~> 2'
   
   s.default_subspec   = 'Common' 
 
@@ -29,19 +29,19 @@ Pod::Spec.new do |s|
   s.subspec 'PromiseKit' do |ss|
     ss.source_files   = 'YapDatabaseExtensions/PromiseKit/*.swift'
     ss.dependency 'YapDatabaseExtensions/Common'
-    ss.dependency 'PromiseKit/Swift/Promise', '~> 1.5'
+    ss.dependency 'PromiseKit/Swift/Promise', '~> 2'
   end
 
   s.subspec 'BrightFutures' do |ss|
     ss.source_files   = 'YapDatabaseExtensions/BrightFutures/*.swift'
     ss.dependency 'YapDatabaseExtensions/Common'
-    ss.dependency 'BrightFutures', '~> 1.0'
+    ss.dependency 'BrightFutures', '~> 3'
   end
 
   s.subspec 'SwiftTask' do |ss|
     ss.source_files   = 'YapDatabaseExtensions/SwiftTask/*.swift'
     ss.dependency 'YapDatabaseExtensions/Common'
-    ss.dependency 'SwiftTask', '~> 3.0'
+    ss.dependency 'SwiftTask', '~> 3'
   end
 
   s.subspec 'All' do |ss|
