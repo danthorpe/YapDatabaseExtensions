@@ -5,3 +5,4 @@ OTHER_LDFLAGS = $(inherited) -weak_library /usr/lib/libc++.dylib -framework "Box
 OTHER_SWIFT_FLAGS = $(inherited) "-D" "COCOAPODS"
 PODS_FRAMEWORK_BUILD_PATH = $(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/Pods-YapDBExtensionsMobile
 PODS_ROOT = ${SRCROOT}/Pods
+SWIFT_INSTALL_OBJC_HEADER = NO
