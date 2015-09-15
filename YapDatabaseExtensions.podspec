@@ -29,7 +29,7 @@ Pod::Spec.new do |s|
   s.subspec 'PromiseKit' do |ss|
     ss.source_files   = 'YapDatabaseExtensions/PromiseKit/*.swift'
     ss.dependency 'YapDatabaseExtensions/Common'
-    ss.dependency 'PromiseKit/Swift/Promise', '~> 1.5'
+    ss.dependency 'PromiseKit/Swift/Promise', '~> 2.0'
   end
 
   s.subspec 'BrightFutures' do |ss|
