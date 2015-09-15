@@ -1,3 +1,41 @@
+# 1.8.0
+1. [[YDB-36](https://github.com/danthorpe/YapDatabaseExtensions/pull/36)]: Sets the required version of [BrightFutures](https://github.com/Thomvis/BrightFutures) to the latest for Swift 1.2, which is 2.0.1.
+2. [[YDB-37](https://github.com/danthorpe/YapDatabaseExtensions/pull/37)]: Sets the required version of [PromiseKit](https://github.com/mxcl/PromiseKit) to the latest for Swift 1.2, which is 2.2.1 (as submitted to CocoaPods).
+
+# 1.7.0
+1. [[YDB-25](https://github.com/danthorpe/YapDatabaseExtensions/pull/25)]: Adds `YapDB.Search` to aid with running FTS queries. An example of using with will be forthcoming (probably after Swift 2.0 has settled). But essentially, you can initialize it with your db, an array of `YapDB.Fetch` values (which should be views) and a string mapper. Then execute `usingTerm(term: String)` with the search term supplied by the user to run the search.
+2. [[YDB-26](https://github.com/danthorpe/YapDatabaseExtensions/pull/26)]: Adds some missing default parameters for the `YapDB.SecondaryIndex` wrapper.
+3. [[YDB-27](https://github.com/danthorpe/YapDatabaseExtensions/pull/27)]: Removes an explicit unwrap which could cause a crash if pattern matching against value types.
+4. [[YDB-29](https://github.com/danthorpe/YapDatabaseExtensions/pull/29)]: Adds support to `YapDatabaseConnection` for writeBlockOperation (`NSBlockOperation`), write and remove APIs. This is great if you want to perform a number of writes of different types in the same transaction inside of an `NSOperation` based architecture, as you can do:
+
+```swift
+queue.addOperation(connection.writeBlockOperation { transaction in 
+	transaction.write(foo)
+	transaction.write(bar)
+	transaction.remove(bat)
+})
+```
+If you're using my `Operations` framework, as these operations are `NSBlockOperation`s, use `ComposedOperation` to attach conditions or observers. E.g.
+
+```swift
+let write = ComposedOperation(connection.writeBlockOperation { transaction in 
+	transaction.write(foo)
+	transaction.write(bar)
+	transaction.remove(bat)
+})
+write.addCondition(UserConfirmationCondition()) // etc etc
+queue.addOperation(write)
+```
+
+5. [[YDB-30](https://github.com/danthorpe/YapDatabaseExtensions/pull/30)]: Expands the `YapDB.Mappings` type to support the full `YapDatabaseViewMappings` gamut.
+6. [[YDB-31](https://github.com/danthorpe/YapDatabaseExtensions/pull/31)]: Silences a warning in the `removeAtIndexes` API.
+
+# 1.6.0
+1. [[YDB-22](https://github.com/danthorpe/YapDatabaseExtensions/pull/22)]: Adds `YapDB.Fetch.Index` which wraps `YapDatabaseSecondaryIndex` extension.
+2. [[YDB-23](https://github.com/danthorpe/YapDatabaseExtensions/pull/23)]: Fixes a crash which has been observed in some cases in a Release configuration where writing a value type can fail to get the type’s Archiver.
+3. [[YDB-24](https://github.com/danthorpe/YapDatabaseExtensions/pull/24)]: Just cleans up some of the code.
+
+
 # 1.5.0
 
 1. [[YDB-19](https://github.com/danthorpe/YapDatabaseExtensions/pull/19)]: Implements Saveable on YapDB.Index. This makes it easier to store references between YapDatabase objects. In general this is preferable to storing references as `let fooId: Foo.IdentifierType`.

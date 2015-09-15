@@ -75,6 +75,8 @@ extern AnyPromise * __nonnull PMKWhen(id __nonnull input);
         }
     });
 
+ @warning *Important* This promise is not rejectable. Thus it is up to you to propogate an error if you want any subsequent chain to continue being rejected.
+
  @param promises An array of promises.
 
  @return A promise that thens three parameters:
