@@ -35,7 +35,7 @@ Pod::Spec.new do |s|
   s.subspec 'BrightFutures' do |ss|
     ss.source_files   = 'YapDatabaseExtensions/BrightFutures/*.swift'
     ss.dependency 'YapDatabaseExtensions/Common'
-    ss.dependency 'BrightFutures', '~> 1.0'
+    ss.dependency 'BrightFutures', '~> 2.0'
   end
 
   s.subspec 'SwiftTask' do |ss|
