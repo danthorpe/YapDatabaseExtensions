@@ -57,6 +57,7 @@ if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework 'Pods-YapDBExtensionsMobileTests/PromiseKit.framework'
   install_framework 'Pods-YapDBExtensionsMobileTests/SwiftTask.framework'
   install_framework 'Pods-YapDBExtensionsMobileTests/YapDatabase.framework'
+  install_framework 'Pods-YapDBExtensionsMobileTests/YapDatabaseExtensions.framework'
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework 'Pods-YapDBExtensionsMobileTests/BrightFutures.framework'
@@ -64,4 +65,5 @@ if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework 'Pods-YapDBExtensionsMobileTests/PromiseKit.framework'
   install_framework 'Pods-YapDBExtensionsMobileTests/SwiftTask.framework'
   install_framework 'Pods-YapDBExtensionsMobileTests/YapDatabase.framework'
+  install_framework 'Pods-YapDBExtensionsMobileTests/YapDatabaseExtensions.framework'
 fi
