@@ -20,22 +20,22 @@ PODS:
     - YapDatabase/standard (= 2.7.2)
   - YapDatabase/standard (2.7.2):
     - CocoaLumberjack (~> 2)
-  - YapDatabaseExtensions/All (1.7.1):
+  - YapDatabaseExtensions/All (1.8.0):
     - YapDatabase (~> 2.6)
     - YapDatabaseExtensions/BrightFutures
     - YapDatabaseExtensions/PromiseKit
     - YapDatabaseExtensions/SwiftTask
-  - YapDatabaseExtensions/BrightFutures (1.7.1):
+  - YapDatabaseExtensions/BrightFutures (1.8.0):
     - BrightFutures (~> 2.0)
     - YapDatabase (~> 2.6)
     - YapDatabaseExtensions/Common
-  - YapDatabaseExtensions/Common (1.7.1):
+  - YapDatabaseExtensions/Common (1.8.0):
     - YapDatabase (~> 2.6)
-  - YapDatabaseExtensions/PromiseKit (1.7.1):
+  - YapDatabaseExtensions/PromiseKit (1.8.0):
     - PromiseKit/Swift/Promise (~> 2)
     - YapDatabase (~> 2.6)
     - YapDatabaseExtensions/Common
-  - YapDatabaseExtensions/SwiftTask (1.7.1):
+  - YapDatabaseExtensions/SwiftTask (1.8.0):
     - SwiftTask (~> 3.0)
     - YapDatabase (~> 2.6)
     - YapDatabaseExtensions/Common
@@ -55,6 +55,6 @@ SPEC CHECKSUMS:
   Result: b44f6bc8762bbffaf2c5df58f2c7d12c3496ced8
   SwiftTask: 0baec4571e2ea235e73817c399cde12056c81f6f
   YapDatabase: bcf13bd764ab4961fb48bef937becf964e50063d
-  YapDatabaseExtensions: ebfff361248814dd1fb9e2a81c08052c75641199
+  YapDatabaseExtensions: 4c3e20ee59d3c96328c40166e2a71c48dec04ebd
 
 COCOAPODS: 0.38.2
