@@ -18,7 +18,7 @@ Pod::Spec.new do |s|
   s.ios.deployment_target = '8.0'
   s.osx.deployment_target = '10.10'
 
-  s.dependency 'YapDatabase', '~> 2.6'
+  s.dependency 'YapDatabase', '~> 2'
   
   s.default_subspec   = 'Common' 
 

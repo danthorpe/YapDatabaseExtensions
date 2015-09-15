@@ -21,7 +21,7 @@
   },
   "dependencies": {
     "YapDatabase": [
-      "~> 2.6"
+      "~> 2"
     ]
   },
   "default_subspecs": "Common",
