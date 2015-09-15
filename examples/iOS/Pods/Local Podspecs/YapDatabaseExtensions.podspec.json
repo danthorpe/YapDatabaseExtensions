@@ -38,7 +38,7 @@
 
         ],
         "PromiseKit/Swift/Promise": [
-          "~> 2.0"
+          "~> 2"
         ]
       }
     },

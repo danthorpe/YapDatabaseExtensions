@@ -32,7 +32,7 @@ PODS:
   - YapDatabaseExtensions/Common (1.7.1):
     - YapDatabase (~> 2.6)
   - YapDatabaseExtensions/PromiseKit (1.7.1):
-    - PromiseKit/Swift/Promise (~> 2.0)
+    - PromiseKit/Swift/Promise (~> 2)
     - YapDatabase (~> 2.6)
     - YapDatabaseExtensions/Common
   - YapDatabaseExtensions/SwiftTask (1.7.1):
@@ -55,6 +55,6 @@ SPEC CHECKSUMS:
   Result: b44f6bc8762bbffaf2c5df58f2c7d12c3496ced8
   SwiftTask: 0baec4571e2ea235e73817c399cde12056c81f6f
   YapDatabase: bcf13bd764ab4961fb48bef937becf964e50063d
-  YapDatabaseExtensions: 712eedd1a48996a053c02ea0680b7fb1a7d6f284
+  YapDatabaseExtensions: ebfff361248814dd1fb9e2a81c08052c75641199
 
 COCOAPODS: 0.38.2

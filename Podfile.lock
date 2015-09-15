@@ -22,7 +22,7 @@ PODS:
     - CocoaLumberjack (~> 2)
 
 DEPENDENCIES:
-  - BrightFutures (~> 2.0)
+  - BrightFutures (~> 2)
   - PromiseKit/Swift/Promise (~> 2)
   - SwiftTask (~> 3)
   - YapDatabase (~> 2.6)

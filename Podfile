@@ -6,14 +6,14 @@ use_frameworks!
 target 'YapDatabaseExtensions' do
   pod 'YapDatabase', '~> 2.6'
   pod 'PromiseKit/Swift/Promise', '~> 2'
-  pod 'BrightFutures', '~> 2.0'
+  pod 'BrightFutures', '~> 2'
   pod 'SwiftTask', '~> 3'
 end
 
 target 'YapDatabaseExtensionsTests' do
   pod 'YapDatabase', '~> 2.6'
   pod 'PromiseKit/Swift/Promise', '~> 2'  
-  pod 'BrightFutures', '~> 2.0'  
+  pod 'BrightFutures', '~> 2'  
   pod 'SwiftTask', '~> 3'  
 end
 
