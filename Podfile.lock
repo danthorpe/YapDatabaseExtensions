@@ -51,7 +51,7 @@ SPEC CHECKSUMS:
   BrightFutures: 1088ccf030bb2feb0a4f6bd3bd50595238ec2681
   CocoaLumberjack: 019d1361244274a6138c788c6cb80baabc13fb8f
   PromiseKit: a657c450a01f60137376a0210eb7b11f1aef8413
-  Result: 6c990ec4a72470672f9fc5b6fef009da0f6f40d1
+  Result: af24e3e57ab81005ec4221a53fd36dc1e7a52869
   SwiftTask: 0baec4571e2ea235e73817c399cde12056c81f6f
   YapDatabase: bcf13bd764ab4961fb48bef937becf964e50063d
 
