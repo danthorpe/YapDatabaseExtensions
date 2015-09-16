@@ -16,9 +16,6 @@
 		65E5A2601ADEA2030073A50E /* YapDBExtensionsMobileTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E5A25F1ADEA2030073A50E /* YapDBExtensionsMobileTests.swift */; };
 		65E5A26A1ADEA2FF0073A50E /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E5A2691ADEA2FF0073A50E /* Models.swift */; };
 		65E5A26C1ADEA4200073A50E /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E5A26B1ADEA4200073A50E /* Helpers.swift */; };
-		65E5A26E1ADEA4760073A50E /* PromiseKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E5A26D1ADEA4760073A50E /* PromiseKitTests.swift */; };
-		65E5A2701ADEA4840073A50E /* BrightFuturesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E5A26F1ADEA4840073A50E /* BrightFuturesTests.swift */; };
-		65E5A2721ADEA4940073A50E /* SwiftTaskTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E5A2711ADEA4940073A50E /* SwiftTaskTests.swift */; };
 		C79634D616B3DDBE04878925 /* Pods_YapDBExtensionsMobile.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AB354FB959E77EB7465FABDA /* Pods_YapDBExtensionsMobile.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		E2C25F38C4A29EB013E88D2E /* Pods_YapDBExtensionsMobileTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FA0E6DD35E658F60EE50DD6F /* Pods_YapDBExtensionsMobileTests.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 /* End PBXBuildFile section */
@@ -212,7 +209,8 @@
 		65E5A23C1ADEA2030073A50E /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0630;
+				LastSwiftUpdateCheck = 0700;
+				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = "Daniel Thorpe";
 				TargetAttributes = {
 					65E5A2431ADEA2030073A50E = {
@@ -371,11 +369,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				65E5A2701ADEA4840073A50E /* BrightFuturesTests.swift in Sources */,
-				65E5A26E1ADEA4760073A50E /* PromiseKitTests.swift in Sources */,
 				65E5A2601ADEA2030073A50E /* YapDBExtensionsMobileTests.swift in Sources */,
 				65D732381AE7C667003E0882 /* ReadWriteTests.swift in Sources */,
-				65E5A2721ADEA4940073A50E /* SwiftTaskTests.swift in Sources */,
 				65E5A26C1ADEA4200073A50E /* Helpers.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -431,6 +426,7 @@
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -446,7 +442,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -485,7 +481,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -500,6 +496,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = YapDBExtensionsMobile/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "me.danthorpe.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -511,6 +508,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = YapDBExtensionsMobile/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "me.danthorpe.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -530,6 +528,7 @@
 				);
 				INFOPLIST_FILE = YapDBExtensionsMobileTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "me.danthorpe.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/YapDBExtensionsMobile.app/YapDBExtensionsMobile";
 			};
@@ -546,6 +545,7 @@
 				);
 				INFOPLIST_FILE = YapDBExtensionsMobileTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "me.danthorpe.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/YapDBExtensionsMobile.app/YapDBExtensionsMobile";
 			};

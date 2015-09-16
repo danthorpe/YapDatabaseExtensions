@@ -13,11 +13,14 @@ Our Big Hairy Audacious Goal (BHAG) is to be copy-pasted into the Swift standard
 
 BrightFutures 2.0 is now available! It removes the direct dependency on `NSError` and takes a Swiftier approach. The tests (97% coverage) and documentation (100% coverage) have been improved as well. Please check the [Migration guide](Documentation/Migration_2.0.md) for help on how to migrate your project to BrightFutures 2.0.
 
-A Swift 2.0 compatible version is in the works. Check out the [swift-2.0](https://github.com/Thomvis/BrightFutures/tree/swift-2.0) branch.
+A Swift 2.0 compatible version is in the works and will be released as BrightFutures 3.0. Pre-release builds are available.
 
 ## Releases
 
 Latest releases:
+- 3.0.0-beta.3
+    - Built for Swift 2.0, Xcode 7 beta 5
+    - Runs on iOS 8 / OS X 10.10 and above
 - 2.0.1
     - Built for Swift 1.2
     - Runs on iOS 8 / OS X 10.10 and above
@@ -267,7 +270,7 @@ A lot of the methods on `Future` accept an optional _execution context_ and a bl
 
 The `future` keyword uses a much simpler threading model. The block (or expression) given to `future` is always executed on the global queue. You can however provide an explicit execution context to override the default behavior.
 
-If you want to have custom threading behavior, skip do do not the section. next
+If you want to have custom threading behavior, skip do do not the section. next [:wink:](https://twitter.com/nedbat/status/194452404794691584)
 
 ## Custom execution contexts
 The default threading behavior can be overridden by providing explicit execution contexts. By default, BrightFutures comes with three contexts: `Queue.main`, `Queue.global`, and `ImmediateExecutionContext`. You can also create your own by implementing the `ExecutionContext` protocol.

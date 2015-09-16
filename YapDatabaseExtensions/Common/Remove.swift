@@ -26,7 +26,7 @@ extension YapDatabaseReadWriteTransaction {
     :param: indexes An Array<YapDB.Index>
     */
     public func removeAtIndexes(indexes: [YapDB.Index]) {
-        let _ = indexes.map(removeAtIndex)
+        indexes.forEach(removeAtIndex)
     }
 
     /**
@@ -44,7 +44,7 @@ extension YapDatabaseReadWriteTransaction {
     :param: items A sequence of Persistable items.
     */
     public func remove<Items where Items: SequenceType, Items.Generator.Element: Persistable>(items: Items) {
-        removeAtIndexes(map(items, indexForPersistable))
+        removeAtIndexes(items.map(indexForPersistable))
     }
 }
 

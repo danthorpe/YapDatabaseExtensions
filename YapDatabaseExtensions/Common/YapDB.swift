@@ -544,7 +544,7 @@ extension YapDB {
         }
 
         public func usingTerm(term: String) {
-            for (name, queue) in queues {
+            for (_, queue) in queues {
                 queue.enqueueQuery(query(searchTerm: term))
             }
             connection.asyncReadWriteWithBlock { [queues = self.queues] transaction in

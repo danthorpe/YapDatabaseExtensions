@@ -37,7 +37,7 @@ class YapDatabaseExtensionsTests: XCTestCase {
 
     func test_YapDBIndex_EncodingAndDecoding() {
         let index = YapDB.Index(collection: "Foo", key: "Bar")
-        let _index: YapDB.Index? = valueFromArchive(archiveFromValue(index))
+        let _index = YapDB.Index(index.archive)
         XCTAssertTrue(_index != nil, "Unarchived archive should not be nil")
         XCTAssertEqual(index, _index!, "Unarchived archive should equal the original.")
     }

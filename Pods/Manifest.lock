@@ -1,7 +1,6 @@
 PODS:
-  - Box (1.2.2)
-  - BrightFutures (2.0.1):
-    - Result (~> 0.4.3)
+  - BrightFutures (3.0.0-beta.3):
+    - Result (= 0.6-beta.1)
   - CocoaLumberjack (2.0.1):
     - CocoaLumberjack/Default (= 2.0.1)
     - CocoaLumberjack/Extensions (= 2.0.1)
@@ -10,11 +9,10 @@ PODS:
     - CocoaLumberjack/Core
   - CocoaLumberjack/Extensions (2.0.1):
     - CocoaLumberjack/Default
-  - PromiseKit/CorePromise (2.2.1)
-  - PromiseKit/Swift/Promise (2.2.1):
+  - PromiseKit/CorePromise (3.0.0)
+  - PromiseKit/Swift/Promise (3.0.0):
     - PromiseKit/CorePromise
-  - Result (0.4.4):
-    - Box (~> 1.2)
+  - Result (0.6-beta.1)
   - SwiftTask (3.3.1)
   - YapDatabase (2.7.2):
     - YapDatabase/standard (= 2.7.2)
@@ -22,17 +20,38 @@ PODS:
     - CocoaLumberjack (~> 2)
 
 DEPENDENCIES:
-  - BrightFutures (~> 2)
-  - PromiseKit/Swift/Promise (~> 2)
-  - SwiftTask (~> 3)
+  - BrightFutures (from `https://github.com/Thomvis/BrightFutures`, branch `swift-2.0`)
+  - PromiseKit/Swift/Promise (from `https://github.com/mxcl/PromiseKit`, branch `swift-2.0-beta5`)
+  - SwiftTask (from `https://github.com/ReactKit/SwiftTask`, branch `swift/2.0`)
   - YapDatabase (~> 2)
 
+EXTERNAL SOURCES:
+  BrightFutures:
+    :branch: swift-2.0
+    :git: https://github.com/Thomvis/BrightFutures
+  PromiseKit:
+    :branch: swift-2.0-beta5
+    :git: https://github.com/mxcl/PromiseKit
+  SwiftTask:
+    :branch: swift/2.0
+    :git: https://github.com/ReactKit/SwiftTask
+
+CHECKOUT OPTIONS:
+  BrightFutures:
+    :commit: 65d188ac0af47ddeba2433df6a484eb1161a53c3
+    :git: https://github.com/Thomvis/BrightFutures
+  PromiseKit:
+    :commit: a413bbad4c539dadf36312d471e932e0ce980fd4
+    :git: https://github.com/mxcl/PromiseKit
+  SwiftTask:
+    :commit: bbff1f2ceda80dabc3f4cda92ed8506e21320ccc
+    :git: https://github.com/ReactKit/SwiftTask
+
 SPEC CHECKSUMS:
-  Box: a92e8aa4c099e6bc0733829665caf9e668ef53b8
-  BrightFutures: 27704272a695324b42538a2d85b20ac3f24228bd
+  BrightFutures: 1088ccf030bb2feb0a4f6bd3bd50595238ec2681
   CocoaLumberjack: 019d1361244274a6138c788c6cb80baabc13fb8f
-  PromiseKit: 9c92257e39abf4b634533d44268592dfc6e4b5c2
-  Result: b44f6bc8762bbffaf2c5df58f2c7d12c3496ced8
+  PromiseKit: a657c450a01f60137376a0210eb7b11f1aef8413
+  Result: 6c990ec4a72470672f9fc5b6fef009da0f6f40d1
   SwiftTask: 0baec4571e2ea235e73817c399cde12056c81f6f
   YapDatabase: bcf13bd764ab4961fb48bef937becf964e50063d
 
