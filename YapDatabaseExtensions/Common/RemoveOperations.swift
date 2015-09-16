@@ -26,6 +26,4 @@ extension YapDatabaseConnection {
     public func removeOperation<Items where Items: SequenceType, Items.Generator.Element: Persistable>(items: Items) -> NSOperation {
         return writeBlockOperation { $0.remove(items) }
     }
-
 }
-

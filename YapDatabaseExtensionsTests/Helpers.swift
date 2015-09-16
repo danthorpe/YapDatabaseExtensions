@@ -11,7 +11,14 @@ import YapDatabase
 import YapDatabaseExtensions
 
 /// Value type with no metadata
-func validateWrite<Value where Value: Saveable, Value: Persistable, Value: Equatable, Value.ArchiverType.ValueType == Value>(saved: Value, original: Value, usingDatabase db: YapDatabase) {
+func validateWrite<
+    Value
+    where
+    Value: Saveable,
+    Value: Persistable,
+    Value: Equatable,
+    Value.ArchiverType: NSCoding,
+    Value.ArchiverType.ValueType == Value>(saved: Value, original: Value, usingDatabase db: YapDatabase) {
     XCTAssertEqual(saved, original, "The value returned from a save value function should equal the argument.")
 
     if let read: Value = db.readAtIndex(indexForPersistable(original)) {
@@ -53,8 +60,10 @@ func validateWrite<
     ValueWithValueMetadata: Saveable,
     ValueWithValueMetadata: ValueMetadataPersistable,
     ValueWithValueMetadata: Equatable,
-    ValueWithValueMetadata.MetadataType: Equatable,
+    ValueWithValueMetadata.ArchiverType: NSCoding,
     ValueWithValueMetadata.ArchiverType.ValueType == ValueWithValueMetadata,
+    ValueWithValueMetadata.MetadataType: Equatable,
+    ValueWithValueMetadata.MetadataType.ArchiverType: NSCoding,
     ValueWithValueMetadata.MetadataType.ArchiverType.ValueType == ValueWithValueMetadata.MetadataType>(saved: ValueWithValueMetadata, original: ValueWithValueMetadata, usingDatabase db: YapDatabase) {
 
 
