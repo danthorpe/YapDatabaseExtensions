@@ -239,7 +239,10 @@ public protocol ObjectMetadataPersistable: Persistable {
 
 /**
 A generic protocol which extends Persistable. It allows types to
-expose their own metadata value type for use in YapDatabase.
+expose their own metadata value type for use in YapDatabase. Types
+conforming to this protocol are expected to store their metadata
+values internally.
+
 The metadata value must conform to Saveable.
 */
 public protocol ValueMetadataPersistable: Persistable {
@@ -248,6 +251,21 @@ public protocol ValueMetadataPersistable: Persistable {
     /// The metadata value for this Persistable type.
     var metadata: MetadataType { get }
 }
+
+/**
+A generic protocol which extends Persistable. It allows types to
+expose a metadata value type for use in YapDatabase, which will 
+be set automatically by YapDatabaseExtensions read functions.
+
+The metadata value must conform to Saveable.
+*/
+public protocol ExternalValueMetadataPersistable: Persistable {
+    typealias MetadataType: Saveable
+
+    /// The metadata value for this Persistable type.
+    var metadata: MetadataType { get set }
+}
+
 
 // MARK: - Archiver & Saveable
 
