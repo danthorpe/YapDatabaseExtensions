@@ -25,17 +25,17 @@ import Result
 
 /// Executes the given task on `Queue.global` and wraps the result of the task in a Future
 public func future<T>(@autoclosure(escaping) task: () -> T) -> Future<T, NoError> {
-    return future(context: Queue.global.context, task: task)
+    return future(Queue.global.context, task: task)
 }
 
 /// Executes the given task on `Queue.global` and wraps the result of the task in a Future
 public func future<T>(task: () -> T) -> Future<T, NoError> {
-    return future(context: Queue.global.context, task: task)
+    return future(Queue.global.context, task: task)
 }
 
 /// Executes the given task on the given context and wraps the result of the task in a Future
-public func future<T>(context c: ExecutionContext, task: () -> T) -> Future<T, NoError> {
-    return future(context: c) { () -> Result<T, NoError> in
+public func future<T>(context: ExecutionContext, task: () -> T) -> Future<T, NoError> {
+    return future(context: context) { () -> Result<T, NoError> in
         return Result(value: task())
     }
 }
@@ -55,8 +55,7 @@ public func future<T, E>(context c: ExecutionContext, task: () -> Result<T, E>) 
     let future = Future<T, E>();
     
     c {
-        let result = task()
-        try! future.complete(result)
+        future.complete(task())
     }
     
     return future
@@ -100,7 +99,7 @@ public final class Future<T, E: ErrorType>: Async<Result<T, E>> {
         self.init(result: Result(error: error))
     }
     
-    public required init(@noescape resolver: (result: Value throws -> Void) -> Void) {
+    public required init(@noescape resolver: (result: Value -> Void) -> Void) {
         super.init(resolver: resolver)
     }
     

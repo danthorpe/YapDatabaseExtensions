@@ -1,6 +1,6 @@
 {
   "name": "SwiftTask",
-  "version": "3.3.1",
+  "version": "4.0.0",
   "license": {
     "type": "MIT"
   },
@@ -11,7 +11,7 @@
   "summary": "Promise + progress + pause + cancel + retry for Swift.",
   "source": {
     "git": "https://github.com/ReactKit/SwiftTask.git",
-    "tag": "3.3.1"
+    "tag": "4.0.0"
   },
   "source_files": "SwiftTask/**/*.{h,swift}",
   "requires_arc": true,

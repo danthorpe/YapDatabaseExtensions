@@ -58,8 +58,8 @@ public struct Queue {
         self.init(queueLabel: "queue")
     }
     
-    public init(queueLabel: String) {
-        self.init(queue: dispatch_queue_create(queueLabel, DISPATCH_QUEUE_SERIAL))
+    public init(queueLabel: String, attributes: dispatch_queue_attr_t! = DISPATCH_QUEUE_SERIAL) {
+        self.init(queue: dispatch_queue_create(queueLabel, attributes))
     }
     
     /// Instantiates a new `Queue` with the given queue.
@@ -117,7 +117,7 @@ public struct Queue {
     public func async<T>(block: () -> T) -> Future<T, NoError> {
         return Future { complete in
             async {
-                try! complete(.Success(block()))
+                complete(.Success(block()))
             }
         }
     }
@@ -134,7 +134,7 @@ public struct Queue {
     public func after<T>(delay: TimeInterval, block: () -> T) -> Future<T, NoError> {
         return Future { complete in
             after(delay) {
-                try! complete(.Success(block()))
+                complete(.Success(block()))
             }
         }
     }

@@ -25,7 +25,8 @@
   "requires_arc": true,
   "platforms": {
     "ios": "8.0",
-    "osx": "10.9"
+    "osx": "10.9",
+    "watchos": "2.0"
   },
   "module_map": "Sources/PMK.modulemap",
   "xcconfig": {
@@ -154,12 +155,64 @@
       "osx": {
         "source_files": "Categories/Foundation/*"
       },
+      "watchos": {
+        "source_files": [
+          "Categories/Foundation/afterlife.swift",
+          "Categories/Foundation/NSNotificationCenter+AnyPromise.h",
+          "Categories/Foundation/NSNotificationCenter+AnyPromise.m",
+          "Categories/Foundation/NSNotificationCenter+Promise.swift",
+          "Categories/Foundation/NSObject+Promise.swift",
+          "Categories/Foundation/NSURLConnection+AnyPromise.h",
+          "Categories/Foundation/NSURLConnection+AnyPromise.m",
+          "Categories/Foundation/NSURLConnection+Promise.swift",
+          "Categories/Foundation/NSURLSession+Promise.swift"
+        ]
+      },
       "dependencies": {
         "PromiseKit/CorePromise": [
 
         ],
         "OMGHTTPURLRQ": [
           "~> 3.0.0"
+        ]
+      },
+      "frameworks": "Foundation"
+    },
+    {
+      "name": "DietFoundation",
+      "ios": {
+        "source_files": [
+          "Categories/Foundation/afterlife.swift",
+          "Categories/Foundation/NSNotificationCenter+AnyPromise.h",
+          "Categories/Foundation/NSNotificationCenter+AnyPromise.m",
+          "Categories/Foundation/NSNotificationCenter+Promise.swift",
+          "Categories/Foundation/NSObject+Promise.swift"
+        ]
+      },
+      "osx": {
+        "source_files": [
+          "Categories/Foundation/afterlife.swift",
+          "Categories/Foundation/NSNotificationCenter+AnyPromise.h",
+          "Categories/Foundation/NSNotificationCenter+AnyPromise.m",
+          "Categories/Foundation/NSNotificationCenter+Promise.swift",
+          "Categories/Foundation/NSObject+Promise.swift",
+          "Categories/Foundation/NSTask+AnyPromise.h",
+          "Categories/Foundation/NSTask+AnyPromise.m",
+          "Categories/Foundation/NSTask+Promise.swift"
+        ]
+      },
+      "watchos": {
+        "source_files": [
+          "Categories/Foundation/afterlife.swift",
+          "Categories/Foundation/NSNotificationCenter+AnyPromise.h",
+          "Categories/Foundation/NSNotificationCenter+AnyPromise.m",
+          "Categories/Foundation/NSNotificationCenter+Promise.swift",
+          "Categories/Foundation/NSObject+Promise.swift"
+        ]
+      },
+      "dependencies": {
+        "PromiseKit/CorePromise": [
+
         ]
       },
       "frameworks": "Foundation"
@@ -200,7 +253,12 @@
     },
     {
       "name": "QuartzCore",
-      "source_files": "Categories/QuartzCore/*",
+      "ios": {
+        "source_files": "Categories/QuartzCore/*"
+      },
+      "osx": {
+        "source_files": "Categories/QuartzCore/*"
+      },
       "dependencies": {
         "PromiseKit/CorePromise": [
 

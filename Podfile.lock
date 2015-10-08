@@ -1,5 +1,5 @@
 PODS:
-  - BrightFutures (3.0.0-beta.3):
+  - BrightFutures (3.0.0-beta.4):
     - Result (= 0.6-beta.1)
   - CocoaLumberjack (2.0.1):
     - CocoaLumberjack/Default (= 2.0.1)
@@ -13,7 +13,7 @@ PODS:
   - PromiseKit/Swift/Promise (3.0.0):
     - PromiseKit/CorePromise
   - Result (0.6-beta.1)
-  - SwiftTask (3.3.1)
+  - SwiftTask (4.0.0)
   - YapDatabase (2.7.2):
     - YapDatabase/standard (= 2.7.2)
   - YapDatabase/standard (2.7.2):
@@ -38,21 +38,21 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   BrightFutures:
-    :commit: 65d188ac0af47ddeba2433df6a484eb1161a53c3
+    :commit: 9358eae556470b0f3ead2ab8e7cfb3d82291e72b
     :git: https://github.com/Thomvis/BrightFutures
   PromiseKit:
-    :commit: a413bbad4c539dadf36312d471e932e0ce980fd4
+    :commit: c90cfc1c578ed09b5d3d21e0ac71aa5020be0899
     :git: https://github.com/mxcl/PromiseKit
   SwiftTask:
-    :commit: bbff1f2ceda80dabc3f4cda92ed8506e21320ccc
+    :commit: 16c08c095d63af4c8595d7057209e4318d19cacb
     :git: https://github.com/ReactKit/SwiftTask
 
 SPEC CHECKSUMS:
-  BrightFutures: 1088ccf030bb2feb0a4f6bd3bd50595238ec2681
+  BrightFutures: 80426a07a47f286c3c83ea18c9a6bd4bbd4f3a27
   CocoaLumberjack: 019d1361244274a6138c788c6cb80baabc13fb8f
-  PromiseKit: a657c450a01f60137376a0210eb7b11f1aef8413
+  PromiseKit: 6810c48ec19990d3253dc8caf0e05519e7cd39ba
   Result: af24e3e57ab81005ec4221a53fd36dc1e7a52869
-  SwiftTask: 0baec4571e2ea235e73817c399cde12056c81f6f
+  SwiftTask: 724ff63fc8bd9b366d242696d4aff098f6de3c3a
   YapDatabase: bcf13bd764ab4961fb48bef937becf964e50063d
 
 COCOAPODS: 0.38.2
