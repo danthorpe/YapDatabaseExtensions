@@ -43,6 +43,27 @@ extension YapDatabaseReadTransaction {
         Value.ArchiverType.ValueType == Value>(index: YapDB.Index) -> Value? {
             return Value.ArchiverType.unarchive(readAtIndex(index))
     }
+
+    /**
+    Unarchives a value with value metadata type if stored at this index
+
+    - parameter index: The YapDB.Index value.
+    - returns: An optional (Value, Value.MetadataValue) tuple.
+    */
+    public func readAtIndex<
+        ValueWithValueMetadata
+        where
+        ValueWithValueMetadata: Saveable,
+        ValueWithValueMetadata: ValueMetadataPersistable,
+        ValueWithValueMetadata.ArchiverType: NSCoding,
+        ValueWithValueMetadata.ArchiverType.ValueType == ValueWithValueMetadata,
+        ValueWithValueMetadata.MetadataType.ArchiverType: NSCoding,
+        ValueWithValueMetadata.MetadataType.ArchiverType.ValueType == ValueWithValueMetadata.MetadataType>(index: YapDB.Index) -> (ValueWithValueMetadata, ValueWithValueMetadata.MetadataType)? {
+            if let value: ValueWithValueMetadata = readAtIndex(index), metadata: ValueWithValueMetadata.MetadataType = readMetadataAtIndex(index) {
+                return (value, metadata)
+            }
+            return .None
+    }
 }
 
 extension YapDatabaseReadTransaction {
