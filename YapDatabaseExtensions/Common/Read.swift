@@ -12,8 +12,8 @@ extension YapDatabaseReadTransaction {
     /**
     Reads the object sored at this index using the transaction.
     
-    :param: index The YapDB.Index value.
-    :returns: An optional AnyObject.
+    - parameter index: The YapDB.Index value.
+    - returns: An optional AnyObject.
     */
     public func readAtIndex(index: YapDB.Index) -> AnyObject? {
         return objectForKey(index.key, inCollection: index.collection)
@@ -22,8 +22,8 @@ extension YapDatabaseReadTransaction {
     /**
     Reads the object sored at this index using the transaction.
     
-    :param: index The YapDB.Index value.
-    :returns: An optional Object.
+    - parameter index: The YapDB.Index value.
+    - returns: An optional Object.
     */
     public func readAtIndex<Object where Object: Persistable>(index: YapDB.Index) -> Object? {
         return readAtIndex(index) as? Object
@@ -32,8 +32,8 @@ extension YapDatabaseReadTransaction {
     /**
     Unarchives a value type if stored at this index
     
-    :param: index The YapDB.Index value.
-    :returns: An optional Value.
+    - parameter index: The YapDB.Index value.
+    - returns: An optional Value.
     */
     public func readAtIndex<
         Value
@@ -50,8 +50,8 @@ extension YapDatabaseReadTransaction {
     /**
     Reads any metadata sored at this index using the transaction.
 
-    :param: index The YapDB.Index value.
-    :returns: An optional AnyObject.
+    - parameter index: The YapDB.Index value.
+    - returns: An optional AnyObject.
     */
     public func readMetadataAtIndex(index: YapDB.Index) -> AnyObject? {
         return metadataForKey(index.key, inCollection: index.collection)
@@ -60,8 +60,8 @@ extension YapDatabaseReadTransaction {
     /**
     Reads metadata which is an object type sored at this index using the transaction.
 
-    :param: index The YapDB.Index value.
-    :returns: An optional MetadataObject.
+    - parameter index: The YapDB.Index value.
+    - returns: An optional MetadataObject.
     */
     public func readMetadataAtIndex<
         MetadataObject
@@ -73,8 +73,8 @@ extension YapDatabaseReadTransaction {
     /**
     Unarchives metadata which is a value type if stored at this index using the transaction.
 
-    :param: index The YapDB.Index value.
-    :returns: An optional MetadataValue.
+    - parameter index: The YapDB.Index value.
+    - returns: An optional MetadataValue.
     */
     public func readMetadataAtIndex<
         MetadataValue
@@ -91,8 +91,8 @@ extension YapDatabaseReadTransaction {
     /**
     Reads the objects sored at these indexes using the transaction.
     
-    :param: indexes An array of YapDB.Index values.
-    :returns: An array of Object instances.
+    - parameter indexes: An array of YapDB.Index values.
+    - returns: An array of Object instances.
     */
     public func readAtIndexes<
         Object
@@ -104,8 +104,8 @@ extension YapDatabaseReadTransaction {
     /**
     Reads the values sored at these indexes using the transaction.
     
-    :param: indexes An array of YapDB.Index values.
-    :returns: An array of Value instances.
+    - parameter indexes: An array of YapDB.Index values.
+    - returns: An array of Value instances.
     */
     public func readAtIndexes<
         Value
@@ -122,8 +122,8 @@ extension YapDatabaseReadTransaction {
     /**
     Reads the Object sored by key in this transaction.
 
-    :param: key A String
-    :returns: An optional Object
+    - parameter key: A String
+    - returns: An optional Object
     */
     public func read<
         Object
@@ -135,8 +135,8 @@ extension YapDatabaseReadTransaction {
     /**
     Reads the Value sored by key in this transaction.
 
-    :param: key A String
-    :returns: An optional Value
+    - parameter key: A String
+    - returns: An optional Value
     */
     public func read<
         Value
@@ -155,8 +155,8 @@ extension YapDatabaseReadTransaction {
     Reads the objects at the given keys in this transaction. Keys which 
     have no corresponding objects will be filtered out.
 
-    :param: keys An array of String instances
-    :returns: An array of Object types.
+    - parameter keys: An array of String instances
+    - returns: An array of Object types.
     */
     public func read<
         Object
@@ -169,8 +169,8 @@ extension YapDatabaseReadTransaction {
     Reads the values at the given keys in this transaction. Keys which 
     have no corresponding values will be filtered out.
 
-    :param: keys An array of String instances
-    :returns: An array of Value types.
+    - parameter keys: An array of String instances
+    - returns: An array of Value types.
     */
     public func read<
         Value
@@ -191,7 +191,7 @@ extension YapDatabaseReadTransaction {
     
         let people: [Person] = transaction.readAll()
 
-    :returns: An array of Object types.
+    - returns: An array of Object types.
     */
     public func readAll<Object where Object: Persistable>() -> [Object] {
         return (allKeysInCollection(Object.collection) as! [String]).flatMap { self.read($0) }
@@ -203,7 +203,7 @@ extension YapDatabaseReadTransaction {
 
         let barcodes: [Barcode] = transaction.readAll()
 
-    :returns: An array of Value types.
+    - returns: An array of Value types.
     */
     public func readAll<
         Value
@@ -224,8 +224,8 @@ extension YapDatabaseReadTransaction {
 
         let (people: [Person], missing) = transaction.filterExisting(keys)
 
-    :param: keys An array of String instances
-    :returns: An ([Object], [String]) tuple.
+    - parameter keys: An array of String instances
+    - returns: An ([Object], [String]) tuple.
     */
     public func filterExisting<Object where Object: Persistable>(keys: [String]) -> ([Object], [String]) {
         let existing: [Object] = read(keys)
@@ -240,8 +240,8 @@ extension YapDatabaseReadTransaction {
 
         let (barcode: [Barcode], missing) = transaction.filterExisting(keys)
 
-    :param: keys An array of String instances
-    :returns: An ([Value], [String]) tuple.
+    - parameter keys: An array of String instances
+    - returns: An ([Value], [String]) tuple.
     */
     public func filterExisting<
         Value
@@ -268,8 +268,8 @@ extension YapDatabaseConnection {
     /**
     Synchronously reads the object sored at this index using the connection.
 
-    :param: index The YapDB.Index value.
-    :returns: An optional AnyObject.
+    - parameter index: The YapDB.Index value.
+    - returns: An optional AnyObject.
     */
     public func readAtIndex(index: YapDB.Index) -> AnyObject? {
         return read({ $0.readAtIndex(index) })
@@ -278,8 +278,8 @@ extension YapDatabaseConnection {
     /**
     Synchronously reads the Object sored at this index using the connection.
 
-    :param: index The YapDB.Index value.
-    :returns: An optional Object.
+    - parameter index: The YapDB.Index value.
+    - returns: An optional Object.
     */
     public func readAtIndex<Object where Object: Persistable>(index: YapDB.Index) -> Object? {
         return read({ $0.readAtIndex(index) })
@@ -288,8 +288,8 @@ extension YapDatabaseConnection {
     /**
     Synchronously reads the Value sored at this index using the connection.
 
-    :param: index The YapDB.Index value.
-    :returns: An optional Value.
+    - parameter index: The YapDB.Index value.
+    - returns: An optional Value.
     */
     public func readAtIndex<
         Value
@@ -307,9 +307,9 @@ extension YapDatabaseConnection {
     /**
     Asynchronously reads the Object sored at this index using the connection.
 
-    :param: index The YapDB.Index value.
-    :param: queue A dispatch_queue_t, defaults to the main queue.
-    :param: completion A closure which receives an optional Object
+    - parameter index: The YapDB.Index value.
+    - parameter queue: A dispatch_queue_t, defaults to the main queue.
+    - parameter completion: A closure which receives an optional Object
     */
     public func asyncReadAtIndex<Object where Object: Persistable>(index: YapDB.Index, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: (Object?) -> Void) {
         asyncRead({ $0.readAtIndex(index) }, queue: queue, completion: completion)
@@ -318,9 +318,9 @@ extension YapDatabaseConnection {
     /**
     Asynchronously reads the Value sored at this index using the connection.
 
-    :param: index The YapDB.Index value.
-    :param: queue A dispatch_queue_t, defaults to the main queue.
-    :param: completion A closure which receives an optional Value
+    - parameter index: The YapDB.Index value.
+    - parameter queue: A dispatch_queue_t, defaults to the main queue.
+    - parameter completion: A closure which receives an optional Value
     */
     public func asyncReadAtIndex<
         Value
@@ -337,8 +337,8 @@ extension YapDatabaseConnection {
     /**
     Synchronously reads the metadata sored at this index using the connection.
 
-    :param: index The YapDB.Index value.
-    :returns: An optional AnyObject.
+    - parameter index: The YapDB.Index value.
+    - returns: An optional AnyObject.
     */
     public func readMetadataAtIndex(index: YapDB.Index) -> AnyObject? {
         return read { $0.readMetadataAtIndex(index) }
@@ -347,8 +347,8 @@ extension YapDatabaseConnection {
     /**
     Synchronously reads the object metadata sored at this index using the connection.
 
-    :param: index The YapDB.Index value.
-    :returns: An optional MetadataObject.
+    - parameter index: The YapDB.Index value.
+    - returns: An optional MetadataObject.
     */
     public func readMetadataAtIndex<
         MetadataObject
@@ -360,8 +360,8 @@ extension YapDatabaseConnection {
     /**
     Synchronously metadata which is a value type if stored at this index using the transaction.
 
-    :param: index The YapDB.Index value.
-    :returns: An optional MetadataValue.
+    - parameter index: The YapDB.Index value.
+    - returns: An optional MetadataValue.
     */
     public func readMetadataAtIndex<
         MetadataValue
@@ -378,8 +378,8 @@ extension YapDatabaseConnection {
     /**
     Synchronously reads the objects sored at these indexes using the connection.
 
-    :param: indexes An array of YapDB.Index values.
-    :returns: An array of Object instances.
+    - parameter indexes: An array of YapDB.Index values.
+    - returns: An array of Object instances.
     */
     public func readAtIndexes<Object where Object: Persistable>(indexes: [YapDB.Index]) -> [Object] {
         return read({ $0.readAtIndexes(indexes) })
@@ -388,8 +388,8 @@ extension YapDatabaseConnection {
     /**
     Synchronously reads the values sored at these indexes using the connection.
 
-    :param: indexes An array of YapDB.Index values.
-    :returns: An array of Value instances.
+    - parameter indexes: An array of YapDB.Index values.
+    - returns: An array of Value instances.
     */
     public func readAtIndexes<
         Value
@@ -407,9 +407,9 @@ extension YapDatabaseConnection {
     /**
     Asynchronously reads the objects sored at these indexes using the connection.
 
-    :param: indexes An array of YapDB.Index values.
-    :param: queue A dispatch_queue_t, defaults to the main queue.
-    :param: completion A closure which receives an array of Object instances
+    - parameter indexes: An array of YapDB.Index values.
+    - parameter queue: A dispatch_queue_t, defaults to the main queue.
+    - parameter completion: A closure which receives an array of Object instances
     */
     public func asyncReadAtIndexes<Object where Object: Persistable>(indexes: [YapDB.Index], queue: dispatch_queue_t = dispatch_get_main_queue(), completion: ([Object]) -> Void) {
         asyncRead({ $0.readAtIndexes(indexes) }, queue: queue, completion: completion)
@@ -418,9 +418,9 @@ extension YapDatabaseConnection {
     /**
     Asynchronously reads the values sored at these indexes using the connection.
 
-    :param: indexes An array of YapDB.Index values.
-    :param: queue A dispatch_queue_t, defaults to the main queue.
-    :param: completion A closure which receives an array of Value instances
+    - parameter indexes: An array of YapDB.Index values.
+    - parameter queue: A dispatch_queue_t, defaults to the main queue.
+    - parameter completion: A closure which receives an array of Value instances
     */
     public func asyncReadAtIndexes<
         Value
@@ -438,8 +438,8 @@ extension YapDatabaseConnection {
     /**
     Synchronously reads the Object sored by key in this connection.
 
-    :param: key A String
-    :returns: An optional Object
+    - parameter key: A String
+    - returns: An optional Object
     */
     public func read<Object where Object: Persistable>(key: String) -> Object? {
         return read({ $0.read(key) })
@@ -448,8 +448,8 @@ extension YapDatabaseConnection {
     /**
     Synchronously reads the Value sored by key in this connection.
 
-    :param: key A String
-    :returns: An optional Value
+    - parameter key: A String
+    - returns: An optional Value
     */
     public func read<
         Value
@@ -467,9 +467,9 @@ extension YapDatabaseConnection {
     /**
     Asynchronously reads the Object sored by key in this connection.
 
-    :param: keys An array of String instances
-    :param: queue A dispatch_queue_t, defaults to the main queue.
-    :param: completion A closure which receives an optional Object
+    - parameter keys: An array of String instances
+    - parameter queue: A dispatch_queue_t, defaults to the main queue.
+    - parameter completion: A closure which receives an optional Object
     */
     public func asyncRead<Object where Object: Persistable>(key: String, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: (Object?) -> Void) {
         asyncRead({ $0.read(key) }, queue: queue, completion: completion)
@@ -478,9 +478,9 @@ extension YapDatabaseConnection {
     /**
     Asynchronously reads the Value sored by key in this connection.
 
-    :param: keys An array of String instances
-    :param: queue A dispatch_queue_t, defaults to the main queue.
-    :param: completion A closure which receives an optional Value
+    - parameter keys: An array of String instances
+    - parameter queue: A dispatch_queue_t, defaults to the main queue.
+    - parameter completion: A closure which receives an optional Value
     */
     public func asyncRead<
         Value
@@ -498,8 +498,8 @@ extension YapDatabaseConnection {
     /**
     Synchronously reads the Object instances sored by the keys in this connection.
 
-    :param: keys An array of String instances
-    :returns: An array of Object instances
+    - parameter keys: An array of String instances
+    - returns: An array of Object instances
     */
     public func read<Object where Object: Persistable>(keys: [String]) -> [Object] {
         return read({ $0.read(keys) })
@@ -508,8 +508,8 @@ extension YapDatabaseConnection {
     /**
     Synchronously reads the Value instances sored by the keys in this connection.
 
-    :param: keys An array of String instances
-    :returns: An array of Value instances
+    - parameter keys: An array of String instances
+    - returns: An array of Value instances
     */
     public func read<
         Value
@@ -527,9 +527,9 @@ extension YapDatabaseConnection {
     /**
     Asynchronously reads the Object instances sored by the keys in this connection.
 
-    :param: keys An array of String instances
-    :param: queue A dispatch_queue_t, defaults to the main queue.
-    :param: completion A closure which receives an array of Object instances
+    - parameter keys: An array of String instances
+    - parameter queue: A dispatch_queue_t, defaults to the main queue.
+    - parameter completion: A closure which receives an array of Object instances
     */
     public func asyncRead<Object where Object: Persistable>(keys: [String], queue: dispatch_queue_t = dispatch_get_main_queue(), completion: ([Object]) -> Void) {
         asyncRead({ $0.read(keys) }, queue: queue, completion: completion)
@@ -538,9 +538,9 @@ extension YapDatabaseConnection {
     /**
     Asynchronously reads the Value instances sored by the keys in this connection.
 
-    :param: keys An array of String instances
-    :param: queue A dispatch_queue_t, defaults to the main queue.
-    :param: completion A closure which receives an array of Value instances
+    - parameter keys: An array of String instances
+    - parameter queue: A dispatch_queue_t, defaults to the main queue.
+    - parameter completion: A closure which receives an array of Value instances
     */
     public func asyncRead<
         Value
@@ -561,7 +561,7 @@ extension YapDatabaseConnection {
 
         let people: [Person] = connection.readAll()
 
-    :returns: An array of Object types.
+    - returns: An array of Object types.
     */
     public func readAll<Object where Object: Persistable>() -> [Object] {
         return read({ $0.readAll() })
@@ -573,7 +573,7 @@ extension YapDatabaseConnection {
 
     let barcodes: [Barcode] = connection.readAll()
 
-    :returns: An array of Value types.
+    - returns: An array of Value types.
     */
     public func readAll<
         Value
@@ -594,7 +594,7 @@ extension YapDatabaseConnection {
 
         connection.readAll() { (people: [Person] in }
 
-    :returns: An array of Object types.
+    - returns: An array of Object types.
     */
     public func asyncReadAll<Object where Object: Persistable>(queue: dispatch_queue_t = dispatch_get_main_queue(), completion: ([Object]) -> Void) {
         asyncRead({ $0.readAll() }, queue: queue, completion: completion)
@@ -606,7 +606,7 @@ extension YapDatabaseConnection {
 
         connection.readAll() { (barcodes: [Barcode] in }
 
-    :returns: An array of Value types.
+    - returns: An array of Value types.
     */
     public func asyncReadAll<
         Value
@@ -627,8 +627,8 @@ extension YapDatabaseConnection {
 
         let (people: [Person], missing) = connection.filterExisting(keys)
 
-    :param: keys An array of String instances
-    :returns: An ([Object], [String]) tuple.
+    - parameter keys: An array of String instances
+    - returns: An ([Object], [String]) tuple.
     */
     public func filterExisting<Object where Object: Persistable>(keys: [String]) -> (existing: [Object], missing: [String]) {
         return read({ $0.filterExisting(keys) })
@@ -640,8 +640,8 @@ extension YapDatabaseConnection {
 
         let (barcode: [Barcode], missing) = connection.filterExisting(keys)
 
-    :param: keys An array of String instances
-    :returns: An ([Value], [String]) tuple.
+    - parameter keys: An array of String instances
+    - returns: An ([Value], [String]) tuple.
     */
     public func filterExisting<
         Value
@@ -662,8 +662,8 @@ extension YapDatabase {
     /**
     Synchronously reads the Object sored at this index using a new connection.
 
-    :param: index The YapDB.Index value.
-    :returns: An optional Object.
+    - parameter index: The YapDB.Index value.
+    - returns: An optional Object.
     */
     public func readAtIndex<Object where Object: Persistable>(index: YapDB.Index) -> Object? {
         return newConnection().readAtIndex(index)
@@ -672,8 +672,8 @@ extension YapDatabase {
     /**
     Synchronously reads the Value sored at this index using a new connection.
 
-    :param: index The YapDB.Index value.
-    :returns: An optional Value.
+    - parameter index: The YapDB.Index value.
+    - returns: An optional Value.
     */
     public func readAtIndex<
         Value
@@ -691,9 +691,9 @@ extension YapDatabase {
     /**
     Asynchronously reads the Object sored at this index using a new connection.
 
-    :param: index The YapDB.Index value.
-    :param: queue A dispatch_queue_t, defaults to the main queue.
-    :param: completion A closure which receives an optional Object
+    - parameter index: The YapDB.Index value.
+    - parameter queue: A dispatch_queue_t, defaults to the main queue.
+    - parameter completion: A closure which receives an optional Object
     */
     public func asyncReadAtIndex<Object where Object: Persistable>(index: YapDB.Index, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: (Object?) -> Void) {
         newConnection().asyncReadAtIndex(index, queue: queue, completion: completion)
@@ -702,9 +702,9 @@ extension YapDatabase {
     /**
     Asynchronously reads the Value sored at this index using a new connection.
 
-    :param: index The YapDB.Index value.
-    :param: queue A dispatch_queue_t, defaults to the main queue.
-    :param: completion A closure which receives an optional Value
+    - parameter index: The YapDB.Index value.
+    - parameter queue: A dispatch_queue_t, defaults to the main queue.
+    - parameter completion: A closure which receives an optional Value
     */
     public func asyncReadAtIndex<
         Value
@@ -721,8 +721,8 @@ extension YapDatabase {
     /**
     Synchronously reads the object metadata sored at this index using the connection.
 
-    :param: index The YapDB.Index value.
-    :returns: An optional MetadataObject.
+    - parameter index: The YapDB.Index value.
+    - returns: An optional MetadataObject.
     */
     public func readMetadataAtIndex<
         MetadataObject
@@ -734,8 +734,8 @@ extension YapDatabase {
     /**
     Synchronously metadata which is a value type if stored at this index using the transaction.
 
-    :param: index The YapDB.Index value.
-    :returns: An optional MetadataValue.
+    - parameter index: The YapDB.Index value.
+    - returns: An optional MetadataValue.
     */
     public func readMetadataAtIndex<
         MetadataValue
@@ -752,8 +752,8 @@ extension YapDatabase {
     /**
     Synchronously reads the objects sored at these indexes using a new connection.
 
-    :param: indexes An array of YapDB.Index values.
-    :returns: An array of Object instances.
+    - parameter indexes: An array of YapDB.Index values.
+    - returns: An array of Object instances.
     */
     public func readAtIndexes<Object where Object: Persistable>(indexes: [YapDB.Index]) -> [Object] {
         return newConnection().readAtIndexes(indexes)
@@ -762,8 +762,8 @@ extension YapDatabase {
     /**
     Synchronously reads the values sored at these indexes using a new connection.
 
-    :param: indexes An array of YapDB.Index values.
-    :returns: An array of Value instances.
+    - parameter indexes: An array of YapDB.Index values.
+    - returns: An array of Value instances.
     */
     public func readAtIndexes<
         Value
@@ -781,9 +781,9 @@ extension YapDatabase {
     /**
     Asynchronously  reads the objects sored at these indexes using a new connection.
 
-    :param: indexes An array of YapDB.Index values.
-    :param: queue A dispatch_queue_t, defaults to the main queue.
-    :param: completion A closure which receives an array of Object instances
+    - parameter indexes: An array of YapDB.Index values.
+    - parameter queue: A dispatch_queue_t, defaults to the main queue.
+    - parameter completion: A closure which receives an array of Object instances
     */
     public func asyncReadAtIndexes<Object where Object: Persistable>(indexes: [YapDB.Index], queue: dispatch_queue_t = dispatch_get_main_queue(), completion: ([Object]) -> Void) {
         return newConnection().asyncReadAtIndexes(indexes, queue: queue, completion: completion)
@@ -792,9 +792,9 @@ extension YapDatabase {
     /**
     Asynchronously  reads the values sored at these indexes using a new connection.
 
-    :param: indexes An array of YapDB.Index values.
-    :param: queue A dispatch_queue_t, defaults to the main queue.
-    :param: completion A closure which receives an array of Value instances
+    - parameter indexes: An array of YapDB.Index values.
+    - parameter queue: A dispatch_queue_t, defaults to the main queue.
+    - parameter completion: A closure which receives an array of Value instances
     */
     public func asyncReadAtIndexes<
         Value
@@ -812,8 +812,8 @@ extension YapDatabase {
     /**
     Synchronously reads the Object sored by key in a new connection.
 
-    :param: key A String
-    :returns: An optional Object
+    - parameter key: A String
+    - returns: An optional Object
     */
     public func read<Object where Object: Persistable>(key: String) -> Object? {
         return newConnection().read(key)
@@ -822,8 +822,8 @@ extension YapDatabase {
     /**
     Synchronously reads the Value sored by key in a new connection.
 
-    :param: key A String
-    :returns: An optional Value
+    - parameter key: A String
+    - returns: An optional Value
     */
     public func read<
         Value
@@ -841,9 +841,9 @@ extension YapDatabase {
     /**
     Asynchronously reads the Object sored by key in a new connection.
 
-    :param: keys An array of String instances
-    :param: queue A dispatch_queue_t, defaults to the main queue.
-    :param: completion A closure which receives an optional Object
+    - parameter keys: An array of String instances
+    - parameter queue: A dispatch_queue_t, defaults to the main queue.
+    - parameter completion: A closure which receives an optional Object
     */
     public func asyncRead<Object where Object: Persistable>(key: String, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: (Object?) -> Void) {
         newConnection().asyncRead(key, queue: queue, completion: completion)
@@ -852,9 +852,9 @@ extension YapDatabase {
     /**
     Asynchronously reads the Value sored by key in a new connection.
 
-    :param: keys An array of String instances
-    :param: queue A dispatch_queue_t, defaults to the main queue.
-    :param: completion A closure which receives an optional Value
+    - parameter keys: An array of String instances
+    - parameter queue: A dispatch_queue_t, defaults to the main queue.
+    - parameter completion: A closure which receives an optional Value
     */
     public func asyncRead<
         Value
@@ -872,8 +872,8 @@ extension YapDatabase {
     /**
     Synchronously reads the Object instances sored by the keys in a new connection.
 
-    :param: keys An array of String instances
-    :returns: An array of Object instances
+    - parameter keys: An array of String instances
+    - returns: An array of Object instances
     */
     public func read<
         Object
@@ -885,8 +885,8 @@ extension YapDatabase {
     /**
     Synchronously reads the Value instances sored by the keys in a new connection.
 
-    :param: keys An array of String instances
-    :returns: An array of Value instances
+    - parameter keys: An array of String instances
+    - returns: An array of Value instances
     */
     public func read<
         Value
@@ -904,9 +904,9 @@ extension YapDatabase {
     /**
     Asynchronously reads the Object instances sored by the keys in a new connection.
 
-    :param: keys An array of String instances
-    :param: queue A dispatch_queue_t, defaults to the main queue.
-    :param: completion A closure which receives an array of Object instances
+    - parameter keys: An array of String instances
+    - parameter queue: A dispatch_queue_t, defaults to the main queue.
+    - parameter completion: A closure which receives an array of Object instances
     */
     public func asyncRead<
         Object
@@ -918,9 +918,9 @@ extension YapDatabase {
     /**
     Asynchronously reads the Value instances sored by the keys in a new connection.
 
-    :param: keys An array of String instances
-    :param: queue A dispatch_queue_t, defaults to the main queue.
-    :param: completion A closure which receives an array of Value instances
+    - parameter keys: An array of String instances
+    - parameter queue: A dispatch_queue_t, defaults to the main queue.
+    - parameter completion: A closure which receives an array of Value instances
     */
     public func asyncRead<
         Value
@@ -941,7 +941,7 @@ extension YapDatabase {
 
         let people: [Person] = database.readAll()
 
-    :returns: An array of Object types.
+    - returns: An array of Object types.
     */
     public func readAll<
         Object
@@ -956,7 +956,7 @@ extension YapDatabase {
 
     let barcodes: [Barcode] = database.readAll()
 
-    :returns: An array of Value types.
+    - returns: An array of Value types.
     */
     public func readAll<
         Value
@@ -977,7 +977,7 @@ extension YapDatabase {
 
         database.readAll() { (people: [Person] in }
 
-    :returns: An array of Object types.
+    - returns: An array of Object types.
     */
     public func asyncReadAll<
         Object
@@ -992,7 +992,7 @@ extension YapDatabase {
 
         database.readAll() { (barcodes: [Barcode] in }
 
-    :returns: An array of Object types.
+    - returns: An array of Object types.
     */
     public func asyncReadAll<
         Value
@@ -1013,8 +1013,8 @@ extension YapDatabase {
 
         let (people: [Person], missing) = database.filterExisting(keys)
 
-    :param: keys An array of String instances
-    :returns: An ([Object], [String]) tuple.
+    - parameter keys: An array of String instances
+    - returns: An ([Object], [String]) tuple.
     */
     public func filterExisting<Object where Object: Persistable>(keys: [String]) -> (existing: [Object], missing: [String]) {
         return newConnection().filterExisting(keys)
@@ -1026,8 +1026,8 @@ extension YapDatabase {
 
         let (barcode: [Barcode], missing) = database.filterExisting(keys)
 
-    :param: keys An array of String instances
-    :returns: An ([Value], [String]) tuple.
+    - parameter keys: An array of String instances
+    - returns: An ([Value], [String]) tuple.
     */
     public func filterExisting<
         Value
