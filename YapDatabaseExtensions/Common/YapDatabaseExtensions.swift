@@ -198,32 +198,54 @@ extension Persistable {
     public static func indexWithKey(key: String) -> YapDB.Index {
         return YapDB.Index(collection: collection, key: key)
     }
+
+    /**
+    Convenience computed property to get the key
+    for a persistable, which is just the identifier's description.
+
+    - returns: a String.
+    */
+    public var key: String {
+        return identifier.description
+    }
+
+    /**
+    Convenience computed property to get the index for a persistable.
+
+    - returns: a `YapDB.Index`.
+    */
+    public var index: YapDB.Index {
+        return self.dynamicType.indexWithKey(key)
+    }
 }
 
 /**
-A simple function which generates a String key from a Persistable
-instance. 
+A generic protocol for Persistable which support YapDatabase metadata.
 
-Note that it is preferable to use this exclusively to ensure
-a consistent key structure.
-
-- parameter persistable: A Persistable type instance
-- returns: A String
+In order to read/write your metadata types from/to YapDatabase they must
+implement either NSCoding (i.e. be object based) or Saveable (i.e. be 
+value based).
 */
-public func keyForPersistable<P: Persistable>(persistable: P) -> String {
-    return "\(persistable.identifier)"
+public protocol MetadataPersistable: Persistable {
+    typealias MetadataType
+
+    /// A metadata which is set when reading, and get when writing.
+    var metadata: MetadataType? { get set }
 }
 
-/**
-A simple function which generates a YapDB.Index from a Persistable
-instance. All write(_:) store objects in the database using this function.
 
-- parameter persistable: A Persistable type instance
-- returns: A YapDB.Index
-*/
-public func indexForPersistable<P: Persistable>(persistable: P) -> YapDB.Index {
-    return YapDB.Index(collection: persistable.dynamicType.collection, key: keyForPersistable(persistable))
-}
+
+
+
+
+
+
+
+
+
+
+
+
 
 /**
 A generic protocol which extends Persistable. It allows types to
@@ -251,21 +273,6 @@ public protocol ValueMetadataPersistable: Persistable {
     /// The metadata value for this Persistable type.
     var metadata: MetadataType { get }
 }
-
-/**
-A generic protocol which extends Persistable. It allows types to
-expose a metadata value type for use in YapDatabase, which will 
-be set automatically by YapDatabaseExtensions read functions.
-
-The metadata value must conform to Saveable.
-*/
-public protocol ExternalValueMetadataPersistable: Persistable {
-    typealias MetadataType: Saveable
-
-    /// The metadata value for this Persistable type.
-    var metadata: MetadataType { get set }
-}
-
 
 // MARK: - Archiver & Saveable
 
@@ -497,4 +504,20 @@ public final class YapDBIndexArchiver: NSObject, NSCoding, Archiver {
         aCoder.encodeObject(value.key, forKey: "key")
     }
 }
+
+
+
+
+
+// MARK: - Functions
+
+public func keyForPersistable<P: Persistable>(persistable: P) -> String {
+    return persistable.key
+}
+
+public func indexForPersistable<P: Persistable>(persistable: P) -> YapDB.Index {
+    return persistable.index
+}
+
+
 

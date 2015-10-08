@@ -37,31 +37,31 @@ class SynchronousReadWriteTests: BaseTestCase {
 
     func test_ReadingNonexisting_Object_ByIndex() {
         let db = YapDB.testDatabaseForFile(__FILE__, test: __FUNCTION__)
-        let read: Person? = db.readAtIndex(indexForPersistable(person))
+        let read: Person? = db.readAtIndex(person.index)
         XCTAssertNil(read, "In an empty database, this should return nil.")
     }
 
     func test_ReadingNonexisting_Value_ByIndex() {
         let db = YapDB.testDatabaseForFile(__FILE__, test: __FUNCTION__)
-        let read: Barcode? = db.readAtIndex(indexForPersistable(barcode))
+        let read: Barcode? = db.readAtIndex(barcode.index)
         XCTAssertTrue(read == nil, "In an empty database, this should return nil.")
     }
 
     func test_ReadingNonexisting_Object_ByKey() {
         let db = YapDB.testDatabaseForFile(__FILE__, test: __FUNCTION__)
-        let read: Person? = db.read(keyForPersistable(person))
+        let read: Person? = db.read(person.key)
         XCTAssertNil(read, "In an empty database, this should return nil.")
     }
 
     func test_ReadingNonexisting_Value_ByKey() {
         let db = YapDB.testDatabaseForFile(__FILE__, test: __FUNCTION__)
-        let read: Barcode? = db.read(keyForPersistable(barcode))
+        let read: Barcode? = db.read(barcode.key)
         XCTAssertTrue(read == nil, "In an empty database, this should return nil.")
     }
 
     func test_ReadingNonexisting_Metadata_ByIndex() {
         let db = YapDB.testDatabaseForFile(__FILE__, test: __FUNCTION__)
-        let metadata: Product.Metadata? = db.readMetadataAtIndex(indexForPersistable(product))
+        let metadata: Product.Metadata? = db.readMetadataAtIndex(product.index)
         XCTAssertTrue(metadata == nil, "In an empty database, this should return nil.")
     }
 
@@ -182,7 +182,7 @@ class AsynchronousReadTests: BaseTestCase {
         let expectation = expectationWithDescription("Finished async reading of value at index.")
 
         db.write(barcode)
-        db.asyncReadAtIndex(indexForPersistable(barcode)) { (saved: Barcode?) -> Void in
+        db.asyncReadAtIndex(barcode.index) { (saved: Barcode?) -> Void in
             XCTAssertTrue(saved != nil, "There should be an item returned.")
             validateWrite(saved!, original: self.barcode, usingDatabase: db)
             expectation.fulfill()
@@ -196,7 +196,7 @@ class AsynchronousReadTests: BaseTestCase {
         let expectation = expectationWithDescription("Finished async reading of object at index")
 
         db.write(person)
-        db.asyncReadAtIndex(indexForPersistable(person)) { (saved: Person?) -> Void in
+        db.asyncReadAtIndex(person.index) { (saved: Person?) -> Void in
             XCTAssertTrue(saved != nil, "There should be an item returned.")
             expectation.fulfill()
         }
@@ -209,7 +209,7 @@ class AsynchronousReadTests: BaseTestCase {
         let expectation = expectationWithDescription("Finished async reading of value by key.")
 
         db.write(barcode)
-        db.asyncRead(keyForPersistable(barcode)) { (read: Barcode?) in
+        db.asyncRead(barcode.key) { (read: Barcode?) in
             XCTAssertTrue(read != nil, "There should be an object in the database.")
             XCTAssertEqual(read!, self.barcode, "The value returned from a save value function should equal the argument.")
             expectation.fulfill()
@@ -223,7 +223,7 @@ class AsynchronousReadTests: BaseTestCase {
         let expectation = expectationWithDescription("Finished async reading of object by key.")
 
         db.write(person)
-        db.asyncRead(keyForPersistable(person)) { (read: Person?) in
+        db.asyncRead(person.key) { (read: Person?) in
             XCTAssertTrue(read != nil, "There should be an object in the database.")
             XCTAssertEqual(read!.identifier, self.person.identifier)
             XCTAssertEqual(read!.name, self.person.name)
@@ -240,7 +240,7 @@ class AsynchronousReadTests: BaseTestCase {
         let values = barcodes()
         db.write(values)
 
-        db.asyncRead(values.map { indexForPersistable($0).key }) { (read: [Barcode]) in
+        db.asyncRead(values.map(keyForPersistable)) { (read: [Barcode]) in
             XCTAssertEqual(values, Set(read), "Expecting all keys in collection to return all items.")
             expectation.fulfill()
         }
@@ -303,7 +303,7 @@ class SynchronousRemoveTests: BaseTestCase {
         db.write(barcode)
         XCTAssertEqual((db.readAll() as [Barcode]).count, 1, "There should be one barcodes in the database.")
 
-        db.removeAtIndex(indexForPersistable(barcode))
+        db.removeAtIndex(barcode.index)
         XCTAssertEqual((db.readAll() as [Barcode]).count, 0, "There should be no barcodes in the database.")
     }
 
@@ -349,7 +349,7 @@ class AsynchronousRemoveTests: BaseTestCase {
         db.write(barcode)
         XCTAssertEqual((db.readAll() as [Barcode]).count, 1, "There should be one barcodes in the database.")
 
-        db.asyncRemoveAtIndex(indexForPersistable(barcode)) {
+        db.asyncRemoveAtIndex(barcode.index) {
             XCTAssertEqual((db.readAll() as [Barcode]).count, 0, "There should be no barcodes in the database.")
             expectation.fulfill()
         }

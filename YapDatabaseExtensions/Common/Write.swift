@@ -32,7 +32,7 @@ extension YapDatabaseReadWriteTransaction {
         where
         Object: NSCoding,
         Object: Persistable>(object: Object) -> Object {
-            writeAtIndex(indexForPersistable(object), object: object)
+            writeAtIndex(object.index, object: object)
             return object
     }
 
@@ -47,7 +47,7 @@ extension YapDatabaseReadWriteTransaction {
         where
         ObjectWithObjectMetadata: NSCoding,
         ObjectWithObjectMetadata: ObjectMetadataPersistable>(object: ObjectWithObjectMetadata) -> ObjectWithObjectMetadata {
-            writeAtIndex(indexForPersistable(object), object: object, metadata: object.metadata)
+            writeAtIndex(object.index, object: object, metadata: object.metadata)
             return object
     }
 
@@ -64,7 +64,7 @@ extension YapDatabaseReadWriteTransaction {
         ObjectWithValueMetadata: ValueMetadataPersistable,
         ObjectWithValueMetadata.MetadataType.ArchiverType: NSCoding,
         ObjectWithValueMetadata.MetadataType.ArchiverType.ValueType == ObjectWithValueMetadata.MetadataType>(object: ObjectWithValueMetadata) -> ObjectWithValueMetadata {
-            writeAtIndex(indexForPersistable(object), object: object, metadata: object.metadata.archive)
+            writeAtIndex(object.index, object: object, metadata: object.metadata.archive)
             return object
     }
 
@@ -81,7 +81,7 @@ extension YapDatabaseReadWriteTransaction {
         Value: Persistable,
         Value.ArchiverType: NSCoding,
         Value.ArchiverType.ValueType == Value>(value: Value) -> Value {
-            writeAtIndex(indexForPersistable(value), object: value.archive)
+            writeAtIndex(value.index, object: value.archive)
             return value
     }
 
@@ -100,7 +100,7 @@ extension YapDatabaseReadWriteTransaction {
         ValueWithValueMetadata.ArchiverType.ValueType == ValueWithValueMetadata,
         ValueWithValueMetadata.MetadataType.ArchiverType: NSCoding,
         ValueWithValueMetadata.MetadataType.ArchiverType.ValueType == ValueWithValueMetadata.MetadataType>(value: ValueWithValueMetadata) -> ValueWithValueMetadata {
-            writeAtIndex(indexForPersistable(value), object: value.archive, metadata: value.metadata.archive)
+            writeAtIndex(value.index, object: value.archive, metadata: value.metadata.archive)
             return value
     }
 
@@ -118,7 +118,7 @@ extension YapDatabaseReadWriteTransaction {
         ValueWithObjectMetadata.MetadataType: NSCoding,
         ValueWithObjectMetadata.ArchiverType: NSCoding,
         ValueWithObjectMetadata.ArchiverType.ValueType == ValueWithObjectMetadata>(value: ValueWithObjectMetadata) -> ValueWithObjectMetadata {
-            writeAtIndex(indexForPersistable(value), object: value.archive, metadata: value.metadata)
+            writeAtIndex(value.index, object: value.archive, metadata: value.metadata)
             return value
     }
 }

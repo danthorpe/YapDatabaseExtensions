@@ -58,7 +58,7 @@ extension AsynchronousReadTests {
         let expectation = expectationWithDescription("Finished async reading of value by key.")
 
         db.write(barcode)
-        db.asyncRead(keyForPersistable(barcode)).success { (read: Barcode?) -> Void in
+        db.asyncRead(barcode.key).success { (read: Barcode?) -> Void in
             XCTAssertTrue(read != nil, "There should be an object in the database.")
             XCTAssertEqual(read!, self.barcode, "The value returned from a save value function should equal the argument.")
             expectation.fulfill()
@@ -72,7 +72,7 @@ extension AsynchronousReadTests {
         let expectation = expectationWithDescription("Finished async reading of value by key.")
 
         db.write(person)
-        db.asyncRead(keyForPersistable(person)).success { (read: Person?) -> Void in
+        db.asyncRead(person.key).success { (read: Person?) -> Void in
             XCTAssertTrue(read != nil, "There should be an object in the database.")
             XCTAssertEqual(read!, self.person, "The value returned from a save value function should equal the argument.")
             expectation.fulfill()
@@ -88,7 +88,7 @@ extension AsynchronousReadTests {
         let values = barcodes()
         db.write(values)
         
-        db.asyncRead(map(values, keyForPersistable)).success { (read: [Barcode]) -> Void in
+        db.asyncRead(values.map(keyForPersistable)).success { (read: [Barcode]) -> Void in
             XCTAssertEqual(values, Set(read), "Expecting all keys in collection to return all items.")
             expectation.fulfill()
         }
@@ -103,7 +103,7 @@ extension AsynchronousReadTests {
         let objects = people()
         db.write(objects)
 
-        db.asyncRead(map(objects, keyForPersistable)).success { (read: [Person]) -> Void in
+        db.asyncRead(objects.map(keyForPersistable)).success { (read: [Person]) -> Void in
             XCTAssertEqual(objects, read, "Expecting all keys in collection to return all items.")
             expectation.fulfill()
         }

@@ -35,7 +35,7 @@ extension YapDatabaseReadWriteTransaction {
     :param: item A Persistable item.
     */
     public func remove<Item where Item: Persistable>(item: Item) {
-        removeAtIndex(indexForPersistable(item))
+        removeAtIndex(item.index)
     }
 
     /**

@@ -232,7 +232,7 @@ extension YapDatabaseReadTransaction {
     */
     public func filterExisting<Object where Object: Persistable>(keys: [String]) -> ([Object], [String]) {
         let existing: [Object] = read(keys)
-        let existingKeys = existing.map { indexForPersistable($0).key }
+        let existingKeys = existing.map(keyForPersistable)
         let missingKeys = keys.filter { !existingKeys.contains($0) }
         return (existing, missingKeys)
     }
@@ -253,7 +253,7 @@ extension YapDatabaseReadTransaction {
         Value: Persistable,
         Value.ArchiverType.ValueType == Value>(keys: [String]) -> ([Value], [String]) {
             let existing: [Value] = read(keys)
-            let existingKeys = existing.map { indexForPersistable($0).key }
+            let existingKeys = existing.map(keyForPersistable)
             let missingKeys = keys.filter { !existingKeys.contains($0) }
             return (existing, missingKeys)
     }

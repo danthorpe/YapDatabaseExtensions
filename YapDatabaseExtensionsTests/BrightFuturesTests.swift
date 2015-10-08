@@ -58,7 +58,7 @@ extension AsynchronousReadTests {
         let expectation = expectationWithDescription("Finished async reading of value by key.")
 
         db.write(barcode)
-        db.asyncRead(keyForPersistable(barcode)).onSuccess { (read: Barcode?) in
+        db.asyncRead(barcode.key).onSuccess { (read: Barcode?) in
             XCTAssertTrue(read != nil, "There should be an object in the database.")
             XCTAssertEqual(read!, self.barcode, "The value returned from a save value function should equal the argument.")
             expectation.fulfill()
@@ -72,7 +72,7 @@ extension AsynchronousReadTests {
         let expectation = expectationWithDescription("Finished async reading of value by key.")
 
         db.write(person)
-        db.asyncRead(keyForPersistable(person)).onSuccess { (read: Person?) in
+        db.asyncRead(person.key).onSuccess { (read: Person?) in
             XCTAssertTrue(read != nil, "There should be an object in the database.")
             XCTAssertEqual(read!, self.person, "The value returned from a save value function should equal the argument.")
             expectation.fulfill()
