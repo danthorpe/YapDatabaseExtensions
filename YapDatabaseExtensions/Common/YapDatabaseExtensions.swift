@@ -15,11 +15,11 @@ public struct YapDB {
     /**
     Helper function for evaluating the path to a database for easy use in the YapDatabase constructor.
     
-    :param: directory a NSSearchPathDirectory value, use .DocumentDirectory for production.
-    :param: name a String, the name of the sqlite file.
-    :param: suffix a String, will be appended to the name of the file.
+    - parameter directory: a NSSearchPathDirectory value, use .DocumentDirectory for production.
+    - parameter name: a String, the name of the sqlite file.
+    - parameter suffix: a String, will be appended to the name of the file.
     
-    :returns: a String
+    - returns: a String
     */
     public static func pathToDatabase(directory: NSSearchPathDirectory, name: String, suffix: String? = .None) -> String {
         let paths = NSSearchPathForDirectoriesInDomains(directory, .UserDomainMask, true)
@@ -66,11 +66,11 @@ public struct YapDB {
     Note that you can only use this convenience if you use the default serializers
     and sanitizers etc.
 
-    :param: name a String, which will be the name of the SQLite database in the documents folder.
-    :param: operations a DatabaseOperationsBlock closure, which receives the database,
+    - parameter name: a String, which will be the name of the SQLite database in the documents folder.
+    - parameter operations: a DatabaseOperationsBlock closure, which receives the database,
     but is executed before the database is returned.
     
-    :returns: the YapDatabase instance.
+    - returns: the YapDatabase instance.
     */
     public static func databaseNamed(name: String, operations: DatabaseOperationsBlock? = .None) -> YapDatabase {
         let db =  YapDatabase(path: pathToDatabase(.DocumentDirectory, name: name, suffix: .None))
@@ -97,13 +97,13 @@ public struct YapDB {
             // etc etc
         }
     
-    :param: file a String, which should be the swift special macro __FILE__
-    :param: test a String, which should be the swift special macro __FUNCTION__
-    :param: operations a DatabaseOperationsBlock closure, which receives the database,
+    - parameter file: a String, which should be the swift special macro __FILE__
+    - parameter test: a String, which should be the swift special macro __FUNCTION__
+    - parameter operations: a DatabaseOperationsBlock closure, which receives the database,
     but is executed before the database is returned. This is very useful if you want to 
     populate the database with some objects before running the test.
     
-    :returns: the YapDatabase instance.
+    - returns: the YapDatabase instance.
     */
     public static func testDatabaseForFile(file: String, test: String, operations: DatabaseOperationsBlock? = .None) -> YapDatabase {
         let path = pathToDatabase(.CachesDirectory, name: (file as NSString).lastPathComponent, suffix: test.stringByTrimmingCharactersInSet(NSCharacterSet(charactersInString: "()")))
@@ -122,16 +122,22 @@ public struct YapDB {
 extension YapDB {
 
     /**
-
     A database index value type.
-
-    :param: collection A String
-    :param: key A String
     */
     public struct Index {
+
+        /// The index's collection
         public let collection: String
+
+        // The index's key
         public let key: String
 
+        /**
+        Create a new Index value.
+
+        - parameter collection: a String
+        - parameter key: a String
+        */
         public init(collection: String, key: String) {
             self.collection = collection
             self.key = key
@@ -180,6 +186,20 @@ public protocol Persistable: Identifiable {
     static var collection: String { get }
 }
 
+extension Persistable {
+
+    /**
+    Convenience static function to get an index for a given key 
+    with this type's collection.
+    
+    - parameter key: a String
+    - returns: a YapDB.Index value.
+    */
+    public static func indexWithKey(key: String) -> YapDB.Index {
+        return YapDB.Index(collection: collection, key: key)
+    }
+}
+
 /**
 A simple function which generates a String key from a Persistable
 instance. 
@@ -187,8 +207,8 @@ instance.
 Note that it is preferable to use this exclusively to ensure
 a consistent key structure.
 
-:param: persistable A Persistable type instance
-:returns: A String
+- parameter persistable: A Persistable type instance
+- returns: A String
 */
 public func keyForPersistable<P: Persistable>(persistable: P) -> String {
     return "\(persistable.identifier)"
@@ -198,8 +218,8 @@ public func keyForPersistable<P: Persistable>(persistable: P) -> String {
 A simple function which generates a YapDB.Index from a Persistable
 instance. All write(_:) store objects in the database using this function.
 
-:param: persistable A Persistable type instance
-:returns: A YapDB.Index
+- parameter persistable: A Persistable type instance
+- returns: A YapDB.Index
 */
 public func indexForPersistable<P: Persistable>(persistable: P) -> YapDB.Index {
     return YapDB.Index(collection: persistable.dynamicType.collection, key: keyForPersistable(persistable))
@@ -350,7 +370,7 @@ extension YapDatabaseConnection {
     their basis.
 
     :param: block A closure which receives YapDatabaseReadTransaction and returns T
-    :returns: An instance of T
+    - returns: An instance of T
     */
     public func read<T>(block: (YapDatabaseReadTransaction) -> T) -> T {
         var result: T! = .None
@@ -367,7 +387,7 @@ extension YapDatabaseConnection {
     their basis.
 
     :param: block A closure which receives YapDatabaseReadWriteTransaction and returns T
-    :returns: An instance of T
+    - returns: An instance of T
     */
     public func write<T>(block: (YapDatabaseReadWriteTransaction) -> T) -> T {
         var result: T! = .None
