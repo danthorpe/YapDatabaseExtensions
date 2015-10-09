@@ -233,15 +233,31 @@ public protocol MetadataPersistable: Persistable {
     var metadata: MetadataType? { get set }
 }
 
+public protocol ReadTransactionType {
+    func keysInCollection(collection: String) -> [String]
+    func readAtIndex(index: YapDB.Index) -> AnyObject?
+    func readMetadataAtIndex(index: YapDB.Index) -> AnyObject?
+}
 
+public protocol WriteTransactionType: ReadTransactionType {
+    func writeAtIndex(index: YapDB.Index, object: AnyObject, metadata: AnyObject?)
+}
 
+public protocol ConnectionType {
+    func read<T>(block: (ReadTransactionType) -> T) -> T
+    func write<T>(block: (WriteTransactionType) -> T) -> T
 
+    func asyncRead<T>(block: (ReadTransactionType) -> T, queue: dispatch_queue_t, completion: (T) -> Void)
+    func asyncWrite<T>(block: (WriteTransactionType) -> T, queue: dispatch_queue_t, completion: (T) -> Void)
 
+    func writeBlockOperation(block: (WriteTransactionType) -> Void) -> NSOperation
+}
 
-
-
-
-
+internal enum Handle {
+    case Transaction(ReadTransactionType)
+    case Connection(ConnectionType)
+    case Database(YapDatabase)
+}
 
 
 
@@ -384,7 +400,7 @@ extension SequenceType where Generator.Element: Hashable {
     }
 }
 
-extension YapDatabaseConnection {
+extension YapDatabaseConnection: ConnectionType {
 
     /**
     Synchronously reads from the database on the connection. The closure receives
@@ -397,7 +413,7 @@ extension YapDatabaseConnection {
     :param: block A closure which receives YapDatabaseReadTransaction and returns T
     - returns: An instance of T
     */
-    public func read<T>(block: (YapDatabaseReadTransaction) -> T) -> T {
+    public func read<T>(block: ReadTransactionType -> T) -> T {
         var result: T! = .None
         readWithBlock { result = block($0) }
         return result
@@ -414,7 +430,7 @@ extension YapDatabaseConnection {
     :param: block A closure which receives YapDatabaseReadWriteTransaction and returns T
     - returns: An instance of T
     */
-    public func write<T>(block: (YapDatabaseReadWriteTransaction) -> T) -> T {
+    public func write<T>(block: WriteTransactionType -> T) -> T {
         var result: T! = .None
         readWriteWithBlock { result = block($0) }
         return result
@@ -432,7 +448,7 @@ extension YapDatabaseConnection {
     :param: queue A dispatch_queue_t, defaults to main queue, can be ommitted in most cases.
     :param: completion A closure which receives T and returns Void.
     */
-    public func asyncRead<T>(block: (YapDatabaseReadTransaction) -> T, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: (T) -> Void) {
+    public func asyncRead<T>(block: ReadTransactionType -> T, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: (T) -> Void) {
         var result: T! = .None
         asyncReadWithBlock({ result = block($0) }, completionQueue: queue) { completion(result) }
     }
@@ -449,11 +465,30 @@ extension YapDatabaseConnection {
     :param: queue A dispatch_queue_t, defaults to main queue, can be ommitted in most cases.
     :param: completion A closure which receives T and returns Void.
     */
-    public func asyncWrite<T>(block: (YapDatabaseReadWriteTransaction) -> T, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: (T) -> Void) {
+    public func asyncWrite<T>(block: WriteTransactionType -> T, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: (T) -> Void) {
         var result: T! = .None
         asyncReadWriteWithBlock({ result = block($0) }, completionQueue: queue) { completion(result) }
     }
+
+    /**
+    Execute a read/write block inside a `NSOperation`. The block argument receives a
+    `YapDatabaseReadWriteTransaction`. This method is very handy for writing
+    different item types to the database inside the same transaction. For example
+
+    let operation = connection.writeBlockOperation { transaction in
+    Write(people).sync(transaction)
+    Write(barcode).sync(transaction)
+    }
+    queue.addOperation(operation)
+
+    - parameter block: a closure of type (YapDatabaseReadWriteTransaction) -> Void
+    - returns: an `NSOperation`.
+    */
+    public func writeBlockOperation(block: WriteTransactionType -> Void) -> NSOperation {
+        return NSBlockOperation { self.asyncReadWriteWithBlock({ block($0) }) }
+    }
 }
+
 
 // MARK: Hashable etc
 

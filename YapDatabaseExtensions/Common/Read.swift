@@ -7,48 +7,21 @@ import YapDatabase
 
 // MARK: - YapDatabaseTransaction
 
-extension YapDatabaseReadTransaction {
+extension YapDatabaseReadTransaction: ReadTransactionType {
+
+    public func keysInCollection(collection: String) -> [String] {
+        return allKeysInCollection(collection) as! [String]
+    }
 
     /**
     Reads the object sored at this index using the transaction.
-    
+
     - parameter index: The YapDB.Index value.
     - returns: An optional AnyObject.
     */
     public func readAtIndex(index: YapDB.Index) -> AnyObject? {
         return objectForKey(index.key, inCollection: index.collection)
     }
-
-    /**
-    Reads the object sored at this index using the transaction.
-    
-    - parameter index: The YapDB.Index value.
-    - returns: An optional Object.
-    */
-    public func readAtIndex<
-        Object
-        where
-        Object: Persistable>(index: YapDB.Index) -> Object? {
-        return readAtIndex(index) as? Object
-    }
-
-    /**
-    Unarchives a value type if stored at this index
-    
-    - parameter index: The YapDB.Index value.
-    - returns: An optional Value.
-    */
-    public func readAtIndex<
-        Value
-        where
-        Value: Saveable,
-        Value: Persistable,
-        Value.ArchiverType.ValueType == Value>(index: YapDB.Index) -> Value? {
-            return Value.ArchiverType.unarchive(readAtIndex(index))
-    }
-}
-
-extension YapDatabaseReadTransaction {
 
     /**
     Reads any metadata sored at this index using the transaction.
@@ -59,989 +32,620 @@ extension YapDatabaseReadTransaction {
     public func readMetadataAtIndex(index: YapDB.Index) -> AnyObject? {
         return metadataForKey(index.key, inCollection: index.collection)
     }
+}
 
-    /**
-    Reads metadata which is an object type sored at this index using the transaction.
+// MARK: - Readable
 
-    - parameter index: The YapDB.Index value.
-    - returns: An optional MetadataObject.
-    */
-    public func readMetadataAtIndex<
-        MetadataObject
-        where
-        MetadataObject: NSCoding>(index: YapDB.Index) -> MetadataObject? {
-            return readMetadataAtIndex(index) as? MetadataObject
+public protocol Readable {
+    typealias ItemType
+
+    var transaction: ReadTransactionType? { get }
+    var connection: ConnectionType { get }
+}
+
+
+public struct Read<Item>: Readable {
+    public typealias ItemType = Item
+
+    let reader: Handle
+
+    public var transaction: ReadTransactionType? {
+        if case let .Transaction(transaction) = reader {
+            return transaction
+        }
+        return .None
     }
 
-    /**
-    Unarchives metadata which is a value type if stored at this index using the transaction.
+    public var connection: ConnectionType {
+        switch reader {
+        case .Transaction(_):
+            fatalError("Attempting to get connection from a transaction.")
+        case .Connection(let connection):
+            return connection
+        default:
+            return database.newConnection()
+        }
+    }
 
-    - parameter index: The YapDB.Index value.
-    - returns: An optional MetadataValue.
-    */
-    public func readMetadataAtIndex<
-        MetadataValue
-        where
-        MetadataValue: Saveable,
-        MetadataValue.ArchiverType: NSCoding,
-        MetadataValue.ArchiverType.ValueType == MetadataValue>(index: YapDB.Index) -> MetadataValue? {
-            return MetadataValue.ArchiverType.unarchive(readMetadataAtIndex(index))
+    internal var database: YapDatabase {
+        if case let .Database(database) = reader {
+            return database
+        }
+        fatalError("Attempting to get database from \(reader)")
+    }
+
+    internal init(_ transaction: ReadTransactionType) {
+        reader = .Transaction(transaction)
+    }
+
+    internal init(_ connection: ConnectionType) {
+        reader = .Connection(connection)
+    }
+
+    internal init(_ database: YapDatabase) {
+        reader = .Database(database)
     }
 }
 
-extension YapDatabaseReadTransaction {
+extension Persistable {
 
     /**
-    Reads the objects sored at these indexes using the transaction.
+    Returns a type suitable for *reading* from the transaction. The available
+    functions will depend on your own types correctly implementing Persistable,
+    MetadataPersistable and Saveable.
     
-    - parameter indexes: An array of YapDB.Index values.
-    - returns: An array of Object instances.
-    */
-    public func readAtIndexes<
-        Object
-        where
-        Object: Persistable>(indexes: [YapDB.Index]) -> [Object] {
-            return indexes.unique().flatMap { self.readAtIndex($0) }
-    }
-
-    /**
-    Reads the values sored at these indexes using the transaction.
+    For example, given the key for a `Person` type, and you are in a read
+    transaction block, the following would read the object for you.
     
-    - parameter indexes: An array of YapDB.Index values.
-    - returns: An array of Value instances.
-    */
-    public func readAtIndexes<
-        Value
-        where
-        Value: Saveable,
-        Value: Persistable,
-        Value.ArchiverType.ValueType == Value>(indexes: [YapDB.Index]) -> [Value] {
-            return indexes.unique().flatMap { self.readAtIndex($0) }
-    }
-}
-
-extension YapDatabaseReadTransaction {
-
-    /**
-    Reads the Object sored by key in this transaction.
-
-    - parameter key: A String
-    - returns: An optional Object
-    */
-    public func read<
-        Object
-        where
-        Object: Persistable>(key: String) -> Object? {
-            return objectForKey(key, inCollection: Object.collection) as? Object
-    }
-
-    /**
-    Reads the Value sored by key in this transaction.
-
-    - parameter key: A String
-    - returns: An optional Value
-    */
-    public func read<
-        Value
-        where
-        Value: Saveable,
-        Value: Persistable,
-        Value.ArchiverType: NSCoding,
-        Value.ArchiverType.ValueType == Value>(key: String) -> Value? {
-            return Value.ArchiverType.unarchive(objectForKey(key, inCollection: Value.collection))
-    }
-}
-
-extension YapDatabaseReadTransaction {
-
-    /**
-    Reads the objects at the given keys in this transaction. Keys which 
-    have no corresponding objects will be filtered out.
-
-    - parameter keys: An array of String instances
-    - returns: An array of Object types.
-    */
-    public func read<
-        Object
-        where
-        Object: Persistable>(keys: [String]) -> [Object] {
-            return keys.unique().flatMap { self.read($0) }
-    }
-
-    /**
-    Reads the values at the given keys in this transaction. Keys which 
-    have no corresponding values will be filtered out.
-
-    - parameter keys: An array of String instances
-    - returns: An array of Value types.
-    */
-    public func read<
-        Value
-        where
-        Value: Saveable,
-        Value: Persistable,
-        Value.ArchiverType: NSCoding,
-        Value.ArchiverType.ValueType == Value>(keys: [String]) -> [Value] {
-            return keys.unique().flatMap { self.read($0) }
-    }
-}
-
-extension YapDatabaseReadTransaction {
-
-    /**
-    Reads all the items in the database for a particular Persistable Object.
-    Example usage:
+        if let person = Person.read(transaction).key(key) {
+            print("Hello \(person.name)")
+        }
     
-        let people: [Person] = transaction.readAll()
-
-    - returns: An array of Object types.
+    Note that this API is consistent for Object types, Value types, with or
+    without metadata.
+    
+    - parameter transaction: a type conforming to ReadTransactionType such as
+    YapDatabaseReadTransaction
     */
-    public func readAll<Object where Object: Persistable>() -> [Object] {
-        return (allKeysInCollection(Object.collection) as! [String]).flatMap { self.read($0) }
+    public static func read(transaction: ReadTransactionType) -> Read<Self> {
+        return Read(transaction)
     }
 
     /**
-    Reads all the items in the database for a particular Persistable Value.
-    Example usage:
+    Returns a type suitable for Reading from a database connection. The available
+    functions will depend on your own types correctly implementing Persistable,
+    MetadataPersistable and Saveable.
 
-        let barcodes: [Barcode] = transaction.readAll()
+    For example, given the key for a `Person` type, and you have a database 
+    connection.
 
-    - returns: An array of Value types.
+        if let person = Person.read(connection).key(key) {
+            print("Hello \(person.name)")
+        }
+
+    Note that this API is consistent for Object types, Value types, with or
+    without metadata.
+
+    - parameter connection: a type conforming to ConnectionType such as
+    YapDatabaseConnection.
     */
-    public func readAll<
-        Value
-        where
-        Value: Saveable,
-        Value: Persistable,
-        Value.ArchiverType: NSCoding,
-        Value.ArchiverType.ValueType == Value>() -> [Value] {
-            return (allKeysInCollection(Value.collection) as! [String]).flatMap { self.read($0) }
+    public static func read(connection: ConnectionType) -> Read<Self> {
+        return Read(connection)
+    }
+
+    internal static func read(database: YapDatabase) -> Read<Self> {
+        return Read(database)
     }
 }
 
-extension YapDatabaseReadTransaction {
+extension Readable
+    where
+    ItemType: Persistable {
 
-    /**
-    Returns an array of Object type for the given keys, with an array of keys which don't have
-    corresponding objects in the database.
+    func sync<T>(block: (ReadTransactionType) -> T) -> T {
+        if let transaction = transaction {
+            return block(transaction)
+        }
+        else {
+            return connection.read(block)
+        }
+    }
+}
 
-        let (people: [Person], missing) = transaction.filterExisting(keys)
+// MARK: - Object with no metadata
 
-    - parameter keys: An array of String instances
-    - returns: An ([Object], [String]) tuple.
-    */
-    public func filterExisting<Object where Object: Persistable>(keys: [String]) -> ([Object], [String]) {
-        let existing: [Object] = read(keys)
-        let existingKeys = existing.map(keyForPersistable)
-        let missingKeys = keys.filter { !existingKeys.contains($0) }
-        return (existing, missingKeys)
+extension Readable
+    where
+    ItemType: NSCoding,
+    ItemType: Persistable {
+
+    func inTransaction(transaction: ReadTransactionType, atIndex index: YapDB.Index) -> ItemType? {
+        return transaction.readAtIndex(index) as? ItemType
     }
 
-    /**
-    Returns an array of Value type for the given keys, with an array of keys which don't have
-    corresponding values in the database.
+    func inTransactionAtIndex(transaction: ReadTransactionType) -> YapDB.Index -> ItemType? {
+        return { self.inTransaction(transaction, atIndex: $0) }
+    }
 
-        let (barcode: [Barcode], missing) = transaction.filterExisting(keys)
+    func atIndexInTransaction(index: YapDB.Index) -> ReadTransactionType -> ItemType? {
+        return { self.inTransaction($0, atIndex: index) }
+    }
 
-    - parameter keys: An array of String instances
-    - returns: An ([Value], [String]) tuple.
-    */
-    public func filterExisting<
-        Value
-        where
-        Value: Saveable,
-        Value: Persistable,
-        Value.ArchiverType.ValueType == Value>(keys: [String]) -> ([Value], [String]) {
-            let existing: [Value] = read(keys)
+    func atIndexesInTransaction(indexes: [YapDB.Index]) -> ReadTransactionType -> [ItemType] {
+        let atIndex = inTransactionAtIndex
+        return { transaction in
+            indexes.flatMap(atIndex(transaction)) ?? []
+        }
+    }
+
+    func inTransaction(transaction: ReadTransactionType, atKey key: String) -> ItemType? {
+        return transaction.readAtIndex(ItemType.indexWithKey(key)) as? ItemType
+    }
+
+    func inTransactionAtKey(transaction: ReadTransactionType) -> String -> ItemType? {
+        return { self.inTransaction(transaction, atKey: $0) }
+    }
+
+    func atKeyInTransaction(key: String) -> ReadTransactionType -> ItemType? {
+        return { self.inTransaction($0, atKey: key) }
+    }
+
+    func atKeysInTransaction(_keys: [String]? = .None) -> ReadTransactionType -> [ItemType] {
+        let atKey = inTransactionAtKey
+        return { transaction in
+            let keys = _keys ?? transaction.keysInCollection(ItemType.collection)
+            return keys.flatMap(atKey(transaction)) ?? []
+        }
+    }
+
+    public func atIndex(index: YapDB.Index) -> ItemType? {
+        return sync(atIndexInTransaction(index))
+    }
+
+    public func atIndexes(indexes: [YapDB.Index]) -> [ItemType] {
+        return sync(atIndexesInTransaction(indexes))
+    }
+
+    public func byKey(key: String) -> ItemType? {
+        return sync(atKeyInTransaction(key))
+    }
+
+    public func byKeys(keys: [String]) -> [ItemType] {
+        return sync(atKeysInTransaction(keys))
+    }
+
+    public func all() -> [ItemType] {
+        return sync(atKeysInTransaction())
+    }
+
+    public func filterExisting(keys: [String]) -> (existing: [ItemType], missing: [String]) {
+        let existingInTransaction = atKeysInTransaction(keys)
+        return sync { transaction -> ([ItemType], [String]) in
+            let existing = existingInTransaction(transaction)
             let existingKeys = existing.map(keyForPersistable)
             let missingKeys = keys.filter { !existingKeys.contains($0) }
             return (existing, missingKeys)
+        }
+    }
+}
+
+// MARK: - Object with Object metadata
+
+extension Readable
+    where
+    ItemType: NSCoding,
+    ItemType: MetadataPersistable,
+    ItemType.MetadataType: NSCoding {
+
+    func inTransaction(transaction: ReadTransactionType, atIndex index: YapDB.Index) -> ItemType? {
+        if var item = transaction.readAtIndex(index) as? ItemType {
+            item.metadata = transaction.readMetadataAtIndex(index) as? ItemType.MetadataType
+            return item
+        }
+        return .None
+    }
+
+    func inTransactionAtIndex(transaction: ReadTransactionType) -> YapDB.Index -> ItemType? {
+        return { self.inTransaction(transaction, atIndex: $0) }
+    }
+
+    func atIndexInTransaction(index: YapDB.Index) -> ReadTransactionType -> ItemType? {
+        return { self.inTransaction($0, atIndex: index) }
+    }
+
+    func atIndexesInTransaction(indexes: [YapDB.Index]) -> ReadTransactionType -> [ItemType] {
+        let atIndex = inTransactionAtIndex
+        return { transaction in
+            indexes.flatMap(atIndex(transaction)) ?? []
+        }
+    }
+
+    func inTransaction(transaction: ReadTransactionType, atKey key: String) -> ItemType? {
+        return inTransaction(transaction, atIndex: ItemType.indexWithKey(key))
+    }
+
+    func inTransactionAtKey(transaction: ReadTransactionType) -> String -> ItemType? {
+        return { self.inTransaction(transaction, atKey: $0) }
+    }
+
+    func atKeyInTransaction(key: String) -> ReadTransactionType -> ItemType? {
+        return { self.inTransaction($0, atKey: key) }
+    }
+
+    func atKeysInTransaction(_keys: [String]? = .None) -> ReadTransactionType -> [ItemType] {
+        let atKey = inTransactionAtKey
+        return { transaction in
+            let keys = _keys ?? transaction.keysInCollection(ItemType.collection)
+            return keys.flatMap(atKey(transaction)) ?? []
+        }
+    }
+
+    public func atIndex(index: YapDB.Index) -> ItemType? {
+        return sync(atIndexInTransaction(index))
+    }
+
+    public func atIndexes(indexes: [YapDB.Index]) -> [ItemType] {
+        return sync(atIndexesInTransaction(indexes))
+    }
+
+    public func byKey(key: String) -> ItemType? {
+        return sync(atKeyInTransaction(key))
+    }
+
+    public func byKeys(keys: [String]) -> [ItemType] {
+        return sync(atKeysInTransaction(keys))
+    }
+
+    public func all() -> [ItemType] {
+        return sync(atKeysInTransaction())
+    }
+
+    public func filterExisting(keys: [String]) -> (existing: [ItemType], missing: [String]) {
+        let existingInTransaction = atKeysInTransaction(keys)
+        return sync { transaction -> ([ItemType], [String]) in
+            let existing = existingInTransaction(transaction)
+            let existingKeys = existing.map(keyForPersistable)
+            let missingKeys = keys.filter { !existingKeys.contains($0) }
+            return (existing, missingKeys)
+        }
+    }
+}
+
+// MARK: - Object with Value metadata
+
+extension Readable
+    where
+    ItemType: NSCoding,
+    ItemType: MetadataPersistable,
+    ItemType.MetadataType: Saveable,
+    ItemType.MetadataType.ArchiverType: NSCoding,
+    ItemType.MetadataType.ArchiverType.ValueType == ItemType.MetadataType {
+
+    func inTransaction(transaction: ReadTransactionType, atIndex index: YapDB.Index) -> ItemType? {
+        if var item = transaction.readAtIndex(index) as? ItemType {
+            item.metadata = ItemType.MetadataType.unarchive(transaction.readMetadataAtIndex(index))
+            return item
+        }
+        return .None
+    }
+
+    func inTransactionAtIndex(transaction: ReadTransactionType) -> YapDB.Index -> ItemType? {
+        return { self.inTransaction(transaction, atIndex: $0) }
+    }
+
+    func atIndexInTransaction(index: YapDB.Index) -> ReadTransactionType -> ItemType? {
+        return { self.inTransaction($0, atIndex: index) }
+    }
+
+    func atIndexesInTransaction(indexes: [YapDB.Index]) -> ReadTransactionType -> [ItemType] {
+        let atIndex = inTransactionAtIndex
+        return { transaction in
+            indexes.flatMap(atIndex(transaction)) ?? []
+        }
+    }
+
+    func inTransaction(transaction: ReadTransactionType, atKey key: String) -> ItemType? {
+        return inTransaction(transaction, atIndex: ItemType.indexWithKey(key))
+    }
+
+    func inTransactionAtKey(transaction: ReadTransactionType) -> String -> ItemType? {
+        return { self.inTransaction(transaction, atKey: $0) }
+    }
+
+    func atKeyInTransaction(key: String) -> ReadTransactionType -> ItemType? {
+        return { self.inTransaction($0, atKey: key) }
+    }
+
+    func atKeysInTransaction(_keys: [String]? = .None) -> ReadTransactionType -> [ItemType] {
+        let atKey = inTransactionAtKey
+        return { transaction in
+            let keys = _keys ?? transaction.keysInCollection(ItemType.collection)
+            return keys.flatMap(atKey(transaction)) ?? []
+        }
+    }
+
+    public func atIndex(index: YapDB.Index) -> ItemType? {
+        return sync(atIndexInTransaction(index))
+    }
+
+    public func atIndexes(indexes: [YapDB.Index]) -> [ItemType] {
+        return sync(atIndexesInTransaction(indexes))
+    }
+
+    public func byKey(key: String) -> ItemType? {
+        return sync(atKeyInTransaction(key))
+    }
+
+    public func byKeys(keys: [String]) -> [ItemType] {
+        return sync(atKeysInTransaction(keys))
+    }
+
+    public func all() -> [ItemType] {
+        return sync(atKeysInTransaction())
+    }
+
+    public func filterExisting(keys: [String]) -> (existing: [ItemType], missing: [String]) {
+        let existingInTransaction = atKeysInTransaction(keys)
+        return sync { transaction -> ([ItemType], [String]) in
+            let existing = existingInTransaction(transaction)
+            let existingKeys = existing.map(keyForPersistable)
+            let missingKeys = keys.filter { !existingKeys.contains($0) }
+            return (existing, missingKeys)
+        }
+    }
+}
+
+// MARK: - Value with no metadata
+
+extension Readable
+    where
+    ItemType: Saveable,
+    ItemType: Persistable,
+    ItemType.ArchiverType: NSCoding,
+    ItemType.ArchiverType.ValueType == ItemType {
+
+    func inTransaction(transaction: ReadTransactionType, atIndex index: YapDB.Index) -> ItemType? {
+        return ItemType.unarchive(transaction.readAtIndex(index))
+    }
+
+    func inTransactionAtIndex(transaction: ReadTransactionType) -> YapDB.Index -> ItemType? {
+        return { self.inTransaction(transaction, atIndex: $0) }
+    }
+
+    func atIndexInTransaction(index: YapDB.Index) -> ReadTransactionType -> ItemType? {
+        return { self.inTransaction($0, atIndex: index) }
+    }
+
+    func atIndexesInTransaction(indexes: [YapDB.Index]) -> ReadTransactionType -> [ItemType] {
+        let atIndex = inTransactionAtIndex
+        return { transaction in
+            indexes.flatMap(atIndex(transaction)) ?? []
+        }
+    }
+
+    func inTransaction(transaction: ReadTransactionType, atKey key: String) -> ItemType? {
+        return inTransaction(transaction, atIndex: ItemType.indexWithKey(key))
+    }
+
+    func inTransactionAtKey(transaction: ReadTransactionType) -> String -> ItemType? {
+        return { self.inTransaction(transaction, atKey: $0) }
+    }
+
+    func atKeyInTransaction(key: String) -> ReadTransactionType -> ItemType? {
+        return { self.inTransaction($0, atKey: key) }
+    }
+
+    func atKeysInTransaction(_keys: [String]? = .None) -> ReadTransactionType -> [ItemType] {
+        let atKey = inTransactionAtKey
+        return { transaction in
+            let keys = _keys ?? transaction.keysInCollection(ItemType.collection)
+            return keys.flatMap(atKey(transaction)) ?? []
+        }
+    }
+
+    public func atIndex(index: YapDB.Index) -> ItemType? {
+        return sync(atIndexInTransaction(index))
+    }
+
+    public func atIndexes(indexes: [YapDB.Index]) -> [ItemType] {
+        return sync(atIndexesInTransaction(indexes))
+    }
+
+    public func byKey(key: String) -> ItemType? {
+        return sync(atKeyInTransaction(key))
+    }
+
+    public func byKeys(keys: [String]) -> [ItemType] {
+        return sync(atKeysInTransaction(keys))
+    }
+
+    public func all() -> [ItemType] {
+        return sync(atKeysInTransaction())
+    }
+
+    public func filterExisting(keys: [String]) -> (existing: [ItemType], missing: [String]) {
+        let existingInTransaction = atKeysInTransaction(keys)
+        return sync { transaction -> ([ItemType], [String]) in
+            let existing = existingInTransaction(transaction)
+            let existingKeys = existing.map(keyForPersistable)
+            let missingKeys = keys.filter { !existingKeys.contains($0) }
+            return (existing, missingKeys)
+        }
+    }
+}
+
+// MARK: - Value with Object metadata
+
+extension Readable
+    where
+    ItemType: Saveable,
+    ItemType: MetadataPersistable,
+    ItemType.ArchiverType: NSCoding,
+    ItemType.ArchiverType.ValueType == ItemType,
+    ItemType.MetadataType: NSCoding {
+
+    func inTransaction(transaction: ReadTransactionType, atIndex index: YapDB.Index) -> ItemType? {
+        if var item = ItemType.unarchive(transaction.readAtIndex(index)) {
+            item.metadata = transaction.readMetadataAtIndex(index) as? ItemType.MetadataType
+            return item
+        }
+        return .None
+    }
+
+    func inTransactionAtIndex(transaction: ReadTransactionType) -> YapDB.Index -> ItemType? {
+        return { self.inTransaction(transaction, atIndex: $0) }
+    }
+
+    func atIndexInTransaction(index: YapDB.Index) -> ReadTransactionType -> ItemType? {
+        return { self.inTransaction($0, atIndex: index) }
+    }
+
+    func atIndexesInTransaction(indexes: [YapDB.Index]) -> ReadTransactionType -> [ItemType] {
+        let atIndex = inTransactionAtIndex
+        return { transaction in
+            indexes.flatMap(atIndex(transaction)) ?? []
+        }
+    }
+
+    func inTransaction(transaction: ReadTransactionType, atKey key: String) -> ItemType? {
+        return inTransaction(transaction, atIndex: ItemType.indexWithKey(key))
+    }
+
+    func inTransactionAtKey(transaction: ReadTransactionType) -> String -> ItemType? {
+        return { self.inTransaction(transaction, atKey: $0) }
+    }
+
+    func atKeyInTransaction(key: String) -> ReadTransactionType -> ItemType? {
+        return { self.inTransaction($0, atKey: key) }
+    }
+
+    func atKeysInTransaction(_keys: [String]? = .None) -> ReadTransactionType -> [ItemType] {
+        let atKey = inTransactionAtKey
+        return { transaction in
+            let keys = _keys ?? transaction.keysInCollection(ItemType.collection)
+            return keys.flatMap(atKey(transaction)) ?? []
+        }
+    }
+
+    public func atIndex(index: YapDB.Index) -> ItemType? {
+        return sync(atIndexInTransaction(index))
+    }
+
+    public func atIndexes(indexes: [YapDB.Index]) -> [ItemType] {
+        return sync(atIndexesInTransaction(indexes))
+    }
+
+    public func byKey(key: String) -> ItemType? {
+        return sync(atKeyInTransaction(key))
+    }
+
+    public func byKeys(keys: [String]) -> [ItemType] {
+        return sync(atKeysInTransaction(keys))
+    }
+
+    public func all() -> [ItemType] {
+        return sync(atKeysInTransaction())
+    }
+
+    public func filterExisting(keys: [String]) -> (existing: [ItemType], missing: [String]) {
+        let existingInTransaction = atKeysInTransaction(keys)
+        return sync { transaction -> ([ItemType], [String]) in
+            let existing = existingInTransaction(transaction)
+            let existingKeys = existing.map(keyForPersistable)
+            let missingKeys = keys.filter { !existingKeys.contains($0) }
+            return (existing, missingKeys)
+        }
+    }
+}
+
+// MARK: - Value with Value metadata
+
+extension Readable
+    where
+    ItemType: Saveable,
+    ItemType: MetadataPersistable,
+    ItemType.ArchiverType: NSCoding,
+    ItemType.ArchiverType.ValueType == ItemType,
+    ItemType.MetadataType: Saveable,
+    ItemType.MetadataType.ArchiverType: NSCoding,
+    ItemType.MetadataType.ArchiverType.ValueType == ItemType.MetadataType {
+
+    func inTransaction(transaction: ReadTransactionType, atIndex index: YapDB.Index) -> ItemType? {
+        if var item = ItemType.unarchive(transaction.readAtIndex(index)) {
+            item.metadata = ItemType.MetadataType.unarchive(transaction.readMetadataAtIndex(index))
+            return item
+        }
+        return .None
+    }
+
+    func inTransactionAtIndex(transaction: ReadTransactionType) -> YapDB.Index -> ItemType? {
+        return { self.inTransaction(transaction, atIndex: $0) }
+    }
+
+    func atIndexInTransaction(index: YapDB.Index) -> ReadTransactionType -> ItemType? {
+        return { self.inTransaction($0, atIndex: index) }
+    }
+
+    func atIndexesInTransaction(indexes: [YapDB.Index]) -> ReadTransactionType -> [ItemType] {
+        let atIndex = inTransactionAtIndex
+        return { transaction in
+            indexes.flatMap(atIndex(transaction)) ?? []
+        }
+    }
+
+    func inTransaction(transaction: ReadTransactionType, atKey key: String) -> ItemType? {
+        return inTransaction(transaction, atIndex: ItemType.indexWithKey(key))
+    }
+
+    func inTransactionAtKey(transaction: ReadTransactionType) -> String -> ItemType? {
+        return { self.inTransaction(transaction, atKey: $0) }
+    }
+
+    func atKeyInTransaction(key: String) -> ReadTransactionType -> ItemType? {
+        return { self.inTransaction($0, atKey: key) }
+    }
+
+    func atKeysInTransaction(_keys: [String]? = .None) -> ReadTransactionType -> [ItemType] {
+        let atKey = inTransactionAtKey
+        return { transaction in
+            let keys = _keys ?? transaction.keysInCollection(ItemType.collection)
+            return keys.flatMap(atKey(transaction)) ?? []
+        }
+    }
+
+    public func atIndex(index: YapDB.Index) -> ItemType? {
+        return sync(atIndexInTransaction(index))
+    }
+
+    public func atIndexes(indexes: [YapDB.Index]) -> [ItemType] {
+        return sync(atIndexesInTransaction(indexes))
+    }
+
+    public func byKey(key: String) -> ItemType? {
+        return sync(atKeyInTransaction(key))
+    }
+
+    public func byKeys(keys: [String]) -> [ItemType] {
+        return sync(atKeysInTransaction(keys))
+    }
+
+    public func all() -> [ItemType] {
+        return sync(atKeysInTransaction())
+    }
+
+    public func filterExisting(keys: [String]) -> (existing: [ItemType], missing: [String]) {
+        let existingInTransaction = atKeysInTransaction(keys)
+        return sync { transaction -> ([ItemType], [String]) in
+            let existing = existingInTransaction(transaction)
+            let existingKeys = existing.map(keyForPersistable)
+            let missingKeys = keys.filter { !existingKeys.contains($0) }
+            return (existing, missingKeys)
+        }
     }
 }
 
 
 
-
-
-
-// MARK: - YapDatabaseConnection
-
-extension YapDatabaseConnection {
-
-    /**
-    Synchronously reads the object sored at this index using the connection.
-
-    - parameter index: The YapDB.Index value.
-    - returns: An optional AnyObject.
-    */
-    public func readAtIndex(index: YapDB.Index) -> AnyObject? {
-        return read({ $0.readAtIndex(index) })
-    }
-
-    /**
-    Synchronously reads the Object sored at this index using the connection.
-
-    - parameter index: The YapDB.Index value.
-    - returns: An optional Object.
-    */
-    public func readAtIndex<Object where Object: Persistable>(index: YapDB.Index) -> Object? {
-        return read({ $0.readAtIndex(index) })
-    }
-
-    /**
-    Synchronously reads the Value sored at this index using the connection.
-
-    - parameter index: The YapDB.Index value.
-    - returns: An optional Value.
-    */
-    public func readAtIndex<
-        Value
-        where
-        Value: Saveable,
-        Value: Persistable,
-        Value.ArchiverType: NSCoding,
-        Value.ArchiverType.ValueType == Value>(index: YapDB.Index) -> Value? {
-            return read({ $0.readAtIndex(index) })
-    }
-}
-
-extension YapDatabaseConnection {
-
-    /**
-    Asynchronously reads the Object sored at this index using the connection.
-
-    - parameter index: The YapDB.Index value.
-    - parameter queue: A dispatch_queue_t, defaults to the main queue.
-    - parameter completion: A closure which receives an optional Object
-    */
-    public func asyncReadAtIndex<Object where Object: Persistable>(index: YapDB.Index, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: (Object?) -> Void) {
-        asyncRead({ $0.readAtIndex(index) }, queue: queue, completion: completion)
-    }
-
-    /**
-    Asynchronously reads the Value sored at this index using the connection.
-
-    - parameter index: The YapDB.Index value.
-    - parameter queue: A dispatch_queue_t, defaults to the main queue.
-    - parameter completion: A closure which receives an optional Value
-    */
-    public func asyncReadAtIndex<
-        Value
-        where
-        Value: Saveable,
-        Value: Persistable,
-        Value.ArchiverType.ValueType == Value>(index: YapDB.Index, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: (Value?) -> Void) {
-            asyncRead({ $0.readAtIndex(index) }, queue: queue, completion: completion)
-    }
-}
-
-extension YapDatabaseConnection {
-
-    /**
-    Synchronously reads the metadata sored at this index using the connection.
-
-    - parameter index: The YapDB.Index value.
-    - returns: An optional AnyObject.
-    */
-    public func readMetadataAtIndex(index: YapDB.Index) -> AnyObject? {
-        return read { $0.readMetadataAtIndex(index) }
-    }
-
-    /**
-    Synchronously reads the object metadata sored at this index using the connection.
-
-    - parameter index: The YapDB.Index value.
-    - returns: An optional MetadataObject.
-    */
-    public func readMetadataAtIndex<
-        MetadataObject
-        where
-        MetadataObject: NSCoding>(index: YapDB.Index) -> MetadataObject? {
-            return read { $0.readMetadataAtIndex(index) as? MetadataObject }
-    }
-
-    /**
-    Synchronously metadata which is a value type if stored at this index using the transaction.
-
-    - parameter index: The YapDB.Index value.
-    - returns: An optional MetadataValue.
-    */
-    public func readMetadataAtIndex<
-        MetadataValue
-        where
-        MetadataValue: Saveable,
-        MetadataValue.ArchiverType: NSCoding,
-        MetadataValue.ArchiverType.ValueType == MetadataValue>(index: YapDB.Index) -> MetadataValue? {
-            return read { $0.readMetadataAtIndex(index) }
-    }
-}
-
-extension YapDatabaseConnection {
-
-    /**
-    Synchronously reads the objects sored at these indexes using the connection.
-
-    - parameter indexes: An array of YapDB.Index values.
-    - returns: An array of Object instances.
-    */
-    public func readAtIndexes<Object where Object: Persistable>(indexes: [YapDB.Index]) -> [Object] {
-        return read({ $0.readAtIndexes(indexes) })
-    }
-
-    /**
-    Synchronously reads the values sored at these indexes using the connection.
-
-    - parameter indexes: An array of YapDB.Index values.
-    - returns: An array of Value instances.
-    */
-    public func readAtIndexes<
-        Value
-        where
-        Value: Saveable,
-        Value: Persistable,
-        Value.ArchiverType: NSCoding,
-        Value.ArchiverType.ValueType == Value>(indexes: [YapDB.Index]) -> [Value] {
-            return read({ $0.readAtIndexes(indexes) })
-    }
-}
-
-extension YapDatabaseConnection {
-
-    /**
-    Asynchronously reads the objects sored at these indexes using the connection.
-
-    - parameter indexes: An array of YapDB.Index values.
-    - parameter queue: A dispatch_queue_t, defaults to the main queue.
-    - parameter completion: A closure which receives an array of Object instances
-    */
-    public func asyncReadAtIndexes<Object where Object: Persistable>(indexes: [YapDB.Index], queue: dispatch_queue_t = dispatch_get_main_queue(), completion: ([Object]) -> Void) {
-        asyncRead({ $0.readAtIndexes(indexes) }, queue: queue, completion: completion)
-    }
-
-    /**
-    Asynchronously reads the values sored at these indexes using the connection.
-
-    - parameter indexes: An array of YapDB.Index values.
-    - parameter queue: A dispatch_queue_t, defaults to the main queue.
-    - parameter completion: A closure which receives an array of Value instances
-    */
-    public func asyncReadAtIndexes<
-        Value
-        where
-        Value: Saveable,
-        Value: Persistable,
-        Value.ArchiverType: NSCoding,
-        Value.ArchiverType.ValueType == Value>(indexes: [YapDB.Index], queue: dispatch_queue_t = dispatch_get_main_queue(), completion: ([Value]) -> Void) {
-            asyncRead({ $0.readAtIndexes(indexes) }, queue: queue, completion: completion)
-    }
-}
-
-extension YapDatabaseConnection {
-
-    /**
-    Synchronously reads the Object sored by key in this connection.
-
-    - parameter key: A String
-    - returns: An optional Object
-    */
-    public func read<Object where Object: Persistable>(key: String) -> Object? {
-        return read({ $0.read(key) })
-    }
-
-    /**
-    Synchronously reads the Value sored by key in this connection.
-
-    - parameter key: A String
-    - returns: An optional Value
-    */
-    public func read<
-        Value
-        where
-        Value: Saveable,
-        Value: Persistable,
-        Value.ArchiverType: NSCoding,
-        Value.ArchiverType.ValueType == Value>(key: String) -> Value? {
-            return read({ $0.read(key) })
-    }
-}
-
-extension YapDatabaseConnection {
-
-    /**
-    Asynchronously reads the Object sored by key in this connection.
-
-    - parameter keys: An array of String instances
-    - parameter queue: A dispatch_queue_t, defaults to the main queue.
-    - parameter completion: A closure which receives an optional Object
-    */
-    public func asyncRead<Object where Object: Persistable>(key: String, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: (Object?) -> Void) {
-        asyncRead({ $0.read(key) }, queue: queue, completion: completion)
-    }
-
-    /**
-    Asynchronously reads the Value sored by key in this connection.
-
-    - parameter keys: An array of String instances
-    - parameter queue: A dispatch_queue_t, defaults to the main queue.
-    - parameter completion: A closure which receives an optional Value
-    */
-    public func asyncRead<
-        Value
-        where
-        Value: Saveable,
-        Value: Persistable,
-        Value.ArchiverType: NSCoding,
-        Value.ArchiverType.ValueType == Value>(key: String, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: (Value?) -> Void) {
-            asyncRead({ $0.read(key) }, queue: queue, completion: completion)
-    }
-}
-
-extension YapDatabaseConnection {
-
-    /**
-    Synchronously reads the Object instances sored by the keys in this connection.
-
-    - parameter keys: An array of String instances
-    - returns: An array of Object instances
-    */
-    public func read<Object where Object: Persistable>(keys: [String]) -> [Object] {
-        return read({ $0.read(keys) })
-    }
-
-    /**
-    Synchronously reads the Value instances sored by the keys in this connection.
-
-    - parameter keys: An array of String instances
-    - returns: An array of Value instances
-    */
-    public func read<
-        Value
-        where
-        Value: Saveable,
-        Value: Persistable,
-        Value.ArchiverType: NSCoding,
-        Value.ArchiverType.ValueType == Value>(keys: [String]) -> [Value] {
-            return read({ $0.read(keys) })
-    }
-}
-
-extension YapDatabaseConnection {
-
-    /**
-    Asynchronously reads the Object instances sored by the keys in this connection.
-
-    - parameter keys: An array of String instances
-    - parameter queue: A dispatch_queue_t, defaults to the main queue.
-    - parameter completion: A closure which receives an array of Object instances
-    */
-    public func asyncRead<Object where Object: Persistable>(keys: [String], queue: dispatch_queue_t = dispatch_get_main_queue(), completion: ([Object]) -> Void) {
-        asyncRead({ $0.read(keys) }, queue: queue, completion: completion)
-    }
-
-    /**
-    Asynchronously reads the Value instances sored by the keys in this connection.
-
-    - parameter keys: An array of String instances
-    - parameter queue: A dispatch_queue_t, defaults to the main queue.
-    - parameter completion: A closure which receives an array of Value instances
-    */
-    public func asyncRead<
-        Value
-        where
-        Value: Saveable,
-        Value: Persistable,
-        Value.ArchiverType: NSCoding,
-        Value.ArchiverType.ValueType == Value>(keys: [String], queue: dispatch_queue_t = dispatch_get_main_queue(), completion: ([Value]) -> Void) {
-            asyncRead({ $0.read(keys) }, queue: queue, completion: completion)
-    }
-}
-
-extension YapDatabaseConnection {
-
-    /**
-    Synchronously reads all the items in the database for a particular Persistable Object.
-    Example usage:
-
-        let people: [Person] = connection.readAll()
-
-    - returns: An array of Object types.
-    */
-    public func readAll<Object where Object: Persistable>() -> [Object] {
-        return read({ $0.readAll() })
-    }
-
-    /**
-    Synchronously reads all the items in the database for a particular Persistable Value.
-    Example usage:
-
-    let barcodes: [Barcode] = connection.readAll()
-
-    - returns: An array of Value types.
-    */
-    public func readAll<
-        Value
-        where
-        Value: Saveable,
-        Value: Persistable,
-        Value.ArchiverType: NSCoding,
-        Value.ArchiverType.ValueType == Value>() -> [Value] {
-            return read({ $0.readAll() })
-    }
-}
-
-extension YapDatabaseConnection {
-
-    /**
-    Asynchronously reads all the items in the database for a particular Persistable Object.
-    Example usage:
-
-        connection.readAll() { (people: [Person] in }
-
-    - returns: An array of Object types.
-    */
-    public func asyncReadAll<Object where Object: Persistable>(queue: dispatch_queue_t = dispatch_get_main_queue(), completion: ([Object]) -> Void) {
-        asyncRead({ $0.readAll() }, queue: queue, completion: completion)
-    }
-
-    /**
-    Asynchronously reads all the items in the database for a particular Persistable Value.
-    Example usage:
-
-        connection.readAll() { (barcodes: [Barcode] in }
-
-    - returns: An array of Value types.
-    */
-    public func asyncReadAll<
-        Value
-        where
-        Value: Saveable,
-        Value: Persistable,
-        Value.ArchiverType: NSCoding,
-        Value.ArchiverType.ValueType == Value>(queue: dispatch_queue_t = dispatch_get_main_queue(), completion: ([Value]) -> Void) {
-            asyncRead({ $0.readAll() }, queue: queue, completion: completion)
-    }
-}
-
-extension YapDatabaseConnection {
-
-    /**
-    Synchronously returns an array of Object type for the given keys, with an array of keys which don't have
-    corresponding objects in the database.
-
-        let (people: [Person], missing) = connection.filterExisting(keys)
-
-    - parameter keys: An array of String instances
-    - returns: An ([Object], [String]) tuple.
-    */
-    public func filterExisting<Object where Object: Persistable>(keys: [String]) -> (existing: [Object], missing: [String]) {
-        return read({ $0.filterExisting(keys) })
-    }
-
-    /**
-    Synchronously returns an array of Value type for the given keys, with an array of keys which don't have
-    corresponding values in the database.
-
-        let (barcode: [Barcode], missing) = connection.filterExisting(keys)
-
-    - parameter keys: An array of String instances
-    - returns: An ([Value], [String]) tuple.
-    */
-    public func filterExisting<
-        Value
-        where
-        Value: Saveable,
-        Value: Persistable,
-        Value.ArchiverType: NSCoding,
-        Value.ArchiverType.ValueType == Value>(keys: [String]) -> (existing: [Value], missing: [String]) {
-            return read({ $0.filterExisting(keys) })
-    }
-}
-
-
-// MARK: - YapDatabase
-
-extension YapDatabase {
-
-    /**
-    Synchronously reads the Object sored at this index using a new connection.
-
-    - parameter index: The YapDB.Index value.
-    - returns: An optional Object.
-    */
-    public func readAtIndex<Object where Object: Persistable>(index: YapDB.Index) -> Object? {
-        return newConnection().readAtIndex(index)
-    }
-
-    /**
-    Synchronously reads the Value sored at this index using a new connection.
-
-    - parameter index: The YapDB.Index value.
-    - returns: An optional Value.
-    */
-    public func readAtIndex<
-        Value
-        where
-        Value: Saveable,
-        Value: Persistable,
-        Value.ArchiverType: NSCoding,
-        Value.ArchiverType.ValueType == Value>(index: YapDB.Index) -> Value? {
-            return newConnection().readAtIndex(index)
-    }
-}
-
-extension YapDatabase {
-
-    /**
-    Asynchronously reads the Object sored at this index using a new connection.
-
-    - parameter index: The YapDB.Index value.
-    - parameter queue: A dispatch_queue_t, defaults to the main queue.
-    - parameter completion: A closure which receives an optional Object
-    */
-    public func asyncReadAtIndex<Object where Object: Persistable>(index: YapDB.Index, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: (Object?) -> Void) {
-        newConnection().asyncReadAtIndex(index, queue: queue, completion: completion)
-    }
-
-    /**
-    Asynchronously reads the Value sored at this index using a new connection.
-
-    - parameter index: The YapDB.Index value.
-    - parameter queue: A dispatch_queue_t, defaults to the main queue.
-    - parameter completion: A closure which receives an optional Value
-    */
-    public func asyncReadAtIndex<
-        Value
-        where
-        Value: Saveable,
-        Value: Persistable,
-        Value.ArchiverType.ValueType == Value>(index: YapDB.Index, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: (Value?) -> Void) {
-            newConnection().asyncReadAtIndex(index, queue: queue, completion: completion)
-    }
-}
-
-extension YapDatabase {
-
-    /**
-    Synchronously reads the object metadata sored at this index using the connection.
-
-    - parameter index: The YapDB.Index value.
-    - returns: An optional MetadataObject.
-    */
-    public func readMetadataAtIndex<
-        MetadataObject
-        where
-        MetadataObject: NSCoding>(index: YapDB.Index) -> MetadataObject? {
-            return newConnection().readMetadataAtIndex(index) as? MetadataObject
-    }
-
-    /**
-    Synchronously metadata which is a value type if stored at this index using the transaction.
-
-    - parameter index: The YapDB.Index value.
-    - returns: An optional MetadataValue.
-    */
-    public func readMetadataAtIndex<
-        MetadataValue
-        where
-        MetadataValue: Saveable,
-        MetadataValue.ArchiverType: NSCoding,
-        MetadataValue.ArchiverType.ValueType == MetadataValue>(index: YapDB.Index) -> MetadataValue? {
-            return newConnection().readMetadataAtIndex(index)
-    }
-}
-
-extension YapDatabase {
-
-    /**
-    Synchronously reads the objects sored at these indexes using a new connection.
-
-    - parameter indexes: An array of YapDB.Index values.
-    - returns: An array of Object instances.
-    */
-    public func readAtIndexes<Object where Object: Persistable>(indexes: [YapDB.Index]) -> [Object] {
-        return newConnection().readAtIndexes(indexes)
-    }
-
-    /**
-    Synchronously reads the values sored at these indexes using a new connection.
-
-    - parameter indexes: An array of YapDB.Index values.
-    - returns: An array of Value instances.
-    */
-    public func readAtIndexes<
-        Value
-        where
-        Value: Saveable,
-        Value: Persistable,
-        Value.ArchiverType: NSCoding,
-        Value.ArchiverType.ValueType == Value>(indexes: [YapDB.Index]) -> [Value] {
-            return newConnection().readAtIndexes(indexes)
-    }
-}
-
-extension YapDatabase {
-
-    /**
-    Asynchronously  reads the objects sored at these indexes using a new connection.
-
-    - parameter indexes: An array of YapDB.Index values.
-    - parameter queue: A dispatch_queue_t, defaults to the main queue.
-    - parameter completion: A closure which receives an array of Object instances
-    */
-    public func asyncReadAtIndexes<Object where Object: Persistable>(indexes: [YapDB.Index], queue: dispatch_queue_t = dispatch_get_main_queue(), completion: ([Object]) -> Void) {
-        return newConnection().asyncReadAtIndexes(indexes, queue: queue, completion: completion)
-    }
-
-    /**
-    Asynchronously  reads the values sored at these indexes using a new connection.
-
-    - parameter indexes: An array of YapDB.Index values.
-    - parameter queue: A dispatch_queue_t, defaults to the main queue.
-    - parameter completion: A closure which receives an array of Value instances
-    */
-    public func asyncReadAtIndexes<
-        Value
-        where
-        Value: Saveable,
-        Value: Persistable,
-        Value.ArchiverType: NSCoding,
-        Value.ArchiverType.ValueType == Value>(indexes: [YapDB.Index], queue: dispatch_queue_t = dispatch_get_main_queue(), completion: ([Value]) -> Void) {
-            return newConnection().asyncReadAtIndexes(indexes, queue: queue, completion: completion)
-    }
-}
-
-extension YapDatabase {
-
-    /**
-    Synchronously reads the Object sored by key in a new connection.
-
-    - parameter key: A String
-    - returns: An optional Object
-    */
-    public func read<Object where Object: Persistable>(key: String) -> Object? {
-        return newConnection().read(key)
-    }
-
-    /**
-    Synchronously reads the Value sored by key in a new connection.
-
-    - parameter key: A String
-    - returns: An optional Value
-    */
-    public func read<
-        Value
-        where
-        Value: Saveable,
-        Value: Persistable,
-        Value.ArchiverType: NSCoding,
-        Value.ArchiverType.ValueType == Value>(key: String) -> Value? {
-            return newConnection().read(key)
-    }
-}
-
-extension YapDatabase {
-
-    /**
-    Asynchronously reads the Object sored by key in a new connection.
-
-    - parameter keys: An array of String instances
-    - parameter queue: A dispatch_queue_t, defaults to the main queue.
-    - parameter completion: A closure which receives an optional Object
-    */
-    public func asyncRead<Object where Object: Persistable>(key: String, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: (Object?) -> Void) {
-        newConnection().asyncRead(key, queue: queue, completion: completion)
-    }
-
-    /**
-    Asynchronously reads the Value sored by key in a new connection.
-
-    - parameter keys: An array of String instances
-    - parameter queue: A dispatch_queue_t, defaults to the main queue.
-    - parameter completion: A closure which receives an optional Value
-    */
-    public func asyncRead<
-        Value
-        where
-        Value: Saveable,
-        Value: Persistable,
-        Value.ArchiverType: NSCoding,
-        Value.ArchiverType.ValueType == Value>(key: String, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: (Value?) -> Void) {
-            newConnection().asyncRead(key, queue: queue, completion: completion)
-    }
-}
-
-extension YapDatabase {
-
-    /**
-    Synchronously reads the Object instances sored by the keys in a new connection.
-
-    - parameter keys: An array of String instances
-    - returns: An array of Object instances
-    */
-    public func read<
-        Object
-        where
-        Object: Persistable>(keys: [String]) -> [Object] {
-            return newConnection().read(keys)
-    }
-
-    /**
-    Synchronously reads the Value instances sored by the keys in a new connection.
-
-    - parameter keys: An array of String instances
-    - returns: An array of Value instances
-    */
-    public func read<
-        Value
-        where
-        Value: Saveable,
-        Value: Persistable,
-        Value.ArchiverType: NSCoding,
-        Value.ArchiverType.ValueType == Value>(keys: [String]) -> [Value] {
-            return newConnection().read(keys)
-    }
-}
-
-extension YapDatabase {
-
-    /**
-    Asynchronously reads the Object instances sored by the keys in a new connection.
-
-    - parameter keys: An array of String instances
-    - parameter queue: A dispatch_queue_t, defaults to the main queue.
-    - parameter completion: A closure which receives an array of Object instances
-    */
-    public func asyncRead<
-        Object
-        where
-        Object: Persistable>(keys: [String], queue: dispatch_queue_t = dispatch_get_main_queue(), completion: ([Object]) -> Void) {
-            newConnection().asyncRead(keys, queue: queue, completion: completion)
-    }
-
-    /**
-    Asynchronously reads the Value instances sored by the keys in a new connection.
-
-    - parameter keys: An array of String instances
-    - parameter queue: A dispatch_queue_t, defaults to the main queue.
-    - parameter completion: A closure which receives an array of Value instances
-    */
-    public func asyncRead<
-        Value
-        where
-        Value: Saveable,
-        Value: Persistable,
-        Value.ArchiverType: NSCoding,
-        Value.ArchiverType.ValueType == Value>(keys: [String], queue: dispatch_queue_t = dispatch_get_main_queue(), completion: ([Value]) -> Void) {
-            newConnection().asyncRead(keys, queue: queue, completion: completion)
-    }
-}
-
-extension YapDatabase {
-
-    /**
-    Synchronously reads all the items in the database for a particular Persistable Object in a new connection.
-    Example usage:
-
-        let people: [Person] = database.readAll()
-
-    - returns: An array of Object types.
-    */
-    public func readAll<
-        Object
-        where
-        Object: Persistable>() -> [Object] {
-            return newConnection().readAll()
-    }
-
-    /**
-    Synchronously reads all the items in the database for a particular Persistable Value in a new connection.
-    Example usage:
-
-    let barcodes: [Barcode] = database.readAll()
-
-    - returns: An array of Value types.
-    */
-    public func readAll<
-        Value
-        where
-        Value: Saveable,
-        Value: Persistable,
-        Value.ArchiverType: NSCoding,
-        Value.ArchiverType.ValueType == Value>() -> [Value] {
-            return newConnection().readAll()
-    }
-}
-
-extension YapDatabase {
-
-    /**
-    Asynchronously reads all the items in the database for a particular Persistable Object in a new connection.
-    Example usage:
-
-        database.readAll() { (people: [Person] in }
-
-    - returns: An array of Object types.
-    */
-    public func asyncReadAll<
-        Object
-        where
-        Object: Persistable>(queue: dispatch_queue_t = dispatch_get_main_queue(), completion: ([Object]) -> Void) {
-            newConnection().asyncReadAll(queue, completion: completion)
-    }
-
-    /**
-    Asynchronously reads all the items in the database for a particular Persistable Value in a new connection.
-    Example usage:
-
-        database.readAll() { (barcodes: [Barcode] in }
-
-    - returns: An array of Object types.
-    */
-    public func asyncReadAll<
-        Value
-        where
-        Value: Saveable,
-        Value: Persistable,
-        Value.ArchiverType: NSCoding,
-        Value.ArchiverType.ValueType == Value>(queue: dispatch_queue_t = dispatch_get_main_queue(), completion: ([Value]) -> Void) {
-            newConnection().asyncReadAll(queue, completion: completion)
-    }
-}
-
-extension YapDatabase {
-
-    /**
-    Synchronously returns an array of Object type for the given keys, with an array of keys which don't have
-    corresponding objects in the database, using a new connection.
-
-        let (people: [Person], missing) = database.filterExisting(keys)
-
-    - parameter keys: An array of String instances
-    - returns: An ([Object], [String]) tuple.
-    */
-    public func filterExisting<Object where Object: Persistable>(keys: [String]) -> (existing: [Object], missing: [String]) {
-        return newConnection().filterExisting(keys)
-    }
-
-    /**
-    Synchronously returns an array of Value type for the given keys, with an array of keys which don't have
-    corresponding values in the database, using a new connection.
-
-        let (barcode: [Barcode], missing) = database.filterExisting(keys)
-
-    - parameter keys: An array of String instances
-    - returns: An ([Value], [String]) tuple.
-    */
-    public func filterExisting<
-        Value
-        where
-        Value: Saveable,
-        Value: Persistable,
-        Value.ArchiverType: NSCoding,
-        Value.ArchiverType.ValueType == Value>(keys: [String]) -> (existing: [Value], missing: [String]) {
-            return newConnection().filterExisting(keys)
-    }
-}
 
 
 

@@ -6,7 +6,7 @@
 import UIKit
 import XCTest
 import YapDatabase
-import YapDatabaseExtensions
+@testable import YapDatabaseExtensions
 
 class BaseTestCase: XCTestCase {
 
@@ -14,7 +14,31 @@ class BaseTestCase: XCTestCase {
     let barcode: Barcode = .QRCode("I have no idea what the string of a QR Code might look like")
     let product = Product(metadata: Product.Metadata(categoryIdentifier: 1), identifier: "cocoa-123", name: "CocoaPops", barcode: .UPCA(1, 2, 3, 4))
 
-    func people() -> [Person] {
+    var personIndex: YapDB.Index {
+        return person.index
+    }
+
+    var peopleIndexes: [YapDB.Index] {
+        return people.map { $0.index }
+    }
+
+    var personKey: String {
+        return person.key
+    }
+
+    var peopleKeys: [String] {
+        return people.map { $0.key }
+    }
+
+    var barcodeIndex: YapDB.Index {
+        return barcode.index
+    }
+
+    var barcodeKey: String {
+        return barcode.key
+    }
+
+    var people: [Person] {
         return [
             Person(id: "beatle-1", name: "John"),
             Person(id: "beatle-2", name: "Paul"),
@@ -33,6 +57,89 @@ class BaseTestCase: XCTestCase {
     }
 }
 
+class SynchronousReadWriteTests: BaseTestCase {
+
+    // Non Existing
+
+    func test__non_existing__object__by_index() {
+        let db = YapDB.testDatabaseForFile(__FILE__, test: __FUNCTION__)
+        XCTAssertNil(Person.read(db).atIndex(personIndex))
+    }
+
+    func test__non_existing__object__by_key() {
+        let db = YapDB.testDatabaseForFile(__FILE__, test: __FUNCTION__)
+        XCTAssertNil(Person.read(db).byKey(personKey))
+    }
+
+    func test__non_existing__value__by_index() {
+        let db = YapDB.testDatabaseForFile(__FILE__, test: __FUNCTION__)
+        XCTAssertNil(Barcode.read(db).atIndex(barcodeIndex))
+    }
+
+    func test__non_existing__value__by_key() {
+        let db = YapDB.testDatabaseForFile(__FILE__, test: __FUNCTION__)
+        XCTAssertNil(Barcode.read(db).byKey(barcodeKey))
+    }
+
+    // Single
+
+    func test__single__object_no_metadata__by_index() {
+        let db = YapDB.testDatabaseForFile(__FILE__, test: __FUNCTION__)
+        person.write.to(db)
+        guard let saved = Person.read(db).atIndex(personIndex) else {
+            XCTFail("Object not found in database")
+            return
+        }
+        XCTAssertEqual(saved.identifier, person.identifier)
+        XCTAssertEqual(saved.name, person.name)
+    }
+
+    func test__single__object_no_metadata__by_key() {
+        let db = YapDB.testDatabaseForFile(__FILE__, test: __FUNCTION__)
+        person.write.to(db)
+        guard let saved = Person.read(db).byKey(personKey) else {
+            XCTFail("Object not found in database")
+            return
+        }
+        XCTAssertEqual(saved.identifier, person.identifier)
+        XCTAssertEqual(saved.name, person.name)
+    }
+
+    func test__single__value_no_metadata__by_index() {
+        let db = YapDB.testDatabaseForFile(__FILE__, test: __FUNCTION__)
+        barcode.write.to(db)
+        guard let saved = Barcode.read(db).atIndex(barcodeIndex) else {
+            XCTFail("Object not found in database")
+            return
+        }
+        XCTAssertEqual(saved, barcode)
+    }
+
+    func test__single__value_no_metadata__by_key() {
+        let db = YapDB.testDatabaseForFile(__FILE__, test: __FUNCTION__)
+        barcode.write.to(db)
+        guard let saved = Barcode.read(db).byKey(barcodeKey) else {
+            XCTFail("Object not found in database")
+            return
+        }
+        XCTAssertEqual(saved, barcode)
+    }
+
+    // Many
+
+    func test__many__object_no_metadata__by_indexes() {
+        let db = YapDB.testDatabaseForFile(__FILE__, test: __FUNCTION__)
+        people.write.to(db)
+        let saved = Person.read(db).atIndexes(peopleIndexes)
+        XCTAssertEqual(saved.count, people.count)
+    }
+
+
+}
+
+
+
+/*
 class SynchronousReadWriteTests: BaseTestCase {
 
     func test_ReadingNonexisting_Object_ByIndex() {
@@ -388,6 +495,7 @@ class AsynchronousRemoveTests: BaseTestCase {
         waitForExpectationsWithTimeout(5.0, handler: nil)
     }
 }
+*/
 
 
 
