@@ -553,10 +553,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 9A4ED174BF7F30AD1C4AF751 /* Pods-YapDatabaseExtensionsTests.debug.xcconfig */;
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-				);
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -572,10 +568,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 48240A83CEC968CA66DAAF3B /* Pods-YapDatabaseExtensionsTests.release.xcconfig */;
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-				);
 				INFOPLIST_FILE = YapDatabaseExtensionsTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "me.danthorpe.$(PRODUCT_NAME:rfc1034identifier)";
