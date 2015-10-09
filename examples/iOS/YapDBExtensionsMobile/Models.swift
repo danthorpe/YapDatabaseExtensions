@@ -64,6 +64,17 @@ public class Person: NSObject, NSCoding {
     }
 }
 
+public class Employee: Person {
+    public var metadata: NSDate? = .None
+}
+
+public class Manager: Person {
+    public struct Metadata: Equatable {
+        public let numberOfDirectReports: Int
+    }
+    public var metadata: Metadata? = .None
+}
+
 // MARK: - Hashable etc
 
 extension Barcode: Hashable {
@@ -93,6 +104,10 @@ public func == (a: Product.Metadata, b: Product.Metadata) -> Bool {
 
 public func == (a: Person, b: Person) -> Bool {
     return (a.identifier == b.identifier) && (a.name == b.name)
+}
+
+public func == (a: Manager.Metadata, b: Manager.Metadata) -> Bool {
+    return a.numberOfDirectReports == b.numberOfDirectReports
 }
 
 extension Person {
@@ -141,6 +156,11 @@ extension Person: Persistable {
     }
 }
 
+extension Employee: MetadataPersistable { }
+
+extension Manager: MetadataPersistable { }
+
+
 // MARK: - Saveable
 
 extension Barcode: Saveable {
@@ -187,6 +207,16 @@ extension Product: Saveable {
         return Archive(self)
     }
 }
+
+extension Manager.Metadata: Saveable {
+
+    public typealias Archive = ManagerMetadataArchiver
+
+    public var archive: Archive {
+        return Archive(self)
+    }
+}
+
 
 // MARK: - Archivers
 
@@ -284,6 +314,23 @@ public class ProductArchiver: NSObject, NSCoding, Archiver {
         aCoder.encodeObject(value.identifier, forKey: "identifier")
         aCoder.encodeObject(value.name, forKey: "name")
         aCoder.encodeObject(value.barcode.archive, forKey: "barcode")
+    }
+}
+
+public class ManagerMetadataArchiver: NSObject, NSCoding, Archiver {
+    public let value: Manager.Metadata
+
+    public required init(_ v: Manager.Metadata) {
+        value = v
+    }
+
+    public required init?(coder aDecoder: NSCoder) {
+        let numberOfDirectReports = aDecoder.decodeIntegerForKey("numberOfDirectReports")
+        value = Manager.Metadata(numberOfDirectReports: numberOfDirectReports)
+    }
+
+    public func encodeWithCoder(aCoder: NSCoder) {
+        aCoder.encodeInteger(value.numberOfDirectReports, forKey: "numberOfDirectReports")
     }
 }
 

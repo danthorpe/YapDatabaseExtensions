@@ -23,7 +23,7 @@ DEPENDENCIES:
   - BrightFutures (from `https://github.com/Thomvis/BrightFutures`, branch `swift-2.0`)
   - PromiseKit/Swift/Promise (from `https://github.com/mxcl/PromiseKit`, branch `swift-2.0-beta5`)
   - SwiftTask (from `https://github.com/ReactKit/SwiftTask`, branch `swift/2.0`)
-  - YapDatabase (~> 2)
+  - YapDatabase (from `https://github.com/yapstudios/yapdatabase`, branch `master`)
 
 EXTERNAL SOURCES:
   BrightFutures:
@@ -35,6 +35,9 @@ EXTERNAL SOURCES:
   SwiftTask:
     :branch: swift/2.0
     :git: https://github.com/ReactKit/SwiftTask
+  YapDatabase:
+    :branch: master
+    :git: https://github.com/yapstudios/yapdatabase
 
 CHECKOUT OPTIONS:
   BrightFutures:
@@ -46,6 +49,9 @@ CHECKOUT OPTIONS:
   SwiftTask:
     :commit: 16c08c095d63af4c8595d7057209e4318d19cacb
     :git: https://github.com/ReactKit/SwiftTask
+  YapDatabase:
+    :commit: 23461c2ee873db7fdd831097223643e9b53f31fe
+    :git: https://github.com/yapstudios/yapdatabase
 
 SPEC CHECKSUMS:
   BrightFutures: 80426a07a47f286c3c83ea18c9a6bd4bbd4f3a27
@@ -53,6 +59,6 @@ SPEC CHECKSUMS:
   PromiseKit: 6810c48ec19990d3253dc8caf0e05519e7cd39ba
   Result: af24e3e57ab81005ec4221a53fd36dc1e7a52869
   SwiftTask: 724ff63fc8bd9b366d242696d4aff098f6de3c3a
-  YapDatabase: bcf13bd764ab4961fb48bef937becf964e50063d
+  YapDatabase: c9bf113e40137e96e67ff65a25cd4bf4bdc0beed
 
 COCOAPODS: 0.38.2
