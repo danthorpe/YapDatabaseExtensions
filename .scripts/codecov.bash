@@ -220,7 +220,7 @@ then
 
 elif [ "$CI" = "true" ] && [ "$BUILDKITE" = "true" ];
 then
-  say "==> BuildKit CI detected."
+  say "==> BuildKite CI detected."
   # http://docs.travis-ci.com/user/ci-environment/#Environment-variables
 #  service="buildkite"
   branch="$BUILDKITE_BRANCH"
