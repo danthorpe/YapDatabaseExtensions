@@ -1,5 +1,5 @@
 //
-//  ObjectWithNoMetadataTests.swift
+//  ValueWithValueMetadataTests.swift
 //  YapDatabaseExtensions
 //
 //  Created by Daniel Thorpe on 09/10/2015.
@@ -10,13 +10,13 @@ import Foundation
 import XCTest
 @testable import YapDatabaseExtensions
 
-class ObjectWithNoMetadataTests: XCTestCase {
+class ValueWithValueMetadataTests: XCTestCase {
 
-    var item: Person!
+    var item: Product!
     var index: YapDB.Index!
     var key: String!
 
-    var items: [Person]!
+    var items: [Product]!
     var indexes: [YapDB.Index]!
     var keys: [String]!
 
@@ -25,8 +25,8 @@ class ObjectWithNoMetadataTests: XCTestCase {
     var writeTransaction: TestableWriteTransaction!
     var readTransaction: TestableReadTransaction!
 
-    var reader: Read<Person, TestableDatabase>!
-    var writer: Write<Person, TestableConnection>!
+    var reader: Read<Product, TestableDatabase>!
+    var writer: Write<Product, TestableConnection>!
 
     var dispatchQueue: dispatch_queue_t!
     var operationQueue: NSOperationQueue!
@@ -71,21 +71,41 @@ class ObjectWithNoMetadataTests: XCTestCase {
     }
 
     func createPersistables() {
-        item = Person(id: "beatle-1", name: "John")
+        item = Product(
+            metadata: Product.Metadata(categoryIdentifier: 1),
+            identifier: "vodka-123",
+            name: "Belvidere",
+            barcode: .UPCA(1, 2, 3, 4)
+        )
         items = [
-            Person(id: "beatle-1", name: "John"),
-            Person(id: "beatle-2", name: "Paul"),
-            Person(id: "beatle-3", name: "George"),
-            Person(id: "beatle-4", name: "Ringo")
+            item,
+            Product(
+                metadata: Product.Metadata(categoryIdentifier: 2),
+                identifier: "gin-123",
+                name: "Boxer Gin",
+                barcode: .UPCA(5, 10, 15, 20)
+            ),
+            Product(
+                metadata: Product.Metadata(categoryIdentifier: 3),
+                identifier: "rum-123",
+                name: "Mount Gay Rum",
+                barcode: .UPCA(12, 24, 39, 48)
+            ),
+            Product(
+                metadata: Product.Metadata(categoryIdentifier: 2),
+                identifier: "gin-234",
+                name: "Monkey 47",
+                barcode: .UPCA(31, 62, 93, 124)
+            )
         ]
     }
 
     func configureForReadingSingle() {
-        readTransaction.object = item
+        readTransaction.object = item.archive
     }
 
     func configureForReadingMultiple() {
-        readTransaction.objects = items
+        readTransaction.objects = items.archives
         readTransaction.keys = keys
     }
 
@@ -111,8 +131,8 @@ class ObjectWithNoMetadataTests: XCTestCase {
 
         XCTAssertNotNil(writeTransaction.didWriteAtIndex)
         XCTAssertEqual(writeTransaction.didWriteAtIndex!.0, index)
-        XCTAssertEqual(writeTransaction.didWriteAtIndex!.1.identifier, item.identifier)
-        XCTAssertNil(writeTransaction.didWriteAtIndex!.2)
+        XCTAssertEqual(Product.unarchive(writeTransaction.didWriteAtIndex!.1)!, item)
+        XCTAssertEqual(Product.MetadataType.unarchive(writeTransaction.didWriteAtIndex!.2), item.metadata)
     }
 
     func test__write_sync() {
@@ -122,8 +142,8 @@ class ObjectWithNoMetadataTests: XCTestCase {
         XCTAssertTrue(connection.didWrite)
         XCTAssertNotNil(writeTransaction.didWriteAtIndex)
         XCTAssertEqual(writeTransaction.didWriteAtIndex!.0, index)
-        XCTAssertEqual(writeTransaction.didWriteAtIndex!.1.identifier, item.identifier)
-        XCTAssertNil(writeTransaction.didWriteAtIndex!.2)
+        XCTAssertEqual(Product.unarchive(writeTransaction.didWriteAtIndex!.1)!, item)
+        XCTAssertEqual(Product.MetadataType.unarchive(writeTransaction.didWriteAtIndex!.2), item.metadata)
     }
 
     func test__write_async() {
@@ -139,8 +159,8 @@ class ObjectWithNoMetadataTests: XCTestCase {
         XCTAssertFalse(connection.didWrite)
         XCTAssertNotNil(writeTransaction.didWriteAtIndex)
         XCTAssertEqual(writeTransaction.didWriteAtIndex!.0, index)
-        XCTAssertEqual(writeTransaction.didWriteAtIndex!.1.identifier, item.identifier)
-        XCTAssertNil(writeTransaction.didWriteAtIndex!.2)
+        XCTAssertEqual(Product.unarchive(writeTransaction.didWriteAtIndex!.1)!, item)
+        XCTAssertEqual(Product.MetadataType.unarchive(writeTransaction.didWriteAtIndex!.2), item.metadata)
     }
 
     func test__write_operation() {
@@ -159,8 +179,8 @@ class ObjectWithNoMetadataTests: XCTestCase {
         XCTAssertFalse(connection.didAsyncWrite)
         XCTAssertNotNil(writeTransaction.didWriteAtIndex)
         XCTAssertEqual(writeTransaction.didWriteAtIndex!.0, index)
-        XCTAssertEqual(writeTransaction.didWriteAtIndex!.1.identifier, item.identifier)
-        XCTAssertNil(writeTransaction.didWriteAtIndex!.2)
+        XCTAssertEqual(Product.unarchive(writeTransaction.didWriteAtIndex!.1)!, item)
+        XCTAssertEqual(Product.MetadataType.unarchive(writeTransaction.didWriteAtIndex!.2), item.metadata)
     }
 
     // Reading - Internal
@@ -257,7 +277,7 @@ class ObjectWithNoMetadataTests: XCTestCase {
         reader = Read(readTransaction)
         let items = reader.byKeysInTransaction()(readTransaction)
         XCTAssertEqual(readTransaction.didReadAtIndexes, indexes)
-        XCTAssertEqual(readTransaction.didKeysInCollection!, Person.collection)
+        XCTAssertEqual(readTransaction.didKeysInCollection!, Product.collection)
         XCTAssertEqual(items.map { $0.identifier }, items.map { $0.identifier })
     }
 
@@ -338,7 +358,7 @@ class ObjectWithNoMetadataTests: XCTestCase {
         configureForReadingMultiple()
         reader = Read(readTransaction)
         let items = reader.all()
-        XCTAssertEqual(readTransaction.didKeysInCollection, Person.collection)
+        XCTAssertEqual(readTransaction.didKeysInCollection, Product.collection)
         XCTAssertEqual(readTransaction.didReadAtIndexes, indexes)
         XCTAssertEqual(items.map { $0.identifier }, items.map { $0.identifier })
     }
@@ -346,7 +366,7 @@ class ObjectWithNoMetadataTests: XCTestCase {
     func test__reader_with_transaction__all_with_no_items() {
         reader = Read(readTransaction)
         let items = reader.all()
-        XCTAssertEqual(readTransaction.didKeysInCollection, Person.collection)
+        XCTAssertEqual(readTransaction.didKeysInCollection, Product.collection)
         XCTAssertEqual(readTransaction.didReadAtIndexes, [])
         XCTAssertEqual(items, [])
     }
@@ -439,7 +459,7 @@ class ObjectWithNoMetadataTests: XCTestCase {
         reader = Read(connection)
         let items = reader.all()
         XCTAssertTrue(connection.didRead)
-        XCTAssertEqual(readTransaction.didKeysInCollection, Person.collection)
+        XCTAssertEqual(readTransaction.didKeysInCollection, Product.collection)
         XCTAssertEqual(readTransaction.didReadAtIndexes, indexes)
         XCTAssertEqual(items.map { $0.identifier }, items.map { $0.identifier })
     }
@@ -448,7 +468,7 @@ class ObjectWithNoMetadataTests: XCTestCase {
         reader = Read(connection)
         let items = reader.all()
         XCTAssertTrue(connection.didRead)
-        XCTAssertEqual(readTransaction.didKeysInCollection, Person.collection)
+        XCTAssertEqual(readTransaction.didKeysInCollection, Product.collection)
         XCTAssertEqual(readTransaction.didReadAtIndexes, [])
         XCTAssertEqual(items, [])
     }

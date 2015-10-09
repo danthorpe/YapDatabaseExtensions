@@ -58,7 +58,6 @@ class BaseTestCase: XCTestCase {
         return people.map { $0.key }
     }
 
-
     func barcodes() -> Set<Barcode> {
         return [
             .QRCode("I have no idea what the string of a QR Code might look like"),

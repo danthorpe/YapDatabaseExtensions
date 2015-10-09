@@ -1,5 +1,5 @@
 //
-//  ObjectWithNoMetadataTests.swift
+//  ObjectWithValueMetadataTests.swift
 //  YapDatabaseExtensions
 //
 //  Created by Daniel Thorpe on 09/10/2015.
@@ -10,13 +10,13 @@ import Foundation
 import XCTest
 @testable import YapDatabaseExtensions
 
-class ObjectWithNoMetadataTests: XCTestCase {
+class ObjectWithValueMetadataTests: XCTestCase {
 
-    var item: Person!
+    var item: Manager!
     var index: YapDB.Index!
     var key: String!
 
-    var items: [Person]!
+    var items: [Manager]!
     var indexes: [YapDB.Index]!
     var keys: [String]!
 
@@ -25,8 +25,8 @@ class ObjectWithNoMetadataTests: XCTestCase {
     var writeTransaction: TestableWriteTransaction!
     var readTransaction: TestableReadTransaction!
 
-    var reader: Read<Person, TestableDatabase>!
-    var writer: Write<Person, TestableConnection>!
+    var reader: Read<Manager, TestableDatabase>!
+    var writer: Write<Manager, TestableConnection>!
 
     var dispatchQueue: dispatch_queue_t!
     var operationQueue: NSOperationQueue!
@@ -71,13 +71,15 @@ class ObjectWithNoMetadataTests: XCTestCase {
     }
 
     func createPersistables() {
-        item = Person(id: "beatle-1", name: "John")
+        item = Manager(id: "beatle-1", name: "John")
+        item.metadata = Manager.Metadata(numberOfDirectReports: 4)
         items = [
-            Person(id: "beatle-1", name: "John"),
-            Person(id: "beatle-2", name: "Paul"),
-            Person(id: "beatle-3", name: "George"),
-            Person(id: "beatle-4", name: "Ringo")
+            item,
+            Manager(id: "beatle-2", name: "Paul"),
+            Manager(id: "beatle-3", name: "George"),
+            Manager(id: "beatle-4", name: "Ringo")
         ]
+        items.suffixFrom(1).forEach { $0.metadata = Manager.Metadata(numberOfDirectReports: 1) }
     }
 
     func configureForReadingSingle() {
@@ -112,7 +114,7 @@ class ObjectWithNoMetadataTests: XCTestCase {
         XCTAssertNotNil(writeTransaction.didWriteAtIndex)
         XCTAssertEqual(writeTransaction.didWriteAtIndex!.0, index)
         XCTAssertEqual(writeTransaction.didWriteAtIndex!.1.identifier, item.identifier)
-        XCTAssertNil(writeTransaction.didWriteAtIndex!.2)
+        XCTAssertEqual(Manager.MetadataType.unarchive(writeTransaction.didWriteAtIndex!.2), item.metadata)
     }
 
     func test__write_sync() {
@@ -123,7 +125,7 @@ class ObjectWithNoMetadataTests: XCTestCase {
         XCTAssertNotNil(writeTransaction.didWriteAtIndex)
         XCTAssertEqual(writeTransaction.didWriteAtIndex!.0, index)
         XCTAssertEqual(writeTransaction.didWriteAtIndex!.1.identifier, item.identifier)
-        XCTAssertNil(writeTransaction.didWriteAtIndex!.2)
+        XCTAssertEqual(Manager.MetadataType.unarchive(writeTransaction.didWriteAtIndex!.2), item.metadata)
     }
 
     func test__write_async() {
@@ -140,7 +142,7 @@ class ObjectWithNoMetadataTests: XCTestCase {
         XCTAssertNotNil(writeTransaction.didWriteAtIndex)
         XCTAssertEqual(writeTransaction.didWriteAtIndex!.0, index)
         XCTAssertEqual(writeTransaction.didWriteAtIndex!.1.identifier, item.identifier)
-        XCTAssertNil(writeTransaction.didWriteAtIndex!.2)
+        XCTAssertEqual(Manager.MetadataType.unarchive(writeTransaction.didWriteAtIndex!.2), item.metadata)
     }
 
     func test__write_operation() {
@@ -160,7 +162,7 @@ class ObjectWithNoMetadataTests: XCTestCase {
         XCTAssertNotNil(writeTransaction.didWriteAtIndex)
         XCTAssertEqual(writeTransaction.didWriteAtIndex!.0, index)
         XCTAssertEqual(writeTransaction.didWriteAtIndex!.1.identifier, item.identifier)
-        XCTAssertNil(writeTransaction.didWriteAtIndex!.2)
+        XCTAssertEqual(Manager.MetadataType.unarchive(writeTransaction.didWriteAtIndex!.2), item.metadata)
     }
 
     // Reading - Internal
@@ -257,7 +259,7 @@ class ObjectWithNoMetadataTests: XCTestCase {
         reader = Read(readTransaction)
         let items = reader.byKeysInTransaction()(readTransaction)
         XCTAssertEqual(readTransaction.didReadAtIndexes, indexes)
-        XCTAssertEqual(readTransaction.didKeysInCollection!, Person.collection)
+        XCTAssertEqual(readTransaction.didKeysInCollection!, Manager.collection)
         XCTAssertEqual(items.map { $0.identifier }, items.map { $0.identifier })
     }
 
@@ -338,7 +340,7 @@ class ObjectWithNoMetadataTests: XCTestCase {
         configureForReadingMultiple()
         reader = Read(readTransaction)
         let items = reader.all()
-        XCTAssertEqual(readTransaction.didKeysInCollection, Person.collection)
+        XCTAssertEqual(readTransaction.didKeysInCollection, Manager.collection)
         XCTAssertEqual(readTransaction.didReadAtIndexes, indexes)
         XCTAssertEqual(items.map { $0.identifier }, items.map { $0.identifier })
     }
@@ -346,7 +348,7 @@ class ObjectWithNoMetadataTests: XCTestCase {
     func test__reader_with_transaction__all_with_no_items() {
         reader = Read(readTransaction)
         let items = reader.all()
-        XCTAssertEqual(readTransaction.didKeysInCollection, Person.collection)
+        XCTAssertEqual(readTransaction.didKeysInCollection, Manager.collection)
         XCTAssertEqual(readTransaction.didReadAtIndexes, [])
         XCTAssertEqual(items, [])
     }
@@ -439,7 +441,7 @@ class ObjectWithNoMetadataTests: XCTestCase {
         reader = Read(connection)
         let items = reader.all()
         XCTAssertTrue(connection.didRead)
-        XCTAssertEqual(readTransaction.didKeysInCollection, Person.collection)
+        XCTAssertEqual(readTransaction.didKeysInCollection, Manager.collection)
         XCTAssertEqual(readTransaction.didReadAtIndexes, indexes)
         XCTAssertEqual(items.map { $0.identifier }, items.map { $0.identifier })
     }
@@ -448,7 +450,7 @@ class ObjectWithNoMetadataTests: XCTestCase {
         reader = Read(connection)
         let items = reader.all()
         XCTAssertTrue(connection.didRead)
-        XCTAssertEqual(readTransaction.didKeysInCollection, Person.collection)
+        XCTAssertEqual(readTransaction.didKeysInCollection, Manager.collection)
         XCTAssertEqual(readTransaction.didReadAtIndexes, [])
         XCTAssertEqual(items, [])
     }

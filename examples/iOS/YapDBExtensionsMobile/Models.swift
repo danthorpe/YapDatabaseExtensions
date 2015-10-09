@@ -43,6 +43,15 @@ public struct Product: Identifiable, Equatable {
     }
 }
 
+public struct Inventory: Identifiable, Equatable {
+    let product: Product
+    public var metadata: NSNumber? = .None
+
+    public var identifier: Identifier {
+        return product.identifier
+    }
+}
+
 public class Person: NSObject, NSCoding {
 
     public let identifier: Identifier
@@ -102,6 +111,10 @@ public func == (a: Product.Metadata, b: Product.Metadata) -> Bool {
     return a.categoryIdentifier == b.categoryIdentifier
 }
 
+public func == (a: Inventory, b: Inventory) -> Bool {
+    return (a.product == b.product) && (a.metadata == b.metadata)
+}
+
 public func == (a: Person, b: Person) -> Bool {
     return (a.identifier == b.identifier) && (a.name == b.name)
 }
@@ -146,6 +159,13 @@ extension Product: MetadataPersistable {
 
     public static var collection: String {
         return "Products"
+    }
+}
+
+extension Inventory: MetadataPersistable {
+
+    public static var collection: String {
+        return "Inventory"
     }
 }
 
@@ -207,6 +227,16 @@ extension Product: Saveable {
         return Archive(self)
     }
 }
+
+extension Inventory: Saveable {
+
+    public typealias Archive = InventoryArchiver
+
+    public var archive: Archive {
+        return Archive(self)
+    }
+}
+
 
 extension Manager.Metadata: Saveable {
 
@@ -316,6 +346,24 @@ public class ProductArchiver: NSObject, NSCoding, Archiver {
         aCoder.encodeObject(value.barcode.archive, forKey: "barcode")
     }
 }
+
+public class InventoryArchiver: NSObject, NSCoding, Archiver {
+    public let value: Inventory
+
+    public required init(_ v: Inventory) {
+        value = v
+    }
+
+    public required init?(coder aDecoder: NSCoder) {
+        let product = Product.unarchive(aDecoder.decodeObjectForKey("product"))
+        value = Inventory(product: product!, metadata: .None)
+    }
+
+    public func encodeWithCoder(aCoder: NSCoder) {
+        aCoder.encodeObject(value.product.archive, forKey: "product")
+    }
+}
+
 
 public class ManagerMetadataArchiver: NSObject, NSCoding, Archiver {
     public let value: Manager.Metadata
