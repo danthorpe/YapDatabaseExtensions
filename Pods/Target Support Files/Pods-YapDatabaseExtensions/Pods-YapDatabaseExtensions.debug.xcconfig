@@ -1,8 +1,6 @@
 GCC_PREPROCESSOR_DEFINITIONS = $(inherited) COCOAPODS=1
 LD_RUNPATH_SEARCH_PATHS = $(inherited) '@executable_path/Frameworks' '@loader_path/Frameworks'
-OTHER_CFLAGS = $(inherited) -iquote "$CONFIGURATION_BUILD_DIR/BrightFutures.framework/Headers" -iquote "$CONFIGURATION_BUILD_DIR/CocoaLumberjack.framework/Headers" -iquote "$CONFIGURATION_BUILD_DIR/PromiseKit.framework/Headers" -iquote "$CONFIGURATION_BUILD_DIR/Result.framework/Headers" -iquote "$CONFIGURATION_BUILD_DIR/SwiftTask.framework/Headers" -iquote "$CONFIGURATION_BUILD_DIR/YapDatabase.framework/Headers"
-OTHER_LDFLAGS = $(inherited) -framework "BrightFutures" -framework "CocoaLumberjack" -framework "PromiseKit" -framework "Result" -framework "SwiftTask" -framework "YapDatabase"
-OTHER_SWIFT_FLAGS = $(inherited) "-D" "COCOAPODS"
+OTHER_CFLAGS = $(inherited) -iquote "$CONFIGURATION_BUILD_DIR/CocoaLumberjack.framework/Headers" -iquote "$CONFIGURATION_BUILD_DIR/YapDatabase.framework/Headers"
+OTHER_LDFLAGS = $(inherited) -framework "CocoaLumberjack" -framework "YapDatabase"
 PODS_FRAMEWORK_BUILD_PATH = $(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/Pods-YapDatabaseExtensions
 PODS_ROOT = ${SRCROOT}/Pods
-SWIFT_INSTALL_OBJC_HEADER = NO

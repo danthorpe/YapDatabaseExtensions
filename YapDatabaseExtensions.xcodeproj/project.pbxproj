@@ -47,16 +47,10 @@
 		6529ECD21BC82111006748B8 /* ObjectWithValueMetadataTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ObjectWithValueMetadataTests.swift; sourceTree = "<group>"; };
 		6529ECD61BC82570006748B8 /* ValueWithObjectMetadataTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ValueWithObjectMetadataTests.swift; sourceTree = "<group>"; };
 		6529ECD91BC83296006748B8 /* RemovalTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RemovalTests.swift; sourceTree = "<group>"; };
-		652AAFB41B28C43900D40BB0 /* BrightFuturesTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BrightFuturesTests.swift; sourceTree = "<group>"; };
-		652AAFB51B28C43900D40BB0 /* PromiseKitTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PromiseKitTests.swift; sourceTree = "<group>"; };
-		652AAFB61B28C43900D40BB0 /* SwiftTaskTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftTaskTests.swift; sourceTree = "<group>"; };
 		652AAFBA1B28C44E00D40BB0 /* Models.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Models.swift; path = ../examples/iOS/YapDBExtensionsMobile/Models.swift; sourceTree = "<group>"; };
 		655E20D91BC7E73800185160 /* Support.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Support.swift; sourceTree = "<group>"; };
 		655E20DB1BC7EBAF00185160 /* ObjectWithNoMetadataTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ObjectWithNoMetadataTests.swift; sourceTree = "<group>"; };
 		655E20E11BC814C300185160 /* ValueWithValueMetadataTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ValueWithValueMetadataTests.swift; sourceTree = "<group>"; };
-		65EF89F11B28C50F0039FC08 /* BrightFutures.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BrightFutures.swift; sourceTree = "<group>"; };
-		65EF89F31B28C50F0039FC08 /* PromiseKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PromiseKit.swift; sourceTree = "<group>"; };
-		65EF89F51B28C50F0039FC08 /* SwiftTask.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftTask.swift; sourceTree = "<group>"; };
 		65F748C21B28A922007E90B2 /* YapDatabaseExtensions.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = YapDatabaseExtensions.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		65F748C61B28A922007E90B2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		65F748C71B28A922007E90B2 /* YapDatabaseExtensions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = YapDatabaseExtensions.h; sourceTree = "<group>"; };
@@ -119,30 +113,6 @@
 			name = "Reading & Writing";
 			sourceTree = "<group>";
 		};
-		65EF89F01B28C50F0039FC08 /* BrightFutures */ = {
-			isa = PBXGroup;
-			children = (
-				65EF89F11B28C50F0039FC08 /* BrightFutures.swift */,
-			);
-			path = BrightFutures;
-			sourceTree = "<group>";
-		};
-		65EF89F21B28C50F0039FC08 /* PromiseKit */ = {
-			isa = PBXGroup;
-			children = (
-				65EF89F31B28C50F0039FC08 /* PromiseKit.swift */,
-			);
-			path = PromiseKit;
-			sourceTree = "<group>";
-		};
-		65EF89F41B28C50F0039FC08 /* SwiftTask */ = {
-			isa = PBXGroup;
-			children = (
-				65EF89F51B28C50F0039FC08 /* SwiftTask.swift */,
-			);
-			path = SwiftTask;
-			sourceTree = "<group>";
-		};
 		65F748B81B28A922007E90B2 = {
 			isa = PBXGroup;
 			children = (
@@ -167,11 +137,8 @@
 			isa = PBXGroup;
 			children = (
 				65F748C71B28A922007E90B2 /* YapDatabaseExtensions.h */,
-				65EF89F01B28C50F0039FC08 /* BrightFutures */,
 				65F748DE1B28AB77007E90B2 /* Common */,
-				65EF89F21B28C50F0039FC08 /* PromiseKit */,
 				65F748C51B28A922007E90B2 /* Supporting Files */,
-				65EF89F41B28C50F0039FC08 /* SwiftTask */,
 			);
 			path = YapDatabaseExtensions;
 			sourceTree = "<group>";
@@ -187,14 +154,11 @@
 		65F748D11B28A922007E90B2 /* YapDatabaseExtensionsTests */ = {
 			isa = PBXGroup;
 			children = (
-				652AAFB41B28C43900D40BB0 /* BrightFuturesTests.swift */,
 				65F748EA1B28ABE0007E90B2 /* Helpers.swift */,
 				652AAFBA1B28C44E00D40BB0 /* Models.swift */,
-				652AAFB51B28C43900D40BB0 /* PromiseKitTests.swift */,
 				65F748E91B28ABE0007E90B2 /* ReadWriteTests.swift */,
 				6529ECD91BC83296006748B8 /* RemovalTests.swift */,
 				655E20D91BC7E73800185160 /* Support.swift */,
-				652AAFB61B28C43900D40BB0 /* SwiftTaskTests.swift */,
 				65F748D41B28A922007E90B2 /* YapDatabaseExtensionsTests.swift */,
 				6529ECD51BC8211C006748B8 /* Reading & Writing */,
 				65F748D21B28A922007E90B2 /* Supporting Files */,
