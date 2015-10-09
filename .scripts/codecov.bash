@@ -222,13 +222,13 @@ elif [ "$CI" = "true" ] && [ "$BUILDKITE" = "true" ];
 then
   say "==> BuildKit CI detected."
   # http://docs.travis-ci.com/user/ci-environment/#Environment-variables
-  service="buildkite"
+#  service="buildkite"
   branch="$BUILDKITE_BRANCH"
   commit="$BUILDKITE_COMMIT"
-  build="$BUILDKITE_BUILD_NUMBER"
-  pr="$BUILDKITE_PULL_REQUEST"
-  job="$BUILDKITE_BUILD_ID"
-  slug="$BUILDKITE_PROJECT_SLUG"
+#  build="$BUILDKITE_BUILD_NUMBER"
+#  pr="$BUILDKITE_PULL_REQUEST"
+#  job="$BUILDKITE_BUILD_ID"
+#  slug="$BUILDKITE_PROJECT_SLUG"
 
 elif [ "$CI" = "true" ] && [ "$CI_NAME" = "codeship" ];
 then
