@@ -26,7 +26,7 @@ class ValueWithNoMetadataTests: XCTestCase {
     var readTransaction: TestableReadTransaction!
 
     var reader: Read<Barcode, TestableDatabase>!
-    var writer: Write<Barcode, TestableConnection>!
+    var writer: Write<Barcode, TestableDatabase>!
 
     var dispatchQueue: dispatch_queue_t!
     var operationQueue: NSOperationQueue!

@@ -101,7 +101,7 @@ extension Persistable {
     - parameter connection: a type conforming to ConnectionType such as
     YapDatabaseConnection.
     */
-    public static func read(connection: YapDatabaseReadWriteTransaction) -> Read<Self, YapDatabase> {
+    public static func read(connection: YapDatabaseConnection) -> Read<Self, YapDatabase> {
         return Read(connection)
     }
 

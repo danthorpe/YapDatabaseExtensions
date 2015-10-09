@@ -25,7 +25,7 @@ class RemovalTests: XCTestCase {
     var writeTransaction: TestableWriteTransaction!
     var readTransaction: TestableReadTransaction!
 
-    var remover: Remove<TestableConnection>!
+    var remover: Remove<TestableDatabase>!
 
     var dispatchQueue: dispatch_queue_t!
     var operationQueue: NSOperationQueue!

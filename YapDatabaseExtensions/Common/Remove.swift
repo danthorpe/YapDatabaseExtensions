@@ -7,7 +7,7 @@ import Foundation
 import YapDatabase
 
 public protocol Removable {
-    typealias Connection: ConnectionType
+    typealias Database: DatabaseType
 
     var indexes: [YapDB.Index] { get }
 }
@@ -22,9 +22,9 @@ to this wrapped structure will only be available if your
 model types implement the correct protocols to facilitate
 writing to YapDatabase.
 */
-public struct Remove<C: ConnectionType>: Removable {
+public struct Remove<D: DatabaseType>: Removable {
 
-    public typealias Connection = C
+    public typealias Database = D
 
     /// The items which will be written into the database.
     public let indexes: [YapDB.Index]
@@ -76,7 +76,7 @@ extension Persistable {
 
     - returns: a `Remove` value composing the receiver.
     */
-    public static func remove(index: YapDB.Index) -> Remove<YapDatabaseConnection> {
+    public static func remove(index: YapDB.Index) -> Remove<YapDatabase> {
         return Remove(index)
     }
 
@@ -108,7 +108,7 @@ extension Persistable {
 
     - returns: a `Remove` value composing the receiver.
     */
-    public static func remove(key: String) -> Remove<YapDatabaseConnection> {
+    public static func remove(key: String) -> Remove<YapDatabase> {
         return remove(indexWithKey(key))
     }
 
@@ -136,7 +136,7 @@ extension Persistable {
 
     - returns: a `Remove` value composing the receiver.
     */
-    public var remove: Remove<YapDatabaseConnection> {
+    public var remove: Remove<YapDatabase> {
         return Remove(self)
     }
 }
@@ -169,7 +169,7 @@ extension SequenceType where Generator.Element: Persistable {
 
     - returns: a `Remove` value composing the receiver.
     */
-    public var remove: Remove<YapDatabaseConnection> {
+    public var remove: Remove<YapDatabase> {
         return Remove(self)
     }
 }
@@ -203,7 +203,7 @@ extension SequenceType where Generator.Element == YapDB.Index {
 
     - returns: a `Remove` value composing the receiver.
     */
-    public var remove: Remove<YapDatabaseConnection> {
+    public var remove: Remove<YapDatabase> {
         return Remove(self)
     }
 }
@@ -218,7 +218,7 @@ extension Removable {
 
     - parameter transaction: a YapDatabaseReadWriteTransaction
     */
-    public func on(transaction: Connection.WriteTransaction) {
+    public func on(transaction: Database.Connection.WriteTransaction) {
         indexes.forEach { transaction.removeAtIndex($0) }
     }
 
@@ -227,7 +227,7 @@ extension Removable {
 
     - parameter connection: a YapDatabaseConnection
     */
-    public func sync(connection: Connection) {
+    public func sync(connection: Database.Connection) {
         connection.write(on)
     }
 
@@ -236,7 +236,7 @@ extension Removable {
 
     - parameter connection: a YapDatabaseConnection
     */
-    public func async(connection: Connection, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: dispatch_block_t) {
+    public func async(connection: Database.Connection, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: dispatch_block_t) {
         connection.asyncWrite(on, queue: queue, completion: completion)
     }
 
@@ -245,7 +245,7 @@ extension Removable {
 
     - parameter connection: a YapDatabaseConnection
     */
-    public func operation(connection: Connection) -> NSOperation {
+    public func operation(connection: Database.Connection) -> NSOperation {
         return connection.writeBlockOperation { self.on($0) }
     }
 

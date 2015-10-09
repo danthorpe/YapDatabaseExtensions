@@ -8,537 +8,158 @@ import XCTest
 import YapDatabase
 @testable import YapDatabaseExtensions
 
-class BaseTestCase: XCTestCase {
+class ReadWriteBaseTests: XCTestCase {
 
-    let person = Person(id: "user-123", name: "Robbie")
+    var item: Employee!
+    var index: YapDB.Index!
+    var key: String!
 
-    var personIndex: YapDB.Index {
-        return person.index
+    var items: [Employee]!
+    var indexes: [YapDB.Index]!
+    var keys: [String]!
+
+    override func setUp() {
+        super.setUp()
+        createPersistables()
+        index = item.index
+        key = item.key
+
+        indexes = items.map { $0.index }
+        keys = items.map { $0.key }
     }
 
-    var personKey: String {
-        return person.key
+    override func tearDown() {
+        item = nil
+        index = nil
+        key = nil
+        items = nil
+        indexes = nil
+        keys = nil
+        super.tearDown()
     }
 
-
-    let barcode: Barcode = .QRCode("I have no idea what the string of a QR Code might look like")
-
-    var barcodeIndex: YapDB.Index {
-        return barcode.index
-    }
-
-    var barcodeKey: String {
-        return barcode.key
-    }
-
-    let product = Product(metadata: Product.Metadata(categoryIdentifier: 1), identifier: "cocoa-123", name: "CocoaPops", barcode: .UPCA(1, 2, 3, 4))
-
-    var productIndex: YapDB.Index {
-        return product.index
-    }
-
-    var productKey: String {
-        return product.key
-    }
-
-    var people: [Person] {
-        return [
-            Person(id: "beatle-1", name: "John"),
-            Person(id: "beatle-2", name: "Paul"),
-            Person(id: "beatle-3", name: "George"),
-            Person(id: "beatle-4", name: "Ringo")
+    func createPersistables() {
+        item = Employee(id: "beatle-1", name: "John")
+        item.metadata = NSDate()
+        items = [
+            item,
+            Employee(id: "beatle-2", name: "Paul"),
+            Employee(id: "beatle-3", name: "George"),
+            Employee(id: "beatle-4", name: "Ringo")
         ]
+        items.suffixFrom(1).forEach { $0.metadata = NSDate() }
     }
 
-    var peopleIndexes: [YapDB.Index] {
-        return people.map { $0.index }
-    }
-
-    var peopleKeys: [String] {
-        return people.map { $0.key }
-    }
-
-    func barcodes() -> Set<Barcode> {
-        return [
-            .QRCode("I have no idea what the string of a QR Code might look like"),
-            .QRCode("This could honestly be what it looks like."),
-            .UPCA(1, 2, 3, 5),
-            .UPCA(8, 13, 21, 34)
-        ]
+    func writeItemsToDatabase(db: YapDatabase) {
+        items.write.sync(db.makeNewConnection())
     }
 }
 
-class SynchronousReadWriteTests: BaseTestCase {
+class ReadTests: ReadWriteBaseTests {
 
-    // Non Existing
+    var reader: Read<Employee, YapDatabase>!
 
-    func test__non_existing__object__by_index() {
-        let db = YapDB.testDatabaseForFile(__FILE__, test: __FUNCTION__)
-        XCTAssertNil(Person.read(db).atIndex(personIndex))
-    }
-
-    func test__non_existing__object__by_key() {
-        let db = YapDB.testDatabaseForFile(__FILE__, test: __FUNCTION__)
-        XCTAssertNil(Person.read(db).byKey(personKey))
-    }
-
-    func test__non_existing__value__by_index() {
-        let db = YapDB.testDatabaseForFile(__FILE__, test: __FUNCTION__)
-        XCTAssertNil(Barcode.read(db).atIndex(barcodeIndex))
-    }
-
-    func test__non_existing__value__by_key() {
-        let db = YapDB.testDatabaseForFile(__FILE__, test: __FUNCTION__)
-        XCTAssertNil(Barcode.read(db).byKey(barcodeKey))
-    }
-
-    func test__non_existing__value_with_value_metadata_by_index() {
-        let db = YapDB.testDatabaseForFile(__FILE__, test: __FUNCTION__)
-        XCTAssertNil(Product.read(db).atIndex(productIndex))
-    }
-
-    func test__non_existing__value_with_value_metadata_by_key() {
-        let db = YapDB.testDatabaseForFile(__FILE__, test: __FUNCTION__)
-        XCTAssertNil(Product.read(db).byKey(productKey))
-    }
-
-
-    // Single
-
-    func test__single__object_no_metadata__by_index() {
-        let db = YapDB.testDatabaseForFile(__FILE__, test: __FUNCTION__)
-        person.write.to(db)
-        guard let saved = Person.read(db).atIndex(personIndex) else {
-            XCTFail("Object not found in database")
-            return
+    func test__initialize_with_transaction() {
+        let db = YapDB.testDatabase()
+        let connection = db.makeNewConnection()
+        connection.readWithBlock { transaction in
+            self.reader = Read(transaction)
+            XCTAssertNotNil(self.reader)
         }
-        XCTAssertEqual(saved.identifier, person.identifier)
-        XCTAssertEqual(saved.name, person.name)
     }
 
-    func test__single__object_no_metadata__by_key() {
-        let db = YapDB.testDatabaseForFile(__FILE__, test: __FUNCTION__)
-        person.write.to(db)
-        guard let saved = Person.read(db).byKey(personKey) else {
-            XCTFail("Object not found in database")
-            return
+    func test__initialize_with_connection() {
+        let db = YapDB.testDatabase()
+        reader = Read(db.makeNewConnection())
+        XCTAssertNotNil(reader)
+        XCTAssertNil(reader.transaction)
+        XCTAssertNotNil(reader.connection)
+    }
+
+    func test__initialize_with_database() {
+        let db = YapDB.testDatabase()
+        reader = Read(db)
+        XCTAssertNotNil(reader)
+        XCTAssertNil(reader.transaction)
+        XCTAssertNotNil(reader.connection)
+    }
+
+    func test__getting_reader_from_persistable_with_transaction() {
+        let db = YapDB.testDatabase()
+        let connection = db.makeNewConnection()
+        connection.readWithBlock { transaction in
+            self.reader = Employee.read(transaction)
+            XCTAssertNotNil(self.reader)
         }
-        XCTAssertEqual(saved.identifier, person.identifier)
-        XCTAssertEqual(saved.name, person.name)
     }
 
-    func test__single__value_no_metadata__by_index() {
-        let db = YapDB.testDatabaseForFile(__FILE__, test: __FUNCTION__)
-        barcode.write.to(db)
-        guard let saved = Barcode.read(db).atIndex(barcodeIndex) else {
-            XCTFail("Object not found in database")
-            return
-        }
-        XCTAssertEqual(saved, barcode)
+    func test__getting_reader_from_persistable_with_connection() {
+        let db = YapDB.testDatabase()
+        reader = Employee.read(db.newConnection())
+        XCTAssertNotNil(reader)
+        XCTAssertNil(reader.transaction)
+        XCTAssertNotNil(reader.connection)
     }
 
-    func test__single__value_no_metadata__by_key() {
-        let db = YapDB.testDatabaseForFile(__FILE__, test: __FUNCTION__)
-        barcode.write.to(db)
-        guard let saved = Barcode.read(db).byKey(barcodeKey) else {
-            XCTFail("Object not found in database")
-            return
-        }
-        XCTAssertEqual(saved, barcode)
-    }
-
-    func test__single__value_with_value_metadata__by_index() {
-        let db = YapDB.testDatabaseForFile(__FILE__, test: __FUNCTION__)
-        product.write.to(db)
-        guard let saved = Product.read(db).atIndex(productIndex) else {
-            XCTFail("Object not found in database")
-            return
-        }
-        XCTAssertEqual(saved, product)
-    }
-
-    func test__single__value_with_value_metadata__by_key() {
-        let db = YapDB.testDatabaseForFile(__FILE__, test: __FUNCTION__)
-        product.write.to(db)
-        guard let saved = Product.read(db).byKey(productKey) else {
-            XCTFail("Object not found in database")
-            return
-        }
-        XCTAssertEqual(saved, product)
-    }
-
-
-    // Many
-
-    func test__many__object_no_metadata__by_indexes() {
-        let db = YapDB.testDatabaseForFile(__FILE__, test: __FUNCTION__)
-        people.write.to(db)
-        let saved = Person.read(db).atIndexes(peopleIndexes)
-        XCTAssertEqual(saved.count, people.count)
-    }
-
-
-}
-
-
-
-/*
-class SynchronousReadWriteTests: BaseTestCase {
-
-    func test_ReadingNonexisting_Object_ByIndex() {
-        let db = YapDB.testDatabaseForFile(__FILE__, test: __FUNCTION__)
-        let read: Person? = db.readAtIndex(person.index)
-        XCTAssertNil(read, "In an empty database, this should return nil.")
-    }
-
-    func test_ReadingNonexisting_Value_ByIndex() {
-        let db = YapDB.testDatabaseForFile(__FILE__, test: __FUNCTION__)
-        let read: Barcode? = db.readAtIndex(barcode.index)
-        XCTAssertTrue(read == nil, "In an empty database, this should return nil.")
-    }
-
-    func test_ReadingNonexisting_Object_ByKey() {
-        let db = YapDB.testDatabaseForFile(__FILE__, test: __FUNCTION__)
-        let read: Person? = db.read(person.key)
-        XCTAssertNil(read, "In an empty database, this should return nil.")
-    }
-
-    func test_ReadingNonexisting_Value_ByKey() {
-        let db = YapDB.testDatabaseForFile(__FILE__, test: __FUNCTION__)
-        let read: Barcode? = db.read(barcode.key)
-        XCTAssertTrue(read == nil, "In an empty database, this should return nil.")
-    }
-
-    func test_ReadingNonexisting_Metadata_ByIndex() {
-        let db = YapDB.testDatabaseForFile(__FILE__, test: __FUNCTION__)
-        let metadata: Product.Metadata? = db.readMetadataAtIndex(product.index)
-        XCTAssertTrue(metadata == nil, "In an empty database, this should return nil.")
-    }
-
-    func test_ReadingAndWriting_Object() {
-        let db = YapDB.testDatabaseForFile(__FILE__, test: __FUNCTION__)
-        let saved = db.write(person)
-//        validateWrite(db.write(person), original: person, usingDatabase: db)
-        XCTAssertEqual(saved.identifier, self.person.identifier)
-        XCTAssertEqual(saved.name, self.person.name)
-    }
-
-    func test_ReadingAndWriting_Value() {
-        let db = YapDB.testDatabaseForFile(__FILE__, test: __FUNCTION__)
-        validateWrite(db.write(barcode), original: barcode, usingDatabase: db)
-    }
-
-    func test_ReadingAndWriting_ValueWithValueMetadata() {
-        let db = YapDB.testDatabaseForFile(__FILE__, test: __FUNCTION__)
-        validateWrite(db.write(product), original: product, usingDatabase: db)
-    }
-
-    func test_ReadingAndWriting_ManyObjects() {
-        let db = YapDB.testDatabaseForFile(__FILE__, test: __FUNCTION__)
-
-        let objects = people()
-        db.write(objects)
-
-        let read: [Person] = db.readAll()
-        XCTAssertEqual(read.count, objects.count)
-    }
-
-    func test_ReadingAndWriting_ManyValues() {
-        let db = YapDB.testDatabaseForFile(__FILE__, test: __FUNCTION__)
-
-        let values = barcodes()
-        db.write(values)
-
-        let read: Set<Barcode> = Set(db.readAll())
-        XCTAssertEqual(values, read, "Expecting all keys in collection to return all items.")
-    }
-
-    func test_ReadingAnyWriting_ManyObjects_SomeNonexistent() {
-        let db = YapDB.testDatabaseForFile(__FILE__, test: __FUNCTION__)
-
-        let objects = people()
-        db.write(objects)
-
-        var keys = objects.map(keyForPersistable)
-        keys += ["beatle-4", "beatle-5"]
-
-        XCTAssertEqual(keys.count, objects.count + 2, "We should be attempting to read more keys than are stored in the database")
-
-        let read: [Person] = db.read(keys)
-        XCTAssertEqual(read.count, objects.count)
-    }
-
-    func test_ReadingAnyWriting_ManyValues_SomeNonexistent() {
-        let db = YapDB.testDatabaseForFile(__FILE__, test: __FUNCTION__)
-
-        let values = barcodes()
-        db.write(values)
-
-        var keys = values.map(keyForPersistable)
-        keys += ["some other barcode", "and another one"]
-
-        XCTAssertEqual(keys.count, values.count + 2, "We should be attempting to read more keys than are stored in the database")
-
-        let read: Set<Barcode> = Set(db.read(keys))
-        XCTAssertEqual(values, read, "Expecting all keys in collection to return all items.")
+    func test__getting_reader_from_persistable_with_database() {
+        let db = YapDB.testDatabase()
+        reader = Employee.read(db)
+        XCTAssertNotNil(reader)
+        XCTAssertNil(reader.transaction)
+        XCTAssertNotNil(reader.connection)
     }
 }
 
-class AsynchronousWriteTests: BaseTestCase {
+class WriteTests: ReadWriteBaseTests {
 
-    func test_Writing_Object() {
-        let db = YapDB.testDatabaseForFile(__FILE__, test: __FUNCTION__)
-        let expectation = expectationWithDescription("Finished async writing of object.")
+    var writer: Write<Employee, YapDatabase>!
 
-        db.asyncWrite(person) {
-//            validateWrite($0, original: self.person, usingDatabase: db)
-            XCTAssertEqual($0.identifier, self.person.identifier)
-            XCTAssertEqual($0.name, self.person.name)
-            expectation.fulfill()
-        }
-
-        waitForExpectationsWithTimeout(5.0, handler: nil)
+    func test__initializing_with_single_item() {
+        writer = item.write
+        XCTAssertNotNil(writer)
+        XCTAssertEqual(writer.items.first!.identifier, item.identifier)
     }
 
-    func test_Writing_Value() {
-        let db = YapDB.testDatabaseForFile(__FILE__, test: __FUNCTION__)
-        let expectation = expectationWithDescription("Finished async writing of value.")
-
-        db.asyncWrite(barcode) {
-            validateWrite($0, original: self.barcode, usingDatabase: db)
-            expectation.fulfill()
-        }
-
-        waitForExpectationsWithTimeout(5.0, handler: nil)
-    }
-
-    func test_Writing_ValueWithValueMetadata() {
-        let db = YapDB.testDatabaseForFile(__FILE__, test: __FUNCTION__)
-        let expectation = expectationWithDescription("Finished async writing of value with value metadata.")
-
-        db.asyncWrite(product) {
-            validateWrite($0, original: self.product, usingDatabase: db)
-            expectation.fulfill()
-        }
-
-        waitForExpectationsWithTimeout(5.0, handler: nil)
+    func test__initializing_with_multiple_items() {
+        writer = items.write
+        XCTAssertNotNil(writer)
+        XCTAssertEqual(writer.items, items)
     }
 }
 
-class AsynchronousReadTests: BaseTestCase {
+class RemoveTests: ReadWriteBaseTests {
 
-    func test_Reading_Index_Value() {
-        let db = YapDB.testDatabaseForFile(__FILE__, test: __FUNCTION__)
-        let expectation = expectationWithDescription("Finished async reading of value at index.")
+    var remover: Remove<YapDatabase>!
 
-        db.write(barcode)
-        db.asyncReadAtIndex(barcode.index) { (saved: Barcode?) -> Void in
-            XCTAssertTrue(saved != nil, "There should be an item returned.")
-            validateWrite(saved!, original: self.barcode, usingDatabase: db)
-            expectation.fulfill()
-        }
-
-        waitForExpectationsWithTimeout(5.0, handler: nil)
+    func test__initializing_with_single_item() {
+        remover = item.remove
+        XCTAssertNotNil(remover)
+        XCTAssertEqual(remover.indexes.first!, index)
     }
 
-    func test_Reading_Index_Object() {
-        let db = YapDB.testDatabaseForFile(__FILE__, test: __FUNCTION__)
-        let expectation = expectationWithDescription("Finished async reading of object at index")
-
-        db.write(person)
-        db.asyncReadAtIndex(person.index) { (saved: Person?) -> Void in
-            XCTAssertTrue(saved != nil, "There should be an item returned.")
-            expectation.fulfill()
-        }
-
-        waitForExpectationsWithTimeout(5.0, handler: nil)
+    func test__initializing_with_multiple_items() {
+        remover = items.remove
+        XCTAssertNotNil(remover)
+        XCTAssertEqual(remover.indexes, indexes)
     }
 
-    func test_Reading_Value() {
-        let db = YapDB.testDatabaseForFile(__FILE__, test: __FUNCTION__)
-        let expectation = expectationWithDescription("Finished async reading of value by key.")
-
-        db.write(barcode)
-        db.asyncRead(barcode.key) { (read: Barcode?) in
-            XCTAssertTrue(read != nil, "There should be an object in the database.")
-            XCTAssertEqual(read!, self.barcode, "The value returned from a save value function should equal the argument.")
-            expectation.fulfill()
-        }
-
-        waitForExpectationsWithTimeout(5.0, handler: nil)
+    func test__initializing_with_single_index() {
+        remover = Employee.remove(index)
+        XCTAssertNotNil(remover)
+        XCTAssertEqual(remover.indexes.first!, index)
     }
 
-    func test_Reading_Object() {
-        let db = YapDB.testDatabaseForFile(__FILE__, test: __FUNCTION__)
-        let expectation = expectationWithDescription("Finished async reading of object by key.")
-
-        db.write(person)
-        db.asyncRead(person.key) { (read: Person?) in
-            XCTAssertTrue(read != nil, "There should be an object in the database.")
-            XCTAssertEqual(read!.identifier, self.person.identifier)
-            XCTAssertEqual(read!.name, self.person.name)
-            expectation.fulfill()            
-        }
-
-        waitForExpectationsWithTimeout(5.0, handler: nil)
+    func test__initializing_with_single_key() {
+        remover = Employee.remove(key)
+        XCTAssertNotNil(remover)
+        XCTAssertEqual(remover.indexes.first!, index)
     }
 
-    func test_Reading_Values() {
-        let db = YapDB.testDatabaseForFile(__FILE__, test: __FUNCTION__)
-        let expectation = expectationWithDescription("Finished async reading of value by key.")
-
-        let values = barcodes()
-        db.write(values)
-
-        db.asyncRead(values.map(keyForPersistable)) { (read: [Barcode]) in
-            XCTAssertEqual(values, Set(read), "Expecting all keys in collection to return all items.")
-            expectation.fulfill()
-        }
-
-        waitForExpectationsWithTimeout(5.0, handler: nil)
-    }
-
-    func test_Reading_Objects() {
-        let db = YapDB.testDatabaseForFile(__FILE__, test: __FUNCTION__)
-        let expectation = expectationWithDescription("Finished async reading of object by key.")
-
-        let objects = people()
-        db.write(objects)
-
-        db.asyncRead(objects.map(keyForPersistable)) { (read: [Person]) in
-            XCTAssertEqual(objects.count, read.count, "Expecting all keys in collection to return all items.")
-            expectation.fulfill()
-        }
-
-        waitForExpectationsWithTimeout(5.0, handler: nil)
-    }
-
-    func test_ReadingAll_Values() {
-        let db = YapDB.testDatabaseForFile(__FILE__, test: __FUNCTION__)
-        let expectation = expectationWithDescription("Finished async reading of all values.")
-
-        let values = barcodes()
-        db.write(values)
-
-        db.asyncReadAll() { (read: [Barcode]) in
-            XCTAssertEqual(values, Set(read), "Expecting all keys in collection to return all items.")
-            expectation.fulfill()
-        }
-
-        waitForExpectationsWithTimeout(5.0, handler: nil)
-    }
-
-    func test_ReadingAll_Objects() {
-        let db = YapDB.testDatabaseForFile(__FILE__, test: __FUNCTION__)
-        let expectation = expectationWithDescription("Finished async reading of all values.")
-
-        let objects = people()
-        db.write(objects)
-
-        db.asyncReadAll() { (read: [Person]) in
-            XCTAssertEqual(objects.map { $0.identifier }, read.map { $0.identifier })
-            XCTAssertEqual(objects.map { $0.name }, read.map { $0.name })
-            expectation.fulfill()
-        }
-
-        waitForExpectationsWithTimeout(5.0, handler: nil)
+    func test__initializing_with_multiple_indexes() {
+        remover = indexes.remove
+        XCTAssertNotNil(remover)
+        XCTAssertEqual(remover.indexes, indexes)
     }
 }
-
-class SynchronousRemoveTests: BaseTestCase {
-
-    func test_RemoveAtIndex() {
-        let db = YapDB.testDatabaseForFile(__FILE__, test: __FUNCTION__)
-
-        db.write(barcode)
-        XCTAssertEqual((db.readAll() as [Barcode]).count, 1, "There should be one barcodes in the database.")
-
-        db.removeAtIndex(barcode.index)
-        XCTAssertEqual((db.readAll() as [Barcode]).count, 0, "There should be no barcodes in the database.")
-    }
-
-    func testSynchronous_RemoveAtIndexes() {
-        let db = YapDB.testDatabaseForFile(__FILE__, test: __FUNCTION__)
-
-        let _barcodes = barcodes()
-        db.write(_barcodes)
-        XCTAssertEqual((db.readAll() as [Barcode]).count, _barcodes.count, "There should be one barcodes in the database.")
-
-        db.removeAtIndexes(_barcodes.map(indexForPersistable))
-        XCTAssertEqual((db.readAll() as [Barcode]).count, 0, "There should be no barcodes in the database.")
-    }
-
-    func test_RemovePersistable() {
-        let db = YapDB.testDatabaseForFile(__FILE__, test: __FUNCTION__)
-
-        db.write(barcode)
-        XCTAssertEqual((db.readAll() as [Barcode]).count, 1, "There should be one barcodes in the database.")
-
-        db.remove(barcode)
-        XCTAssertEqual((db.readAll() as [Barcode]).count, 0, "There should be no barcodes in the database.")
-    }
-
-    func test_RemovePersistables() {
-        let db = YapDB.testDatabaseForFile(__FILE__, test: __FUNCTION__)
-
-        let _barcodes = barcodes()
-        db.write(_barcodes)
-        XCTAssertEqual((db.readAll() as [Barcode]).count, _barcodes.count, "There should be one barcodes in the database.")
-
-        db.remove(_barcodes)
-        XCTAssertEqual((db.readAll() as [Barcode]).count, 0, "There should be no barcodes in the database.")
-    }
-}
-
-class AsynchronousRemoveTests: BaseTestCase {
-
-    func test_RemoveAtIndex() {
-        let db = YapDB.testDatabaseForFile(__FILE__, test: __FUNCTION__)
-        let expectation = expectationWithDescription("Finished async writing of object.")
-
-        db.write(barcode)
-        XCTAssertEqual((db.readAll() as [Barcode]).count, 1, "There should be one barcodes in the database.")
-
-        db.asyncRemoveAtIndex(barcode.index) {
-            XCTAssertEqual((db.readAll() as [Barcode]).count, 0, "There should be no barcodes in the database.")
-            expectation.fulfill()
-        }
-
-        waitForExpectationsWithTimeout(5.0, handler: nil)
-    }
-
-    func test_RemovePersistable() {
-        let db = YapDB.testDatabaseForFile(__FILE__, test: __FUNCTION__)
-        let expectation = expectationWithDescription("Finished async writing of object.")
-
-        db.write(barcode)
-        XCTAssertEqual((db.readAll() as [Barcode]).count, 1, "There should be one barcodes in the database.")
-
-        db.asyncRemove(barcode) {
-            XCTAssertEqual((db.readAll() as [Barcode]).count, 0, "There should be no barcodes in the database.")
-            expectation.fulfill()
-        }
-
-        waitForExpectationsWithTimeout(5.0, handler: nil)
-    }
-
-    func test_RemovePersistables() {
-        let db = YapDB.testDatabaseForFile(__FILE__, test: __FUNCTION__)
-        let expectation = expectationWithDescription("Finished async writing of object.")
-
-        let _people = people()
-        db.write(_people)
-        XCTAssertEqual((db.readAll() as [Person]).count, _people.count, "There should be \(_people.count) Person in the database.")
-
-        db.asyncRemove(_people) {
-            XCTAssertEqual((db.readAll() as [Person]).count, 0, "There should be no Person in the database.")
-            expectation.fulfill()
-        }
-
-        waitForExpectationsWithTimeout(5.0, handler: nil)
-    }
-}
-*/
-
 
 

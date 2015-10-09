@@ -29,7 +29,7 @@ public struct YapDB {
                 return "\(name)-\(suffix).sqlite"
             }
             return "\(name).sqlite"
-            }()
+        }()
 
         return (directory as NSString).stringByAppendingPathComponent(filename)
     }
@@ -105,7 +105,7 @@ public struct YapDB {
     
     - returns: the YapDatabase instance.
     */
-    public static func testDatabaseForFile(file: String, test: String, operations: DatabaseOperationsBlock? = .None) -> YapDatabase {
+    public static func testDatabase(file: String = __FILE__, test: String = __FUNCTION__, operations: DatabaseOperationsBlock? = .None) -> YapDatabase {
         let path = pathToDatabase(.CachesDirectory, name: (file as NSString).lastPathComponent, suffix: test.stringByTrimmingCharactersInSet(NSCharacterSet(charactersInString: "()")))
         assert(!path.isEmpty, "Path should not be empty.")
         do {
@@ -202,12 +202,15 @@ extension Persistable {
     /**
     Convenience static function to get an array of indexes for an
     array of keys with this type's collection.
+    
+    - warning: This function will remove any duplicated keys and
+    the order of the indexes is not guaranteed to match the keys.
 
     - parameter keys: a sequence of `String`s
     - returns: an array of `YapDB.Index` values.
     */
     public static func indexesWithKeys<Keys: SequenceType where Keys.Generator.Element == String>(keys: Keys) -> [YapDB.Index] {
-        return keys.map { YapDB.Index(collection: collection, key: $0) }
+        return Set(keys).map { YapDB.Index(collection: collection, key: $0) }
     }
 
     /**
@@ -385,16 +388,11 @@ extension Saveable where ArchiverType: NSCoding, ArchiverType.ValueType == Self 
     }
 
     public static func archive(values: [Self]) -> [AnyObject] {
-        return values.map { $0.archive }
+        return ArchiverType.archive(values)
     }
 
-    /// The archive(r)
-    public var archive: ArchiverType {
-        return ArchiverType(self)
-    }
-
-    public init?(_ object: AnyObject?) {
-        if let tmp = ArchiverType.unarchive(object) {
+    public init?(_ archive: AnyObject?) {
+        if let tmp = ArchiverType.unarchive(archive) {
             self = tmp
         }
         else {
@@ -414,13 +412,6 @@ extension SequenceType where Generator.Element: Saveable {
 
     public var archives: [Generator.Element.ArchiverType] {
         return map { $0.archive }
-    }
-}
-
-extension SequenceType where Generator.Element: Hashable {
-
-    public func unique() -> [Generator.Element] {
-        return Array(Set(self))
     }
 }
 

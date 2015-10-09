@@ -10,7 +10,7 @@ import YapDatabase
 
 public protocol Writable {
     typealias ItemType
-    typealias Connection: ConnectionType
+    typealias Database: DatabaseType
 
     var items: [ItemType] { get }
 }
@@ -25,9 +25,9 @@ to this wrapped structure will only be available if your
 model types implement the correct protocols to facilitate
 writing to YapDatabase.
 */
-public struct Write<Item, C: ConnectionType>: Writable {
+public struct Write<Item, D: DatabaseType>: Writable {
 
-    public typealias Connection = C
+    public typealias Database = D
 
     /// The items which will be written into the database.
     public let items: [Item]
@@ -69,7 +69,7 @@ extension Persistable {
 
     - returns: a `Write` value composing the receiver.
     */
-    public var write: Write<Self, YapDatabaseConnection> {
+    public var write: Write<Self, YapDatabase> {
         return Write(self)
     }
 }
@@ -104,7 +104,7 @@ extension SequenceType where Generator.Element: Persistable {
 
     - returns: a `Write` value composing the receiver.
     */
-    public var write: Write<Generator.Element, YapDatabaseConnection> {
+    public var write: Write<Generator.Element, YapDatabase> {
         return Write(self)
     }
 }
@@ -121,7 +121,7 @@ extension Writable
     
     - parameter transaction: a YapDatabaseReadWriteTransaction
     */
-    public func on(transaction: Connection.WriteTransaction) {
+    public func on(transaction: Database.Connection.WriteTransaction) {
         items.forEach { transaction.writeAtIndex($0.index, object: $0, metadata: .None) }
     }
 
@@ -130,7 +130,7 @@ extension Writable
 
     - parameter connection: a YapDatabaseConnection
     */
-    public func sync(connection: Connection) {
+    public func sync(connection: Database.Connection) {
         connection.write(on)
     }
 
@@ -139,7 +139,7 @@ extension Writable
 
     - parameter connection: a YapDatabaseConnection
     */
-    public func async(connection: Connection, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: dispatch_block_t) {
+    public func async(connection: Database.Connection, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: dispatch_block_t) {
         connection.asyncWrite(on, queue: queue, completion: completion)
     }
 
@@ -148,7 +148,7 @@ extension Writable
 
     - parameter connection: a YapDatabaseConnection
     */
-    public func operation(connection: Connection) -> NSOperation {
+    public func operation(connection: Database.Connection) -> NSOperation {
         return connection.writeBlockOperation { self.on($0) }
     }
 }
@@ -166,7 +166,7 @@ extension Writable
 
     - parameter transaction: a YapDatabaseReadWriteTransaction
     */
-    public func on(transaction: Connection.WriteTransaction) {
+    public func on(transaction: Database.Connection.WriteTransaction) {
         items.forEach { transaction.writeAtIndex($0.index, object: $0, metadata: $0.metadata) }
     }
 
@@ -175,7 +175,7 @@ extension Writable
 
     - parameter connection: a YapDatabaseConnection
     */
-    public func sync(connection: Connection) {
+    public func sync(connection: Database.Connection) {
         connection.write(on)
     }
 
@@ -184,7 +184,7 @@ extension Writable
 
     - parameter connection: a YapDatabaseConnection
     */
-    public func async(connection: Connection, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: dispatch_block_t) {
+    public func async(connection: Database.Connection, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: dispatch_block_t) {
         connection.asyncWrite(on, queue: queue, completion: completion)
     }
 
@@ -193,7 +193,7 @@ extension Writable
 
     - parameter connection: a YapDatabaseConnection
     */
-    public func operation(connection: Connection) -> NSOperation {
+    public func operation(connection: Database.Connection) -> NSOperation {
         return connection.writeBlockOperation { self.on($0) }
     }
 }
@@ -213,7 +213,7 @@ extension Writable
 
     - parameter transaction: a YapDatabaseReadWriteTransaction
     */
-    public func on(transaction: Connection.WriteTransaction) {
+    public func on(transaction: Database.Connection.WriteTransaction) {
         items.forEach { transaction.writeAtIndex($0.index, object: $0, metadata: $0.metadata?.archive) }
     }
 
@@ -222,7 +222,7 @@ extension Writable
 
     - parameter connection: a YapDatabaseConnection
     */
-    public func sync(connection: Connection) {
+    public func sync(connection: Database.Connection) {
         connection.write(on)
     }
 
@@ -231,7 +231,7 @@ extension Writable
 
     - parameter connection: a YapDatabaseConnection
     */
-    public func async(connection: Connection, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: dispatch_block_t) {
+    public func async(connection: Database.Connection, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: dispatch_block_t) {
         connection.asyncWrite(on, queue: queue, completion: completion)
     }
 
@@ -240,7 +240,7 @@ extension Writable
 
     - parameter connection: a YapDatabaseConnection
     */
-    public func operation(connection: Connection) -> NSOperation {
+    public func operation(connection: Database.Connection) -> NSOperation {
         return connection.writeBlockOperation { self.on($0) }
     }
 }
@@ -259,7 +259,7 @@ extension Writable
 
     - parameter transaction: a YapDatabaseReadWriteTransaction
     */
-    public func on(transaction: Connection.WriteTransaction) {
+    public func on(transaction: Database.Connection.WriteTransaction) {
         items.forEach { transaction.writeAtIndex($0.index, object: $0.archive, metadata: .None) }
     }
 
@@ -268,7 +268,7 @@ extension Writable
 
     - parameter connection: a YapDatabaseConnection
     */
-    public func sync(connection: Connection) {
+    public func sync(connection: Database.Connection) {
         connection.write(on)
     }
 
@@ -277,7 +277,7 @@ extension Writable
 
     - parameter connection: a YapDatabaseConnection
     */
-    public func async(connection: Connection, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: dispatch_block_t) {
+    public func async(connection: Database.Connection, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: dispatch_block_t) {
         connection.asyncWrite(on, queue: queue, completion: completion)
     }
 
@@ -286,7 +286,7 @@ extension Writable
 
     - parameter connection: a YapDatabaseConnection
     */
-    public func operation(connection: Connection) -> NSOperation {
+    public func operation(connection: Database.Connection) -> NSOperation {
         return connection.writeBlockOperation { self.on($0) }
     }
 }
@@ -306,7 +306,7 @@ extension Writable
 
     - parameter transaction: a YapDatabaseReadWriteTransaction
     */
-    public func on(transaction: Connection.WriteTransaction) {
+    public func on(transaction: Database.Connection.WriteTransaction) {
         items.forEach { transaction.writeAtIndex($0.index, object: $0.archive, metadata: $0.metadata) }
     }
 
@@ -315,7 +315,7 @@ extension Writable
 
     - parameter connection: a YapDatabaseConnection
     */
-    public func sync(connection: Connection) {
+    public func sync(connection: Database.Connection) {
         connection.write(on)
     }
 
@@ -324,7 +324,7 @@ extension Writable
 
     - parameter connection: a YapDatabaseConnection
     */
-    public func async(connection: Connection, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: dispatch_block_t) {
+    public func async(connection: Database.Connection, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: dispatch_block_t) {
         connection.asyncWrite(on, queue: queue, completion: completion)
     }
 
@@ -333,7 +333,7 @@ extension Writable
 
     - parameter connection: a YapDatabaseConnection
     */
-    public func operation(connection: Connection) -> NSOperation {
+    public func operation(connection: Database.Connection) -> NSOperation {
         return connection.writeBlockOperation { self.on($0) }
     }
 }
@@ -355,7 +355,7 @@ extension Writable
 
     - parameter transaction: a YapDatabaseReadWriteTransaction
     */
-    public func on(transaction: Connection.WriteTransaction) {
+    public func on(transaction: Database.Connection.WriteTransaction) {
         items.forEach { transaction.writeAtIndex($0.index, object: $0.archive, metadata: $0.metadata?.archive) }
     }
 
@@ -364,7 +364,7 @@ extension Writable
 
     - parameter connection: a YapDatabaseConnection
     */
-    public func sync(connection: Connection) {
+    public func sync(connection: Database.Connection) {
         connection.write(on)
     }
 
@@ -373,7 +373,7 @@ extension Writable
 
     - parameter connection: a YapDatabaseConnection
     */
-    public func async(connection: Connection, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: dispatch_block_t) {
+    public func async(connection: Database.Connection, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: dispatch_block_t) {
         connection.asyncWrite(on, queue: queue, completion: completion)
     }
 
@@ -382,7 +382,7 @@ extension Writable
 
     - parameter connection: a YapDatabaseConnection
     */
-    public func operation(connection: Connection) -> NSOperation {
+    public func operation(connection: Database.Connection) -> NSOperation {
         return connection.writeBlockOperation { self.on($0) }
     }
 }

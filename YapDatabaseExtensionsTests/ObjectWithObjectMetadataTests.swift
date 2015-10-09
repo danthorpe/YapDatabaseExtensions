@@ -26,7 +26,7 @@ class ObjectWithObjectMetadataTests: XCTestCase {
     var readTransaction: TestableReadTransaction!
 
     var reader: Read<Employee, TestableDatabase>!
-    var writer: Write<Employee, TestableConnection>!
+    var writer: Write<Employee, TestableDatabase>!
 
     var dispatchQueue: dispatch_queue_t!
     var operationQueue: NSOperationQueue!
