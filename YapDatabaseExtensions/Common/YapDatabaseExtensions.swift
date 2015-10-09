@@ -546,8 +546,8 @@ extension YapDatabaseConnection: ConnectionType {
     - parameter block: a closure of type (YapDatabaseReadWriteTransaction) -> Void
     - returns: an `NSOperation`.
     */
-    public func writeBlockOperation(block: YapDatabaseReadWriteTransaction -> Void) -> NSOperation {
-        return NSBlockOperation { self.asyncReadWriteWithBlock({ block($0) }) }
+    public func writeBlockOperation(block: (YapDatabaseReadWriteTransaction) -> Void) -> NSOperation {
+        return NSBlockOperation { self.asyncReadWriteWithBlock(block) }
     }
 }
 

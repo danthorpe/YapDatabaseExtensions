@@ -171,7 +171,7 @@ class YapDatabaseConnectionTests: ReadWriteBaseTests {
         let expectation = expectationWithDescription("Test: \(__FUNCTION__)")
 
         var written: Employee? = .None
-        db.newConnection().asyncWrite({ transaction -> Employee? in
+        db.makeNewConnection().asyncWrite({ transaction -> Employee? in
             transaction.writeAtIndex(self.index, object: self.item, metadata: self.item.metadata)
             return self.item
         }, queue: dispatchQueue) { (result: Employee?) in
@@ -189,16 +189,16 @@ class YapDatabaseConnectionTests: ReadWriteBaseTests {
         let db = YapDB.testDatabase()
         let expectation = expectationWithDescription("Test: \(__FUNCTION__)")
 
-        let operation = db.newConnection().writeBlockOperation { transaction in
-            transaction.writeAtIndex(self.index, object: self.item, metadata: self.item.metadata)
+        var didExecuteWithTransaction = false
+        let operation = db.makeNewConnection().writeBlockOperation { transaction in
+            didExecuteWithTransaction = true
             expectation.fulfill()
         }
 
         operationQueue.addOperation(operation)
 
         waitForExpectationsWithTimeout(3.0, handler: nil)
-
-        XCTAssertNotNil(Employee.read(db).atIndex(index))
+        XCTAssertTrue(didExecuteWithTransaction)
     }
 }
 
