@@ -7,19 +7,24 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6529ECD01BC81C94006748B8 /* ValueWithNoMetadataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6529ECCF1BC81C94006748B8 /* ValueWithNoMetadataTests.swift */; settings = {ASSET_TAGS = (); }; };
+		6529ECD31BC82111006748B8 /* ObjectWithObjectMetadataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6529ECD11BC82111006748B8 /* ObjectWithObjectMetadataTests.swift */; settings = {ASSET_TAGS = (); }; };
+		6529ECD41BC82111006748B8 /* ObjectWithValueMetadataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6529ECD21BC82111006748B8 /* ObjectWithValueMetadataTests.swift */; settings = {ASSET_TAGS = (); }; };
+		6529ECD71BC82570006748B8 /* ValueWithObjectMetadataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6529ECD61BC82570006748B8 /* ValueWithObjectMetadataTests.swift */; settings = {ASSET_TAGS = (); }; };
+		6529ECD81BC82ACD006748B8 /* Remove.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F748E01B28AB77007E90B2 /* Remove.swift */; settings = {ASSET_TAGS = (); }; };
+		6529ECDA1BC83296006748B8 /* RemovalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6529ECD91BC83296006748B8 /* RemovalTests.swift */; settings = {ASSET_TAGS = (); }; };
+		6529ECDB1BC83511006748B8 /* ReadWriteTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F748E91B28ABE0007E90B2 /* ReadWriteTests.swift */; settings = {ASSET_TAGS = (); }; };
 		652AAFBB1B28C44E00D40BB0 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 652AAFBA1B28C44E00D40BB0 /* Models.swift */; };
-		65EC38EF1B95E85C0022F472 /* WriteOperations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EC38EE1B95E85C0022F472 /* WriteOperations.swift */; settings = {ASSET_TAGS = (); }; };
-		65EC38F11B95EA350022F472 /* RemoveOperations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EC38F01B95EA350022F472 /* RemoveOperations.swift */; settings = {ASSET_TAGS = (); }; };
+		655E20DA1BC7E73800185160 /* Support.swift in Sources */ = {isa = PBXBuildFile; fileRef = 655E20D91BC7E73800185160 /* Support.swift */; settings = {ASSET_TAGS = (); }; };
+		655E20DC1BC7EBAF00185160 /* ObjectWithNoMetadataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 655E20DB1BC7EBAF00185160 /* ObjectWithNoMetadataTests.swift */; settings = {ASSET_TAGS = (); }; };
+		655E20E01BC7ECB600185160 /* YapDatabaseExtensionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F748D41B28A922007E90B2 /* YapDatabaseExtensionsTests.swift */; settings = {ASSET_TAGS = (); }; };
+		655E20E21BC814C300185160 /* ValueWithValueMetadataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 655E20E11BC814C300185160 /* ValueWithValueMetadataTests.swift */; settings = {ASSET_TAGS = (); }; };
 		65F748C81B28A922007E90B2 /* YapDatabaseExtensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 65F748C71B28A922007E90B2 /* YapDatabaseExtensions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		65F748CE1B28A922007E90B2 /* YapDatabaseExtensions.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65F748C21B28A922007E90B2 /* YapDatabaseExtensions.framework */; };
-		65F748D51B28A922007E90B2 /* YapDatabaseExtensionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F748D41B28A922007E90B2 /* YapDatabaseExtensionsTests.swift */; };
 		65F748E41B28AB77007E90B2 /* Read.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F748DF1B28AB77007E90B2 /* Read.swift */; };
-		65F748E51B28AB77007E90B2 /* Remove.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F748E01B28AB77007E90B2 /* Remove.swift */; };
 		65F748E61B28AB77007E90B2 /* Write.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F748E11B28AB77007E90B2 /* Write.swift */; };
 		65F748E71B28AB77007E90B2 /* YapDatabaseExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F748E21B28AB77007E90B2 /* YapDatabaseExtensions.swift */; };
 		65F748E81B28AB77007E90B2 /* YapDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F748E31B28AB77007E90B2 /* YapDB.swift */; };
-		65F748EB1B28ABE0007E90B2 /* ReadWriteTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F748E91B28ABE0007E90B2 /* ReadWriteTests.swift */; };
-		65F748EC1B28ABE0007E90B2 /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F748EA1B28ABE0007E90B2 /* Helpers.swift */; };
 		9F489F36393C5A58ECC4B223 /* Pods_YapDatabaseExtensionsTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DDF7A0EA5B59F2D8A8FB8C4E /* Pods_YapDatabaseExtensionsTests.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		E834C79B10DD6AEF851C6D00 /* Pods_YapDatabaseExtensions.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B552F59065CC85B272636A0F /* Pods_YapDatabaseExtensions.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 /* End PBXBuildFile section */
@@ -37,15 +42,15 @@
 /* Begin PBXFileReference section */
 		43DA81892DAA1D5E0BC21593 /* Pods-YapDatabaseExtensions.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-YapDatabaseExtensions.release.xcconfig"; path = "Pods/Target Support Files/Pods-YapDatabaseExtensions/Pods-YapDatabaseExtensions.release.xcconfig"; sourceTree = "<group>"; };
 		48240A83CEC968CA66DAAF3B /* Pods-YapDatabaseExtensionsTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-YapDatabaseExtensionsTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-YapDatabaseExtensionsTests/Pods-YapDatabaseExtensionsTests.release.xcconfig"; sourceTree = "<group>"; };
-		652AAFB41B28C43900D40BB0 /* BrightFuturesTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BrightFuturesTests.swift; sourceTree = "<group>"; };
-		652AAFB51B28C43900D40BB0 /* PromiseKitTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PromiseKitTests.swift; sourceTree = "<group>"; };
-		652AAFB61B28C43900D40BB0 /* SwiftTaskTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftTaskTests.swift; sourceTree = "<group>"; };
+		6529ECCF1BC81C94006748B8 /* ValueWithNoMetadataTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ValueWithNoMetadataTests.swift; sourceTree = "<group>"; };
+		6529ECD11BC82111006748B8 /* ObjectWithObjectMetadataTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ObjectWithObjectMetadataTests.swift; sourceTree = "<group>"; };
+		6529ECD21BC82111006748B8 /* ObjectWithValueMetadataTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ObjectWithValueMetadataTests.swift; sourceTree = "<group>"; };
+		6529ECD61BC82570006748B8 /* ValueWithObjectMetadataTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ValueWithObjectMetadataTests.swift; sourceTree = "<group>"; };
+		6529ECD91BC83296006748B8 /* RemovalTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RemovalTests.swift; sourceTree = "<group>"; };
 		652AAFBA1B28C44E00D40BB0 /* Models.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Models.swift; path = ../examples/iOS/YapDBExtensionsMobile/Models.swift; sourceTree = "<group>"; };
-		65EC38EE1B95E85C0022F472 /* WriteOperations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WriteOperations.swift; sourceTree = "<group>"; };
-		65EC38F01B95EA350022F472 /* RemoveOperations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RemoveOperations.swift; sourceTree = "<group>"; };
-		65EF89F11B28C50F0039FC08 /* BrightFutures.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BrightFutures.swift; sourceTree = "<group>"; };
-		65EF89F31B28C50F0039FC08 /* PromiseKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PromiseKit.swift; sourceTree = "<group>"; };
-		65EF89F51B28C50F0039FC08 /* SwiftTask.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftTask.swift; sourceTree = "<group>"; };
+		655E20D91BC7E73800185160 /* Support.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Support.swift; sourceTree = "<group>"; };
+		655E20DB1BC7EBAF00185160 /* ObjectWithNoMetadataTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ObjectWithNoMetadataTests.swift; sourceTree = "<group>"; };
+		655E20E11BC814C300185160 /* ValueWithValueMetadataTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ValueWithValueMetadataTests.swift; sourceTree = "<group>"; };
 		65F748C21B28A922007E90B2 /* YapDatabaseExtensions.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = YapDatabaseExtensions.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		65F748C61B28A922007E90B2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		65F748C71B28A922007E90B2 /* YapDatabaseExtensions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = YapDatabaseExtensions.h; sourceTree = "<group>"; };
@@ -95,28 +100,17 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		65EF89F01B28C50F0039FC08 /* BrightFutures */ = {
+		6529ECD51BC8211C006748B8 /* Reading & Writing */ = {
 			isa = PBXGroup;
 			children = (
-				65EF89F11B28C50F0039FC08 /* BrightFutures.swift */,
+				655E20DB1BC7EBAF00185160 /* ObjectWithNoMetadataTests.swift */,
+				6529ECD11BC82111006748B8 /* ObjectWithObjectMetadataTests.swift */,
+				6529ECD21BC82111006748B8 /* ObjectWithValueMetadataTests.swift */,
+				6529ECCF1BC81C94006748B8 /* ValueWithNoMetadataTests.swift */,
+				6529ECD61BC82570006748B8 /* ValueWithObjectMetadataTests.swift */,
+				655E20E11BC814C300185160 /* ValueWithValueMetadataTests.swift */,
 			);
-			path = BrightFutures;
-			sourceTree = "<group>";
-		};
-		65EF89F21B28C50F0039FC08 /* PromiseKit */ = {
-			isa = PBXGroup;
-			children = (
-				65EF89F31B28C50F0039FC08 /* PromiseKit.swift */,
-			);
-			path = PromiseKit;
-			sourceTree = "<group>";
-		};
-		65EF89F41B28C50F0039FC08 /* SwiftTask */ = {
-			isa = PBXGroup;
-			children = (
-				65EF89F51B28C50F0039FC08 /* SwiftTask.swift */,
-			);
-			path = SwiftTask;
+			name = "Reading & Writing";
 			sourceTree = "<group>";
 		};
 		65F748B81B28A922007E90B2 = {
@@ -143,11 +137,8 @@
 			isa = PBXGroup;
 			children = (
 				65F748C71B28A922007E90B2 /* YapDatabaseExtensions.h */,
-				65EF89F01B28C50F0039FC08 /* BrightFutures */,
 				65F748DE1B28AB77007E90B2 /* Common */,
-				65EF89F21B28C50F0039FC08 /* PromiseKit */,
 				65F748C51B28A922007E90B2 /* Supporting Files */,
-				65EF89F41B28C50F0039FC08 /* SwiftTask */,
 			);
 			path = YapDatabaseExtensions;
 			sourceTree = "<group>";
@@ -163,13 +154,13 @@
 		65F748D11B28A922007E90B2 /* YapDatabaseExtensionsTests */ = {
 			isa = PBXGroup;
 			children = (
-				652AAFB41B28C43900D40BB0 /* BrightFuturesTests.swift */,
 				65F748EA1B28ABE0007E90B2 /* Helpers.swift */,
 				652AAFBA1B28C44E00D40BB0 /* Models.swift */,
-				652AAFB51B28C43900D40BB0 /* PromiseKitTests.swift */,
 				65F748E91B28ABE0007E90B2 /* ReadWriteTests.swift */,
-				652AAFB61B28C43900D40BB0 /* SwiftTaskTests.swift */,
+				6529ECD91BC83296006748B8 /* RemovalTests.swift */,
+				655E20D91BC7E73800185160 /* Support.swift */,
 				65F748D41B28A922007E90B2 /* YapDatabaseExtensionsTests.swift */,
+				6529ECD51BC8211C006748B8 /* Reading & Writing */,
 				65F748D21B28A922007E90B2 /* Supporting Files */,
 			);
 			path = YapDatabaseExtensionsTests;
@@ -191,8 +182,6 @@
 				65F748E11B28AB77007E90B2 /* Write.swift */,
 				65F748E21B28AB77007E90B2 /* YapDatabaseExtensions.swift */,
 				65F748E31B28AB77007E90B2 /* YapDB.swift */,
-				65EC38EE1B95E85C0022F472 /* WriteOperations.swift */,
-				65EC38F01B95EA350022F472 /* RemoveOperations.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -399,13 +388,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6529ECD81BC82ACD006748B8 /* Remove.swift in Sources */,
 				65F748E41B28AB77007E90B2 /* Read.swift in Sources */,
 				65F748E81B28AB77007E90B2 /* YapDB.swift in Sources */,
 				65F748E71B28AB77007E90B2 /* YapDatabaseExtensions.swift in Sources */,
 				65F748E61B28AB77007E90B2 /* Write.swift in Sources */,
-				65F748E51B28AB77007E90B2 /* Remove.swift in Sources */,
-				65EC38EF1B95E85C0022F472 /* WriteOperations.swift in Sources */,
-				65EC38F11B95EA350022F472 /* RemoveOperations.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -413,10 +400,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				65F748D51B28A922007E90B2 /* YapDatabaseExtensionsTests.swift in Sources */,
-				65F748EC1B28ABE0007E90B2 /* Helpers.swift in Sources */,
-				65F748EB1B28ABE0007E90B2 /* ReadWriteTests.swift in Sources */,
+				6529ECD01BC81C94006748B8 /* ValueWithNoMetadataTests.swift in Sources */,
 				652AAFBB1B28C44E00D40BB0 /* Models.swift in Sources */,
+				655E20DC1BC7EBAF00185160 /* ObjectWithNoMetadataTests.swift in Sources */,
+				655E20E01BC7ECB600185160 /* YapDatabaseExtensionsTests.swift in Sources */,
+				6529ECD31BC82111006748B8 /* ObjectWithObjectMetadataTests.swift in Sources */,
+				6529ECD41BC82111006748B8 /* ObjectWithValueMetadataTests.swift in Sources */,
+				6529ECDA1BC83296006748B8 /* RemovalTests.swift in Sources */,
+				6529ECD71BC82570006748B8 /* ValueWithObjectMetadataTests.swift in Sources */,
+				655E20DA1BC7E73800185160 /* Support.swift in Sources */,
+				6529ECDB1BC83511006748B8 /* ReadWriteTests.swift in Sources */,
+				655E20E21BC814C300185160 /* ValueWithValueMetadataTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -559,10 +553,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 9A4ED174BF7F30AD1C4AF751 /* Pods-YapDatabaseExtensionsTests.debug.xcconfig */;
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-				);
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -578,10 +568,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 48240A83CEC968CA66DAAF3B /* Pods-YapDatabaseExtensionsTests.release.xcconfig */;
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-				);
 				INFOPLIST_FILE = YapDatabaseExtensionsTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "me.danthorpe.$(PRODUCT_NAME:rfc1034identifier)";

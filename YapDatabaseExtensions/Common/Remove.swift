@@ -4,224 +4,263 @@
 //
 
 import Foundation
-
 import YapDatabase
 
-// MARK: - YapDatabaseTransaction
+public protocol Removable {
+    typealias Database: DatabaseType
 
-extension YapDatabaseReadWriteTransaction {
+    var indexes: [YapDB.Index] { get }
+}
+
+/**
+Remove wrapper for an array of indexes. This type facilitates
+the removal of items from YapDatabase.
+
+This wrapper does not impose any constraints on the type of
+item that it stores. However, the APIs which are available
+to this wrapped structure will only be available if your
+model types implement the correct protocols to facilitate
+writing to YapDatabase.
+*/
+public struct Remove<D: DatabaseType>: Removable {
+
+    public typealias Database = D
+
+    /// The items which will be written into the database.
+    public let indexes: [YapDB.Index]
+
+    init(_ index: YapDB.Index) {
+        indexes = [index]
+    }
+
+    init<Indexes where Indexes: SequenceType, Indexes.Generator.Element == YapDB.Index>(_ items: Indexes) {
+        indexes = Array(items)
+    }
+
+    init<Item where Item: Persistable>(_ item: Item) {
+        indexes = [item.index]
+    }
+
+    init<Items where Items: SequenceType, Items.Generator.Element: Persistable>(_ items: Items) {
+        indexes = items.map { $0.index }
+    }
+}
+
+extension Persistable {
 
     /**
-    Removes the object stored at this index.
+    Returns a type suitable for *removing* an instance of the
+    receiver from the database, when you only have the index. In
+    other words, you don't need to read the object if you just
+    want to remove it - use the static functions on its type.
 
-    :param: index A YapDB.Index
+    For example, given a `Person` key, inside a read write
+    transaction, you can remove the object like this:
+
+        Person.remove(index).on(transaction)
+
+    Alternatively, given a `YapDatabaseConnection`, you can
+    synchronously write the object to the database as:
+
+        Person.remove(index).sync(connection)
+
+    and asynchronously:
+
+        Person.remove(index).async(connection) {
+            print("did remove person")
+        }
+
+    Finally, if you use `NSOperation`, you can do:
+
+        queue.addOperation(Person.remove(index).operation(connection))
+
+    - returns: a `Remove` value composing the receiver.
     */
-    public func removeAtIndex(index: YapDB.Index) {
-        removeObjectForKey(index.key, inCollection: index.collection)
+    public static func remove(index: YapDB.Index) -> Remove<YapDatabase> {
+        return Remove(index)
     }
 
     /**
-    Removes the object stored at these indexes.
+    Returns a type suitable for *removing* an instance of the
+    receiver from the database, when you only have the key. In
+    other words, you don't need to read the object if you just
+    want to remove it - use the static functions on its type.
 
-    :param: indexes An Array<YapDB.Index>
+    For example, given a `Person` key, inside a read write
+    transaction, you can remove the object like this:
+
+    Person.remove(key).on(transaction)
+
+    Alternatively, given a `YapDatabaseConnection`, you can
+    synchronously write the object to the database as:
+
+        Person.remove(key).sync(connection)
+
+    and asynchronously:
+
+        Person.remove(key).async(connection) {
+            print("did remove person")
+        }
+
+    Finally, if you use `NSOperation`, you can do:
+
+        queue.addOperation(Person.remove(key).operation(connection))
+
+    - returns: a `Remove` value composing the receiver.
     */
-    public func removeAtIndexes(indexes: [YapDB.Index]) {
-        indexes.forEach(removeAtIndex)
+    public static func remove(key: String) -> Remove<YapDatabase> {
+        return remove(indexWithKey(key))
     }
 
     /**
-    Removes any Persistable item.
+    Returns a type suitable for *removing* the receiver from the
+    database.
 
-    :param: item A Persistable item.
+    For example, given a `Person` object, inside a read write
+    transaction, you can remove the object like this:
+
+        person.remove.on(transaction)
+
+    Alternatively, given a `YapDatabaseConnection`, you can
+    synchronously write the object to the database as:
+
+        person.remove.sync(connection)
+
+    and asynchronously:
+
+        person.remove.async(connection)
+
+    Finally, if you use `NSOperation`, you can do:
+
+        queue.addOperation(person.remove.operation(connection))
+
+    - returns: a `Remove` value composing the receiver.
     */
-    public func remove<Item where Item: Persistable>(item: Item) {
-        removeAtIndex(indexForPersistable(item))
+    public var remove: Remove<YapDatabase> {
+        return Remove(self)
     }
+}
+
+extension SequenceType where Generator.Element: Persistable {
 
     /**
-    Removes a sequence of Persistable items.
+    Returns a type suitable for *removing* the receiver from the
+    database.
 
-    :param: items A sequence of Persistable items.
+    For example, given a sequence of `Person` objects, inside
+    a read write transaction, you can remove all the objects to
+    the database like this:
+
+        people.remove.on(transaction)
+
+    Alternatively, given a `YapDatabaseConnection`, you can
+    synchronously write all the objects to the database as, in
+    the same transaction like this:
+
+        people.remove.sync(connection)
+
+    and asynchronously:
+
+        people.remove.async(connection)
+
+    Finally, if you use `NSOperation`, you can do:
+
+        queue.addOperation(people.remove.operation(connection))
+
+    - returns: a `Remove` value composing the receiver.
     */
-    public func remove<Items where Items: SequenceType, Items.Generator.Element: Persistable>(items: Items) {
-        removeAtIndexes(items.map(indexForPersistable))
+    public var remove: Remove<YapDatabase> {
+        return Remove(self)
+    }
+}
+
+extension SequenceType where Generator.Element == YapDB.Index {
+
+    /**
+    Returns a type suitable for *removing* the items referenced
+    by the receiver from the database. In other words, you've got
+    an array of database indexes to remove.
+
+    For example, given a sequence of `YapDB.Index` values, inside
+    a read write transaction, you can remove all the objects to
+    the database like this:
+
+        indexes.remove.on(transaction)
+
+    Alternatively, given a `YapDatabaseConnection`, you can
+    synchronously write all the objects to the database as, in
+    the same transaction like this:
+
+        indexes.remove.sync(connection)
+
+    and asynchronously:
+
+        indexes.remove.async(connection)
+
+    Finally, if you use `NSOperation`, you can do:
+
+        indexes.addOperation(people.remove.operation(connection))
+
+    - returns: a `Remove` value composing the receiver.
+    */
+    public var remove: Remove<YapDatabase> {
+        return Remove(self)
     }
 }
 
 
+// MARK: - Objects with no Metadata
 
-extension YapDatabaseConnection {
+extension Removable {
 
     /**
-    Synchonously removes the object stored at this index.
+    Remove the items at indexes using an existing transaction.
 
-    :param: index A YapDB.Index
+    - parameter transaction: a YapDatabaseReadWriteTransaction
     */
-    public func removeAtIndex(index: YapDB.Index) {
-        write({ $0.removeAtIndex(index) })
+    public func on(transaction: Database.Connection.WriteTransaction) {
+        indexes.forEach { transaction.removeAtIndex($0) }
     }
 
     /**
-    Synchonously removes the object stored at this index.
+    Remove the items at indexes synchronously using a connection.
 
-    :param: indexes An Array<YapDB.Index>
+    - parameter connection: a YapDatabaseConnection
     */
-    public func removeAtIndexes(indexes: [YapDB.Index]) {
-        write({ $0.removeAtIndexes(indexes) })
+    public func sync(connection: Database.Connection) {
+        connection.write(on)
     }
 
     /**
-    Synchonously removes any Persistable item.
+    Remove the items at indexes asynchronously using a connection.
 
-    :param: item A Persistable item.
+    - parameter connection: a YapDatabaseConnection
     */
-    public func remove<Item where Item: Persistable>(item: Item) {
-        write({ $0.remove(item) })
+    public func async(connection: Database.Connection, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: dispatch_block_t) {
+        connection.asyncWrite(on, queue: queue, completion: completion)
     }
 
     /**
-    Synchonously removes a sequence of Persistable items.
+    Remove the items at indexes inside of an `NSOperation`.
 
-    :param: items A sequence of Persistable items.
+    - parameter connection: a YapDatabaseConnection
     */
-    public func remove<Items where Items: SequenceType, Items.Generator.Element: Persistable>(items: Items) {
-        write({ $0.remove(items) })
-    }
-}
-
-extension YapDatabaseConnection {
-
-    /**
-    Asynchonously removes the object stored at this index.
-
-    :param: index A YapDB.Index
-    :param: queue The dispatch queue to run the completion closure on, defaults to the main queue
-    :param: completion A void closure
-    */
-    public func asyncRemoveAtIndex(index: YapDB.Index, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: () -> Void) {
-        asyncReadWriteWithBlock({ $0.removeAtIndex(index) }, completionQueue: queue, completionBlock: completion)
+    public func operation(connection: Database.Connection) -> NSOperation {
+        return connection.writeBlockOperation { self.on($0) }
     }
 
-    /**
-    Asynchonously removes the object stored at this index.
-
-    :param: indexes An Array<YapDB.Index>
-    :param: queue The dispatch queue to run the completion closure on, defaults to the main queue
-    :param: completion A void closure
-    */
-    public func asyncRemoveAtIndexes(indexes: [YapDB.Index], queue: dispatch_queue_t = dispatch_get_main_queue(), completion: () -> Void) {
-        asyncReadWriteWithBlock({ $0.removeAtIndexes(indexes) }, completionQueue: queue, completionBlock: completion)
-    }
-
-    /**
-    Synchonously removes any Persistable item.
-
-    :param: item A Persistable item.
-    :param: queue The dispatch queue to run the completion closure on, defaults to the main queue
-    :param: completion A void closure
-    */
-    public func asyncRemove<Item where Item: Persistable>(item: Item, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: () -> Void) {
-        asyncReadWriteWithBlock({ $0.remove(item) }, completionQueue: queue, completionBlock: completion)
-    }
-
-    /**
-    Synchonously removes a sequence of Persistable items.
-
-    :param: items A sequence of Persistable items.
-    :param: queue The dispatch queue to run the completion closure on, defaults to the main queue
-    :param: completion A void closure
-    */
-    public func asyncRemove<Items where Items: SequenceType, Items.Generator.Element: Persistable>(items: Items, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: () -> Void) {
-        asyncReadWriteWithBlock({ $0.remove(items) }, completionQueue: queue, completionBlock: completion)
-    }
 }
 
 
 
-extension YapDatabase {
 
-    /**
-    Synchonously removes the object stored at this index.
 
-    :param: index A YapDB.Index
-    */
-    public func removeAtIndex(index: YapDB.Index) {
-        newConnection().removeAtIndex(index)
-    }
 
-    /**
-    Synchonously removes the object stored at this index.
 
-    :param: indexes An Array<YapDB.Index>
-    */
-    public func removeAtIndexes(indexes: [YapDB.Index]) {
-        newConnection().removeAtIndexes(indexes)
-    }
 
-    /**
-    Synchonously removes any Persistable item.
 
-    :param: item A Persistable item.
-    */
-    public func remove<Item where Item: Persistable>(item: Item) {
-        return newConnection().remove(item)
-    }
 
-    /**
-    Synchonously removes a sequence of Persistable items.
 
-    :param: items A sequence of Persistable items.
-    */
-    public func remove<Items where Items: SequenceType, Items.Generator.Element: Persistable>(items: Items) {
-        return newConnection().remove(items)
-    }
-}
 
-extension YapDatabase {
-
-    /**
-    Asynchonously removes the object stored at this index.
-
-    :param: index A YapDB.Index
-    :param: queue The dispatch queue to run the completion closure on, defaults to the main queue
-    :param: completion A void closure
-    */
-    public func asyncRemoveAtIndex(index: YapDB.Index, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: () -> Void) {
-        newConnection().asyncRemoveAtIndex(index, queue: queue, completion: completion)
-    }
-
-    /**
-    Asynchonously removes the object stored at this index.
-
-    :param: indexes An Array<YapDB.Index>
-    :param: queue The dispatch queue to run the completion closure on, defaults to the main queue
-    :param: completion A void closure
-    */
-    public func asyncRemoveAtIndexes(indexes: [YapDB.Index], queue: dispatch_queue_t = dispatch_get_main_queue(), completion: () -> Void) {
-        newConnection().asyncRemoveAtIndexes(indexes, queue: queue, completion: completion)
-    }
-
-    /**
-    Synchonously removes any Persistable item.
-
-    :param: item A Persistable item.
-    :param: queue The dispatch queue to run the completion closure on, defaults to the main queue
-    :param: completion A void closure
-    */
-    public func asyncRemove<Item where Item: Persistable>(item: Item, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: () -> Void) {
-        newConnection().asyncRemove(item, queue: queue, completion: completion)
-    }
-
-    /**
-    Synchonously removes a sequence of Persistable items.
-
-    :param: items A sequence of Persistable items.
-    :param: queue The dispatch queue to run the completion closure on, defaults to the main queue
-    :param: completion A void closure
-    */
-    public func asyncRemove<Items where Items: SequenceType, Items.Generator.Element: Persistable>(items: Items, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: () -> Void) {
-        newConnection().asyncRemove(items, queue: queue, completion: completion)
-    }
-}
 
 

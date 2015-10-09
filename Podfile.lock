@@ -1,6 +1,4 @@
 PODS:
-  - BrightFutures (3.0.0-beta.3):
-    - Result (= 0.6-beta.1)
   - CocoaLumberjack (2.0.1):
     - CocoaLumberjack/Default (= 2.0.1)
     - CocoaLumberjack/Extensions (= 2.0.1)
@@ -9,50 +7,26 @@ PODS:
     - CocoaLumberjack/Core
   - CocoaLumberjack/Extensions (2.0.1):
     - CocoaLumberjack/Default
-  - PromiseKit/CorePromise (3.0.0)
-  - PromiseKit/Swift/Promise (3.0.0):
-    - PromiseKit/CorePromise
-  - Result (0.6-beta.1)
-  - SwiftTask (3.3.1)
-  - YapDatabase (2.7.2):
-    - YapDatabase/standard (= 2.7.2)
-  - YapDatabase/standard (2.7.2):
+  - YapDatabase (2.7.3):
+    - YapDatabase/standard (= 2.7.3)
+  - YapDatabase/standard (2.7.3):
     - CocoaLumberjack (~> 2)
 
 DEPENDENCIES:
-  - BrightFutures (from `https://github.com/Thomvis/BrightFutures`, branch `swift-2.0`)
-  - PromiseKit/Swift/Promise (from `https://github.com/mxcl/PromiseKit`, branch `swift-2.0-beta5`)
-  - SwiftTask (from `https://github.com/ReactKit/SwiftTask`, branch `swift/2.0`)
-  - YapDatabase (~> 2)
+  - YapDatabase (from `https://github.com/yapstudios/yapdatabase`, branch `master`)
 
 EXTERNAL SOURCES:
-  BrightFutures:
-    :branch: swift-2.0
-    :git: https://github.com/Thomvis/BrightFutures
-  PromiseKit:
-    :branch: swift-2.0-beta5
-    :git: https://github.com/mxcl/PromiseKit
-  SwiftTask:
-    :branch: swift/2.0
-    :git: https://github.com/ReactKit/SwiftTask
+  YapDatabase:
+    :branch: master
+    :git: https://github.com/yapstudios/yapdatabase
 
 CHECKOUT OPTIONS:
-  BrightFutures:
-    :commit: 65d188ac0af47ddeba2433df6a484eb1161a53c3
-    :git: https://github.com/Thomvis/BrightFutures
-  PromiseKit:
-    :commit: a413bbad4c539dadf36312d471e932e0ce980fd4
-    :git: https://github.com/mxcl/PromiseKit
-  SwiftTask:
-    :commit: bbff1f2ceda80dabc3f4cda92ed8506e21320ccc
-    :git: https://github.com/ReactKit/SwiftTask
+  YapDatabase:
+    :commit: ece44bfeaf0b194aa9221b122124df7c973cf8b5
+    :git: https://github.com/yapstudios/yapdatabase
 
 SPEC CHECKSUMS:
-  BrightFutures: 1088ccf030bb2feb0a4f6bd3bd50595238ec2681
   CocoaLumberjack: 019d1361244274a6138c788c6cb80baabc13fb8f
-  PromiseKit: a657c450a01f60137376a0210eb7b11f1aef8413
-  Result: af24e3e57ab81005ec4221a53fd36dc1e7a52869
-  SwiftTask: 0baec4571e2ea235e73817c399cde12056c81f6f
-  YapDatabase: bcf13bd764ab4961fb48bef937becf964e50063d
+  YapDatabase: 6d6a30e97face6c3158830823c27614afe83e1e0
 
 COCOAPODS: 0.38.2

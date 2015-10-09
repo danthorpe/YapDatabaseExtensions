@@ -30,16 +30,25 @@ public struct Product: Identifiable, Equatable {
         }
     }
 
-    public let metadata: Metadata
+    public var metadata: Metadata? = .None
     public let identifier: Identifier
     internal let name: String
     internal let barcode: Barcode
 
-    public init(metadata: Metadata, identifier: Identifier, name: String, barcode: Barcode) {
+    public init(metadata: Metadata? = .None, identifier: Identifier, name: String, barcode: Barcode) {
         self.metadata = metadata
         self.identifier = identifier
         self.name = name
         self.barcode = barcode
+    }
+}
+
+public struct Inventory: Identifiable, Equatable {
+    let product: Product
+    public var metadata: NSNumber? = .None
+
+    public var identifier: Identifier {
+        return product.identifier
     }
 }
 
@@ -62,6 +71,17 @@ public class Person: NSObject, NSCoding {
         aCoder.encodeObject(identifier, forKey: "identifier")
         aCoder.encodeObject(name, forKey: "name")
     }
+}
+
+public class Employee: Person {
+    public var metadata: NSDate? = .None
+}
+
+public class Manager: Person {
+    public struct Metadata: Equatable {
+        public let numberOfDirectReports: Int
+    }
+    public var metadata: Metadata? = .None
 }
 
 // MARK: - Hashable etc
@@ -91,8 +111,16 @@ public func == (a: Product.Metadata, b: Product.Metadata) -> Bool {
     return a.categoryIdentifier == b.categoryIdentifier
 }
 
+public func == (a: Inventory, b: Inventory) -> Bool {
+    return (a.product == b.product) && (a.metadata == b.metadata)
+}
+
 public func == (a: Person, b: Person) -> Bool {
     return (a.identifier == b.identifier) && (a.name == b.name)
+}
+
+public func == (a: Manager.Metadata, b: Manager.Metadata) -> Bool {
+    return a.numberOfDirectReports == b.numberOfDirectReports
 }
 
 extension Person {
@@ -127,10 +155,17 @@ extension Product.Category: Persistable {
     }
 }
 
-extension Product: ValueMetadataPersistable {
+extension Product: MetadataPersistable {
 
     public static var collection: String {
         return "Products"
+    }
+}
+
+extension Inventory: MetadataPersistable {
+
+    public static var collection: String {
+        return "Inventory"
     }
 }
 
@@ -140,6 +175,11 @@ extension Person: Persistable {
         return "People"
     }
 }
+
+extension Employee: MetadataPersistable { }
+
+extension Manager: MetadataPersistable { }
+
 
 // MARK: - Saveable
 
@@ -187,6 +227,26 @@ extension Product: Saveable {
         return Archive(self)
     }
 }
+
+extension Inventory: Saveable {
+
+    public typealias Archive = InventoryArchiver
+
+    public var archive: Archive {
+        return Archive(self)
+    }
+}
+
+
+extension Manager.Metadata: Saveable {
+
+    public typealias Archive = ManagerMetadataArchiver
+
+    public var archive: Archive {
+        return Archive(self)
+    }
+}
+
 
 // MARK: - Archivers
 
@@ -274,18 +334,51 @@ public class ProductArchiver: NSObject, NSCoding, Archiver {
     }
 
     public required init?(coder aDecoder: NSCoder) {
-        let metadata = Product.Metadata(aDecoder.decodeObjectForKey("metadata"))
         let identifier = aDecoder.decodeObjectForKey("identifier") as! String
         let name = aDecoder.decodeObjectForKey("name") as! String
         let barcode = Barcode(aDecoder.decodeObjectForKey("barcode"))
-        value = Product(metadata: metadata!, identifier: identifier, name: name, barcode: barcode!)
+        value = Product(identifier: identifier, name: name, barcode: barcode!)
     }
 
     public func encodeWithCoder(aCoder: NSCoder) {
-        aCoder.encodeObject(value.metadata.archive, forKey: "metadata")
         aCoder.encodeObject(value.identifier, forKey: "identifier")
         aCoder.encodeObject(value.name, forKey: "name")
         aCoder.encodeObject(value.barcode.archive, forKey: "barcode")
+    }
+}
+
+public class InventoryArchiver: NSObject, NSCoding, Archiver {
+    public let value: Inventory
+
+    public required init(_ v: Inventory) {
+        value = v
+    }
+
+    public required init?(coder aDecoder: NSCoder) {
+        let product = Product.unarchive(aDecoder.decodeObjectForKey("product"))
+        value = Inventory(product: product!, metadata: .None)
+    }
+
+    public func encodeWithCoder(aCoder: NSCoder) {
+        aCoder.encodeObject(value.product.archive, forKey: "product")
+    }
+}
+
+
+public class ManagerMetadataArchiver: NSObject, NSCoding, Archiver {
+    public let value: Manager.Metadata
+
+    public required init(_ v: Manager.Metadata) {
+        value = v
+    }
+
+    public required init?(coder aDecoder: NSCoder) {
+        let numberOfDirectReports = aDecoder.decodeIntegerForKey("numberOfDirectReports")
+        value = Manager.Metadata(numberOfDirectReports: numberOfDirectReports)
+    }
+
+    public func encodeWithCoder(aCoder: NSCoder) {
+        aCoder.encodeInteger(value.numberOfDirectReports, forKey: "numberOfDirectReports")
     }
 }
 

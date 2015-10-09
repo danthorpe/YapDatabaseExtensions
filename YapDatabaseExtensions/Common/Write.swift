@@ -3,1068 +3,390 @@
 //
 //
 
+import Foundation
 import YapDatabase
 
-// MARK: - YapDatabaseTransaction
+// MARK: - Writable
 
-extension YapDatabaseReadWriteTransaction {
+public protocol Writable {
+    typealias ItemType
+    typealias Database: DatabaseType
 
-    func writeAtIndex(index: YapDB.Index, object: AnyObject, metadata: AnyObject? = .None) {
-        if let metadata: AnyObject = metadata {
-            setObject(object, forKey: index.key, inCollection: index.collection, withMetadata: metadata)
-        }
-        else {
-            setObject(object, forKey: index.key, inCollection: index.collection)
-        }
+    var items: [ItemType] { get }
+}
+
+/**
+Write wrapper for an array of items. This type facilitates
+writing of items to YapDatabase.
+
+This wrapper does not impose any constraints on the type of
+item that it stores. However, the APIs which are available
+to this wrapped structure will only be available if your
+model types implement the correct protocols to facilitate
+writing to YapDatabase.
+*/
+public struct Write<Item, D: DatabaseType>: Writable {
+
+    public typealias Database = D
+
+    /// The items which will be written into the database.
+    public let items: [Item]
+
+    init(_ element: Item) {
+        items = [element]
+    }
+
+    init<Items where Items: SequenceType, Items.Generator.Element == Item>(_ elements: Items) {
+        items = Array(elements)
     }
 }
 
-extension YapDatabaseReadWriteTransaction {
+extension Persistable {
 
     /**
-    Writes a Persistable object conforming to NSCoding to the database inside the read write transaction.
-        
-    :param: object An Object.
-    :returns: The Object.
-    */
-    public func write<
-        Object
-        where
-        Object: NSCoding,
-        Object: Persistable>(object: Object) -> Object {
-            writeAtIndex(indexForPersistable(object), object: object)
-            return object
-    }
-
-    /**
-    Writes a Persistable object with metadata, both conforming to NSCoding to the database inside the read write transaction.
+    Returns a type suitable for *writing* the receiver to the 
+    database. The available functions will depend on the receiver
+    correctly implementing `Persistable`, `MetadataPersistable` 
+    and `Saveable`.
     
-    :param: object An ObjectWithObjectMetadata.
-    :returns: The ObjectWithObjectMetadata.
-    */
-    public func write<
-        ObjectWithObjectMetadata
-        where
-        ObjectWithObjectMetadata: NSCoding,
-        ObjectWithObjectMetadata: ObjectMetadataPersistable>(object: ObjectWithObjectMetadata) -> ObjectWithObjectMetadata {
-            writeAtIndex(indexForPersistable(object), object: object, metadata: object.metadata)
-            return object
-    }
-
-    /**
-    Writes a Persistable object, conforming to NSCoding, with metadata value type to the database inside the read write transaction.
+    For example, given a `Person` object, inside a read write
+    transaction, you can write the object like this:
     
-    :param: object An ObjectWithValueMetadata.
-    :returns: The ObjectWithValueMetadata.
+        person.write.on(transaction)
+
+    Alternatively, given a `YapDatabaseConnection`, you can 
+    synchronously write the object to the database as:
+    
+        person.write.sync(connection)
+    
+    and asynchronously:
+    
+        person.write.async(connection)
+    
+    Finally, if you use `NSOperation`, you can do:
+    
+        queue.addOperation(person.write.operation(connection))
+
+    - returns: a `Write` value composing the receiver.
     */
-    public func write<
-        ObjectWithValueMetadata
-        where
-        ObjectWithValueMetadata: NSCoding,
-        ObjectWithValueMetadata: ValueMetadataPersistable,
-        ObjectWithValueMetadata.MetadataType.ArchiverType: NSCoding,
-        ObjectWithValueMetadata.MetadataType.ArchiverType.ValueType == ObjectWithValueMetadata.MetadataType>(object: ObjectWithValueMetadata) -> ObjectWithValueMetadata {
-            writeAtIndex(indexForPersistable(object), object: object, metadata: object.metadata.archive)
-            return object
-    }
-
-    /**
-    Writes a Persistable value, conforming to Saveable to the database inside the read write transaction.
-
-    :param: value A Value.
-    :returns: The Value.
-    */
-    public func write<
-        Value
-        where
-        Value: Saveable,
-        Value: Persistable,
-        Value.ArchiverType: NSCoding,
-        Value.ArchiverType.ValueType == Value>(value: Value) -> Value {
-            writeAtIndex(indexForPersistable(value), object: value.archive)
-            return value
-    }
-
-    /**
-    Writes a Persistable value with a metadata value, both conforming to Saveable, to the database inside the read write transaction.
-
-    :param: value A ValueWithValueMetadata.
-    :returns: The ValueWithValueMetadata.
-    */
-    public func write<
-        ValueWithValueMetadata
-        where
-        ValueWithValueMetadata: Saveable,
-        ValueWithValueMetadata: ValueMetadataPersistable,
-        ValueWithValueMetadata.ArchiverType: NSCoding,
-        ValueWithValueMetadata.ArchiverType.ValueType == ValueWithValueMetadata,
-        ValueWithValueMetadata.MetadataType.ArchiverType: NSCoding,
-        ValueWithValueMetadata.MetadataType.ArchiverType.ValueType == ValueWithValueMetadata.MetadataType>(value: ValueWithValueMetadata) -> ValueWithValueMetadata {
-            writeAtIndex(indexForPersistable(value), object: value.archive, metadata: value.metadata.archive)
-            return value
-    }
-
-    /**
-    Writes a Persistable value, conforming to Saveable with a metadata object conforming to NSCoding, to the database inside the read write transaction.
-
-    :param: value A ValueWithObjectMetadata.
-    :returns: The ValueWithObjectMetadata.
-    */
-    public func write<
-        ValueWithObjectMetadata
-        where
-        ValueWithObjectMetadata: Saveable,
-        ValueWithObjectMetadata: ObjectMetadataPersistable,
-        ValueWithObjectMetadata.MetadataType: NSCoding,
-        ValueWithObjectMetadata.ArchiverType: NSCoding,
-        ValueWithObjectMetadata.ArchiverType.ValueType == ValueWithObjectMetadata>(value: ValueWithObjectMetadata) -> ValueWithObjectMetadata {
-            writeAtIndex(indexForPersistable(value), object: value.archive, metadata: value.metadata)
-            return value
+    public var write: Write<Self, YapDatabase> {
+        return Write(self)
     }
 }
 
-extension YapDatabaseReadWriteTransaction {
+extension SequenceType where Generator.Element: Persistable {
 
     /**
-    Writes a sequence of Persistable Object instances conforming to NSCoding to the database inside the read write transaction.
+    Returns a type suitable for *writing* the receiver to the
+    database. The available functions will depend on the receive
+    correctly implementing `Persistable`, `MetadataPersistable`
+    and `Saveable`.
 
-    :param: objects A SequenceType of Object instances.
-    :returns: An array of Object instances.
+    For example, given a sequence of `Person` objects, inside 
+    a read write transaction, you can write all the objects to
+    the database like this:
+
+        people.write.on(transaction)
+
+    Alternatively, given a `YapDatabaseConnection`, you can
+    synchronously write all the objects to the database as, in
+    the same transaction like this:
+
+        people.write.sync(connection)
+
+    and asynchronously:
+
+        people.write.async(connection)
+
+    Finally, if you use `NSOperation`, you can do:
+
+        queue.addOperation(people.write.operation(connection))
+
+    - returns: a `Write` value composing the receiver.
     */
-    public func write<
-        Objects, Object
-        where
-        Objects: SequenceType,
-        Objects.Generator.Element == Object,
-        Object: NSCoding,
-        Object: Persistable>(objects: Objects) -> [Object] {
-            return objects.map { self.write($0) }
-    }
-
-    /**
-    Writes a sequence of Persistable object with metadata, both conforming to NSCoding to the database inside the read write transaction.
-
-    :param: objects A SequenceType of ObjectWithObjectMetadata instances.
-    :returns: An array of ObjectWithObjectMetadata instances.
-    */
-    public func write<
-        Objects, ObjectWithObjectMetadata
-        where
-        Objects: SequenceType,
-        Objects.Generator.Element == ObjectWithObjectMetadata,
-        ObjectWithObjectMetadata: NSCoding,
-        ObjectWithObjectMetadata: ObjectMetadataPersistable>(objects: Objects) -> [ObjectWithObjectMetadata] {
-            return objects.map { self.write($0) }
-    }
-
-    /**
-    Writes a sequence of Persistable object, conforming to NSCoding, with metadata value type to the database inside the read write transaction.
-
-    :param: objects A SequenceType of ObjectWithValueMetadata instances.
-    :returns: An array of ObjectWithValueMetadata instances.
-    */
-    public func write<
-        Objects, ObjectWithValueMetadata
-        where
-        Objects: SequenceType,
-        Objects.Generator.Element == ObjectWithValueMetadata,
-        ObjectWithValueMetadata: NSCoding,
-        ObjectWithValueMetadata: ValueMetadataPersistable,
-        ObjectWithValueMetadata.MetadataType.ArchiverType: NSCoding,
-        ObjectWithValueMetadata.MetadataType.ArchiverType.ValueType == ObjectWithValueMetadata.MetadataType>(objects: Objects) -> [ObjectWithValueMetadata] {
-            return objects.map { self.write($0) }
-    }
-
-    /**
-    Writes a sequence of Persistable Value instances conforming to Saveable to the database inside the read write transaction.
-
-    :param: objects A SequenceType of Value instances.
-    :returns: An array of Value instances.
-    */
-    public func write<
-        Values, Value
-        where
-        Values: SequenceType,
-        Values.Generator.Element == Value,
-        Value: Saveable,
-        Value: Persistable,
-        Value.ArchiverType: NSCoding,
-        Value.ArchiverType.ValueType == Value>(values: Values) -> [Value] {
-            return values.map { self.write($0) }
-    }
-
-    /**
-    Writes a sequence of Persistable value with a metadata value, both conforming to Saveable, to the database inside the read write transaction.
-
-    :param: objects A SequenceType of ValueWithValueMetadata instances.
-    :returns: An array of ValueWithValueMetadata instances.
-    */
-    public func write<
-        Values, ValueWithValueMetadata
-        where
-        Values: SequenceType,
-        Values.Generator.Element == ValueWithValueMetadata,
-        ValueWithValueMetadata: Saveable,
-        ValueWithValueMetadata: ValueMetadataPersistable,
-        ValueWithValueMetadata.ArchiverType: NSCoding,
-        ValueWithValueMetadata.ArchiverType.ValueType == ValueWithValueMetadata,
-        ValueWithValueMetadata.MetadataType.ArchiverType: NSCoding,
-        ValueWithValueMetadata.MetadataType.ArchiverType.ValueType == ValueWithValueMetadata.MetadataType>(values: Values) -> [ValueWithValueMetadata] {
-            return values.map { self.write($0) }
-    }
-
-    /**
-    Writes a sequence of Persistable value, conforming to Saveable with a metadata object conforming to NSCoding, to the database inside the read write transaction.
-
-    :param: objects A SequenceType of ValueWithObjectMetadata instances.
-    :returns: An array of ValueWithObjectMetadata instances.
-    */
-    public func write<
-        Values, ValueWithObjectMetadata
-        where
-        Values: SequenceType,
-        Values.Generator.Element == ValueWithObjectMetadata,
-        ValueWithObjectMetadata: Saveable,
-        ValueWithObjectMetadata: ObjectMetadataPersistable,
-        ValueWithObjectMetadata.ArchiverType: NSCoding,
-        ValueWithObjectMetadata.MetadataType: NSCoding,
-        ValueWithObjectMetadata.ArchiverType.ValueType == ValueWithObjectMetadata>(values: Values) -> [ValueWithObjectMetadata] {
-            return values.map { self.write($0) }
+    public var write: Write<Generator.Element, YapDatabase> {
+        return Write(self)
     }
 }
 
-// MARK: - YapDatabaseConnection
+// MARK: - Objects with no Metadata
 
-extension YapDatabaseConnection {
+extension Writable
+    where
+    ItemType: NSCoding,
+    ItemType: Persistable {
 
     /**
-    Synchonously writes a Persistable object conforming to NSCoding to the database using the connection.
-
-    :param: object An Object.
-    :returns: The Object.
+    Write the items using an existing transaction.
+    
+    - parameter transaction: a YapDatabaseReadWriteTransaction
     */
-    public func write<
-        Object
-        where
-        Object: NSCoding,
-        Object: Persistable>(object: Object) -> Object {
-            return write { $0.write(object) }
+    public func on(transaction: Database.Connection.WriteTransaction) {
+        items.forEach { transaction.writeAtIndex($0.index, object: $0, metadata: .None) }
     }
 
     /**
-    Synchonously writes a Persistable object with metadata, both conforming to NSCoding to the database inside the read write transaction.
+    Write the items synchronously using a connection.
 
-    :param: object An ObjectWithObjectMetadata.
-    :returns: The ObjectWithObjectMetadata.
+    - parameter connection: a YapDatabaseConnection
     */
-    public func write<
-        ObjectWithObjectMetadata
-        where
-        ObjectWithObjectMetadata: NSCoding,
-        ObjectWithObjectMetadata: ObjectMetadataPersistable>(object: ObjectWithObjectMetadata) -> ObjectWithObjectMetadata {
-            return write { $0.write(object) }
+    public func sync(connection: Database.Connection) {
+        connection.write(on)
     }
 
     /**
-    Synchonously writes a Persistable object, conforming to NSCoding, with metadata value type to the database inside the read write transaction.
+    Write the items asynchronously using a connection.
 
-    :param: object An ObjectWithValueMetadata.
-    :returns: The ObjectWithValueMetadata.
+    - parameter connection: a YapDatabaseConnection
     */
-    public func write<
-        ObjectWithValueMetadata
-        where
-        ObjectWithValueMetadata: NSCoding,
-        ObjectWithValueMetadata: ValueMetadataPersistable,
-        ObjectWithValueMetadata.MetadataType.ArchiverType: NSCoding,
-        ObjectWithValueMetadata.MetadataType.ArchiverType.ValueType == ObjectWithValueMetadata.MetadataType>(object: ObjectWithValueMetadata) -> ObjectWithValueMetadata {
-            return write { $0.write(object) }
+    public func async(connection: Database.Connection, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: dispatch_block_t) {
+        connection.asyncWrite(on, queue: queue, completion: completion)
     }
 
     /**
-    Synchonously writes a Persistable value conforming to Saveable to the database using the connection.
+    Write the items inside of an `NSOperation`.
 
-    :param: value A Value.
-    :returns: The Value.
+    - parameter connection: a YapDatabaseConnection
     */
-    public func write<
-        Value
-        where
-        Value: Saveable,
-        Value: Persistable,
-        Value.ArchiverType: NSCoding,
-        Value.ArchiverType.ValueType == Value>(value: Value) -> Value {
-            return write { $0.write(value) }
-    }
-
-    /**
-    Synchonously writes a Persistable value with a metadata value, both conforming to Saveable, to the database inside the read write transaction.
-
-    :param: value A ValueWithValueMetadata.
-    :returns: The ValueWithValueMetadata.
-    */
-    public func write<
-        ValueWithValueMetadata
-        where
-        ValueWithValueMetadata: Saveable,
-        ValueWithValueMetadata: ValueMetadataPersistable,
-        ValueWithValueMetadata.ArchiverType: NSCoding,
-        ValueWithValueMetadata.ArchiverType.ValueType == ValueWithValueMetadata,
-        ValueWithValueMetadata.MetadataType.ArchiverType: NSCoding,
-        ValueWithValueMetadata.MetadataType.ArchiverType.ValueType == ValueWithValueMetadata.MetadataType>(value: ValueWithValueMetadata) -> ValueWithValueMetadata {
-            return write { $0.write(value) }
-    }
-
-    /**
-    Synchonously writes a Persistable value, conforming to Saveable with a metadata object conforming to NSCoding, to the database inside the read write transaction.
-
-    :param: value A ValueWithObjectMetadata.
-    :returns: The ValueWithObjectMetadata.
-    */
-    public func write<
-        ValueWithObjectMetadata
-        where
-        ValueWithObjectMetadata: Saveable,
-        ValueWithObjectMetadata: ObjectMetadataPersistable,
-        ValueWithObjectMetadata.MetadataType: NSCoding,
-        ValueWithObjectMetadata.ArchiverType: NSCoding,
-        ValueWithObjectMetadata.ArchiverType.ValueType == ValueWithObjectMetadata>(value: ValueWithObjectMetadata) -> ValueWithObjectMetadata {
-            return write { $0.write(value) }
+    public func operation(connection: Database.Connection) -> NSOperation {
+        return connection.writeBlockOperation { self.on($0) }
     }
 }
 
-extension YapDatabaseConnection {
+// MARK: - Objects with Object Metadata
+
+extension Writable
+    where
+    ItemType: NSCoding,
+    ItemType: MetadataPersistable,
+    ItemType.MetadataType: NSCoding {
 
     /**
-    Asynchonously writes a Persistable object conforming to NSCoding to the database using the connection.
+    Write the items using an existing transaction.
 
-    :param: object An Object.
-    :param: queue A dispatch_queue_t, defaults to the main queue.
-    :param: completion A closure which receives the Object.
+    - parameter transaction: a YapDatabaseReadWriteTransaction
     */
-    public func asyncWrite<
-        Object
-        where
-        Object: NSCoding,
-        Object: Persistable>(object: Object, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: (Object) -> Void) {
-            asyncWrite({ $0.write(object) }, queue: queue, completion: completion)
+    public func on(transaction: Database.Connection.WriteTransaction) {
+        items.forEach { transaction.writeAtIndex($0.index, object: $0, metadata: $0.metadata) }
     }
 
     /**
-    Asynchonously writes a Persistable object with metadata, both conforming to NSCoding to the database inside the read write transaction.
+    Write the items synchronously using a connection.
 
-    :param: object An ObjectWithObjectMetadata.
-    :param: queue A dispatch_queue_t, defaults to the main queue.
-    :param: completion A closure which receives the ObjectWithObjectMetadata.
+    - parameter connection: a YapDatabaseConnection
     */
-    public func asyncWrite<
-        ObjectWithObjectMetadata
-        where
-        ObjectWithObjectMetadata: NSCoding,
-        ObjectWithObjectMetadata: ObjectMetadataPersistable>(object: ObjectWithObjectMetadata, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: (ObjectWithObjectMetadata) -> Void) {
-            asyncWrite({ $0.write(object) }, queue: queue, completion: completion)
+    public func sync(connection: Database.Connection) {
+        connection.write(on)
     }
 
     /**
-    Asynchonously writes a Persistable object, conforming to NSCoding, with metadata value type to the database inside the read write transaction.
+    Write the items asynchronously using a connection.
 
-    :param: object An ObjectWithValueMetadata.
-    :param: queue A dispatch_queue_t, defaults to the main queue.
-    :param: completion A closure which receives the ObjectWithValueMetadata.
+    - parameter connection: a YapDatabaseConnection
     */
-    public func asyncWrite<
-        ObjectWithValueMetadata
-        where
-        ObjectWithValueMetadata: NSCoding,
-        ObjectWithValueMetadata: ValueMetadataPersistable>(object: ObjectWithValueMetadata, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: (ObjectWithValueMetadata) -> Void) {
-            asyncWrite({ $0.write(object) }, queue: queue, completion: completion)
+    public func async(connection: Database.Connection, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: dispatch_block_t) {
+        connection.asyncWrite(on, queue: queue, completion: completion)
     }
 
     /**
-    Asynchonously writes a Persistable value conforming to Saveable to the database using the connection.
+    Write the items inside of an `NSOperation`.
 
-    :param: value A Value.
-    :param: queue A dispatch_queue_t, defaults to the main queue.
-    :param: completion A closure which receives the Value.
+    - parameter connection: a YapDatabaseConnection
     */
-    public func asyncWrite<
-        Value
-        where
-        Value: Saveable,
-        Value: Persistable,
-        Value.ArchiverType: NSCoding,
-        Value.ArchiverType.ValueType == Value>(value: Value, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: (Value) -> Void) {
-            asyncWrite({ $0.write(value) }, queue: queue, completion: completion)
-    }
-
-    /**
-    Asynchonously writes a Persistable value with a metadata value, both conforming to Saveable, to the database inside the read write transaction.
-
-    :param: value An ValueWithValueMetadata.
-    :param: queue A dispatch_queue_t, defaults to the main queue.
-    :param: completion A closure which receives the ValueWithValueMetadata.
-    */
-    public func asyncWrite<
-        ValueWithValueMetadata
-        where
-        ValueWithValueMetadata: Saveable,
-        ValueWithValueMetadata: ValueMetadataPersistable,
-        ValueWithValueMetadata.ArchiverType: NSCoding,
-        ValueWithValueMetadata.ArchiverType.ValueType == ValueWithValueMetadata,
-        ValueWithValueMetadata.MetadataType.ArchiverType: NSCoding,
-        ValueWithValueMetadata.MetadataType.ArchiverType.ValueType == ValueWithValueMetadata.MetadataType>(value: ValueWithValueMetadata, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: (ValueWithValueMetadata) -> Void) {
-            asyncWrite({ $0.write(value) }, queue: queue, completion: completion)
-    }
-
-    /**
-    Asynchonously writes a Persistable value, conforming to Saveable with a metadata object conforming to NSCoding, to the database inside the read write transaction.
-
-    :param: value An ValueWithObjectMetadata.
-    :param: queue A dispatch_queue_t, defaults to the main queue.
-    :param: completion A closure which receives the ValueWithObjectMetadata.
-    */
-    public func asyncWrite<
-        ValueWithObjectMetadata
-        where
-        ValueWithObjectMetadata: Saveable,
-        ValueWithObjectMetadata: ObjectMetadataPersistable,
-        ValueWithObjectMetadata.MetadataType: NSCoding,
-        ValueWithObjectMetadata.ArchiverType: NSCoding,
-        ValueWithObjectMetadata.ArchiverType.ValueType == ValueWithObjectMetadata>(value: ValueWithObjectMetadata, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: (ValueWithObjectMetadata) -> Void) {
-            asyncWrite({ $0.write(value) }, queue: queue, completion: completion)
+    public func operation(connection: Database.Connection) -> NSOperation {
+        return connection.writeBlockOperation { self.on($0) }
     }
 }
 
-extension YapDatabaseConnection {
+// MARK: - Objects with Value Metadata
+
+extension Writable
+    where
+    ItemType: NSCoding,
+    ItemType: MetadataPersistable,
+    ItemType.MetadataType: Saveable,
+    ItemType.MetadataType.ArchiverType: NSCoding,
+    ItemType.MetadataType.ArchiverType.ValueType == ItemType.MetadataType {
 
     /**
-    Synchonously writes Persistable objects conforming to NSCoding to the database using the connection.
+    Write the items using an existing transaction.
 
-    :param: objects A SequenceType of Object instances.
-    :returns: An array of Object instances.
+    - parameter transaction: a YapDatabaseReadWriteTransaction
     */
-    public func write<
-        Objects, Object
-        where
-        Objects: SequenceType,
-        Objects.Generator.Element == Object,
-        Object: NSCoding,
-        Object: Persistable>(objects: Objects) -> [Object] {
-            return write { $0.write(objects) }
+    public func on(transaction: Database.Connection.WriteTransaction) {
+        items.forEach { transaction.writeAtIndex($0.index, object: $0, metadata: $0.metadata?.archive) }
     }
 
     /**
-    Synchonously writes a sequence of Persistable object with metadata, both conforming to NSCoding to the database inside the read write transaction.
+    Write the items synchronously using a connection.
 
-    :param: objects A SequenceType of ObjectWithObjectMetadata instances.
-    :returns: An array of ObjectWithObjectMetadata instances.
+    - parameter connection: a YapDatabaseConnection
     */
-    public func write<
-        Objects, ObjectWithObjectMetadata
-        where
-        Objects: SequenceType,
-        Objects.Generator.Element == ObjectWithObjectMetadata,
-        ObjectWithObjectMetadata: NSCoding,
-        ObjectWithObjectMetadata: ObjectMetadataPersistable>(objects: Objects) -> [ObjectWithObjectMetadata] {
-            return write { $0.write(objects) }
+    public func sync(connection: Database.Connection) {
+        connection.write(on)
     }
 
     /**
-    Synchonously writes a sequence of Persistable object, conforming to NSCoding, with metadata value type to the database inside the read write transaction.
+    Write the items asynchronously using a connection.
 
-    :param: objects A SequenceType of ObjectWithValueMetadata instances.
-    :returns: An array of ObjectWithValueMetadata instances.
+    - parameter connection: a YapDatabaseConnection
     */
-    public func write<
-        Objects, ObjectWithValueMetadata
-        where
-        Objects: SequenceType,
-        Objects.Generator.Element == ObjectWithValueMetadata,
-        ObjectWithValueMetadata: NSCoding,
-        ObjectWithValueMetadata: ValueMetadataPersistable>(objects: Objects) -> [ObjectWithValueMetadata] {
-            return write { $0.write(objects) }
+    public func async(connection: Database.Connection, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: dispatch_block_t) {
+        connection.asyncWrite(on, queue: queue, completion: completion)
     }
 
     /**
-    Synchonously writes Persistable values conforming to Saveable to the database using the connection.
+    Write the items inside of an `NSOperation`.
 
-    :param: values A SequenceType of Value instances.
-    :returns: An array of Object instances.
+    - parameter connection: a YapDatabaseConnection
     */
-    public func write<
-        Values, Value
-        where
-        Values: SequenceType,
-        Values.Generator.Element == Value,
-        Value: Saveable,
-        Value: Persistable,
-        Value.ArchiverType: NSCoding,
-        Value.ArchiverType.ValueType == Value>(values: Values) -> [Value] {
-            return write { $0.write(values) }
-    }
-
-    /**
-    Synchonously writes a sequence of Persistable value with a metadata value, both conforming to Saveable, to the database inside the read write transaction.
-
-    :param: objects A SequenceType of ValueWithValueMetadata instances.
-    :returns: An array of ValueWithValueMetadata instances.
-    */
-    public func write<
-        Values, ValueWithValueMetadata
-        where
-        Values: SequenceType,
-        Values.Generator.Element == ValueWithValueMetadata,
-        ValueWithValueMetadata: Saveable,
-        ValueWithValueMetadata: ValueMetadataPersistable,
-        ValueWithValueMetadata.MetadataType.ArchiverType: NSCoding,
-        ValueWithValueMetadata.ArchiverType: NSCoding,
-        ValueWithValueMetadata.ArchiverType.ValueType == ValueWithValueMetadata>(values: Values) -> [ValueWithValueMetadata] {
-            return write { $0.write(values) }
-    }
-
-    /**
-    Synchonously writes a sequence of Persistable value, conforming to Saveable with a metadata object conforming to NSCoding, to the database inside the read write transaction.
-
-    :param: objects A SequenceType of ValueWithObjectMetadata instances.
-    :returns: An array of ValueWithObjectMetadata instances.
-    */
-    public func write<
-        Values, ValueWithObjectMetadata
-        where
-        Values: SequenceType,
-        Values.Generator.Element == ValueWithObjectMetadata,
-        ValueWithObjectMetadata: Saveable,
-        ValueWithObjectMetadata: ObjectMetadataPersistable,
-        ValueWithObjectMetadata.MetadataType: NSCoding,
-        ValueWithObjectMetadata.ArchiverType: NSCoding,
-        ValueWithObjectMetadata.ArchiverType.ValueType == ValueWithObjectMetadata>(values: Values) -> [ValueWithObjectMetadata] {
-            return write { $0.write(values) }
+    public func operation(connection: Database.Connection) -> NSOperation {
+        return connection.writeBlockOperation { self.on($0) }
     }
 }
 
-extension YapDatabaseConnection {
+// MARK: - Values with no Metadata
+
+extension Writable
+    where
+    ItemType: Saveable,
+    ItemType: Persistable,
+    ItemType.ArchiverType: NSCoding,
+    ItemType.ArchiverType.ValueType == ItemType {
 
     /**
-    Asynchonously writes Persistable objects conforming to NSCoding to the database using the connection.
+    Write the items using an existing transaction.
 
-    :param: objects A SequenceType of Object instances.
-    :param: queue A dispatch_queue_t, defaults to the main queue.
-    :param: completion A closure which receives an array of Object instances.
+    - parameter transaction: a YapDatabaseReadWriteTransaction
     */
-    public func asyncWrite<
-        Objects, Object
-        where
-        Objects: SequenceType,
-        Objects.Generator.Element == Object,
-        Object: NSCoding,
-        Object: Persistable>(objects: Objects, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: ([Object]) -> Void) {
-            asyncWrite({ $0.write(objects) }, queue: queue, completion: completion)
+    public func on(transaction: Database.Connection.WriteTransaction) {
+        items.forEach { transaction.writeAtIndex($0.index, object: $0.archive, metadata: .None) }
     }
 
     /**
-    Asynchonously writes a sequence of Persistable object with metadata, both conforming to NSCoding to the database inside the read write transaction.
+    Write the items synchronously using a connection.
 
-    :param: objects A SequenceType of ObjectWithObjectMetadata instances.
-    :param: queue A dispatch_queue_t, defaults to the main queue.
-    :param: completion A closure which receives an array of ObjectWithObjectMetadata instances.
+    - parameter connection: a YapDatabaseConnection
     */
-    public func asyncWrite<
-        Objects, ObjectWithObjectMetadata
-        where
-        Objects: SequenceType,
-        Objects.Generator.Element == ObjectWithObjectMetadata,
-        ObjectWithObjectMetadata: NSCoding,
-        ObjectWithObjectMetadata: ObjectMetadataPersistable>(objects: Objects, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: ([ObjectWithObjectMetadata]) -> Void) {
-            asyncWrite({ $0.write(objects) }, queue: queue, completion: completion)
+    public func sync(connection: Database.Connection) {
+        connection.write(on)
     }
 
     /**
-    Asynchonously writes a sequence of Persistable object, conforming to NSCoding, with metadata value type to the database inside the read write transaction.
+    Write the items asynchronously using a connection.
 
-    :param: objects A SequenceType of ObjectWithValueMetadata instances.
-    :param: queue A dispatch_queue_t, defaults to the main queue.
-    :param: completion A closure which receives an array of ObjectWithValueMetadata instances.
+    - parameter connection: a YapDatabaseConnection
     */
-    public func asyncWrite<
-        Objects, ObjectWithValueMetadata
-        where
-        Objects: SequenceType,
-        Objects.Generator.Element == ObjectWithValueMetadata,
-        ObjectWithValueMetadata: NSCoding,
-        ObjectWithValueMetadata: ValueMetadataPersistable>(objects: Objects, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: ([ObjectWithValueMetadata]) -> Void) {
-            asyncWrite({ $0.write(objects) }, queue: queue, completion: completion)
+    public func async(connection: Database.Connection, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: dispatch_block_t) {
+        connection.asyncWrite(on, queue: queue, completion: completion)
     }
 
     /**
-    Asynchonously writes Persistable values conforming to Saveable to the database using the connection.
+    Write the items inside of an `NSOperation`.
 
-    :param: values A SequenceType of Value instances.
-    :param: queue A dispatch_queue_t, defaults to the main queue.
-    :param: completion A closure which receives an array of Value instances.
+    - parameter connection: a YapDatabaseConnection
     */
-    public func asyncWrite<
-        Values, Value
-        where
-        Values: SequenceType,
-        Values.Generator.Element == Value,
-        Value: Saveable,
-        Value: Persistable,
-        Value.ArchiverType: NSCoding,
-        Value.ArchiverType.ValueType == Value>(values: Values, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: ([Value]) -> Void) {
-            asyncWrite({ $0.write(values) }, queue: queue, completion: completion)
+    public func operation(connection: Database.Connection) -> NSOperation {
+        return connection.writeBlockOperation { self.on($0) }
+    }
+}
+
+// MARK: - Values with Object Metadata
+
+extension Writable
+    where
+    ItemType: Saveable,
+    ItemType: MetadataPersistable,
+    ItemType.ArchiverType: NSCoding,
+    ItemType.ArchiverType.ValueType == ItemType,
+    ItemType.MetadataType: NSCoding {
+
+    /**
+    Write the items using an existing transaction.
+
+    - parameter transaction: a YapDatabaseReadWriteTransaction
+    */
+    public func on(transaction: Database.Connection.WriteTransaction) {
+        items.forEach { transaction.writeAtIndex($0.index, object: $0.archive, metadata: $0.metadata) }
     }
 
     /**
-    Asynchonously writes a sequence of Persistable value, conforming to Saveable with a metadata object conforming to NSCoding, to the database inside the read write transaction.
+    Write the items synchronously using a connection.
 
-    :param: objects A SequenceType of ValueWithObjectMetadata instances.
-    :returns: An array of ValueWithObjectMetadata instances.
+    - parameter connection: a YapDatabaseConnection
     */
-    public func asyncWrite<
-        Values, ValueWithObjectMetadata
-        where
-        Values: SequenceType,
-        Values.Generator.Element == ValueWithObjectMetadata,
-        ValueWithObjectMetadata: Saveable,
-        ValueWithObjectMetadata: ObjectMetadataPersistable,
-        ValueWithObjectMetadata.MetadataType: NSCoding,
-        ValueWithObjectMetadata.ArchiverType: NSCoding,
-        ValueWithObjectMetadata.ArchiverType.ValueType == ValueWithObjectMetadata>(values: Values, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: ([ValueWithObjectMetadata]) -> Void) {
-            asyncWrite({ $0.write(values) }, queue: queue, completion: completion)
+    public func sync(connection: Database.Connection) {
+        connection.write(on)
     }
 
     /**
-    Asynchonously writes a sequence of Persistable value with a metadata value, both conforming to Saveable, to the database inside the read write transaction.
+    Write the items asynchronously using a connection.
 
-    :param: objects A SequenceType of ValueWithValueMetadata instances.
-    :returns: An array of ValueWithValueMetadata instances.
+    - parameter connection: a YapDatabaseConnection
     */
-    public func asyncWrite<
-        Values, ValueWithValueMetadata
-        where
-        Values: SequenceType,
-        Values.Generator.Element == ValueWithValueMetadata,
-        ValueWithValueMetadata: Saveable,
-        ValueWithValueMetadata: ValueMetadataPersistable,
-        ValueWithValueMetadata.MetadataType: NSCoding,
-        ValueWithValueMetadata.ArchiverType: NSCoding,
-        ValueWithValueMetadata.ArchiverType.ValueType == ValueWithValueMetadata>(values: Values, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: ([ValueWithValueMetadata]) -> Void) {
-            asyncWrite({ $0.write(values) }, queue: queue, completion: completion)
+    public func async(connection: Database.Connection, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: dispatch_block_t) {
+        connection.asyncWrite(on, queue: queue, completion: completion)
+    }
+
+    /**
+    Write the items inside of an `NSOperation`.
+
+    - parameter connection: a YapDatabaseConnection
+    */
+    public func operation(connection: Database.Connection) -> NSOperation {
+        return connection.writeBlockOperation { self.on($0) }
+    }
+}
+
+// MARK: - Values with Value Metadata
+
+extension Writable
+    where
+    ItemType: Saveable,
+    ItemType: MetadataPersistable,
+    ItemType.ArchiverType: NSCoding,
+    ItemType.ArchiverType.ValueType == ItemType,
+    ItemType.MetadataType: Saveable,
+    ItemType.MetadataType.ArchiverType: NSCoding,
+    ItemType.MetadataType.ArchiverType.ValueType == ItemType.MetadataType {
+
+    /**
+    Write the items using an existing transaction.
+
+    - parameter transaction: a YapDatabaseReadWriteTransaction
+    */
+    public func on(transaction: Database.Connection.WriteTransaction) {
+        items.forEach { transaction.writeAtIndex($0.index, object: $0.archive, metadata: $0.metadata?.archive) }
+    }
+
+    /**
+    Write the items synchronously using a connection.
+
+    - parameter connection: a YapDatabaseConnection
+    */
+    public func sync(connection: Database.Connection) {
+        connection.write(on)
+    }
+
+    /**
+    Write the items asynchronously using a connection.
+
+    - parameter connection: a YapDatabaseConnection
+    */
+    public func async(connection: Database.Connection, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: dispatch_block_t) {
+        connection.asyncWrite(on, queue: queue, completion: completion)
+    }
+
+    /**
+    Write the items inside of an `NSOperation`.
+
+    - parameter connection: a YapDatabaseConnection
+    */
+    public func operation(connection: Database.Connection) -> NSOperation {
+        return connection.writeBlockOperation { self.on($0) }
     }
 }
 
 
-// MARK: - YapDatabase
 
-extension YapDatabase {
-
-    /**
-    Synchonously writes a Persistable object conforming to NSCoding to the database using a new connection.
-
-    :param: object An Object.
-    :returns: The Object.
-    */
-    public func write<Object where Object: NSCoding, Object: Persistable>(object: Object) -> Object {
-        return newConnection().write(object)
-    }
-
-    /**
-    Synchonously writes a Persistable object with metadata, both conforming to NSCoding to the database inside the read write transaction.
-
-    :param: object An ObjectWithObjectMetadata.
-    :returns: The ObjectWithObjectMetadata.
-    */
-    public func write<
-        ObjectWithObjectMetadata
-        where
-        ObjectWithObjectMetadata: NSCoding,
-        ObjectWithObjectMetadata: ObjectMetadataPersistable>(object: ObjectWithObjectMetadata) -> ObjectWithObjectMetadata {
-            return newConnection().write(object)
-    }
-
-    /**
-    Synchonously writes a Persistable object, conforming to NSCoding, with metadata value type to the database inside the read write transaction.
-
-    :param: object An ObjectWithValueMetadata.
-    :returns: The ObjectWithValueMetadata.
-    */
-    public func write<
-        ObjectWithValueMetadata
-        where
-        ObjectWithValueMetadata: NSCoding,
-        ObjectWithValueMetadata: ValueMetadataPersistable>(object: ObjectWithValueMetadata) -> ObjectWithValueMetadata {
-            return newConnection().write(object)
-    }
-
-    /**
-    Synchonously writes a Persistable value conforming to Saveable to the database using a new connection.
-
-    :param: value A Value.
-    :returns: The Value.
-    */
-    public func write<
-        Value
-        where
-        Value: Saveable,
-        Value: Persistable,
-        Value.ArchiverType: NSCoding,
-        Value.ArchiverType.ValueType == Value>(value: Value) -> Value {
-            return newConnection().write(value)
-    }
-
-    /**
-    Synchonously writes a Persistable value with a metadata value, both conforming to Saveable, to the database inside the read write transaction.
-
-    :param: value A ValueWithValueMetadata.
-    :returns: The ValueWithValueMetadata.
-    */
-    public func write<
-        ValueWithValueMetadata
-        where
-        ValueWithValueMetadata: Saveable,
-        ValueWithValueMetadata: ValueMetadataPersistable,
-        ValueWithValueMetadata.ArchiverType: NSCoding,
-        ValueWithValueMetadata.ArchiverType.ValueType == ValueWithValueMetadata,
-        ValueWithValueMetadata.MetadataType.ArchiverType: NSCoding,
-        ValueWithValueMetadata.MetadataType.ArchiverType.ValueType == ValueWithValueMetadata.MetadataType>(value: ValueWithValueMetadata) -> ValueWithValueMetadata {
-            return newConnection().write(value)
-    }
-
-    /**
-    Synchonously writes a Persistable value, conforming to Saveable with a metadata object conforming to NSCoding, to the database inside the read write transaction.
-
-    :param: value A ValueWithObjectMetadata.
-    :returns: The ValueWithObjectMetadata.
-    */
-    public func write<
-        ValueWithObjectMetadata
-        where
-        ValueWithObjectMetadata: Saveable,
-        ValueWithObjectMetadata: ObjectMetadataPersistable,
-        ValueWithObjectMetadata.ArchiverType: NSCoding,
-        ValueWithObjectMetadata.ArchiverType.ValueType == ValueWithObjectMetadata>(value: ValueWithObjectMetadata) -> ValueWithObjectMetadata {
-            return newConnection().write(value)
-    }
-}
-
-extension YapDatabase {
-
-    /**
-    Asynchonously writes a Persistable object conforming to NSCoding to the database using a new connection.
-
-    :param: object An Object.
-    :param: queue A dispatch_queue_t, defaults to the main queue.
-    :param: completion A closure which receives the Object.
-    */
-    public func asyncWrite<
-        Object
-        where
-        Object: NSCoding,
-        Object: Persistable>(object: Object, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: (Object) -> Void) {
-            newConnection().asyncWrite(object, queue: queue, completion: completion)
-    }
-
-    /**
-    Asynchonously writes a Persistable object with metadata, both conforming to NSCoding to the database using a new connection.
-
-    :param: object An ObjectWithObjectMetadata.
-    :param: queue A dispatch_queue_t, defaults to the main queue.
-    :param: completion A closure which receives the ObjectWithObjectMetadata.
-    */
-    public func asyncWrite<
-        ObjectWithObjectMetadata
-        where
-        ObjectWithObjectMetadata: NSCoding,
-        ObjectWithObjectMetadata: ObjectMetadataPersistable>(object: ObjectWithObjectMetadata, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: (ObjectWithObjectMetadata) -> Void) {
-            newConnection().asyncWrite(object, queue: queue, completion: completion)
-    }
-
-    /**
-    Asynchonously writes a Persistable object, conforming to NSCoding, with metadata value type to the database using a new connection.
-
-    :param: object An ObjectWithValueMetadata.
-    :param: queue A dispatch_queue_t, defaults to the main queue.
-    :param: completion A closure which receives the ObjectWithValueMetadata.
-    */
-    public func asyncWrite<
-        ObjectWithValueMetadata
-        where
-        ObjectWithValueMetadata: NSCoding,
-        ObjectWithValueMetadata: ValueMetadataPersistable>(object: ObjectWithValueMetadata, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: (ObjectWithValueMetadata) -> Void) {
-        newConnection().asyncWrite(object, queue: queue, completion: completion)
-    }
-
-    /**
-    Asynchonously writes a Persistable value conforming to Saveable to the database using a new connection.
-
-    :param: value A Value.
-    :param: queue A dispatch_queue_t, defaults to the main queue.
-    :param: completion A closure which receives the Value.
-    */
-    public func asyncWrite<
-        Value
-        where
-        Value: Saveable,
-        Value: Persistable,
-        Value.ArchiverType: NSCoding,
-        Value.ArchiverType.ValueType == Value>(value: Value, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: (Value) -> Void) {
-            newConnection().asyncWrite(value, queue: queue, completion: completion)
-    }
-
-    /**
-    Asynchonously writes a Persistable value with a metadata value, both conforming to Saveable, to the database using a new connection.
-
-    :param: object An ValueWithValueMetadata.
-    :param: queue A dispatch_queue_t, defaults to the main queue.
-    :param: completion A closure which receives the ValueWithValueMetadata.
-    */
-    public func asyncWrite<
-        ValueWithValueMetadata
-        where
-        ValueWithValueMetadata: Saveable,
-        ValueWithValueMetadata: ValueMetadataPersistable,
-        ValueWithValueMetadata.ArchiverType: NSCoding,
-        ValueWithValueMetadata.ArchiverType.ValueType == ValueWithValueMetadata,
-        ValueWithValueMetadata.MetadataType.ArchiverType: NSCoding,
-        ValueWithValueMetadata.MetadataType.ArchiverType.ValueType == ValueWithValueMetadata.MetadataType>(value: ValueWithValueMetadata, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: (ValueWithValueMetadata) -> Void) {
-            newConnection().asyncWrite(value, queue: queue, completion: completion)
-    }
-
-    /**
-    Asynchonously writes a Persistable value, conforming to Saveable with a metadata object conforming to NSCoding, to the database using a new connection.
-
-    :param: object An ValueWithObjectMetadata.
-    :param: queue A dispatch_queue_t, defaults to the main queue.
-    :param: completion A closure which receives the ValueWithObjectMetadata.
-    */
-    public func asyncWrite<
-        ValueWithObjectMetadata
-        where
-        ValueWithObjectMetadata: Saveable,
-        ValueWithObjectMetadata: ObjectMetadataPersistable,
-        ValueWithObjectMetadata.MetadataType: NSCoding,
-        ValueWithObjectMetadata.ArchiverType: NSCoding,
-        ValueWithObjectMetadata.ArchiverType.ValueType == ValueWithObjectMetadata>(value: ValueWithObjectMetadata, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: (ValueWithObjectMetadata) -> Void) {
-            newConnection().asyncWrite(value, queue: queue, completion: completion)
-    }
-}
-
-extension YapDatabase {
-
-    /**
-    Synchonously writes Persistable objects conforming to NSCoding to the database using a new connection.
-
-    :param: objects A SequenceType of Object instances.
-    :returns: An array of Object instances.
-    */
-    public func write<
-        Objects, Object
-        where
-        Objects: SequenceType,
-        Objects.Generator.Element == Object,
-        Object: NSCoding,
-        Object: Persistable>(objects: Objects) -> [Object] {
-            return newConnection().write(objects)
-    }
-
-    /**
-    Synchonously writes a sequence of Persistable object with metadata, both conforming to NSCoding to the database inside the read write transaction.
-
-    :param: objects A SequenceType of ObjectWithObjectMetadata instances.
-    :returns: An array of ObjectWithObjectMetadata instances.
-    */
-    public func write<
-        Objects, ObjectWithObjectMetadata
-        where
-        Objects: SequenceType,
-        Objects.Generator.Element == ObjectWithObjectMetadata,
-        ObjectWithObjectMetadata: NSCoding,
-        ObjectWithObjectMetadata: ObjectMetadataPersistable>(objects: Objects) -> [ObjectWithObjectMetadata] {
-            return newConnection().write(objects)
-    }
-
-    /**
-    Synchonously writes a sequence of Persistable object, conforming to NSCoding, with metadata value type to the database inside the read write transaction.
-
-    :param: objects A SequenceType of ObjectWithValueMetadata instances.
-    :returns: An array of ObjectWithValueMetadata instances.
-    */
-    public func write<
-        Objects, ObjectWithValueMetadata
-        where
-        Objects: SequenceType,
-        Objects.Generator.Element == ObjectWithValueMetadata,
-        ObjectWithValueMetadata: NSCoding,
-        ObjectWithValueMetadata.MetadataType.ArchiverType: NSCoding,
-        ObjectWithValueMetadata.MetadataType.ArchiverType.ValueType == ObjectWithValueMetadata.MetadataType,
-        ObjectWithValueMetadata: ValueMetadataPersistable>(objects: Objects) -> [ObjectWithValueMetadata] {
-            return newConnection().write(objects)
-    }
-
-    /**
-    Synchonously writes Persistable values conforming to Saveable to the database using a new connection.
-
-    :param: values A SequenceType of Value instances.
-    :returns: An array of Object instances.
-    */
-    public func write<
-        Values, Value
-        where
-        Values: SequenceType,
-        Values.Generator.Element == Value,
-        Value: Saveable,
-        Value: Persistable,
-        Value.ArchiverType: NSCoding,
-        Value.ArchiverType.ValueType == Value>(values: Values) -> [Value] {
-            return newConnection().write(values)
-    }
-
-    /**
-    Synchonously writes a sequence of Persistable value with a metadata value, both conforming to Saveable, to the database inside the read write transaction.
-
-    :param: objects A SequenceType of ValueWithValueMetadata instances.
-    :returns: An array of ValueWithValueMetadata instances.
-    */
-    public func write<
-        Values, ValueWithValueMetadata
-        where
-        Values: SequenceType,
-        Values.Generator.Element == ValueWithValueMetadata,
-        ValueWithValueMetadata: Saveable,
-        ValueWithValueMetadata: ValueMetadataPersistable,
-        ValueWithValueMetadata.MetadataType.ArchiverType: NSCoding,
-        ValueWithValueMetadata.ArchiverType: NSCoding,
-        ValueWithValueMetadata.ArchiverType.ValueType == ValueWithValueMetadata>(values: Values) -> [ValueWithValueMetadata] {
-            return newConnection().write(values)
-    }
-
-    /**
-    Synchonously writes a sequence of Persistable value, conforming to Saveable with a metadata object conforming to NSCoding, to the database inside the read write transaction.
-
-    :param: objects A SequenceType of ValueWithObjectMetadata instances.
-    :returns: An array of ValueWithObjectMetadata instances.
-    */
-    public func write<
-        Values, ValueWithObjectMetadata
-        where
-        Values: SequenceType,
-        Values.Generator.Element == ValueWithObjectMetadata,
-        ValueWithObjectMetadata: Saveable,
-        ValueWithObjectMetadata: ObjectMetadataPersistable,
-        ValueWithObjectMetadata.MetadataType: NSCoding,
-        ValueWithObjectMetadata.ArchiverType: NSCoding,
-        ValueWithObjectMetadata.ArchiverType.ValueType == ValueWithObjectMetadata>(values: Values) -> [ValueWithObjectMetadata] {
-            return newConnection().write(values)
-    }
-}
-
-extension YapDatabase {
-
-    /**
-    Asynchonously writes Persistable objects conforming to NSCoding to the database using a new connection.
-
-    :param: values A SequenceType of Object instances.
-    :param: queue A dispatch_queue_t, defaults to the main queue.
-    :param: completion A closure which receives an array of Object instances.
-    */
-    public func asyncWrite<
-        Objects, Object
-        where
-        Objects: SequenceType,
-        Objects.Generator.Element == Object,
-        Object: NSCoding,
-        Object: Persistable>(objects: Objects, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: ([Object]) -> Void) {
-            newConnection().asyncWrite(objects, queue: queue, completion: completion)
-    }
-
-    /**
-    Asynchonously writes a sequence of Persistable object with metadata, both conforming to NSCoding to the database inside the read write transaction.
-
-    :param: objects A SequenceType of ObjectWithObjectMetadata instances.
-    :returns: An array of ObjectWithObjectMetadata instances.
-    */
-    public func asyncWrite<
-        Objects, ObjectWithObjectMetadata
-        where
-        Objects: SequenceType,
-        Objects.Generator.Element == ObjectWithObjectMetadata,
-        ObjectWithObjectMetadata: NSCoding,
-        ObjectWithObjectMetadata: ObjectMetadataPersistable>(objects: Objects, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: ([ObjectWithObjectMetadata]) -> Void) {
-            newConnection().asyncWrite(objects, queue: queue, completion: completion)
-    }
-
-    /**
-    Asynchonously writes a sequence of Persistable object, conforming to NSCoding, with metadata value type to the database inside the read write transaction.
-
-    :param: objects A SequenceType of ObjectWithValueMetadata instances.
-    :returns: An array of ObjectWithValueMetadata instances.
-    */
-    public func asyncWrite<
-        Objects, ObjectWithValueMetadata
-        where
-        Objects: SequenceType,
-        Objects.Generator.Element == ObjectWithValueMetadata,
-        ObjectWithValueMetadata: NSCoding,
-        ObjectWithValueMetadata: ValueMetadataPersistable,
-        ObjectWithValueMetadata.MetadataType: Archiver,
-        ObjectWithValueMetadata.MetadataType.ArchiverType.ValueType == ObjectWithValueMetadata.MetadataType>(objects: Objects, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: ([ObjectWithValueMetadata]) -> Void) {
-            newConnection().asyncWrite(objects, queue: queue, completion: completion)
-    }
-
-    /**
-    Asynchonously writes Persistable values conforming to Saveable to the database using a new connection.
-
-    :param: values A SequenceType of Value instances.
-    :param: queue A dispatch_queue_t, defaults to the main queue.
-    :param: completion A closure which receives an array of Value instances.
-    */
-    public func asyncWrite<
-        Values, Value
-        where
-        Values: SequenceType,
-        Values.Generator.Element == Value,
-        Value: Saveable,
-        Value: Persistable,
-        Value.ArchiverType: NSCoding,
-        Value.ArchiverType.ValueType == Value>(values: Values, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: ([Value]) -> Void) {
-            newConnection().asyncWrite(values, queue: queue, completion: completion)
-    }
-
-    /**
-    Asynchonously writes a sequence of Persistable value with a metadata value, both conforming to Saveable, to the database inside the read write transaction.
-
-    :param: objects A SequenceType of ValueWithValueMetadata instances.
-    :returns: An array of ValueWithValueMetadata instances.
-    */
-    public func asyncWrite<
-        Values, ValueWithValueMetadata
-        where
-        Values: SequenceType,
-        Values.Generator.Element == ValueWithValueMetadata,
-        ValueWithValueMetadata: Saveable,
-        ValueWithValueMetadata: ValueMetadataPersistable,
-        ValueWithValueMetadata.ArchiverType: NSCoding,
-        ValueWithValueMetadata.ArchiverType.ValueType == ValueWithValueMetadata>(values: Values, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: ([ValueWithValueMetadata]) -> Void) {
-            newConnection().asyncWrite(values, queue: queue, completion: completion)
-    }
-
-    /**
-    Asynchonously writes a sequence of Persistable value, conforming to Saveable with a metadata object conforming to NSCoding, to the database inside the read write transaction.
-
-    :param: objects A SequenceType of ValueWithObjectMetadata instances.
-    :returns: An array of ValueWithObjectMetadata instances.
-    */
-    public func asyncWrite<
-        Values, ValueWithObjectMetadata
-        where
-        Values: SequenceType,
-        Values.Generator.Element == ValueWithObjectMetadata,
-        ValueWithObjectMetadata: Saveable,
-        ValueWithObjectMetadata: ObjectMetadataPersistable,
-        ValueWithObjectMetadata.MetadataType: NSCoding,
-        ValueWithObjectMetadata.ArchiverType: NSCoding,
-        ValueWithObjectMetadata.ArchiverType.ValueType == ValueWithObjectMetadata>(values: Values, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: ([ValueWithObjectMetadata]) -> Void) {
-            newConnection().asyncWrite(values, queue: queue, completion: completion)
-    }
-}
 
