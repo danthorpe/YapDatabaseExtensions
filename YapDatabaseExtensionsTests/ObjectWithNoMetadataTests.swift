@@ -27,6 +27,7 @@ class ObjectWithNoMetadataTests: XCTestCase {
 
     var reader: Read<Person, TestableDatabase>!
     var writer: Write<Person, TestableConnection>!
+    var remover: Remove<TestableConnection>!
 
     var dispatchQueue: dispatch_queue_t!
     var operationQueue: NSOperationQueue!

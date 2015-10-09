@@ -33,16 +33,16 @@ public struct Remove<C: ConnectionType>: Removable {
         indexes = [index]
     }
 
+    init<Indexes where Indexes: SequenceType, Indexes.Generator.Element == YapDB.Index>(_ items: Indexes) {
+        indexes = Array(items)
+    }
+
     init<Item where Item: Persistable>(_ item: Item) {
         indexes = [item.index]
     }
 
     init<Items where Items: SequenceType, Items.Generator.Element: Persistable>(_ items: Items) {
         indexes = items.map { $0.index }
-    }
-
-    init<Indexes where Indexes: SequenceType, Indexes.Generator.Element == YapDB.Index>(_ items: Indexes) {
-        indexes = Array(items)
     }
 }
 

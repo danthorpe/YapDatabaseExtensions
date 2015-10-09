@@ -192,11 +192,22 @@ extension Persistable {
     Convenience static function to get an index for a given key 
     with this type's collection.
     
-    - parameter key: a String
-    - returns: a YapDB.Index value.
+    - parameter key: a `String`
+    - returns: a `YapDB.Index` value.
     */
     public static func indexWithKey(key: String) -> YapDB.Index {
         return YapDB.Index(collection: collection, key: key)
+    }
+
+    /**
+    Convenience static function to get an array of indexes for an
+    array of keys with this type's collection.
+
+    - parameter keys: a sequence of `String`s
+    - returns: an array of `YapDB.Index` values.
+    */
+    public static func indexesWithKeys<Keys: SequenceType where Keys.Generator.Element == String>(keys: Keys) -> [YapDB.Index] {
+        return keys.map { YapDB.Index(collection: collection, key: $0) }
     }
 
     /**
