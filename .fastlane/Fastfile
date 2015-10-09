@@ -4,9 +4,11 @@ platform :ios do
 
   desc "Runs all the tests"
   lane :test do
-	xctest 	scheme: 'YapDatabaseExtensions', 
-			sdk: 'iphonesimulator', 
-			destination: 'platform=iOS Simulator,name=iPhone 6,OS=9.0',
-			derivedDataPath: '.fastlane/xcodebuild-data'
+	xctest 	
+      scheme: 'YapDatabaseExtensions', 
+      sdk: 'iphonesimulator', 
+      destination: 'platform=iOS Simulator,name=iPhone 6,OS=9.0',
+      destination_timeout: 120,
+      derivedDataPath: '.fastlane/xcodebuild-data'
   end
 end
