@@ -30,12 +30,12 @@ public struct Product: Identifiable, Equatable {
         }
     }
 
-    public let metadata: Metadata
+    public var metadata: Metadata? = .None
     public let identifier: Identifier
     internal let name: String
     internal let barcode: Barcode
 
-    public init(metadata: Metadata, identifier: Identifier, name: String, barcode: Barcode) {
+    public init(metadata: Metadata? = .None, identifier: Identifier, name: String, barcode: Barcode) {
         self.metadata = metadata
         self.identifier = identifier
         self.name = name
@@ -127,7 +127,7 @@ extension Product.Category: Persistable {
     }
 }
 
-extension Product: ValueMetadataPersistable {
+extension Product: MetadataPersistable {
 
     public static var collection: String {
         return "Products"
@@ -274,15 +274,13 @@ public class ProductArchiver: NSObject, NSCoding, Archiver {
     }
 
     public required init?(coder aDecoder: NSCoder) {
-        let metadata = Product.Metadata(aDecoder.decodeObjectForKey("metadata"))
         let identifier = aDecoder.decodeObjectForKey("identifier") as! String
         let name = aDecoder.decodeObjectForKey("name") as! String
         let barcode = Barcode(aDecoder.decodeObjectForKey("barcode"))
-        value = Product(metadata: metadata!, identifier: identifier, name: name, barcode: barcode!)
+        value = Product(identifier: identifier, name: name, barcode: barcode!)
     }
 
     public func encodeWithCoder(aCoder: NSCoder) {
-        aCoder.encodeObject(value.metadata.archive, forKey: "metadata")
         aCoder.encodeObject(value.identifier, forKey: "identifier")
         aCoder.encodeObject(value.name, forKey: "name")
         aCoder.encodeObject(value.barcode.archive, forKey: "barcode")

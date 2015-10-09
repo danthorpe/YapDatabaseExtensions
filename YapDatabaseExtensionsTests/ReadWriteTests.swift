@@ -11,24 +11,17 @@ import YapDatabase
 class BaseTestCase: XCTestCase {
 
     let person = Person(id: "user-123", name: "Robbie")
-    let barcode: Barcode = .QRCode("I have no idea what the string of a QR Code might look like")
-    let product = Product(metadata: Product.Metadata(categoryIdentifier: 1), identifier: "cocoa-123", name: "CocoaPops", barcode: .UPCA(1, 2, 3, 4))
 
     var personIndex: YapDB.Index {
         return person.index
-    }
-
-    var peopleIndexes: [YapDB.Index] {
-        return people.map { $0.index }
     }
 
     var personKey: String {
         return person.key
     }
 
-    var peopleKeys: [String] {
-        return people.map { $0.key }
-    }
+
+    let barcode: Barcode = .QRCode("I have no idea what the string of a QR Code might look like")
 
     var barcodeIndex: YapDB.Index {
         return barcode.index
@@ -36,6 +29,16 @@ class BaseTestCase: XCTestCase {
 
     var barcodeKey: String {
         return barcode.key
+    }
+
+    let product = Product(metadata: Product.Metadata(categoryIdentifier: 1), identifier: "cocoa-123", name: "CocoaPops", barcode: .UPCA(1, 2, 3, 4))
+
+    var productIndex: YapDB.Index {
+        return product.index
+    }
+
+    var productKey: String {
+        return product.key
     }
 
     var people: [Person] {
@@ -46,6 +49,15 @@ class BaseTestCase: XCTestCase {
             Person(id: "beatle-4", name: "Ringo")
         ]
     }
+
+    var peopleIndexes: [YapDB.Index] {
+        return people.map { $0.index }
+    }
+
+    var peopleKeys: [String] {
+        return people.map { $0.key }
+    }
+
 
     func barcodes() -> Set<Barcode> {
         return [
@@ -80,6 +92,17 @@ class SynchronousReadWriteTests: BaseTestCase {
         let db = YapDB.testDatabaseForFile(__FILE__, test: __FUNCTION__)
         XCTAssertNil(Barcode.read(db).byKey(barcodeKey))
     }
+
+    func test__non_existing__value_with_value_metadata_by_index() {
+        let db = YapDB.testDatabaseForFile(__FILE__, test: __FUNCTION__)
+        XCTAssertNil(Product.read(db).atIndex(productIndex))
+    }
+
+    func test__non_existing__value_with_value_metadata_by_key() {
+        let db = YapDB.testDatabaseForFile(__FILE__, test: __FUNCTION__)
+        XCTAssertNil(Product.read(db).byKey(productKey))
+    }
+
 
     // Single
 
@@ -124,6 +147,27 @@ class SynchronousReadWriteTests: BaseTestCase {
         }
         XCTAssertEqual(saved, barcode)
     }
+
+    func test__single__value_with_value_metadata__by_index() {
+        let db = YapDB.testDatabaseForFile(__FILE__, test: __FUNCTION__)
+        product.write.to(db)
+        guard let saved = Product.read(db).atIndex(productIndex) else {
+            XCTFail("Object not found in database")
+            return
+        }
+        XCTAssertEqual(saved, product)
+    }
+
+    func test__single__value_with_value_metadata__by_key() {
+        let db = YapDB.testDatabaseForFile(__FILE__, test: __FUNCTION__)
+        product.write.to(db)
+        guard let saved = Product.read(db).byKey(productKey) else {
+            XCTFail("Object not found in database")
+            return
+        }
+        XCTAssertEqual(saved, product)
+    }
+
 
     // Many
 

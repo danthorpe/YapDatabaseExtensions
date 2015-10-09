@@ -233,13 +233,44 @@ public protocol MetadataPersistable: Persistable {
     var metadata: MetadataType? { get set }
 }
 
+/// A facade interface for a read transaction.
 public protocol ReadTransactionType {
+
+    /**
+    Returns all the keys of a collection.
+    
+    - parameter collection: a String. Not optional.
+    - returns: an array of String values.
+    */
     func keysInCollection(collection: String) -> [String]
+
+    /**
+    Read the object at the index.
+
+    - parameter index: a YapDB.Index.
+    - returns: an `AnyObject` if an item existing in the database for this index.
+    */
     func readAtIndex(index: YapDB.Index) -> AnyObject?
+
+    /**
+    Read the metadata at the index.
+
+    - parameter index: a YapDB.Index.
+    - returns: an `AnyObject` if a metadata item existing in the database for this index.
+    */
     func readMetadataAtIndex(index: YapDB.Index) -> AnyObject?
 }
 
+/// A facade interface for a write transaction.
 public protocol WriteTransactionType: ReadTransactionType {
+
+    /**
+    Write the object to the database at the index, including optional metadata.
+    
+    - parameter index: the `YapDB.Index` to write to.
+    - parameter object: the `AnyObject` which will be written.
+    - parameter metadata: an optional `AnyObject` which will be written as metadata.
+    */
     func writeAtIndex(index: YapDB.Index, object: AnyObject, metadata: AnyObject?)
 }
 
@@ -259,42 +290,9 @@ internal enum Handle {
     case Database(YapDatabase)
 }
 
-
-
-
-
-/**
-A generic protocol which extends Persistable. It allows types to
-expose their own metadata object type for use in YapDatabase. 
-The object metadata must conform to NSCoding.
-*/
-public protocol ObjectMetadataPersistable: Persistable {
-    typealias MetadataType: NSCoding
-
-    /// The metadata object for this Persistable type.
-    var metadata: MetadataType { get }
-}
-
-/**
-A generic protocol which extends Persistable. It allows types to
-expose their own metadata value type for use in YapDatabase. Types
-conforming to this protocol are expected to store their metadata
-values internally.
-
-The metadata value must conform to Saveable.
-*/
-public protocol ValueMetadataPersistable: Persistable {
-    typealias MetadataType: Saveable
-
-    /// The metadata value for this Persistable type.
-    var metadata: MetadataType { get }
-}
-
 // MARK: - Archiver & Saveable
 
-/**
-A generic protocol which acts as an archiver for value types.
-*/
+/// A generic protocol which acts as an archiver for value types.
 public protocol Archiver {
     typealias ValueType
 
@@ -507,7 +505,6 @@ public func == (a: YapDB.Index, b: YapDB.Index) -> Bool {
     return (a.collection == b.collection) && (a.key == b.key)
 }
 
-
 // MARK: Saveable
 
 extension YapDB.Index: Saveable {
@@ -526,7 +523,6 @@ public final class YapDBIndexArchiver: NSObject, NSCoding, Archiver {
     public init(_ v: YapDB.Index) {
         value = v
     }
-
 
     public required init(coder aDecoder: NSCoder) {
         let collection = aDecoder.decodeObjectForKey("collection") as! String
@@ -553,6 +549,14 @@ public func keyForPersistable<P: Persistable>(persistable: P) -> String {
 public func indexForPersistable<P: Persistable>(persistable: P) -> YapDB.Index {
     return persistable.index
 }
+
+// MARK: - Deprecations
+
+@available(*, unavailable, renamed="MetadataPersistable")
+public typealias ObjectMetadataPersistable = MetadataPersistable
+
+@available(*, unavailable, renamed="MetadataPersistable")
+public typealias ValueMetadataPersistable = MetadataPersistable
 
 
 
