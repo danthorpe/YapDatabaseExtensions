@@ -9,6 +9,6 @@ platform :ios do
       destination: 'platform=iOS Simulator,name=iPhone 6,OS=9.0',
       destination_timeout: 120,
       derivedDataPath: '.fastlane/xcodebuild-data',
-      build_settings: { "ENABLED_CODE_COVERAGE" => YES }
+      build_settings: { "ENABLED_CODE_COVERAGE" => true }
   end
 end
