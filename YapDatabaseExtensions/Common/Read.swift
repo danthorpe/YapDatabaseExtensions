@@ -38,51 +38,52 @@ extension YapDatabaseReadTransaction: ReadTransactionType {
 
 public protocol Readable {
     typealias ItemType
+    typealias Database: DatabaseType
 
-    var transaction: ReadTransactionType? { get }
-    var connection: ConnectionType { get }
+    var transaction: Database.Connection.ReadTransaction? { get }
+    var connection: Database.Connection { get }
 }
 
-
-public struct Read<Item>: Readable {
+public struct Read<Item, D: DatabaseType>: Readable {
     public typealias ItemType = Item
+    public typealias Database = D
 
-    let reader: Handle
+    let reader: Handle<D>
 
-    public var transaction: ReadTransactionType? {
+    public var transaction: D.Connection.ReadTransaction? {
         if case let .Transaction(transaction) = reader {
             return transaction
         }
         return .None
     }
 
-    public var connection: ConnectionType {
+    public var connection: D.Connection {
         switch reader {
         case .Transaction(_):
             fatalError("Attempting to get connection from a transaction.")
         case .Connection(let connection):
             return connection
         default:
-            return database.newConnection()
+            return database.makeNewConnection()
         }
     }
 
-    internal var database: YapDatabase {
+    internal var database: D {
         if case let .Database(database) = reader {
             return database
         }
         fatalError("Attempting to get database from \(reader)")
     }
 
-    internal init(_ transaction: ReadTransactionType) {
+    internal init(_ transaction: D.Connection.ReadTransaction) {
         reader = .Transaction(transaction)
     }
 
-    internal init(_ connection: ConnectionType) {
+    internal init(_ connection: D.Connection) {
         reader = .Connection(connection)
     }
 
-    internal init(_ database: YapDatabase) {
+    internal init(_ database: D) {
         reader = .Database(database)
     }
 }
@@ -107,7 +108,7 @@ extension Persistable {
     - parameter transaction: a type conforming to ReadTransactionType such as
     YapDatabaseReadTransaction
     */
-    public static func read(transaction: ReadTransactionType) -> Read<Self> {
+    public static func read(transaction: YapDatabaseReadTransaction) -> Read<Self, YapDatabase> {
         return Read(transaction)
     }
 
@@ -129,11 +130,11 @@ extension Persistable {
     - parameter connection: a type conforming to ConnectionType such as
     YapDatabaseConnection.
     */
-    public static func read(connection: ConnectionType) -> Read<Self> {
+    public static func read(connection: YapDatabaseReadWriteTransaction) -> Read<Self, YapDatabase> {
         return Read(connection)
     }
 
-    internal static func read(database: YapDatabase) -> Read<Self> {
+    internal static func read(database: YapDatabase) -> Read<Self, YapDatabase> {
         return Read(database)
     }
 }
@@ -142,13 +143,11 @@ extension Readable
     where
     ItemType: Persistable {
 
-    func sync<T>(block: (ReadTransactionType) -> T) -> T {
+    func sync<T>(block: (Database.Connection.ReadTransaction) -> T) -> T {
         if let transaction = transaction {
             return block(transaction)
         }
-        else {
-            return connection.read(block)
-        }
+        return connection.read(block)
     }
 }
 
@@ -159,44 +158,48 @@ extension Readable
     ItemType: NSCoding,
     ItemType: Persistable {
 
-    func inTransaction(transaction: ReadTransactionType, atIndex index: YapDB.Index) -> ItemType? {
+    func inTransaction(transaction: Database.Connection.ReadTransaction, atIndex index: YapDB.Index) -> ItemType? {
         return transaction.readAtIndex(index) as? ItemType
     }
 
-    func inTransactionAtIndex(transaction: ReadTransactionType) -> YapDB.Index -> ItemType? {
+    // Everything here is the same for all 6 patterns.
+
+    func inTransactionAtIndex(transaction: Database.Connection.ReadTransaction) -> YapDB.Index -> ItemType? {
         return { self.inTransaction(transaction, atIndex: $0) }
     }
 
-    func atIndexInTransaction(index: YapDB.Index) -> ReadTransactionType -> ItemType? {
+    func atIndexInTransaction(index: YapDB.Index) -> Database.Connection.ReadTransaction -> ItemType? {
         return { self.inTransaction($0, atIndex: index) }
     }
 
-    func atIndexesInTransaction(indexes: [YapDB.Index]) -> ReadTransactionType -> [ItemType] {
+    func atIndexesInTransaction(indexes: [YapDB.Index]) -> Database.Connection.ReadTransaction -> [ItemType] {
         let atIndex = inTransactionAtIndex
         return { transaction in
-            indexes.flatMap(atIndex(transaction)) ?? []
+            indexes.flatMap(atIndex(transaction))
         }
     }
 
-    func inTransaction(transaction: ReadTransactionType, atKey key: String) -> ItemType? {
-        return transaction.readAtIndex(ItemType.indexWithKey(key)) as? ItemType
+    func inTransaction(transaction: Database.Connection.ReadTransaction, byKey key: String) -> ItemType? {
+        return inTransaction(transaction, atIndex: ItemType.indexWithKey(key))
     }
 
-    func inTransactionAtKey(transaction: ReadTransactionType) -> String -> ItemType? {
-        return { self.inTransaction(transaction, atKey: $0) }
+    func inTransactionByKey(transaction: Database.Connection.ReadTransaction) -> String -> ItemType? {
+        return { self.inTransaction(transaction, byKey: $0) }
     }
 
-    func atKeyInTransaction(key: String) -> ReadTransactionType -> ItemType? {
-        return { self.inTransaction($0, atKey: key) }
+    func byKeyInTransaction(key: String) -> Database.Connection.ReadTransaction -> ItemType? {
+        return { self.inTransaction($0, byKey: key) }
     }
 
-    func atKeysInTransaction(_keys: [String]? = .None) -> ReadTransactionType -> [ItemType] {
-        let atKey = inTransactionAtKey
+    func byKeysInTransaction(_keys: [String]? = .None) -> Database.Connection.ReadTransaction -> [ItemType] {
+        let byKey = inTransactionByKey
         return { transaction in
             let keys = _keys ?? transaction.keysInCollection(ItemType.collection)
-            return keys.flatMap(atKey(transaction)) ?? []
+            return keys.flatMap(byKey(transaction))
         }
     }
+
+
 
     public func atIndex(index: YapDB.Index) -> ItemType? {
         return sync(atIndexInTransaction(index))
@@ -207,19 +210,19 @@ extension Readable
     }
 
     public func byKey(key: String) -> ItemType? {
-        return sync(atKeyInTransaction(key))
+        return sync(byKeyInTransaction(key))
     }
 
     public func byKeys(keys: [String]) -> [ItemType] {
-        return sync(atKeysInTransaction(keys))
+        return sync(byKeysInTransaction(keys))
     }
 
     public func all() -> [ItemType] {
-        return sync(atKeysInTransaction())
+        return sync(byKeysInTransaction())
     }
 
     public func filterExisting(keys: [String]) -> (existing: [ItemType], missing: [String]) {
-        let existingInTransaction = atKeysInTransaction(keys)
+        let existingInTransaction = byKeysInTransaction(keys)
         return sync { transaction -> ([ItemType], [String]) in
             let existing = existingInTransaction(transaction)
             let existingKeys = existing.map(keyForPersistable)
@@ -237,7 +240,7 @@ extension Readable
     ItemType: MetadataPersistable,
     ItemType.MetadataType: NSCoding {
 
-    func inTransaction(transaction: ReadTransactionType, atIndex index: YapDB.Index) -> ItemType? {
+    func inTransaction(transaction: Database.Connection.ReadTransaction, atIndex index: YapDB.Index) -> ItemType? {
         if var item = transaction.readAtIndex(index) as? ItemType {
             item.metadata = transaction.readMetadataAtIndex(index) as? ItemType.MetadataType
             return item
@@ -245,38 +248,40 @@ extension Readable
         return .None
     }
 
-    func inTransactionAtIndex(transaction: ReadTransactionType) -> YapDB.Index -> ItemType? {
+    // Everything here is the same for all 6 patterns.
+
+    func inTransactionAtIndex(transaction: Database.Connection.ReadTransaction) -> YapDB.Index -> ItemType? {
         return { self.inTransaction(transaction, atIndex: $0) }
     }
 
-    func atIndexInTransaction(index: YapDB.Index) -> ReadTransactionType -> ItemType? {
+    func atIndexInTransaction(index: YapDB.Index) -> Database.Connection.ReadTransaction -> ItemType? {
         return { self.inTransaction($0, atIndex: index) }
     }
 
-    func atIndexesInTransaction(indexes: [YapDB.Index]) -> ReadTransactionType -> [ItemType] {
+    func atIndexesInTransaction(indexes: [YapDB.Index]) -> Database.Connection.ReadTransaction -> [ItemType] {
         let atIndex = inTransactionAtIndex
         return { transaction in
-            indexes.flatMap(atIndex(transaction)) ?? []
+            indexes.flatMap(atIndex(transaction))
         }
     }
 
-    func inTransaction(transaction: ReadTransactionType, atKey key: String) -> ItemType? {
+    func inTransaction(transaction: Database.Connection.ReadTransaction, byKey key: String) -> ItemType? {
         return inTransaction(transaction, atIndex: ItemType.indexWithKey(key))
     }
 
-    func inTransactionAtKey(transaction: ReadTransactionType) -> String -> ItemType? {
-        return { self.inTransaction(transaction, atKey: $0) }
+    func inTransactionByKey(transaction: Database.Connection.ReadTransaction) -> String -> ItemType? {
+        return { self.inTransaction(transaction, byKey: $0) }
     }
 
-    func atKeyInTransaction(key: String) -> ReadTransactionType -> ItemType? {
-        return { self.inTransaction($0, atKey: key) }
+    func byKeyInTransaction(key: String) -> Database.Connection.ReadTransaction -> ItemType? {
+        return { self.inTransaction($0, byKey: key) }
     }
 
-    func atKeysInTransaction(_keys: [String]? = .None) -> ReadTransactionType -> [ItemType] {
-        let atKey = inTransactionAtKey
+    func byKeysInTransaction(_keys: [String]? = .None) -> Database.Connection.ReadTransaction -> [ItemType] {
+        let byKey = inTransactionByKey
         return { transaction in
             let keys = _keys ?? transaction.keysInCollection(ItemType.collection)
-            return keys.flatMap(atKey(transaction)) ?? []
+            return keys.flatMap(byKey(transaction))
         }
     }
 
@@ -289,19 +294,19 @@ extension Readable
     }
 
     public func byKey(key: String) -> ItemType? {
-        return sync(atKeyInTransaction(key))
+        return sync(byKeyInTransaction(key))
     }
 
     public func byKeys(keys: [String]) -> [ItemType] {
-        return sync(atKeysInTransaction(keys))
+        return sync(byKeysInTransaction(keys))
     }
 
     public func all() -> [ItemType] {
-        return sync(atKeysInTransaction())
+        return sync(byKeysInTransaction())
     }
 
     public func filterExisting(keys: [String]) -> (existing: [ItemType], missing: [String]) {
-        let existingInTransaction = atKeysInTransaction(keys)
+        let existingInTransaction = byKeysInTransaction(keys)
         return sync { transaction -> ([ItemType], [String]) in
             let existing = existingInTransaction(transaction)
             let existingKeys = existing.map(keyForPersistable)
@@ -321,7 +326,7 @@ extension Readable
     ItemType.MetadataType.ArchiverType: NSCoding,
     ItemType.MetadataType.ArchiverType.ValueType == ItemType.MetadataType {
 
-    func inTransaction(transaction: ReadTransactionType, atIndex index: YapDB.Index) -> ItemType? {
+    func inTransaction(transaction: Database.Connection.ReadTransaction, atIndex index: YapDB.Index) -> ItemType? {
         if var item = transaction.readAtIndex(index) as? ItemType {
             item.metadata = ItemType.MetadataType.unarchive(transaction.readMetadataAtIndex(index))
             return item
@@ -329,38 +334,40 @@ extension Readable
         return .None
     }
 
-    func inTransactionAtIndex(transaction: ReadTransactionType) -> YapDB.Index -> ItemType? {
+    // Everything here is the same for all 6 patterns.
+
+    func inTransactionAtIndex(transaction: Database.Connection.ReadTransaction) -> YapDB.Index -> ItemType? {
         return { self.inTransaction(transaction, atIndex: $0) }
     }
 
-    func atIndexInTransaction(index: YapDB.Index) -> ReadTransactionType -> ItemType? {
+    func atIndexInTransaction(index: YapDB.Index) -> Database.Connection.ReadTransaction -> ItemType? {
         return { self.inTransaction($0, atIndex: index) }
     }
 
-    func atIndexesInTransaction(indexes: [YapDB.Index]) -> ReadTransactionType -> [ItemType] {
+    func atIndexesInTransaction(indexes: [YapDB.Index]) -> Database.Connection.ReadTransaction -> [ItemType] {
         let atIndex = inTransactionAtIndex
         return { transaction in
-            indexes.flatMap(atIndex(transaction)) ?? []
+            indexes.flatMap(atIndex(transaction))
         }
     }
 
-    func inTransaction(transaction: ReadTransactionType, atKey key: String) -> ItemType? {
+    func inTransaction(transaction: Database.Connection.ReadTransaction, byKey key: String) -> ItemType? {
         return inTransaction(transaction, atIndex: ItemType.indexWithKey(key))
     }
 
-    func inTransactionAtKey(transaction: ReadTransactionType) -> String -> ItemType? {
-        return { self.inTransaction(transaction, atKey: $0) }
+    func inTransactionByKey(transaction: Database.Connection.ReadTransaction) -> String -> ItemType? {
+        return { self.inTransaction(transaction, byKey: $0) }
     }
 
-    func atKeyInTransaction(key: String) -> ReadTransactionType -> ItemType? {
-        return { self.inTransaction($0, atKey: key) }
+    func byKeyInTransaction(key: String) -> Database.Connection.ReadTransaction -> ItemType? {
+        return { self.inTransaction($0, byKey: key) }
     }
 
-    func atKeysInTransaction(_keys: [String]? = .None) -> ReadTransactionType -> [ItemType] {
-        let atKey = inTransactionAtKey
+    func byKeysInTransaction(_keys: [String]? = .None) -> Database.Connection.ReadTransaction -> [ItemType] {
+        let byKey = inTransactionByKey
         return { transaction in
             let keys = _keys ?? transaction.keysInCollection(ItemType.collection)
-            return keys.flatMap(atKey(transaction)) ?? []
+            return keys.flatMap(byKey(transaction))
         }
     }
 
@@ -373,19 +380,19 @@ extension Readable
     }
 
     public func byKey(key: String) -> ItemType? {
-        return sync(atKeyInTransaction(key))
+        return sync(byKeyInTransaction(key))
     }
 
     public func byKeys(keys: [String]) -> [ItemType] {
-        return sync(atKeysInTransaction(keys))
+        return sync(byKeysInTransaction(keys))
     }
 
     public func all() -> [ItemType] {
-        return sync(atKeysInTransaction())
+        return sync(byKeysInTransaction())
     }
 
     public func filterExisting(keys: [String]) -> (existing: [ItemType], missing: [String]) {
-        let existingInTransaction = atKeysInTransaction(keys)
+        let existingInTransaction = byKeysInTransaction(keys)
         return sync { transaction -> ([ItemType], [String]) in
             let existing = existingInTransaction(transaction)
             let existingKeys = existing.map(keyForPersistable)
@@ -404,42 +411,44 @@ extension Readable
     ItemType.ArchiverType: NSCoding,
     ItemType.ArchiverType.ValueType == ItemType {
 
-    func inTransaction(transaction: ReadTransactionType, atIndex index: YapDB.Index) -> ItemType? {
+    func inTransaction(transaction: Database.Connection.ReadTransaction, atIndex index: YapDB.Index) -> ItemType? {
         return ItemType.unarchive(transaction.readAtIndex(index))
     }
 
-    func inTransactionAtIndex(transaction: ReadTransactionType) -> YapDB.Index -> ItemType? {
+    // Everything here is the same for all 6 patterns.
+
+    func inTransactionAtIndex(transaction: Database.Connection.ReadTransaction) -> YapDB.Index -> ItemType? {
         return { self.inTransaction(transaction, atIndex: $0) }
     }
 
-    func atIndexInTransaction(index: YapDB.Index) -> ReadTransactionType -> ItemType? {
+    func atIndexInTransaction(index: YapDB.Index) -> Database.Connection.ReadTransaction -> ItemType? {
         return { self.inTransaction($0, atIndex: index) }
     }
 
-    func atIndexesInTransaction(indexes: [YapDB.Index]) -> ReadTransactionType -> [ItemType] {
+    func atIndexesInTransaction(indexes: [YapDB.Index]) -> Database.Connection.ReadTransaction -> [ItemType] {
         let atIndex = inTransactionAtIndex
         return { transaction in
-            indexes.flatMap(atIndex(transaction)) ?? []
+            indexes.flatMap(atIndex(transaction))
         }
     }
 
-    func inTransaction(transaction: ReadTransactionType, atKey key: String) -> ItemType? {
+    func inTransaction(transaction: Database.Connection.ReadTransaction, byKey key: String) -> ItemType? {
         return inTransaction(transaction, atIndex: ItemType.indexWithKey(key))
     }
 
-    func inTransactionAtKey(transaction: ReadTransactionType) -> String -> ItemType? {
-        return { self.inTransaction(transaction, atKey: $0) }
+    func inTransactionByKey(transaction: Database.Connection.ReadTransaction) -> String -> ItemType? {
+        return { self.inTransaction(transaction, byKey: $0) }
     }
 
-    func atKeyInTransaction(key: String) -> ReadTransactionType -> ItemType? {
-        return { self.inTransaction($0, atKey: key) }
+    func byKeyInTransaction(key: String) -> Database.Connection.ReadTransaction -> ItemType? {
+        return { self.inTransaction($0, byKey: key) }
     }
 
-    func atKeysInTransaction(_keys: [String]? = .None) -> ReadTransactionType -> [ItemType] {
-        let atKey = inTransactionAtKey
+    func byKeysInTransaction(_keys: [String]? = .None) -> Database.Connection.ReadTransaction -> [ItemType] {
+        let byKey = inTransactionByKey
         return { transaction in
             let keys = _keys ?? transaction.keysInCollection(ItemType.collection)
-            return keys.flatMap(atKey(transaction)) ?? []
+            return keys.flatMap(byKey(transaction))
         }
     }
 
@@ -452,19 +461,19 @@ extension Readable
     }
 
     public func byKey(key: String) -> ItemType? {
-        return sync(atKeyInTransaction(key))
+        return sync(byKeyInTransaction(key))
     }
 
     public func byKeys(keys: [String]) -> [ItemType] {
-        return sync(atKeysInTransaction(keys))
+        return sync(byKeysInTransaction(keys))
     }
 
     public func all() -> [ItemType] {
-        return sync(atKeysInTransaction())
+        return sync(byKeysInTransaction())
     }
 
     public func filterExisting(keys: [String]) -> (existing: [ItemType], missing: [String]) {
-        let existingInTransaction = atKeysInTransaction(keys)
+        let existingInTransaction = byKeysInTransaction(keys)
         return sync { transaction -> ([ItemType], [String]) in
             let existing = existingInTransaction(transaction)
             let existingKeys = existing.map(keyForPersistable)
@@ -484,7 +493,7 @@ extension Readable
     ItemType.ArchiverType.ValueType == ItemType,
     ItemType.MetadataType: NSCoding {
 
-    func inTransaction(transaction: ReadTransactionType, atIndex index: YapDB.Index) -> ItemType? {
+    func inTransaction(transaction: Database.Connection.ReadTransaction, atIndex index: YapDB.Index) -> ItemType? {
         if var item = ItemType.unarchive(transaction.readAtIndex(index)) {
             item.metadata = transaction.readMetadataAtIndex(index) as? ItemType.MetadataType
             return item
@@ -492,38 +501,40 @@ extension Readable
         return .None
     }
 
-    func inTransactionAtIndex(transaction: ReadTransactionType) -> YapDB.Index -> ItemType? {
+    // Everything here is the same for all 6 patterns.
+
+    func inTransactionAtIndex(transaction: Database.Connection.ReadTransaction) -> YapDB.Index -> ItemType? {
         return { self.inTransaction(transaction, atIndex: $0) }
     }
 
-    func atIndexInTransaction(index: YapDB.Index) -> ReadTransactionType -> ItemType? {
+    func atIndexInTransaction(index: YapDB.Index) -> Database.Connection.ReadTransaction -> ItemType? {
         return { self.inTransaction($0, atIndex: index) }
     }
 
-    func atIndexesInTransaction(indexes: [YapDB.Index]) -> ReadTransactionType -> [ItemType] {
+    func atIndexesInTransaction(indexes: [YapDB.Index]) -> Database.Connection.ReadTransaction -> [ItemType] {
         let atIndex = inTransactionAtIndex
         return { transaction in
-            indexes.flatMap(atIndex(transaction)) ?? []
+            indexes.flatMap(atIndex(transaction))
         }
     }
 
-    func inTransaction(transaction: ReadTransactionType, atKey key: String) -> ItemType? {
+    func inTransaction(transaction: Database.Connection.ReadTransaction, byKey key: String) -> ItemType? {
         return inTransaction(transaction, atIndex: ItemType.indexWithKey(key))
     }
 
-    func inTransactionAtKey(transaction: ReadTransactionType) -> String -> ItemType? {
-        return { self.inTransaction(transaction, atKey: $0) }
+    func inTransactionByKey(transaction: Database.Connection.ReadTransaction) -> String -> ItemType? {
+        return { self.inTransaction(transaction, byKey: $0) }
     }
 
-    func atKeyInTransaction(key: String) -> ReadTransactionType -> ItemType? {
-        return { self.inTransaction($0, atKey: key) }
+    func byKeyInTransaction(key: String) -> Database.Connection.ReadTransaction -> ItemType? {
+        return { self.inTransaction($0, byKey: key) }
     }
 
-    func atKeysInTransaction(_keys: [String]? = .None) -> ReadTransactionType -> [ItemType] {
-        let atKey = inTransactionAtKey
+    func byKeysInTransaction(_keys: [String]? = .None) -> Database.Connection.ReadTransaction -> [ItemType] {
+        let byKey = inTransactionByKey
         return { transaction in
             let keys = _keys ?? transaction.keysInCollection(ItemType.collection)
-            return keys.flatMap(atKey(transaction)) ?? []
+            return keys.flatMap(byKey(transaction))
         }
     }
 
@@ -536,19 +547,19 @@ extension Readable
     }
 
     public func byKey(key: String) -> ItemType? {
-        return sync(atKeyInTransaction(key))
+        return sync(byKeyInTransaction(key))
     }
 
     public func byKeys(keys: [String]) -> [ItemType] {
-        return sync(atKeysInTransaction(keys))
+        return sync(byKeysInTransaction(keys))
     }
 
     public func all() -> [ItemType] {
-        return sync(atKeysInTransaction())
+        return sync(byKeysInTransaction())
     }
 
     public func filterExisting(keys: [String]) -> (existing: [ItemType], missing: [String]) {
-        let existingInTransaction = atKeysInTransaction(keys)
+        let existingInTransaction = byKeysInTransaction(keys)
         return sync { transaction -> ([ItemType], [String]) in
             let existing = existingInTransaction(transaction)
             let existingKeys = existing.map(keyForPersistable)
@@ -570,7 +581,7 @@ extension Readable
     ItemType.MetadataType.ArchiverType: NSCoding,
     ItemType.MetadataType.ArchiverType.ValueType == ItemType.MetadataType {
 
-    func inTransaction(transaction: ReadTransactionType, atIndex index: YapDB.Index) -> ItemType? {
+    func inTransaction(transaction: Database.Connection.ReadTransaction, atIndex index: YapDB.Index) -> ItemType? {
         if var item = ItemType.unarchive(transaction.readAtIndex(index)) {
             item.metadata = ItemType.MetadataType.unarchive(transaction.readMetadataAtIndex(index))
             return item
@@ -578,38 +589,40 @@ extension Readable
         return .None
     }
 
-    func inTransactionAtIndex(transaction: ReadTransactionType) -> YapDB.Index -> ItemType? {
+    // Everything here is the same for all 6 patterns.
+
+    func inTransactionAtIndex(transaction: Database.Connection.ReadTransaction) -> YapDB.Index -> ItemType? {
         return { self.inTransaction(transaction, atIndex: $0) }
     }
 
-    func atIndexInTransaction(index: YapDB.Index) -> ReadTransactionType -> ItemType? {
+    func atIndexInTransaction(index: YapDB.Index) -> Database.Connection.ReadTransaction -> ItemType? {
         return { self.inTransaction($0, atIndex: index) }
     }
 
-    func atIndexesInTransaction(indexes: [YapDB.Index]) -> ReadTransactionType -> [ItemType] {
+    func atIndexesInTransaction(indexes: [YapDB.Index]) -> Database.Connection.ReadTransaction -> [ItemType] {
         let atIndex = inTransactionAtIndex
         return { transaction in
-            indexes.flatMap(atIndex(transaction)) ?? []
+            indexes.flatMap(atIndex(transaction))
         }
     }
 
-    func inTransaction(transaction: ReadTransactionType, atKey key: String) -> ItemType? {
+    func inTransaction(transaction: Database.Connection.ReadTransaction, byKey key: String) -> ItemType? {
         return inTransaction(transaction, atIndex: ItemType.indexWithKey(key))
     }
 
-    func inTransactionAtKey(transaction: ReadTransactionType) -> String -> ItemType? {
-        return { self.inTransaction(transaction, atKey: $0) }
+    func inTransactionByKey(transaction: Database.Connection.ReadTransaction) -> String -> ItemType? {
+        return { self.inTransaction(transaction, byKey: $0) }
     }
 
-    func atKeyInTransaction(key: String) -> ReadTransactionType -> ItemType? {
-        return { self.inTransaction($0, atKey: key) }
+    func byKeyInTransaction(key: String) -> Database.Connection.ReadTransaction -> ItemType? {
+        return { self.inTransaction($0, byKey: key) }
     }
 
-    func atKeysInTransaction(_keys: [String]? = .None) -> ReadTransactionType -> [ItemType] {
-        let atKey = inTransactionAtKey
+    func byKeysInTransaction(_keys: [String]? = .None) -> Database.Connection.ReadTransaction -> [ItemType] {
+        let byKey = inTransactionByKey
         return { transaction in
             let keys = _keys ?? transaction.keysInCollection(ItemType.collection)
-            return keys.flatMap(atKey(transaction)) ?? []
+            return keys.flatMap(byKey(transaction))
         }
     }
 
@@ -622,19 +635,19 @@ extension Readable
     }
 
     public func byKey(key: String) -> ItemType? {
-        return sync(atKeyInTransaction(key))
+        return sync(byKeyInTransaction(key))
     }
 
     public func byKeys(keys: [String]) -> [ItemType] {
-        return sync(atKeysInTransaction(keys))
+        return sync(byKeysInTransaction(keys))
     }
 
     public func all() -> [ItemType] {
-        return sync(atKeysInTransaction())
+        return sync(byKeysInTransaction())
     }
 
     public func filterExisting(keys: [String]) -> (existing: [ItemType], missing: [String]) {
-        let existingInTransaction = atKeysInTransaction(keys)
+        let existingInTransaction = byKeysInTransaction(keys)
         return sync { transaction -> ([ItemType], [String]) in
             let existing = existingInTransaction(transaction)
             let existingKeys = existing.map(keyForPersistable)

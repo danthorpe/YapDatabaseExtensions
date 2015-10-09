@@ -275,19 +275,27 @@ public protocol WriteTransactionType: ReadTransactionType {
 }
 
 public protocol ConnectionType {
-    func read<T>(block: (ReadTransactionType) -> T) -> T
-    func write<T>(block: (WriteTransactionType) -> T) -> T
+    typealias ReadTransaction: ReadTransactionType
+    typealias WriteTransaction: WriteTransactionType
 
-    func asyncRead<T>(block: (ReadTransactionType) -> T, queue: dispatch_queue_t, completion: (T) -> Void)
-    func asyncWrite<T>(block: (WriteTransactionType) -> T, queue: dispatch_queue_t, completion: (T) -> Void)
+    func read<T>(block: ReadTransaction -> T) -> T
+    func write<T>(block: WriteTransaction -> T) -> T
 
-    func writeBlockOperation(block: (WriteTransactionType) -> Void) -> NSOperation
+    func asyncRead<T>(block: ReadTransaction -> T, queue: dispatch_queue_t, completion: (T) -> Void)
+    func asyncWrite<T>(block: WriteTransaction -> T, queue: dispatch_queue_t, completion: (T) -> Void)
+
+    func writeBlockOperation(block: WriteTransaction -> Void) -> NSOperation
 }
 
-internal enum Handle {
-    case Transaction(ReadTransactionType)
-    case Connection(ConnectionType)
-    case Database(YapDatabase)
+public protocol DatabaseType {
+    typealias Connection: ConnectionType
+    func makeNewConnection() -> Connection
+}
+
+internal enum Handle<D: DatabaseType> {
+    case Transaction(D.Connection.ReadTransaction)
+    case Connection(D.Connection)
+    case Database(D)
 }
 
 // MARK: - Archiver & Saveable
@@ -411,7 +419,7 @@ extension YapDatabaseConnection: ConnectionType {
     :param: block A closure which receives YapDatabaseReadTransaction and returns T
     - returns: An instance of T
     */
-    public func read<T>(block: ReadTransactionType -> T) -> T {
+    public func read<T>(block: YapDatabaseReadTransaction -> T) -> T {
         var result: T! = .None
         readWithBlock { result = block($0) }
         return result
@@ -428,7 +436,7 @@ extension YapDatabaseConnection: ConnectionType {
     :param: block A closure which receives YapDatabaseReadWriteTransaction and returns T
     - returns: An instance of T
     */
-    public func write<T>(block: WriteTransactionType -> T) -> T {
+    public func write<T>(block: YapDatabaseReadWriteTransaction -> T) -> T {
         var result: T! = .None
         readWriteWithBlock { result = block($0) }
         return result
@@ -446,7 +454,7 @@ extension YapDatabaseConnection: ConnectionType {
     :param: queue A dispatch_queue_t, defaults to main queue, can be ommitted in most cases.
     :param: completion A closure which receives T and returns Void.
     */
-    public func asyncRead<T>(block: ReadTransactionType -> T, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: (T) -> Void) {
+    public func asyncRead<T>(block: YapDatabaseReadTransaction -> T, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: (T) -> Void) {
         var result: T! = .None
         asyncReadWithBlock({ result = block($0) }, completionQueue: queue) { completion(result) }
     }
@@ -463,7 +471,7 @@ extension YapDatabaseConnection: ConnectionType {
     :param: queue A dispatch_queue_t, defaults to main queue, can be ommitted in most cases.
     :param: completion A closure which receives T and returns Void.
     */
-    public func asyncWrite<T>(block: WriteTransactionType -> T, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: (T) -> Void) {
+    public func asyncWrite<T>(block: YapDatabaseReadWriteTransaction -> T, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: (T) -> Void) {
         var result: T! = .None
         asyncReadWriteWithBlock({ result = block($0) }, completionQueue: queue) { completion(result) }
     }
@@ -482,8 +490,15 @@ extension YapDatabaseConnection: ConnectionType {
     - parameter block: a closure of type (YapDatabaseReadWriteTransaction) -> Void
     - returns: an `NSOperation`.
     */
-    public func writeBlockOperation(block: WriteTransactionType -> Void) -> NSOperation {
+    public func writeBlockOperation(block: YapDatabaseReadWriteTransaction -> Void) -> NSOperation {
         return NSBlockOperation { self.asyncReadWriteWithBlock({ block($0) }) }
+    }
+}
+
+extension YapDatabase: DatabaseType {
+
+    public func makeNewConnection() -> YapDatabaseConnection {
+        return newConnection()
     }
 }
 
