@@ -3,21 +3,8 @@
 //
 //
 
+import Foundation
 import YapDatabase
-
-// MARK: - YapDatabaseTransaction
-
-extension YapDatabaseReadWriteTransaction: WriteTransactionType {
-
-    public func writeAtIndex(index: YapDB.Index, object: AnyObject, metadata: AnyObject? = .None) {
-        if let metadata: AnyObject = metadata {
-            setObject(object, forKey: index.key, inCollection: index.collection, withMetadata: metadata)
-        }
-        else {
-            setObject(object, forKey: index.key, inCollection: index.collection)
-        }
-    }
-}
 
 // MARK: - Writable
 
@@ -58,7 +45,7 @@ extension Persistable {
 
     /**
     Returns a type suitable for *writing* the receiver to the 
-    database. The available functions will depend on the receive
+    database. The available functions will depend on the receiver
     correctly implementing `Persistable`, `MetadataPersistable` 
     and `Saveable`.
     
@@ -96,24 +83,24 @@ extension SequenceType where Generator.Element: Persistable {
     and `Saveable`.
 
     For example, given a sequence of `Person` objects, inside 
-    a read write transaction, you can write all the object to
+    a read write transaction, you can write all the objects to
     the database like this:
 
-    people.write.on(transaction)
+        people.write.on(transaction)
 
     Alternatively, given a `YapDatabaseConnection`, you can
     synchronously write all the objects to the database as, in
     the same transaction like this:
 
-    people.write.sync(connection)
+        people.write.sync(connection)
 
     and asynchronously:
 
-    people.write.async(connection)
+        people.write.async(connection)
 
     Finally, if you use `NSOperation`, you can do:
 
-    queue.addOperation(people.write.operation(connection))
+        queue.addOperation(people.write.operation(connection))
 
     - returns: a `Write` value composing the receiver.
     */

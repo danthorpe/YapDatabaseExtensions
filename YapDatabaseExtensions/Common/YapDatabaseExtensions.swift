@@ -272,6 +272,13 @@ public protocol WriteTransactionType: ReadTransactionType {
     - parameter metadata: an optional `AnyObject` which will be written as metadata.
     */
     func writeAtIndex(index: YapDB.Index, object: AnyObject, metadata: AnyObject?)
+
+    /**
+    Remove the object from the database at the index (if it exists), including metadata
+    
+    - parameter index: the `YapDB.Index` to remove.
+    */
+    func removeAtIndex(index: YapDB.Index)
 }
 
 public protocol ConnectionType {
@@ -403,6 +410,53 @@ extension SequenceType where Generator.Element: Hashable {
 
     public func unique() -> [Generator.Element] {
         return Array(Set(self))
+    }
+}
+
+// MARK: - YapDatabaseReadTransaction
+
+extension YapDatabaseReadTransaction: ReadTransactionType {
+
+    public func keysInCollection(collection: String) -> [String] {
+        return allKeysInCollection(collection) as! [String]
+    }
+
+    /**
+    Reads the object sored at this index using the transaction.
+
+    - parameter index: The YapDB.Index value.
+    - returns: An optional AnyObject.
+    */
+    public func readAtIndex(index: YapDB.Index) -> AnyObject? {
+        return objectForKey(index.key, inCollection: index.collection)
+    }
+
+    /**
+    Reads any metadata sored at this index using the transaction.
+
+    - parameter index: The YapDB.Index value.
+    - returns: An optional AnyObject.
+    */
+    public func readMetadataAtIndex(index: YapDB.Index) -> AnyObject? {
+        return metadataForKey(index.key, inCollection: index.collection)
+    }
+}
+
+// MARK: - YapDatabaseReadWriteTransaction
+
+extension YapDatabaseReadWriteTransaction: WriteTransactionType {
+
+    public func writeAtIndex(index: YapDB.Index, object: AnyObject, metadata: AnyObject? = .None) {
+        if let metadata: AnyObject = metadata {
+            setObject(object, forKey: index.key, inCollection: index.collection, withMetadata: metadata)
+        }
+        else {
+            setObject(object, forKey: index.key, inCollection: index.collection)
+        }
+    }
+
+    public func removeAtIndex(index: YapDB.Index) {
+        removeObjectForKey(index.key, inCollection: index.collection)
     }
 }
 

@@ -5,35 +5,6 @@
 
 import YapDatabase
 
-// MARK: - YapDatabaseTransaction
-
-extension YapDatabaseReadTransaction: ReadTransactionType {
-
-    public func keysInCollection(collection: String) -> [String] {
-        return allKeysInCollection(collection) as! [String]
-    }
-
-    /**
-    Reads the object sored at this index using the transaction.
-
-    - parameter index: The YapDB.Index value.
-    - returns: An optional AnyObject.
-    */
-    public func readAtIndex(index: YapDB.Index) -> AnyObject? {
-        return objectForKey(index.key, inCollection: index.collection)
-    }
-
-    /**
-    Reads any metadata sored at this index using the transaction.
-
-    - parameter index: The YapDB.Index value.
-    - returns: An optional AnyObject.
-    */
-    public func readMetadataAtIndex(index: YapDB.Index) -> AnyObject? {
-        return metadataForKey(index.key, inCollection: index.collection)
-    }
-}
-
 // MARK: - Readable
 
 public protocol Readable {
