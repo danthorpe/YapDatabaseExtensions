@@ -485,5 +485,107 @@ class ValueWithObjectMetadataTests: XCTestCase {
         XCTAssertEqual(missing, Array(keys.suffixFrom(1)))
     }
 
+
+    // Functional API - ReadTransactionType - Reading
+
+    func test__transaction__read_at_index_with_data() {
+        configureForReadingSingle()
+        let inventory: Inventory? = readTransaction.readAtIndex(index)
+        XCTAssertNotNil(inventory)
+        XCTAssertEqual(inventory!.identifier, item.identifier)
+    }
+
+    func test__transaction__read_at_index_without_data() {
+        let inventory: Inventory? = readTransaction.readAtIndex(index)
+        XCTAssertNil(inventory)
+    }
+
+    func test__transaction__read_at_indexes_with_data() {
+        configureForReadingMultiple()
+        let inventorys: [Inventory] = readTransaction.readAtIndexes(indexes)
+        XCTAssertEqual(inventorys.count, items.count)
+    }
+
+    func test__transaction__read_at_indexes_without_data() {
+        let inventorys: [Inventory] = readTransaction.readAtIndexes(indexes)
+        XCTAssertNotNil(inventorys)
+        XCTAssertTrue(inventorys.isEmpty)
+    }
+
+    func test__transaction__read_by_key_with_data() {
+        configureForReadingSingle()
+        let inventory: Inventory? = readTransaction.readByKey(key)
+        XCTAssertNotNil(inventory)
+        XCTAssertEqual(inventory!.identifier, item.identifier)
+    }
+
+    func test__transaction__read_by_key_without_data() {
+        let inventory: Inventory? = readTransaction.readByKey(key)
+        XCTAssertNil(inventory)
+    }
+
+    func test__transaction__read_by_keys_with_data() {
+        configureForReadingMultiple()
+        let inventorys: [Inventory] = readTransaction.readByKeys(keys)
+        XCTAssertEqual(inventorys.count, items.count)
+    }
+
+    func test__transaction__read_by_keys_without_data() {
+        let inventorys: [Inventory] = readTransaction.readByKeys(keys)
+        XCTAssertNotNil(inventorys)
+        XCTAssertTrue(inventorys.isEmpty)
+    }
+
+    // Functional API - ConnectionType - Reading
+
+    func test__connection__read_at_index_with_data() {
+        configureForReadingSingle()
+        let inventory: Inventory? = connection.readAtIndex(index)
+        XCTAssertNotNil(inventory)
+        XCTAssertEqual(inventory!.identifier, item.identifier)
+    }
+
+    func test__connection__read_at_index_without_data() {
+        let inventory: Inventory? = connection.readAtIndex(index)
+        XCTAssertNil(inventory)
+    }
+
+    func test__connection__read_at_indexes_with_data() {
+        configureForReadingMultiple()
+        let inventorys: [Inventory] = connection.readAtIndexes(indexes)
+        XCTAssertEqual(inventorys.count, items.count)
+    }
+
+    func test__connection__read_at_indexes_without_data() {
+        let inventorys: [Inventory] = connection.readAtIndexes(indexes)
+        XCTAssertNotNil(inventorys)
+        XCTAssertTrue(inventorys.isEmpty)
+    }
+
+    func test__connection__read_by_key_with_data() {
+        configureForReadingSingle()
+        let inventory: Inventory? = connection.readByKey(key)
+        XCTAssertNotNil(inventory)
+        XCTAssertEqual(inventory!.identifier, item.identifier)
+    }
+
+    func test__connection__read_by_key_without_data() {
+        let inventory: Inventory? = connection.readByKey(key)
+        XCTAssertNil(inventory)
+    }
+
+    func test__connection__read_by_keys_with_data() {
+        configureForReadingMultiple()
+        let inventorys: [Inventory] = connection.readByKeys(keys)
+        XCTAssertEqual(inventorys.count, items.count)
+    }
+
+    func test__connection__read_by_keys_without_data() {
+        let inventorys: [Inventory] = connection.readByKeys(keys)
+        XCTAssertNotNil(inventorys)
+        XCTAssertTrue(inventorys.isEmpty)
+    }
+
+
 }
 

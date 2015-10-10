@@ -629,83 +629,11 @@ extension Readable
 }
 
 
-// MARK: - Object with no metadata
-
-extension ReadTransactionType {
-
-    internal func _readObjectWithNoMetadataAtIndex<
-        Object
-        where
-        Object: Persistable,
-        Object: NSCoding>(index: YapDB.Index) -> Object? {
-            return readAtIndex(index) as? Object
-    }
-
-    internal func _readObjectWithNoMetadataAtIndexes<
-        Object
-        where
-        Object: Persistable,
-        Object: NSCoding>(indexes: [YapDB.Index]) -> [Object] {
-            return indexes.flatMap(_readObjectWithNoMetadataAtIndex)
-    }
-
-    internal func _readObjectWithNoMetadataByKey<
-        Object
-        where
-        Object: Persistable,
-        Object: NSCoding>(key: String) -> Object? {
-            return _readObjectWithNoMetadataAtIndex(Object.indexWithKey(key))
-    }
-
-    internal func _readObjectWithNoMetadataByKeys<
-        Object
-        where
-        Object: Persistable,
-        Object: NSCoding>(keys: [String]) -> [Object] {
-            return _readObjectWithNoMetadataAtIndexes(Object.indexesWithKeys(keys))
-    }
-}
-
-extension ConnectionType {
-
-    internal func _readObjectWithNoMetadataAtIndex<
-        Object
-        where
-        Object: Persistable,
-        Object: NSCoding>(index: YapDB.Index) -> Object? {
-            return read { $0._readObjectWithNoMetadataAtIndex(index) }
-    }
-
-    internal func _readObjectWithNoMetadataAtIndexes<
-        Object
-        where
-        Object: Persistable,
-        Object: NSCoding>(indexes: [YapDB.Index]) -> [Object] {
-            return read { $0._readObjectWithNoMetadataAtIndexes(indexes) }
-    }
-
-    internal func _readObjectWithNoMetadataByKey<
-        Object
-        where
-        Object: Persistable,
-        Object: NSCoding>(key: String) -> Object? {
-            return _readObjectWithNoMetadataAtIndex(Object.indexWithKey(key))
-    }
-
-    internal func _readObjectWithNoMetadataByKeys<
-        Object
-        where
-        Object: Persistable,
-        Object: NSCoding>(keys: [String]) -> [Object] {
-            return _readObjectWithNoMetadataAtIndexes(Object.indexesWithKeys(keys))
-    }
-}
-
 // MARK: - Object with Object metadata
 
 extension ReadTransactionType {
 
-    internal func _readObjectWithObjectMetadataAtIndex<
+    public func readAtIndex<
         ObjectWithObjectMetadata
         where
         ObjectWithObjectMetadata: MetadataPersistable,
@@ -718,72 +646,389 @@ extension ReadTransactionType {
             return .None
     }
 
-    internal func _readObjectWithObjectMetadataAtIndexes<
+    public func readAtIndexes<
         ObjectWithObjectMetadata
         where
         ObjectWithObjectMetadata: MetadataPersistable,
         ObjectWithObjectMetadata: NSCoding,
         ObjectWithObjectMetadata.MetadataType: NSCoding>(indexes: [YapDB.Index]) -> [ObjectWithObjectMetadata] {
-            return indexes.flatMap(_readObjectWithObjectMetadataAtIndex)
+            return indexes.flatMap(readAtIndex)
     }
 
-    internal func _readObjectWithObjectMetadataByKey<
+    public func readByKey<
         ObjectWithObjectMetadata
         where
         ObjectWithObjectMetadata: MetadataPersistable,
         ObjectWithObjectMetadata: NSCoding,
         ObjectWithObjectMetadata.MetadataType: NSCoding>(key: String) -> ObjectWithObjectMetadata? {
-            return _readObjectWithNoMetadataAtIndex(ObjectWithObjectMetadata.indexWithKey(key))
+            return readAtIndex(ObjectWithObjectMetadata.indexWithKey(key))
     }
 
-    internal func _readObjectWithObjectMetadataByKeys<
+    public func readByKeys<
         ObjectWithObjectMetadata
         where
         ObjectWithObjectMetadata: MetadataPersistable,
         ObjectWithObjectMetadata: NSCoding,
         ObjectWithObjectMetadata.MetadataType: NSCoding>(keys: [String]) -> [ObjectWithObjectMetadata] {
-            return _readObjectWithNoMetadataAtIndexes(ObjectWithObjectMetadata.indexesWithKeys(keys))
+            return readAtIndexes(ObjectWithObjectMetadata.indexesWithKeys(keys))
     }
 }
 
 extension ConnectionType {
 
-    internal func _readObjectWithObjectMetadataAtIndex<
+    public func readAtIndex<
         ObjectWithObjectMetadata
         where
         ObjectWithObjectMetadata: MetadataPersistable,
         ObjectWithObjectMetadata: NSCoding,
         ObjectWithObjectMetadata.MetadataType: NSCoding>(index: YapDB.Index) -> ObjectWithObjectMetadata? {
-            return read { $0._readObjectWithObjectMetadataAtIndex(index) }
+            return read { $0.readAtIndex(index) }
     }
 
-    internal func _readObjectWithObjectMetadataAtIndexes<
+    public func readAtIndexes<
         ObjectWithObjectMetadata
         where
         ObjectWithObjectMetadata: MetadataPersistable,
         ObjectWithObjectMetadata: NSCoding,
         ObjectWithObjectMetadata.MetadataType: NSCoding>(indexes: [YapDB.Index]) -> [ObjectWithObjectMetadata] {
-            return read { $0._readObjectWithObjectMetadataAtIndexes(indexes) }
+            return read { $0.readAtIndexes(indexes) }
     }
 
-    internal func _readObjectWithObjectMetadataByKey<
+    public func readByKey<
         ObjectWithObjectMetadata
         where
         ObjectWithObjectMetadata: MetadataPersistable,
         ObjectWithObjectMetadata: NSCoding,
         ObjectWithObjectMetadata.MetadataType: NSCoding>(key: String) -> ObjectWithObjectMetadata? {
-            return _readObjectWithObjectMetadataAtIndex(ObjectWithObjectMetadata.indexWithKey(key))
+            return readAtIndex(ObjectWithObjectMetadata.indexWithKey(key))
     }
 
-    internal func _readObjectWithObjectMetadataByKeys<
+    public func readByKeys<
         ObjectWithObjectMetadata
         where
         ObjectWithObjectMetadata: MetadataPersistable,
         ObjectWithObjectMetadata: NSCoding,
         ObjectWithObjectMetadata.MetadataType: NSCoding>(keys: [String]) -> [ObjectWithObjectMetadata] {
-            return _readObjectWithObjectMetadataAtIndexes(ObjectWithObjectMetadata.indexesWithKeys(keys))
+            return readAtIndexes(ObjectWithObjectMetadata.indexesWithKeys(keys))
     }
 }
+
+// MARK: - Object with Value metadata
+
+extension ReadTransactionType {
+
+    public func readAtIndex<
+        ObjectWithValueMetadata
+        where
+        ObjectWithValueMetadata: MetadataPersistable,
+        ObjectWithValueMetadata: NSCoding,
+        ObjectWithValueMetadata.MetadataType: Saveable,
+        ObjectWithValueMetadata.MetadataType.ArchiverType: NSCoding,
+        ObjectWithValueMetadata.MetadataType.ArchiverType.ValueType == ObjectWithValueMetadata.MetadataType>(index: YapDB.Index) -> ObjectWithValueMetadata? {
+            if var item = readAtIndex(index) as? ObjectWithValueMetadata {
+                item.metadata = ObjectWithValueMetadata.MetadataType.unarchive(readMetadataAtIndex(index))
+                return item
+            }
+            return .None
+    }
+
+    public func readAtIndexes<
+        ObjectWithValueMetadata
+        where
+        ObjectWithValueMetadata: MetadataPersistable,
+        ObjectWithValueMetadata: NSCoding,
+        ObjectWithValueMetadata.MetadataType: Saveable,
+        ObjectWithValueMetadata.MetadataType.ArchiverType: NSCoding,
+        ObjectWithValueMetadata.MetadataType.ArchiverType.ValueType == ObjectWithValueMetadata.MetadataType>(indexes: [YapDB.Index]) -> [ObjectWithValueMetadata] {
+            return indexes.flatMap(readAtIndex)
+    }
+
+    public func readByKey<
+        ObjectWithValueMetadata
+        where
+        ObjectWithValueMetadata: MetadataPersistable,
+        ObjectWithValueMetadata: NSCoding,
+        ObjectWithValueMetadata.MetadataType: Saveable,
+        ObjectWithValueMetadata.MetadataType.ArchiverType: NSCoding,
+        ObjectWithValueMetadata.MetadataType.ArchiverType.ValueType == ObjectWithValueMetadata.MetadataType>(key: String) -> ObjectWithValueMetadata? {
+            return readAtIndex(ObjectWithValueMetadata.indexWithKey(key))
+    }
+
+    public func readByKeys<
+        ObjectWithValueMetadata
+        where
+        ObjectWithValueMetadata: MetadataPersistable,
+        ObjectWithValueMetadata: NSCoding,
+        ObjectWithValueMetadata.MetadataType: Saveable,
+        ObjectWithValueMetadata.MetadataType.ArchiverType: NSCoding,
+        ObjectWithValueMetadata.MetadataType.ArchiverType.ValueType == ObjectWithValueMetadata.MetadataType>(keys: [String]) -> [ObjectWithValueMetadata] {
+            return readAtIndexes(ObjectWithValueMetadata.indexesWithKeys(keys))
+    }
+}
+
+extension ConnectionType {
+
+    public func readAtIndex<
+        ObjectWithValueMetadata
+        where
+        ObjectWithValueMetadata: MetadataPersistable,
+        ObjectWithValueMetadata: NSCoding,
+        ObjectWithValueMetadata.MetadataType: Saveable,
+        ObjectWithValueMetadata.MetadataType.ArchiverType: NSCoding,
+        ObjectWithValueMetadata.MetadataType.ArchiverType.ValueType == ObjectWithValueMetadata.MetadataType>(index: YapDB.Index) -> ObjectWithValueMetadata? {
+            return read { $0.readAtIndex(index) }
+    }
+
+    public func readAtIndexes<
+        ObjectWithValueMetadata
+        where
+        ObjectWithValueMetadata: MetadataPersistable,
+        ObjectWithValueMetadata: NSCoding,
+        ObjectWithValueMetadata.MetadataType: Saveable,
+        ObjectWithValueMetadata.MetadataType.ArchiverType: NSCoding,
+        ObjectWithValueMetadata.MetadataType.ArchiverType.ValueType == ObjectWithValueMetadata.MetadataType>(indexes: [YapDB.Index]) -> [ObjectWithValueMetadata] {
+            return read { $0.readAtIndexes(indexes) }
+    }
+
+    public func readByKey<
+        ObjectWithValueMetadata
+        where
+        ObjectWithValueMetadata: MetadataPersistable,
+        ObjectWithValueMetadata: NSCoding,
+        ObjectWithValueMetadata.MetadataType: Saveable,
+        ObjectWithValueMetadata.MetadataType.ArchiverType: NSCoding,
+        ObjectWithValueMetadata.MetadataType.ArchiverType.ValueType == ObjectWithValueMetadata.MetadataType>(key: String) -> ObjectWithValueMetadata? {
+            return readAtIndex(ObjectWithValueMetadata.indexWithKey(key))
+    }
+
+    public func readByKeys<
+        ObjectWithValueMetadata
+        where
+        ObjectWithValueMetadata: MetadataPersistable,
+        ObjectWithValueMetadata: NSCoding,
+        ObjectWithValueMetadata.MetadataType: Saveable,
+        ObjectWithValueMetadata.MetadataType.ArchiverType: NSCoding,
+        ObjectWithValueMetadata.MetadataType.ArchiverType.ValueType == ObjectWithValueMetadata.MetadataType>(keys: [String]) -> [ObjectWithValueMetadata] {
+            return readAtIndexes(ObjectWithValueMetadata.indexesWithKeys(keys))
+    }
+}
+
+// MARK: - Value with Object metadata
+
+extension ReadTransactionType {
+
+    public func readAtIndex<
+        ValueWithObjectMetadata
+        where
+        ValueWithObjectMetadata: MetadataPersistable,
+        ValueWithObjectMetadata: Saveable,
+        ValueWithObjectMetadata.ArchiverType: NSCoding,
+        ValueWithObjectMetadata.ArchiverType.ValueType == ValueWithObjectMetadata,
+        ValueWithObjectMetadata.MetadataType: NSCoding>(index: YapDB.Index) -> ValueWithObjectMetadata? {
+            if var item = ValueWithObjectMetadata.unarchive(readAtIndex(index)) {
+                item.metadata = readMetadataAtIndex(index) as? ValueWithObjectMetadata.MetadataType
+                return item
+            }
+            return .None
+    }
+
+    public func readAtIndexes<
+        ValueWithObjectMetadata
+        where
+        ValueWithObjectMetadata: MetadataPersistable,
+        ValueWithObjectMetadata: Saveable,
+        ValueWithObjectMetadata.ArchiverType: NSCoding,
+        ValueWithObjectMetadata.ArchiverType.ValueType == ValueWithObjectMetadata,
+        ValueWithObjectMetadata.MetadataType: NSCoding>(indexes: [YapDB.Index]) -> [ValueWithObjectMetadata] {
+            return indexes.flatMap(readAtIndex)
+    }
+
+    public func readByKey<
+        ValueWithObjectMetadata
+        where
+        ValueWithObjectMetadata: MetadataPersistable,
+        ValueWithObjectMetadata: Saveable,
+        ValueWithObjectMetadata.ArchiverType: NSCoding,
+        ValueWithObjectMetadata.ArchiverType.ValueType == ValueWithObjectMetadata,
+        ValueWithObjectMetadata.MetadataType: NSCoding>(key: String) -> ValueWithObjectMetadata? {
+            return readAtIndex(ValueWithObjectMetadata.indexWithKey(key))
+    }
+
+    public func readByKeys<
+        ValueWithObjectMetadata
+        where
+        ValueWithObjectMetadata: MetadataPersistable,
+        ValueWithObjectMetadata: Saveable,
+        ValueWithObjectMetadata.ArchiverType: NSCoding,
+        ValueWithObjectMetadata.ArchiverType.ValueType == ValueWithObjectMetadata,
+        ValueWithObjectMetadata.MetadataType: NSCoding>(keys: [String]) -> [ValueWithObjectMetadata] {
+            return readAtIndexes(ValueWithObjectMetadata.indexesWithKeys(keys))
+    }
+}
+
+extension ConnectionType {
+
+    public func readAtIndex<
+        ValueWithObjectMetadata
+        where
+        ValueWithObjectMetadata: MetadataPersistable,
+        ValueWithObjectMetadata: Saveable,
+        ValueWithObjectMetadata.ArchiverType: NSCoding,
+        ValueWithObjectMetadata.ArchiverType.ValueType == ValueWithObjectMetadata,
+        ValueWithObjectMetadata.MetadataType: NSCoding>(index: YapDB.Index) -> ValueWithObjectMetadata? {
+            return read { $0.readAtIndex(index) }
+    }
+
+    public func readAtIndexes<
+        ValueWithObjectMetadata
+        where
+        ValueWithObjectMetadata: MetadataPersistable,
+        ValueWithObjectMetadata: Saveable,
+        ValueWithObjectMetadata.ArchiverType: NSCoding,
+        ValueWithObjectMetadata.ArchiverType.ValueType == ValueWithObjectMetadata,
+        ValueWithObjectMetadata.MetadataType: NSCoding>(indexes: [YapDB.Index]) -> [ValueWithObjectMetadata] {
+            return read { $0.readAtIndexes(indexes) }
+    }
+
+    public func readByKey<
+        ValueWithObjectMetadata
+        where
+        ValueWithObjectMetadata: MetadataPersistable,
+        ValueWithObjectMetadata: Saveable,
+        ValueWithObjectMetadata.ArchiverType: NSCoding,
+        ValueWithObjectMetadata.ArchiverType.ValueType == ValueWithObjectMetadata,
+        ValueWithObjectMetadata.MetadataType: NSCoding>(key: String) -> ValueWithObjectMetadata? {
+            return readAtIndex(ValueWithObjectMetadata.indexWithKey(key))
+    }
+
+    public func readByKeys<
+        ValueWithObjectMetadata
+        where
+        ValueWithObjectMetadata: MetadataPersistable,
+        ValueWithObjectMetadata: Saveable,
+        ValueWithObjectMetadata.ArchiverType: NSCoding,
+        ValueWithObjectMetadata.ArchiverType.ValueType == ValueWithObjectMetadata,
+        ValueWithObjectMetadata.MetadataType: NSCoding>(keys: [String]) -> [ValueWithObjectMetadata] {
+            return readAtIndexes(ValueWithObjectMetadata.indexesWithKeys(keys))
+    }
+}
+
+// MARK: - Value with Value metadata
+
+extension ReadTransactionType {
+
+    public func readAtIndex<
+        ValueWithValueMetadata
+        where
+        ValueWithValueMetadata: MetadataPersistable,
+        ValueWithValueMetadata: Saveable,
+        ValueWithValueMetadata.ArchiverType: NSCoding,
+        ValueWithValueMetadata.ArchiverType.ValueType == ValueWithValueMetadata,
+        ValueWithValueMetadata.MetadataType: Saveable,
+        ValueWithValueMetadata.MetadataType.ArchiverType: NSCoding,
+        ValueWithValueMetadata.MetadataType.ArchiverType.ValueType == ValueWithValueMetadata.MetadataType>(index: YapDB.Index) -> ValueWithValueMetadata? {
+            if var item = ValueWithValueMetadata.unarchive(readAtIndex(index)) {
+                item.metadata = ValueWithValueMetadata.MetadataType.unarchive(readMetadataAtIndex(index))
+                return item
+            }
+            return .None
+    }
+
+    public func readAtIndexes<
+        ValueWithValueMetadata
+        where
+        ValueWithValueMetadata: MetadataPersistable,
+        ValueWithValueMetadata: Saveable,
+        ValueWithValueMetadata.ArchiverType: NSCoding,
+        ValueWithValueMetadata.ArchiverType.ValueType == ValueWithValueMetadata,
+        ValueWithValueMetadata.MetadataType: Saveable,
+        ValueWithValueMetadata.MetadataType.ArchiverType: NSCoding,
+        ValueWithValueMetadata.MetadataType.ArchiverType.ValueType == ValueWithValueMetadata.MetadataType>(indexes: [YapDB.Index]) -> [ValueWithValueMetadata] {
+            return indexes.flatMap(readAtIndex)
+    }
+
+    public func readByKey<
+        ValueWithValueMetadata
+        where
+        ValueWithValueMetadata: MetadataPersistable,
+        ValueWithValueMetadata: Saveable,
+        ValueWithValueMetadata.ArchiverType: NSCoding,
+        ValueWithValueMetadata.ArchiverType.ValueType == ValueWithValueMetadata,
+        ValueWithValueMetadata.MetadataType: Saveable,
+        ValueWithValueMetadata.MetadataType.ArchiverType: NSCoding,
+        ValueWithValueMetadata.MetadataType.ArchiverType.ValueType == ValueWithValueMetadata.MetadataType>(key: String) -> ValueWithValueMetadata? {
+            return readAtIndex(ValueWithValueMetadata.indexWithKey(key))
+    }
+
+    public func readByKeys<
+        ValueWithValueMetadata
+        where
+        ValueWithValueMetadata: MetadataPersistable,
+        ValueWithValueMetadata: Saveable,
+        ValueWithValueMetadata.ArchiverType: NSCoding,
+        ValueWithValueMetadata.ArchiverType.ValueType == ValueWithValueMetadata,
+        ValueWithValueMetadata.MetadataType: Saveable,
+        ValueWithValueMetadata.MetadataType.ArchiverType: NSCoding,
+        ValueWithValueMetadata.MetadataType.ArchiverType.ValueType == ValueWithValueMetadata.MetadataType>(keys: [String]) -> [ValueWithValueMetadata] {
+            return readAtIndexes(ValueWithValueMetadata.indexesWithKeys(keys))
+    }
+}
+
+extension ConnectionType {
+
+    public func readAtIndex<
+        ValueWithValueMetadata
+        where
+        ValueWithValueMetadata: MetadataPersistable,
+        ValueWithValueMetadata: Saveable,
+        ValueWithValueMetadata.ArchiverType: NSCoding,
+        ValueWithValueMetadata.ArchiverType.ValueType == ValueWithValueMetadata,
+        ValueWithValueMetadata.MetadataType: Saveable,
+        ValueWithValueMetadata.MetadataType.ArchiverType: NSCoding,
+        ValueWithValueMetadata.MetadataType.ArchiverType.ValueType == ValueWithValueMetadata.MetadataType>(index: YapDB.Index) -> ValueWithValueMetadata? {
+            return read { $0.readAtIndex(index) }
+    }
+
+    public func readAtIndexes<
+        ValueWithValueMetadata
+        where
+        ValueWithValueMetadata: MetadataPersistable,
+        ValueWithValueMetadata: Saveable,
+        ValueWithValueMetadata.ArchiverType: NSCoding,
+        ValueWithValueMetadata.ArchiverType.ValueType == ValueWithValueMetadata,
+        ValueWithValueMetadata.MetadataType: Saveable,
+        ValueWithValueMetadata.MetadataType.ArchiverType: NSCoding,
+        ValueWithValueMetadata.MetadataType.ArchiverType.ValueType == ValueWithValueMetadata.MetadataType>(indexes: [YapDB.Index]) -> [ValueWithValueMetadata] {
+            return read { $0.readAtIndexes(indexes) }
+    }
+
+    public func readByKey<
+        ValueWithValueMetadata
+        where
+        ValueWithValueMetadata: MetadataPersistable,
+        ValueWithValueMetadata: Saveable,
+        ValueWithValueMetadata.ArchiverType: NSCoding,
+        ValueWithValueMetadata.ArchiverType.ValueType == ValueWithValueMetadata,
+        ValueWithValueMetadata.MetadataType: Saveable,
+        ValueWithValueMetadata.MetadataType.ArchiverType: NSCoding,
+        ValueWithValueMetadata.MetadataType.ArchiverType.ValueType == ValueWithValueMetadata.MetadataType>(key: String) -> ValueWithValueMetadata? {
+            return readAtIndex(ValueWithValueMetadata.indexWithKey(key))
+    }
+
+    public func readByKeys<
+        ValueWithValueMetadata
+        where
+        ValueWithValueMetadata: MetadataPersistable,
+        ValueWithValueMetadata: Saveable,
+        ValueWithValueMetadata.ArchiverType: NSCoding,
+        ValueWithValueMetadata.ArchiverType.ValueType == ValueWithValueMetadata,
+        ValueWithValueMetadata.MetadataType: Saveable,
+        ValueWithValueMetadata.MetadataType.ArchiverType: NSCoding,
+        ValueWithValueMetadata.MetadataType.ArchiverType.ValueType == ValueWithValueMetadata.MetadataType>(keys: [String]) -> [ValueWithValueMetadata] {
+            return readAtIndexes(ValueWithValueMetadata.indexesWithKeys(keys))
+    }
+}
+
 
 
 

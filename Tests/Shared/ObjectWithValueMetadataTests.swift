@@ -465,5 +465,108 @@ class ObjectWithValueMetadataTests: XCTestCase {
         XCTAssertEqual(missing, Array(keys.suffixFrom(1)))
     }
 
+
+    // Functional API - ReadTransactionType - Reading
+
+    func test__transaction__read_at_index_with_data() {
+        configureForReadingSingle()
+        let manager: Manager? = readTransaction.readAtIndex(index)
+        XCTAssertNotNil(manager)
+        XCTAssertEqual(manager!.identifier, item.identifier)
+    }
+
+    func test__transaction__read_at_index_without_data() {
+        let manager: Manager? = readTransaction.readAtIndex(index)
+        XCTAssertNil(manager)
+    }
+
+    func test__transaction__read_at_indexes_with_data() {
+        configureForReadingMultiple()
+        let managers: [Manager] = readTransaction.readAtIndexes(indexes)
+        XCTAssertEqual(managers.count, items.count)
+    }
+
+    func test__transaction__read_at_indexes_without_data() {
+        let managers: [Manager] = readTransaction.readAtIndexes(indexes)
+        XCTAssertNotNil(managers)
+        XCTAssertTrue(managers.isEmpty)
+    }
+
+    func test__transaction__read_by_key_with_data() {
+        configureForReadingSingle()
+        let manager: Manager? = readTransaction.readByKey(key)
+        XCTAssertNotNil(manager)
+        XCTAssertEqual(manager!.identifier, item.identifier)
+    }
+
+    func test__transaction__read_by_key_without_data() {
+        let manager: Manager? = readTransaction.readByKey(key)
+        XCTAssertNil(manager)
+    }
+
+    func test__transaction__read_by_keys_with_data() {
+        configureForReadingMultiple()
+        let managers: [Manager] = readTransaction.readByKeys(keys)
+        XCTAssertEqual(managers.count, items.count)
+    }
+
+    func test__transaction__read_by_keys_without_data() {
+        let managers: [Manager] = readTransaction.readByKeys(keys)
+        XCTAssertNotNil(managers)
+        XCTAssertTrue(managers.isEmpty)
+    }
+
+    // Functional API - ConnectionType - Reading
+
+    func test__connection__read_at_index_with_data() {
+        configureForReadingSingle()
+        let manager: Manager? = connection.readAtIndex(index)
+        XCTAssertNotNil(manager)
+        XCTAssertEqual(manager!.identifier, item.identifier)
+    }
+
+    func test__connection__read_at_index_without_data() {
+        let manager: Manager? = connection.readAtIndex(index)
+        XCTAssertNil(manager)
+    }
+
+    func test__connection__read_at_indexes_with_data() {
+        configureForReadingMultiple()
+        let managers: [Manager] = connection.readAtIndexes(indexes)
+        XCTAssertEqual(managers.count, items.count)
+    }
+
+    func test__connection__read_at_indexes_without_data() {
+        let managers: [Manager] = connection.readAtIndexes(indexes)
+        XCTAssertNotNil(managers)
+        XCTAssertTrue(managers.isEmpty)
+    }
+
+    func test__connection__read_by_key_with_data() {
+        configureForReadingSingle()
+        let manager: Manager? = connection.readByKey(key)
+        XCTAssertNotNil(manager)
+        XCTAssertEqual(manager!.identifier, item.identifier)
+    }
+
+    func test__connection__read_by_key_without_data() {
+        let manager: Manager? = connection.readByKey(key)
+        XCTAssertNil(manager)
+    }
+
+    func test__connection__read_by_keys_with_data() {
+        configureForReadingMultiple()
+        let managers: [Manager] = connection.readByKeys(keys)
+        XCTAssertEqual(managers.count, items.count)
+    }
+
+    func test__connection__read_by_keys_without_data() {
+        let managers: [Manager] = connection.readByKeys(keys)
+        XCTAssertNotNil(managers)
+        XCTAssertTrue(managers.isEmpty)
+    }
+
+
+
 }
 

@@ -52,7 +52,7 @@ public struct Inventory: Identifiable, Equatable {
     }
 }
 
-public class Person: NSObject, NSCoding {
+public class NamedEntity: NSObject, NSCoding {
 
     public let identifier: Identifier
     public let name: String
@@ -73,11 +73,13 @@ public class Person: NSObject, NSCoding {
     }
 }
 
-public class Employee: Person {
+public class Person: NamedEntity { }
+
+public class Employee: NamedEntity {
     public var metadata: NSDate? = .None
 }
 
-public class Manager: Person {
+public class Manager: NamedEntity {
     public struct Metadata: Equatable {
         public let numberOfDirectReports: Int
     }
@@ -115,7 +117,7 @@ public func == (a: Inventory, b: Inventory) -> Bool {
     return (a.product == b.product) && (a.metadata == b.metadata)
 }
 
-public func == (a: Person, b: Person) -> Bool {
+public func == (a: NamedEntity, b: NamedEntity) -> Bool {
     return (a.identifier == b.identifier) && (a.name == b.name)
 }
 
@@ -123,7 +125,7 @@ public func == (a: Manager.Metadata, b: Manager.Metadata) -> Bool {
     return a.numberOfDirectReports == b.numberOfDirectReports
 }
 
-extension Person {
+extension NamedEntity {
 
     public override var description: String {
         return "id: \(identifier), name: \(name)"
@@ -176,9 +178,19 @@ extension Person: Persistable {
     }
 }
 
-extension Employee: MetadataPersistable { }
+extension Employee: MetadataPersistable {
 
-extension Manager: MetadataPersistable { }
+    public static var collection: String {
+        return "Employees"
+    }
+}
+
+extension Manager: MetadataPersistable {
+
+    public static var collection: String {
+        return "Managers"
+    }
+}
 
 
 // MARK: - Saveable

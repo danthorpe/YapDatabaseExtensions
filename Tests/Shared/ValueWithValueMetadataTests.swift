@@ -483,5 +483,107 @@ class ValueWithValueMetadataTests: XCTestCase {
         XCTAssertEqual(missing, Array(keys.suffixFrom(1)))
     }
 
+
+    // Functional API - ReadTransactionType - Reading
+
+    func test__transaction__read_at_index_with_data() {
+        configureForReadingSingle()
+        let product: Product? = readTransaction.readAtIndex(index)
+        XCTAssertNotNil(product)
+        XCTAssertEqual(product!.identifier, item.identifier)
+    }
+
+    func test__transaction__read_at_index_without_data() {
+        let product: Product? = readTransaction.readAtIndex(index)
+        XCTAssertNil(product)
+    }
+
+    func test__transaction__read_at_indexes_with_data() {
+        configureForReadingMultiple()
+        let products: [Product] = readTransaction.readAtIndexes(indexes)
+        XCTAssertEqual(products.count, items.count)
+    }
+
+    func test__transaction__read_at_indexes_without_data() {
+        let products: [Product] = readTransaction.readAtIndexes(indexes)
+        XCTAssertNotNil(products)
+        XCTAssertTrue(products.isEmpty)
+    }
+
+    func test__transaction__read_by_key_with_data() {
+        configureForReadingSingle()
+        let product: Product? = readTransaction.readByKey(key)
+        XCTAssertNotNil(product)
+        XCTAssertEqual(product!.identifier, item.identifier)
+    }
+
+    func test__transaction__read_by_key_without_data() {
+        let product: Product? = readTransaction.readByKey(key)
+        XCTAssertNil(product)
+    }
+
+    func test__transaction__read_by_keys_with_data() {
+        configureForReadingMultiple()
+        let products: [Product] = readTransaction.readByKeys(keys)
+        XCTAssertEqual(products.count, items.count)
+    }
+
+    func test__transaction__read_by_keys_without_data() {
+        let products: [Product] = readTransaction.readByKeys(keys)
+        XCTAssertNotNil(products)
+        XCTAssertTrue(products.isEmpty)
+    }
+
+    // Functional API - ConnectionType - Reading
+
+    func test__connection__read_at_index_with_data() {
+        configureForReadingSingle()
+        let product: Product? = connection.readAtIndex(index)
+        XCTAssertNotNil(product)
+        XCTAssertEqual(product!.identifier, item.identifier)
+    }
+
+    func test__connection__read_at_index_without_data() {
+        let product: Product? = connection.readAtIndex(index)
+        XCTAssertNil(product)
+    }
+
+    func test__connection__read_at_indexes_with_data() {
+        configureForReadingMultiple()
+        let products: [Product] = connection.readAtIndexes(indexes)
+        XCTAssertEqual(products.count, items.count)
+    }
+
+    func test__connection__read_at_indexes_without_data() {
+        let products: [Product] = connection.readAtIndexes(indexes)
+        XCTAssertNotNil(products)
+        XCTAssertTrue(products.isEmpty)
+    }
+
+    func test__connection__read_by_key_with_data() {
+        configureForReadingSingle()
+        let product: Product? = connection.readByKey(key)
+        XCTAssertNotNil(product)
+        XCTAssertEqual(product!.identifier, item.identifier)
+    }
+
+    func test__connection__read_by_key_without_data() {
+        let product: Product? = connection.readByKey(key)
+        XCTAssertNil(product)
+    }
+
+    func test__connection__read_by_keys_with_data() {
+        configureForReadingMultiple()
+        let products: [Product] = connection.readByKeys(keys)
+        XCTAssertEqual(products.count, items.count)
+    }
+
+    func test__connection__read_by_keys_without_data() {
+        let products: [Product] = connection.readByKeys(keys)
+        XCTAssertNotNil(products)
+        XCTAssertTrue(products.isEmpty)
+    }
+
+
 }
 
