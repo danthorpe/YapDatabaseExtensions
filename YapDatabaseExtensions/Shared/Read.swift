@@ -679,7 +679,7 @@ extension ConnectionType {
         where
         Object: Persistable,
         Object: NSCoding>(indexes: [YapDB.Index]) -> [Object] {
-            return indexes.flatMap(read)
+            return read { $0.read(indexes) }
     }
 
     public func read<
