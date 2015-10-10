@@ -24,7 +24,6 @@
 		653B048A1BC981D700AC98FD /* YapDatabaseExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04801BC981D100AC98FD /* YapDatabaseExtensions.swift */; settings = {ASSET_TAGS = (); }; };
 		653B048B1BC981D700AC98FD /* YapDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04811BC981D100AC98FD /* YapDB.swift */; settings = {ASSET_TAGS = (); }; };
 		653B049B1BC9820A00AC98FD /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 653B048D1BC9820A00AC98FD /* Info.plist */; settings = {ASSET_TAGS = (); }; };
-		653B04A91BC9824000AC98FD /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B048F1BC9820A00AC98FD /* Helpers.swift */; settings = {ASSET_TAGS = (); }; };
 		653B04AA1BC9824000AC98FD /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04901BC9820A00AC98FD /* Models.swift */; settings = {ASSET_TAGS = (); }; };
 		653B04AB1BC9824000AC98FD /* ObjectWithNoMetadataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04911BC9820A00AC98FD /* ObjectWithNoMetadataTests.swift */; settings = {ASSET_TAGS = (); }; };
 		653B04AC1BC9824000AC98FD /* ObjectWithObjectMetadataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04921BC9820A00AC98FD /* ObjectWithObjectMetadataTests.swift */; settings = {ASSET_TAGS = (); }; };
@@ -36,7 +35,6 @@
 		653B04B21BC9824000AC98FD /* ValueWithObjectMetadataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04981BC9820A00AC98FD /* ValueWithObjectMetadataTests.swift */; settings = {ASSET_TAGS = (); }; };
 		653B04B31BC9824000AC98FD /* ValueWithValueMetadataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04991BC9820A00AC98FD /* ValueWithValueMetadataTests.swift */; settings = {ASSET_TAGS = (); }; };
 		653B04B41BC9824000AC98FD /* YapDatabaseExtensionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B049A1BC9820A00AC98FD /* YapDatabaseExtensionsTests.swift */; settings = {ASSET_TAGS = (); }; };
-		653B04B51BC9824100AC98FD /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B048F1BC9820A00AC98FD /* Helpers.swift */; settings = {ASSET_TAGS = (); }; };
 		653B04B61BC9824100AC98FD /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04901BC9820A00AC98FD /* Models.swift */; settings = {ASSET_TAGS = (); }; };
 		653B04B71BC9824100AC98FD /* ObjectWithNoMetadataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04911BC9820A00AC98FD /* ObjectWithNoMetadataTests.swift */; settings = {ASSET_TAGS = (); }; };
 		653B04B81BC9824100AC98FD /* ObjectWithObjectMetadataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04921BC9820A00AC98FD /* ObjectWithObjectMetadataTests.swift */; settings = {ASSET_TAGS = (); }; };
@@ -88,7 +86,6 @@
 		653B04801BC981D100AC98FD /* YapDatabaseExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YapDatabaseExtensions.swift; sourceTree = "<group>"; };
 		653B04811BC981D100AC98FD /* YapDB.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YapDB.swift; sourceTree = "<group>"; };
 		653B048D1BC9820A00AC98FD /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		653B048F1BC9820A00AC98FD /* Helpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
 		653B04901BC9820A00AC98FD /* Models.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
 		653B04911BC9820A00AC98FD /* ObjectWithNoMetadataTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ObjectWithNoMetadataTests.swift; sourceTree = "<group>"; };
 		653B04921BC9820A00AC98FD /* ObjectWithObjectMetadataTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ObjectWithObjectMetadataTests.swift; sourceTree = "<group>"; };
@@ -204,7 +201,6 @@
 		653B048E1BC9820A00AC98FD /* Shared */ = {
 			isa = PBXGroup;
 			children = (
-				653B048F1BC9820A00AC98FD /* Helpers.swift */,
 				653B04901BC9820A00AC98FD /* Models.swift */,
 				653B04911BC9820A00AC98FD /* ObjectWithNoMetadataTests.swift */,
 				653B04921BC9820A00AC98FD /* ObjectWithObjectMetadataTests.swift */,
@@ -605,7 +601,6 @@
 				653B04AF1BC9824000AC98FD /* RemovalTests.swift in Sources */,
 				653B04AC1BC9824000AC98FD /* ObjectWithObjectMetadataTests.swift in Sources */,
 				653B04AB1BC9824000AC98FD /* ObjectWithNoMetadataTests.swift in Sources */,
-				653B04A91BC9824000AC98FD /* Helpers.swift in Sources */,
 				653B04AD1BC9824000AC98FD /* ObjectWithValueMetadataTests.swift in Sources */,
 				653B04B21BC9824000AC98FD /* ValueWithObjectMetadataTests.swift in Sources */,
 				653B04B41BC9824000AC98FD /* YapDatabaseExtensionsTests.swift in Sources */,
@@ -636,7 +631,6 @@
 				653B04BB1BC9824100AC98FD /* RemovalTests.swift in Sources */,
 				653B04B81BC9824100AC98FD /* ObjectWithObjectMetadataTests.swift in Sources */,
 				653B04B71BC9824100AC98FD /* ObjectWithNoMetadataTests.swift in Sources */,
-				653B04B51BC9824100AC98FD /* Helpers.swift in Sources */,
 				653B04B91BC9824100AC98FD /* ObjectWithValueMetadataTests.swift in Sources */,
 				653B04BE1BC9824100AC98FD /* ValueWithObjectMetadataTests.swift in Sources */,
 				653B04C01BC9824100AC98FD /* YapDatabaseExtensionsTests.swift in Sources */,
