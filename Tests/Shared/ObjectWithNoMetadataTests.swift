@@ -463,5 +463,58 @@ class ObjectWithNoMetadataTests: XCTestCase {
         XCTAssertEqual(missing, Array(keys.suffixFrom(1)))
     }
 
+    // Functional API - Reading
+
+    func test__transaction_read_at_index_with_data() {
+        configureForReadingSingle()
+        let person: Person? = readTransaction.read(index)
+        XCTAssertNotNil(person)
+        XCTAssertEqual(person!.identifier, item.identifier)
+    }
+
+    func test__transaction_read_at_index_without_data() {
+        let person: Person? = readTransaction.read(index)
+        XCTAssertNil(person)
+    }
+
+    func test__transaction_read_at_indexes_with_data() {
+        configureForReadingMultiple()
+        let people: [Person] = readTransaction.read(indexes)
+        XCTAssertEqual(people.count, items.count)
+    }
+
+    func test__transaction_read_at_indexes_without_data() {
+        let people: [Person] = readTransaction.read(indexes)
+        XCTAssertNotNil(people)
+        XCTAssertTrue(people.isEmpty)
+    }
+
+    func test__transaction_read_by_key_with_data() {
+        configureForReadingSingle()
+        let person: Person? = readTransaction.read(key)
+        XCTAssertNotNil(person)
+        XCTAssertEqual(person!.identifier, item.identifier)
+    }
+
+    func test__transaction_read_by_key_without_data() {
+        let person: Person? = readTransaction.read(key)
+        XCTAssertNil(person)
+    }
+
+    func test__transaction_read_by_keys_with_data() {
+        configureForReadingMultiple()
+        let people: [Person] = readTransaction.read(keys)
+        XCTAssertEqual(people.count, items.count)
+    }
+
+    func test__transaction_read_by_keys_without_data() {
+        let people: [Person] = readTransaction.read(keys)
+        XCTAssertNotNil(people)
+        XCTAssertTrue(people.isEmpty)
+    }
+
+
+
+
 }
 
