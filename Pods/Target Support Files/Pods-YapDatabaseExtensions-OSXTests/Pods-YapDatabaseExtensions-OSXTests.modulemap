@@ -1,0 +1,6 @@
+framework module Pods_YapDatabaseExtensions_OSXTests {
+  umbrella header "Pods-YapDatabaseExtensions-OSXTests-umbrella.h"
+
+  export *
+  module * { export * }
+}

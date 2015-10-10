@@ -5,22 +5,23 @@
 use_frameworks!
 inhibit_all_warnings!
 
-pod 'YapDatabase', '~> 2'
+target 'YapDatabaseExtensions-iOS' do
+  platform :ios, '8.0'
+  pod 'YapDatabase', '~> 2'
+end
 
+target 'YapDatabaseExtensions-iOSTests' do
+  platform :ios, '8.0'  
+  pod 'YapDatabase', '~> 2'
+end
 
-# target 'YapDatabaseExtensions-iOS' do
-#
-# end
-#
-# target 'YapDatabaseExtensions-iOSTests' do
-#
-# end
-#
-# target 'YapDatabaseExtensions-OSX' do
-#
-# end
-#
-# target 'YapDatabaseExtensions-OSXTests' do
-#
-# end
-#
+target 'YapDatabaseExtensions-OSX' do
+  platform :osx, '10.8'  
+  pod 'YapDatabase', '~> 2'
+end
+
+target 'YapDatabaseExtensions-OSXTests' do
+  platform :osx, '10.8'
+  pod 'YapDatabase', '~> 2'
+end
+

@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		00EFE0D3D9A2DDD7C6BF526A /* Pods_YapDatabaseExtensions_iOSTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5550DE9AA69FDA43AE8D0D51 /* Pods_YapDatabaseExtensions_iOSTests.framework */; };
+		085C9EA234EAEF057CC78041 /* Pods_YapDatabaseExtensions_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EE3D86AD60BF064ADA4CC71C /* Pods_YapDatabaseExtensions_iOS.framework */; };
+		371109FDB091F2E45241BC22 /* Pods_YapDatabaseExtensions_OSX.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DB4702C82EB6B1579DB4EF99 /* Pods_YapDatabaseExtensions_OSX.framework */; };
 		653B044E1BC97ED700AC98FD /* YapDatabaseExtensions.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 653B04431BC97ED700AC98FD /* YapDatabaseExtensions.framework */; settings = {ASSET_TAGS = (); }; };
 		653B046A1BC9805D00AC98FD /* YapDatabaseExtensions.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 653B04601BC9805D00AC98FD /* YapDatabaseExtensions.framework */; settings = {ASSET_TAGS = (); }; };
 		653B047B1BC9816D00AC98FD /* YapDatabaseExtensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 653B04791BC9816D00AC98FD /* YapDatabaseExtensions.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -46,6 +49,7 @@
 		653B04BF1BC9824100AC98FD /* ValueWithValueMetadataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04991BC9820A00AC98FD /* ValueWithValueMetadataTests.swift */; settings = {ASSET_TAGS = (); }; };
 		653B04C01BC9824100AC98FD /* YapDatabaseExtensionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B049A1BC9820A00AC98FD /* YapDatabaseExtensionsTests.swift */; settings = {ASSET_TAGS = (); }; };
 		653B04C11BC982CC00AC98FD /* YapDatabaseExtensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 653B04791BC9816D00AC98FD /* YapDatabaseExtensions.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		AC8FC0BC100A1A0A60C3B18F /* Pods_YapDatabaseExtensions_OSXTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 574741755E625D8A78119A8A /* Pods_YapDatabaseExtensions_OSXTests.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -66,6 +70,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		25A5FCE19D2DB109BEA221DD /* Pods-YapDatabaseExtensions-iOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-YapDatabaseExtensions-iOSTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-YapDatabaseExtensions-iOSTests/Pods-YapDatabaseExtensions-iOSTests.debug.xcconfig"; sourceTree = "<group>"; };
+		3924F2A8B094550C2705DC44 /* Pods-YapDatabaseExtensions-OSXTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-YapDatabaseExtensions-OSXTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-YapDatabaseExtensions-OSXTests/Pods-YapDatabaseExtensions-OSXTests.release.xcconfig"; sourceTree = "<group>"; };
+		5550DE9AA69FDA43AE8D0D51 /* Pods_YapDatabaseExtensions_iOSTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_YapDatabaseExtensions_iOSTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		574741755E625D8A78119A8A /* Pods_YapDatabaseExtensions_OSXTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_YapDatabaseExtensions_OSXTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		598392EAD289EAEAE8D3B2CD /* Pods-YapDatabaseExtensions-iOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-YapDatabaseExtensions-iOS.release.xcconfig"; path = "Pods/Target Support Files/Pods-YapDatabaseExtensions-iOS/Pods-YapDatabaseExtensions-iOS.release.xcconfig"; sourceTree = "<group>"; };
+		5AC602528D550B8182F7A0C6 /* Pods-YapDatabaseExtensions-iOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-YapDatabaseExtensions-iOS.debug.xcconfig"; path = "Pods/Target Support Files/Pods-YapDatabaseExtensions-iOS/Pods-YapDatabaseExtensions-iOS.debug.xcconfig"; sourceTree = "<group>"; };
 		653B04431BC97ED700AC98FD /* YapDatabaseExtensions.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = YapDatabaseExtensions.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		653B044D1BC97ED700AC98FD /* YapDatabaseExtensions-iOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "YapDatabaseExtensions-iOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		653B04601BC9805D00AC98FD /* YapDatabaseExtensions.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = YapDatabaseExtensions.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -90,6 +100,12 @@
 		653B04981BC9820A00AC98FD /* ValueWithObjectMetadataTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ValueWithObjectMetadataTests.swift; sourceTree = "<group>"; };
 		653B04991BC9820A00AC98FD /* ValueWithValueMetadataTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ValueWithValueMetadataTests.swift; sourceTree = "<group>"; };
 		653B049A1BC9820A00AC98FD /* YapDatabaseExtensionsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YapDatabaseExtensionsTests.swift; sourceTree = "<group>"; };
+		9D7D405FE2B19AF9F31FA60A /* Pods-YapDatabaseExtensions-iOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-YapDatabaseExtensions-iOSTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-YapDatabaseExtensions-iOSTests/Pods-YapDatabaseExtensions-iOSTests.release.xcconfig"; sourceTree = "<group>"; };
+		B26F7704368F3FE50A228AB0 /* Pods-YapDatabaseExtensions-OSX.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-YapDatabaseExtensions-OSX.debug.xcconfig"; path = "Pods/Target Support Files/Pods-YapDatabaseExtensions-OSX/Pods-YapDatabaseExtensions-OSX.debug.xcconfig"; sourceTree = "<group>"; };
+		D13C45EFF8EA26355D7BE26C /* Pods-YapDatabaseExtensions-OSX.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-YapDatabaseExtensions-OSX.release.xcconfig"; path = "Pods/Target Support Files/Pods-YapDatabaseExtensions-OSX/Pods-YapDatabaseExtensions-OSX.release.xcconfig"; sourceTree = "<group>"; };
+		DB4702C82EB6B1579DB4EF99 /* Pods_YapDatabaseExtensions_OSX.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_YapDatabaseExtensions_OSX.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		DC6DF36A6B07743776990FC1 /* Pods-YapDatabaseExtensions-OSXTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-YapDatabaseExtensions-OSXTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-YapDatabaseExtensions-OSXTests/Pods-YapDatabaseExtensions-OSXTests.debug.xcconfig"; sourceTree = "<group>"; };
+		EE3D86AD60BF064ADA4CC71C /* Pods_YapDatabaseExtensions_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_YapDatabaseExtensions_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -97,6 +113,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				085C9EA234EAEF057CC78041 /* Pods_YapDatabaseExtensions_iOS.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -105,6 +122,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				653B044E1BC97ED700AC98FD /* YapDatabaseExtensions.framework in Frameworks */,
+				00EFE0D3D9A2DDD7C6BF526A /* Pods_YapDatabaseExtensions_iOSTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -112,6 +130,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				371109FDB091F2E45241BC22 /* Pods_YapDatabaseExtensions_OSX.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -120,6 +139,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				653B046A1BC9805D00AC98FD /* YapDatabaseExtensions.framework in Frameworks */,
+				AC8FC0BC100A1A0A60C3B18F /* Pods_YapDatabaseExtensions_OSXTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -133,6 +153,8 @@
 				653B048C1BC9820A00AC98FD /* Tests */,
 				653B04771BC9816D00AC98FD /* Supporting Files */,
 				653B04441BC97ED700AC98FD /* Products */,
+				B10C6366F8DD8553B1B23D41 /* Pods */,
+				8EF7013721C73AB49C4BA4FE /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -206,6 +228,32 @@
 			name = YapDatabaseExtensions;
 			sourceTree = "<group>";
 		};
+		8EF7013721C73AB49C4BA4FE /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				DB4702C82EB6B1579DB4EF99 /* Pods_YapDatabaseExtensions_OSX.framework */,
+				574741755E625D8A78119A8A /* Pods_YapDatabaseExtensions_OSXTests.framework */,
+				EE3D86AD60BF064ADA4CC71C /* Pods_YapDatabaseExtensions_iOS.framework */,
+				5550DE9AA69FDA43AE8D0D51 /* Pods_YapDatabaseExtensions_iOSTests.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		B10C6366F8DD8553B1B23D41 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				B26F7704368F3FE50A228AB0 /* Pods-YapDatabaseExtensions-OSX.debug.xcconfig */,
+				D13C45EFF8EA26355D7BE26C /* Pods-YapDatabaseExtensions-OSX.release.xcconfig */,
+				DC6DF36A6B07743776990FC1 /* Pods-YapDatabaseExtensions-OSXTests.debug.xcconfig */,
+				3924F2A8B094550C2705DC44 /* Pods-YapDatabaseExtensions-OSXTests.release.xcconfig */,
+				5AC602528D550B8182F7A0C6 /* Pods-YapDatabaseExtensions-iOS.debug.xcconfig */,
+				598392EAD289EAEAE8D3B2CD /* Pods-YapDatabaseExtensions-iOS.release.xcconfig */,
+				25A5FCE19D2DB109BEA221DD /* Pods-YapDatabaseExtensions-iOSTests.debug.xcconfig */,
+				9D7D405FE2B19AF9F31FA60A /* Pods-YapDatabaseExtensions-iOSTests.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -232,10 +280,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 653B04591BC97ED700AC98FD /* Build configuration list for PBXNativeTarget "YapDatabaseExtensions-iOS" */;
 			buildPhases = (
+				87A2A3019EEBED13473D74C2 /* Check Pods Manifest.lock */,
 				653B043E1BC97ED700AC98FD /* Sources */,
 				653B043F1BC97ED700AC98FD /* Frameworks */,
 				653B04401BC97ED700AC98FD /* Headers */,
 				653B04411BC97ED700AC98FD /* Resources */,
+				E8EA528EB7E8024A7D0E0227 /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -250,9 +300,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 653B045A1BC97ED700AC98FD /* Build configuration list for PBXNativeTarget "YapDatabaseExtensions-iOSTests" */;
 			buildPhases = (
+				B72849EB15D9E86F25C5530F /* Check Pods Manifest.lock */,
 				653B04491BC97ED700AC98FD /* Sources */,
 				653B044A1BC97ED700AC98FD /* Frameworks */,
 				653B044B1BC97ED700AC98FD /* Resources */,
+				84C2EBCB7056CD7D8838C49E /* Embed Pods Frameworks */,
+				E4307CBC641D59DF2F853906 /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -268,10 +321,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 653B04711BC9805D00AC98FD /* Build configuration list for PBXNativeTarget "YapDatabaseExtensions-OSX" */;
 			buildPhases = (
+				49BAD171DC9CE6905FDF2B89 /* Check Pods Manifest.lock */,
 				653B045B1BC9805D00AC98FD /* Sources */,
 				653B045C1BC9805D00AC98FD /* Frameworks */,
 				653B045D1BC9805D00AC98FD /* Headers */,
 				653B045E1BC9805D00AC98FD /* Resources */,
+				9EABF98CD0DDE87344A42CB4 /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -286,9 +341,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 653B04741BC9805D00AC98FD /* Build configuration list for PBXNativeTarget "YapDatabaseExtensions-OSXTests" */;
 			buildPhases = (
+				D4FA2DFB00EBFF31BA9CEBD0 /* Check Pods Manifest.lock */,
 				653B04651BC9805D00AC98FD /* Sources */,
 				653B04661BC9805D00AC98FD /* Frameworks */,
 				653B04671BC9805D00AC98FD /* Resources */,
+				062778A7BA5F879BD51CCB6E /* Embed Pods Frameworks */,
+				DB9842EF2260186A61B3A3E6 /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -373,6 +431,159 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		062778A7BA5F879BD51CCB6E /* Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-YapDatabaseExtensions-OSXTests/Pods-YapDatabaseExtensions-OSXTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		49BAD171DC9CE6905FDF2B89 /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		84C2EBCB7056CD7D8838C49E /* Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-YapDatabaseExtensions-iOSTests/Pods-YapDatabaseExtensions-iOSTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		87A2A3019EEBED13473D74C2 /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		9EABF98CD0DDE87344A42CB4 /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-YapDatabaseExtensions-OSX/Pods-YapDatabaseExtensions-OSX-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		B72849EB15D9E86F25C5530F /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		D4FA2DFB00EBFF31BA9CEBD0 /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		DB9842EF2260186A61B3A3E6 /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-YapDatabaseExtensions-OSXTests/Pods-YapDatabaseExtensions-OSXTests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		E4307CBC641D59DF2F853906 /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-YapDatabaseExtensions-iOSTests/Pods-YapDatabaseExtensions-iOSTests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		E8EA528EB7E8024A7D0E0227 /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-YapDatabaseExtensions-iOS/Pods-YapDatabaseExtensions-iOS-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		653B043E1BC97ED700AC98FD /* Sources */ = {
@@ -475,6 +686,7 @@
 		};
 		653B04551BC97ED700AC98FD /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 5AC602528D550B8182F7A0C6 /* Pods-YapDatabaseExtensions-iOS.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				APPLICATION_EXTENSION_API_ONLY = YES;
@@ -531,6 +743,7 @@
 		};
 		653B04561BC97ED700AC98FD /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 598392EAD289EAEAE8D3B2CD /* Pods-YapDatabaseExtensions-iOS.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				APPLICATION_EXTENSION_API_ONLY = YES;
@@ -580,6 +793,7 @@
 		};
 		653B04571BC97ED700AC98FD /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 25A5FCE19D2DB109BEA221DD /* Pods-YapDatabaseExtensions-iOSTests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
@@ -628,6 +842,7 @@
 		};
 		653B04581BC97ED700AC98FD /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9D7D405FE2B19AF9F31FA60A /* Pods-YapDatabaseExtensions-iOSTests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
@@ -669,6 +884,7 @@
 		};
 		653B04721BC9805D00AC98FD /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = B26F7704368F3FE50A228AB0 /* Pods-YapDatabaseExtensions-OSX.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
@@ -724,6 +940,7 @@
 		};
 		653B04731BC9805D00AC98FD /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = D13C45EFF8EA26355D7BE26C /* Pods-YapDatabaseExtensions-OSX.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
@@ -771,6 +988,7 @@
 		};
 		653B04751BC9805D00AC98FD /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = DC6DF36A6B07743776990FC1 /* Pods-YapDatabaseExtensions-OSXTests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
@@ -819,6 +1037,7 @@
 		};
 		653B04761BC9805D00AC98FD /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3924F2A8B094550C2705DC44 /* Pods-YapDatabaseExtensions-OSXTests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
@@ -876,6 +1095,7 @@
 				653B04561BC97ED700AC98FD /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		653B045A1BC97ED700AC98FD /* Build configuration list for PBXNativeTarget "YapDatabaseExtensions-iOSTests" */ = {
 			isa = XCConfigurationList;
@@ -884,6 +1104,7 @@
 				653B04581BC97ED700AC98FD /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		653B04711BC9805D00AC98FD /* Build configuration list for PBXNativeTarget "YapDatabaseExtensions-OSX" */ = {
 			isa = XCConfigurationList;
@@ -892,6 +1113,7 @@
 				653B04731BC9805D00AC98FD /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		653B04741BC9805D00AC98FD /* Build configuration list for PBXNativeTarget "YapDatabaseExtensions-OSXTests" */ = {
 			isa = XCConfigurationList;
@@ -900,6 +1122,7 @@
 				653B04761BC9805D00AC98FD /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
