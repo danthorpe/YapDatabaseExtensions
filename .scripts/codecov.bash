@@ -2,7 +2,7 @@
 
 set -e
 
-VERSION="ed00ab8"
+VERSION="bcf720d"
 
 url="https://codecov.io"
 verbose="0"
@@ -395,12 +395,18 @@ else
         _dir=$(dirname "$profdata")
         for _type in app framework xctest
         do
-          _file=$(find "$_dir" -name "*.$_type" | head -1)
+          _file=$(find "$_dir" -name "*.$_type")
           if [ "$_file" != "" ];
           then
-            _proj=${_file##*/}
-            _proj=${_proj%."$_type"}
-            xcrun llvm-cov show -instr-profile "$profdata" "$_file/$_proj" > "$_type.coverage.txt" || true
+            for f in $_file
+            do
+              _proj=${f##*/}
+              if [ "$_proj" != Pods_* ];
+              then
+                _proj=${_proj%."$_type"}
+                xcrun llvm-cov show -instr-profile "$profdata" "$f/$_proj" > "$_proj.$_type.coverage.txt" || true
+              fi
+            done
           fi
         done
       fi
@@ -429,6 +435,7 @@ else
                      -or -name '*.lst' \) \
                     -not -name '*.sh' \
                     -not -name '*.py' \
+                    -not -name '*.xcconfig' \
                     -not -name 'Coverage.profdata' \
                     -not -name 'phpunit-code-coverage.xml' \
                     -not -name 'coverage.serialized' \
