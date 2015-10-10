@@ -11,4 +11,10 @@ platform :ios do
       derivedDataPath: '.fastlane/xcodebuild-data',
       build_settings: { "ENABLED_CODE_COVERAGE" => true }
   end
+  
+  gcovr(
+    html: true,
+    html_details: true,
+    output: "./code-coverage/report.html"
+  )
 end
