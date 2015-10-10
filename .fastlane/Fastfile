@@ -12,9 +12,9 @@ platform :ios do
       build_settings: { "ENABLED_CODE_COVERAGE" => true }
   end
   
-  gcovr(
-    html: true,
-    html_details: true,
-    output: "./code-coverage/report.html"
+  lcov(
+    project_name: "YapDatabaseExtensions",
+    scheme: "YapDatabaseExtensions",
+    output_dir: "cov_reports" # This value is optional. Default is coverage_reports
   )
 end
