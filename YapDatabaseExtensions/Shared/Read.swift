@@ -662,8 +662,6 @@ extension ReadTransactionType {
         Object: NSCoding>(keys: [String]) -> [Object] {
             return read(Object.indexesWithKeys(keys))
     }
-
-
 }
 
 

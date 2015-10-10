@@ -388,5 +388,26 @@ extension Writable
 }
 
 
+extension WriteTransactionType {
+
+    public func write<
+        Object
+        where
+        Object: Persistable,
+        Object: NSCoding>(item: Object) {
+            writeAtIndex(item.index, object: item, metadata: .None)
+    }
+
+    public func write<
+        Object
+        where
+        Object: Persistable,
+        Object: NSCoding>(items: [Object]) {
+            items.forEach { writeAtIndex($0.index, object: $0, metadata: .None) }
+    }
+}
+
+
+
 
 
