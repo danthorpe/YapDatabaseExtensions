@@ -664,5 +664,39 @@ extension ReadTransactionType {
     }
 }
 
+extension ConnectionType {
+
+    public func read<
+        Object
+        where
+        Object: Persistable,
+        Object: NSCoding>(index: YapDB.Index) -> Object? {
+            return read { $0.read(index) }
+    }
+
+    public func read<
+        Object
+        where
+        Object: Persistable,
+        Object: NSCoding>(indexes: [YapDB.Index]) -> [Object] {
+            return indexes.flatMap(read)
+    }
+
+    public func read<
+        Object
+        where
+        Object: Persistable,
+        Object: NSCoding>(key: String) -> Object? {
+            return read(Object.indexWithKey(key))
+    }
+
+    public func read<
+        Object
+        where
+        Object: Persistable,
+        Object: NSCoding>(keys: [String]) -> [Object] {
+            return read(Object.indexesWithKeys(keys))
+    }
+}
 
 

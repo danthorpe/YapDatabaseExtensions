@@ -407,6 +407,41 @@ extension WriteTransactionType {
     }
 }
 
+extension ConnectionType {
+
+    public func write<
+        Object
+        where
+        Object: Persistable,
+        Object: NSCoding>(item: Object) {
+            write { $0.write(item) }
+    }
+
+    public func write<
+        Object
+        where
+        Object: Persistable,
+        Object: NSCoding>(items: [Object]) {
+            write { $0.write(items) }
+    }
+
+    public func asyncWrite<
+        Object
+        where
+        Object: Persistable,
+        Object: NSCoding>(item: Object, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: dispatch_block_t) {
+            asyncWrite({ $0.write(item) }, queue: queue, completion: { _ in completion() })
+    }
+
+    public func asyncWrite<
+        Object
+        where
+        Object: Persistable,
+        Object: NSCoding>(items: [Object], queue: dispatch_queue_t = dispatch_get_main_queue(), completion: dispatch_block_t) {
+            asyncWrite({ $0.write(items) }, queue: queue, completion: { _ in completion() })
+    }
+}
+
 
 
 

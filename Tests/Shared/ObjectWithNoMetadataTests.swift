@@ -465,58 +465,107 @@ class ObjectWithNoMetadataTests: XCTestCase {
 
     // Functional API - Transaction - Reading
 
-    func test__transaction_read_at_index_with_data() {
+    func test__transaction__read_at_index_with_data() {
         configureForReadingSingle()
         let person: Person? = readTransaction.read(index)
         XCTAssertNotNil(person)
         XCTAssertEqual(person!.identifier, item.identifier)
     }
 
-    func test__transaction_read_at_index_without_data() {
+    func test__transaction__read_at_index_without_data() {
         let person: Person? = readTransaction.read(index)
         XCTAssertNil(person)
     }
 
-    func test__transaction_read_at_indexes_with_data() {
+    func test__transaction__read_at_indexes_with_data() {
         configureForReadingMultiple()
         let people: [Person] = readTransaction.read(indexes)
         XCTAssertEqual(people.count, items.count)
     }
 
-    func test__transaction_read_at_indexes_without_data() {
+    func test__transaction__read_at_indexes_without_data() {
         let people: [Person] = readTransaction.read(indexes)
         XCTAssertNotNil(people)
         XCTAssertTrue(people.isEmpty)
     }
 
-    func test__transaction_read_by_key_with_data() {
+    func test__transaction__read_by_key_with_data() {
         configureForReadingSingle()
         let person: Person? = readTransaction.read(key)
         XCTAssertNotNil(person)
         XCTAssertEqual(person!.identifier, item.identifier)
     }
 
-    func test__transaction_read_by_key_without_data() {
+    func test__transaction__read_by_key_without_data() {
         let person: Person? = readTransaction.read(key)
         XCTAssertNil(person)
     }
 
-    func test__transaction_read_by_keys_with_data() {
+    func test__transaction__read_by_keys_with_data() {
         configureForReadingMultiple()
         let people: [Person] = readTransaction.read(keys)
         XCTAssertEqual(people.count, items.count)
     }
 
-    func test__transaction_read_by_keys_without_data() {
+    func test__transaction__read_by_keys_without_data() {
         let people: [Person] = readTransaction.read(keys)
         XCTAssertNotNil(people)
         XCTAssertTrue(people.isEmpty)
     }
 
+    // Functional API - Connection - Reading
+
+    func test__connection__read_at_index_with_data() {
+        configureForReadingSingle()
+        let person: Person? = connection.read(index)
+        XCTAssertNotNil(person)
+        XCTAssertEqual(person!.identifier, item.identifier)
+    }
+
+    func test__connection__read_at_index_without_data() {
+        let person: Person? = connection.read(index)
+        XCTAssertNil(person)
+    }
+
+    func test__connection__read_at_indexes_with_data() {
+        configureForReadingMultiple()
+        let people: [Person] = connection.read(indexes)
+        XCTAssertEqual(people.count, items.count)
+    }
+
+    func test__connection__read_at_indexes_without_data() {
+        let people: [Person] = connection.read(indexes)
+        XCTAssertNotNil(people)
+        XCTAssertTrue(people.isEmpty)
+    }
+
+    func test__connection__read_by_key_with_data() {
+        configureForReadingSingle()
+        let person: Person? = connection.read(key)
+        XCTAssertNotNil(person)
+        XCTAssertEqual(person!.identifier, item.identifier)
+    }
+
+    func test__connection__read_by_key_without_data() {
+        let person: Person? = connection.read(key)
+        XCTAssertNil(person)
+    }
+
+    func test__connection__read_by_keys_with_data() {
+        configureForReadingMultiple()
+        let people: [Person] = connection.read(keys)
+        XCTAssertEqual(people.count, items.count)
+    }
+
+    func test__connection__read_by_keys_without_data() {
+        let people: [Person] = connection.read(keys)
+        XCTAssertNotNil(people)
+        XCTAssertTrue(people.isEmpty)
+    }
 
     // Functional API - Transaction - Writing
 
-    func test__transaction_write_item() {
+    func test__transaction__write_item() {
         writeTransaction.write(item)
 
         XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
@@ -525,9 +574,53 @@ class ObjectWithNoMetadataTests: XCTestCase {
         XCTAssertNil(writeTransaction.didWriteAtIndexes[0].2)
     }
 
-    func test__transaction_write_items() {
+    func test__transaction__write_items() {
         writeTransaction.write(items)
 
+        XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes.map { $0.0.key }.sort(), indexes.map { $0.key }.sort())
+        XCTAssertTrue(writeTransaction.didWriteAtIndexes.flatMap { $0.2 }.isEmpty)
+    }
+
+    // Functional API - Connection - Writing
+
+    func test__connection__write_item() {
+        connection.write(item)
+
+        XCTAssertTrue(connection.didWrite)
+        XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].0, index)
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].1.identifier, item.identifier)
+        XCTAssertNil(writeTransaction.didWriteAtIndexes[0].2)
+    }
+
+    func test__connection__write_items() {
+        connection.write(items)
+
+        XCTAssertTrue(connection.didWrite)
+        XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes.map { $0.0.key }.sort(), indexes.map { $0.key }.sort())
+        XCTAssertTrue(writeTransaction.didWriteAtIndexes.flatMap { $0.2 }.isEmpty)
+    }
+
+    func test__connection__async_write_item() {
+        let expectation = expectationWithDescription("Test: \(__FUNCTION__)")
+        connection.asyncWrite(item) { expectation.fulfill() }
+
+        waitForExpectationsWithTimeout(3.0, handler: nil)
+        XCTAssertTrue(connection.didAsyncWrite)
+        XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].0, index)
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].1.identifier, item.identifier)
+        XCTAssertNil(writeTransaction.didWriteAtIndexes[0].2)
+    }
+
+    func test__connection__async_write_items() {
+        let expectation = expectationWithDescription("Test: \(__FUNCTION__)")
+        connection.asyncWrite(items) { expectation.fulfill() }
+
+        waitForExpectationsWithTimeout(3.0, handler: nil)
+        XCTAssertTrue(connection.didAsyncWrite)
         XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
         XCTAssertEqual(writeTransaction.didWriteAtIndexes.map { $0.0.key }.sort(), indexes.map { $0.key }.sort())
         XCTAssertTrue(writeTransaction.didWriteAtIndexes.flatMap { $0.2 }.isEmpty)
