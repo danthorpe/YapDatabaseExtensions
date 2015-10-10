@@ -465,5 +465,106 @@ class ObjectWithObjectMetadataTests: XCTestCase {
         XCTAssertEqual(missing, Array(keys.suffixFrom(1)))
     }
 
+    // Functional API - Transaction - Reading
+
+    func test__transaction__read_at_index_with_data() {
+        configureForReadingSingle()
+        let employee: Employee? = readTransaction._readObjectWithObjectMetadataAtIndex(index)
+        XCTAssertNotNil(employee)
+        XCTAssertEqual(employee!.identifier, item.identifier)
+    }
+
+    func test__transaction__read_at_index_without_data() {
+        let employee: Employee? = readTransaction._readObjectWithObjectMetadataAtIndex(index)
+        XCTAssertNil(employee)
+    }
+
+    func test__transaction__read_at_indexes_with_data() {
+        configureForReadingMultiple()
+        let people: [Employee] = readTransaction._readObjectWithObjectMetadataAtIndexes(indexes)
+        XCTAssertEqual(people.count, items.count)
+    }
+
+    func test__transaction__read_at_indexes_without_data() {
+        let people: [Employee] = readTransaction._readObjectWithObjectMetadataAtIndexes(indexes)
+        XCTAssertNotNil(people)
+        XCTAssertTrue(people.isEmpty)
+    }
+
+    func test__transaction__read_by_key_with_data() {
+        configureForReadingSingle()
+        let employee: Employee? = readTransaction._readObjectWithObjectMetadataByKey(key)
+        XCTAssertNotNil(employee)
+        XCTAssertEqual(employee!.identifier, item.identifier)
+    }
+
+    func test__transaction__read_by_key_without_data() {
+        let employee: Employee? = readTransaction._readObjectWithObjectMetadataByKey(key)
+        XCTAssertNil(employee)
+    }
+
+    func test__transaction__read_by_keys_with_data() {
+        configureForReadingMultiple()
+        let people: [Employee] = readTransaction._readObjectWithObjectMetadataByKeys(keys)
+        XCTAssertEqual(people.count, items.count)
+    }
+
+    func test__transaction__read_by_keys_without_data() {
+        let people: [Employee] = readTransaction._readObjectWithObjectMetadataByKeys(keys)
+        XCTAssertNotNil(people)
+        XCTAssertTrue(people.isEmpty)
+    }
+
+    // Functional API - Connection - Reading
+
+    func test__connection__read_at_index_with_data() {
+        configureForReadingSingle()
+        let employee: Employee? = connection._readObjectWithObjectMetadataAtIndex(index)
+        XCTAssertNotNil(employee)
+        XCTAssertEqual(employee!.identifier, item.identifier)
+    }
+
+    func test__connection__read_at_index_without_data() {
+        let employee: Employee? = connection._readObjectWithObjectMetadataAtIndex(index)
+        XCTAssertNil(employee)
+    }
+
+    func test__connection__read_at_indexes_with_data() {
+        configureForReadingMultiple()
+        let people: [Employee] = connection._readObjectWithObjectMetadataAtIndexes(indexes)
+        XCTAssertEqual(people.count, items.count)
+    }
+
+    func test__connection__read_at_indexes_without_data() {
+        let people: [Employee] = connection._readObjectWithObjectMetadataAtIndexes(indexes)
+        XCTAssertNotNil(people)
+        XCTAssertTrue(people.isEmpty)
+    }
+
+    func test__connection__read_by_key_with_data() {
+        configureForReadingSingle()
+        let employee: Employee? = connection._readObjectWithObjectMetadataByKey(key)
+        XCTAssertNotNil(employee)
+        XCTAssertEqual(employee!.identifier, item.identifier)
+    }
+
+    func test__connection__read_by_key_without_data() {
+        let employee: Employee? = connection._readObjectWithObjectMetadataByKey(key)
+        XCTAssertNil(employee)
+    }
+
+    func test__connection__read_by_keys_with_data() {
+        configureForReadingMultiple()
+        let people: [Employee] = connection._readObjectWithObjectMetadataByKeys(keys)
+        XCTAssertEqual(people.count, items.count)
+    }
+
+    func test__connection__read_by_keys_without_data() {
+        let people: [Employee] = connection._readObjectWithObjectMetadataByKeys(keys)
+        XCTAssertNotNil(people)
+        XCTAssertTrue(people.isEmpty)
+    }
+    
+
 }
 

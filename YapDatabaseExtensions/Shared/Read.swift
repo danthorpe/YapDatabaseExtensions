@@ -629,9 +629,11 @@ extension Readable
 }
 
 
+// MARK: - Object with no metadata
+
 extension ReadTransactionType {
 
-    public func read<
+    internal func _readObjectWithNoMetadataAtIndex<
         Object
         where
         Object: Persistable,
@@ -639,64 +641,150 @@ extension ReadTransactionType {
             return readAtIndex(index) as? Object
     }
 
-    public func read<
+    internal func _readObjectWithNoMetadataAtIndexes<
         Object
         where
         Object: Persistable,
         Object: NSCoding>(indexes: [YapDB.Index]) -> [Object] {
-            return indexes.flatMap(read)
+            return indexes.flatMap(_readObjectWithNoMetadataAtIndex)
     }
 
-    public func read<
+    internal func _readObjectWithNoMetadataByKey<
         Object
         where
         Object: Persistable,
         Object: NSCoding>(key: String) -> Object? {
-            return read(Object.indexWithKey(key))
+            return _readObjectWithNoMetadataAtIndex(Object.indexWithKey(key))
     }
 
-    public func read<
+    internal func _readObjectWithNoMetadataByKeys<
         Object
         where
         Object: Persistable,
         Object: NSCoding>(keys: [String]) -> [Object] {
-            return read(Object.indexesWithKeys(keys))
+            return _readObjectWithNoMetadataAtIndexes(Object.indexesWithKeys(keys))
     }
 }
 
 extension ConnectionType {
 
-    public func read<
+    internal func _readObjectWithNoMetadataAtIndex<
         Object
         where
         Object: Persistable,
         Object: NSCoding>(index: YapDB.Index) -> Object? {
-            return read { $0.read(index) }
+            return read { $0._readObjectWithNoMetadataAtIndex(index) }
     }
 
-    public func read<
+    internal func _readObjectWithNoMetadataAtIndexes<
         Object
         where
         Object: Persistable,
         Object: NSCoding>(indexes: [YapDB.Index]) -> [Object] {
-            return read { $0.read(indexes) }
+            return read { $0._readObjectWithNoMetadataAtIndexes(indexes) }
     }
 
-    public func read<
+    internal func _readObjectWithNoMetadataByKey<
         Object
         where
         Object: Persistable,
         Object: NSCoding>(key: String) -> Object? {
-            return read(Object.indexWithKey(key))
+            return _readObjectWithNoMetadataAtIndex(Object.indexWithKey(key))
     }
 
-    public func read<
+    internal func _readObjectWithNoMetadataByKeys<
         Object
         where
         Object: Persistable,
         Object: NSCoding>(keys: [String]) -> [Object] {
-            return read(Object.indexesWithKeys(keys))
+            return _readObjectWithNoMetadataAtIndexes(Object.indexesWithKeys(keys))
     }
 }
+
+// MARK: - Object with Object metadata
+
+extension ReadTransactionType {
+
+    internal func _readObjectWithObjectMetadataAtIndex<
+        ObjectWithObjectMetadata
+        where
+        ObjectWithObjectMetadata: MetadataPersistable,
+        ObjectWithObjectMetadata: NSCoding,
+        ObjectWithObjectMetadata.MetadataType: NSCoding>(index: YapDB.Index) -> ObjectWithObjectMetadata? {
+            if var item = readAtIndex(index) as? ObjectWithObjectMetadata {
+                item.metadata = readMetadataAtIndex(index) as? ObjectWithObjectMetadata.MetadataType
+                return item
+            }
+            return .None
+    }
+
+    internal func _readObjectWithObjectMetadataAtIndexes<
+        ObjectWithObjectMetadata
+        where
+        ObjectWithObjectMetadata: MetadataPersistable,
+        ObjectWithObjectMetadata: NSCoding,
+        ObjectWithObjectMetadata.MetadataType: NSCoding>(indexes: [YapDB.Index]) -> [ObjectWithObjectMetadata] {
+            return indexes.flatMap(_readObjectWithObjectMetadataAtIndex)
+    }
+
+    internal func _readObjectWithObjectMetadataByKey<
+        ObjectWithObjectMetadata
+        where
+        ObjectWithObjectMetadata: MetadataPersistable,
+        ObjectWithObjectMetadata: NSCoding,
+        ObjectWithObjectMetadata.MetadataType: NSCoding>(key: String) -> ObjectWithObjectMetadata? {
+            return _readObjectWithNoMetadataAtIndex(ObjectWithObjectMetadata.indexWithKey(key))
+    }
+
+    internal func _readObjectWithObjectMetadataByKeys<
+        ObjectWithObjectMetadata
+        where
+        ObjectWithObjectMetadata: MetadataPersistable,
+        ObjectWithObjectMetadata: NSCoding,
+        ObjectWithObjectMetadata.MetadataType: NSCoding>(keys: [String]) -> [ObjectWithObjectMetadata] {
+            return _readObjectWithNoMetadataAtIndexes(ObjectWithObjectMetadata.indexesWithKeys(keys))
+    }
+}
+
+extension ConnectionType {
+
+    internal func _readObjectWithObjectMetadataAtIndex<
+        ObjectWithObjectMetadata
+        where
+        ObjectWithObjectMetadata: MetadataPersistable,
+        ObjectWithObjectMetadata: NSCoding,
+        ObjectWithObjectMetadata.MetadataType: NSCoding>(index: YapDB.Index) -> ObjectWithObjectMetadata? {
+            return read { $0._readObjectWithObjectMetadataAtIndex(index) }
+    }
+
+    internal func _readObjectWithObjectMetadataAtIndexes<
+        ObjectWithObjectMetadata
+        where
+        ObjectWithObjectMetadata: MetadataPersistable,
+        ObjectWithObjectMetadata: NSCoding,
+        ObjectWithObjectMetadata.MetadataType: NSCoding>(indexes: [YapDB.Index]) -> [ObjectWithObjectMetadata] {
+            return read { $0._readObjectWithObjectMetadataAtIndexes(indexes) }
+    }
+
+    internal func _readObjectWithObjectMetadataByKey<
+        ObjectWithObjectMetadata
+        where
+        ObjectWithObjectMetadata: MetadataPersistable,
+        ObjectWithObjectMetadata: NSCoding,
+        ObjectWithObjectMetadata.MetadataType: NSCoding>(key: String) -> ObjectWithObjectMetadata? {
+            return _readObjectWithObjectMetadataAtIndex(ObjectWithObjectMetadata.indexWithKey(key))
+    }
+
+    internal func _readObjectWithObjectMetadataByKeys<
+        ObjectWithObjectMetadata
+        where
+        ObjectWithObjectMetadata: MetadataPersistable,
+        ObjectWithObjectMetadata: NSCoding,
+        ObjectWithObjectMetadata.MetadataType: NSCoding>(keys: [String]) -> [ObjectWithObjectMetadata] {
+            return _readObjectWithObjectMetadataAtIndexes(ObjectWithObjectMetadata.indexesWithKeys(keys))
+    }
+}
+
+
 
 

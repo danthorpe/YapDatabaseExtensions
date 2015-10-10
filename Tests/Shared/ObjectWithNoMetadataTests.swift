@@ -467,48 +467,48 @@ class ObjectWithNoMetadataTests: XCTestCase {
 
     func test__transaction__read_at_index_with_data() {
         configureForReadingSingle()
-        let person: Person? = readTransaction.read(index)
+        let person: Person? = readTransaction._readObjectWithNoMetadataAtIndex(index)
         XCTAssertNotNil(person)
         XCTAssertEqual(person!.identifier, item.identifier)
     }
 
     func test__transaction__read_at_index_without_data() {
-        let person: Person? = readTransaction.read(index)
+        let person: Person? = readTransaction._readObjectWithNoMetadataAtIndex(index)
         XCTAssertNil(person)
     }
 
     func test__transaction__read_at_indexes_with_data() {
         configureForReadingMultiple()
-        let people: [Person] = readTransaction.read(indexes)
+        let people: [Person] = readTransaction._readObjectWithNoMetadataAtIndexes(indexes)
         XCTAssertEqual(people.count, items.count)
     }
 
     func test__transaction__read_at_indexes_without_data() {
-        let people: [Person] = readTransaction.read(indexes)
+        let people: [Person] = readTransaction._readObjectWithNoMetadataAtIndexes(indexes)
         XCTAssertNotNil(people)
         XCTAssertTrue(people.isEmpty)
     }
 
     func test__transaction__read_by_key_with_data() {
         configureForReadingSingle()
-        let person: Person? = readTransaction.read(key)
+        let person: Person? = readTransaction._readObjectWithNoMetadataByKey(key)
         XCTAssertNotNil(person)
         XCTAssertEqual(person!.identifier, item.identifier)
     }
 
     func test__transaction__read_by_key_without_data() {
-        let person: Person? = readTransaction.read(key)
+        let person: Person? = readTransaction._readObjectWithNoMetadataByKey(key)
         XCTAssertNil(person)
     }
 
     func test__transaction__read_by_keys_with_data() {
         configureForReadingMultiple()
-        let people: [Person] = readTransaction.read(keys)
+        let people: [Person] = readTransaction._readObjectWithNoMetadataByKeys(keys)
         XCTAssertEqual(people.count, items.count)
     }
 
     func test__transaction__read_by_keys_without_data() {
-        let people: [Person] = readTransaction.read(keys)
+        let people: [Person] = readTransaction._readObjectWithNoMetadataByKeys(keys)
         XCTAssertNotNil(people)
         XCTAssertTrue(people.isEmpty)
     }
@@ -517,48 +517,48 @@ class ObjectWithNoMetadataTests: XCTestCase {
 
     func test__connection__read_at_index_with_data() {
         configureForReadingSingle()
-        let person: Person? = connection.read(index)
+        let person: Person? = connection._readObjectWithNoMetadataAtIndex(index)
         XCTAssertNotNil(person)
         XCTAssertEqual(person!.identifier, item.identifier)
     }
 
     func test__connection__read_at_index_without_data() {
-        let person: Person? = connection.read(index)
+        let person: Person? = connection._readObjectWithNoMetadataAtIndex(index)
         XCTAssertNil(person)
     }
 
     func test__connection__read_at_indexes_with_data() {
         configureForReadingMultiple()
-        let people: [Person] = connection.read(indexes)
+        let people: [Person] = connection._readObjectWithNoMetadataAtIndexes(indexes)
         XCTAssertEqual(people.count, items.count)
     }
 
     func test__connection__read_at_indexes_without_data() {
-        let people: [Person] = connection.read(indexes)
+        let people: [Person] = connection._readObjectWithNoMetadataAtIndexes(indexes)
         XCTAssertNotNil(people)
         XCTAssertTrue(people.isEmpty)
     }
 
     func test__connection__read_by_key_with_data() {
         configureForReadingSingle()
-        let person: Person? = connection.read(key)
+        let person: Person? = connection._readObjectWithNoMetadataByKey(key)
         XCTAssertNotNil(person)
         XCTAssertEqual(person!.identifier, item.identifier)
     }
 
     func test__connection__read_by_key_without_data() {
-        let person: Person? = connection.read(key)
+        let person: Person? = connection._readObjectWithNoMetadataByKey(key)
         XCTAssertNil(person)
     }
 
     func test__connection__read_by_keys_with_data() {
         configureForReadingMultiple()
-        let people: [Person] = connection.read(keys)
+        let people: [Person] = connection._readObjectWithNoMetadataByKeys(keys)
         XCTAssertEqual(people.count, items.count)
     }
 
     func test__connection__read_by_keys_without_data() {
-        let people: [Person] = connection.read(keys)
+        let people: [Person] = connection._readObjectWithNoMetadataByKeys(keys)
         XCTAssertNotNil(people)
         XCTAssertTrue(people.isEmpty)
     }
