@@ -388,7 +388,7 @@ else
   if [ "$ft_gcov" = "1" ];
   then
 
-    xcrun llvm-cov show -instr-profile ".fastlane/xcodebuild-data/Build/Intermediates/CodeCoverage/YapDatabaseExtensions/Coverage.profdata" ".fastlane/xcodebuild-data/Build/Intermediates/CodeCoverage/YapDatabaseExtensions/Products/Debug-iphonesimulator/YapDatabaseExtensions.framework/YapDatabaseExtensions" > "YapDatabaseExtensions.framework.coverage.text" || true
+    xcrun llvm-cov show -instr-profile ".fastlane/xcodebuild-data/Build/Intermediates/CodeCoverage/YapDatabaseExtensions/Coverage.profdata" ".fastlane/xcodebuild-data/Build/Intermediates/CodeCoverage/YapDatabaseExtensions/Products/Debug-iphonesimulator/YapDatabaseExtensions.framework/YapDatabaseExtensions" > "YapDatabaseExtensions.framework.coverage.txt" || true
 
       # # xcode 7 profdata
       # profdata=$(find $proj_root -name 'Coverage.profdata' | head -1)
