@@ -388,28 +388,30 @@ else
   if [ "$ft_gcov" = "1" ];
   then
 
-      # xcode 7 profdata
-      profdata=$(find $proj_root -name 'Coverage.profdata' | head -1)
-      if [ -f "$profdata" ];
-      then
-        _dir=$(dirname "$profdata")
-        for _type in app framework xctest
-        do
-          _file=$(find "$_dir" -name "*.$_type")
-          if [ "$_file" != "" ];
-          then
-            for f in $_file
-            do
-              _proj=${f##*/}
-              if [ "$_proj" != Pods_* ];
-              then
-                _proj=${_proj%."$_type"}
-                xcrun llvm-cov show -instr-profile "$profdata" "$f/$_proj" > "$_proj.$_type.coverage.txt" || true
-              fi
-            done
-          fi
-        done
-      fi
+    xcrun llvm-cov show -instr-profile ".fastlane/xcodebuild-data/Build/Intermediates/CodeCoverage/YapDatabaseExtensions/Coverage.profdata" ".fastlane/xcodebuild-data/Build/Intermediates/CodeCoverage/YapDatabaseExtensions/Products/Debug-iphonesimulator/YapDatabaseExtensions.framework/YapDatabaseExtensions" > "YapDatabaseExtensions.framework.coverage.text" || true
+
+      # # xcode 7 profdata
+      # profdata=$(find $proj_root -name 'Coverage.profdata' | head -1)
+      # if [ -f "$profdata" ];
+      # then
+      #   _dir=$(dirname "$profdata")
+      #   for _type in app framework xctest
+      #   do
+      #     _file=$(find "$_dir" -name "*.$_type")
+      #     if [ "$_file" != "" ];
+      #     then
+      #       for f in $_file
+      #       do
+      #         _proj=${f##*/}
+      #         if [ "$_proj" != Pods_* ];
+      #         then
+      #           _proj=${_proj%."$_type"}
+      #           xcrun llvm-cov show -instr-profile "$profdata" "$f/$_proj" > "$_proj.$_type.coverage.txt" || true
+      #         fi
+      #       done
+      #     fi
+      #   done
+      # fi
 
     say "    Searching for gcov via (find $proj_root -type f -name '*.gcno' $gcov_ignore -exec $gcov_exe $gcov_arg {} +)"
 
