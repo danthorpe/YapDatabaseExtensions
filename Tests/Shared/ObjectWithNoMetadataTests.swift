@@ -109,10 +109,10 @@ class ObjectWithNoMetadataTests: XCTestCase {
         writer = Write(item)
         writer.on(writeTransaction)
 
-        XCTAssertNotNil(writeTransaction.didWriteAtIndex)
-        XCTAssertEqual(writeTransaction.didWriteAtIndex!.0, index)
-        XCTAssertEqual(writeTransaction.didWriteAtIndex!.1.identifier, item.identifier)
-        XCTAssertNil(writeTransaction.didWriteAtIndex!.2)
+        XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].0, index)
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].1.identifier, item.identifier)
+        XCTAssertNil(writeTransaction.didWriteAtIndexes[0].2)
     }
 
     func test__write_sync() {
@@ -120,10 +120,10 @@ class ObjectWithNoMetadataTests: XCTestCase {
         writer.sync(connection)
 
         XCTAssertTrue(connection.didWrite)
-        XCTAssertNotNil(writeTransaction.didWriteAtIndex)
-        XCTAssertEqual(writeTransaction.didWriteAtIndex!.0, index)
-        XCTAssertEqual(writeTransaction.didWriteAtIndex!.1.identifier, item.identifier)
-        XCTAssertNil(writeTransaction.didWriteAtIndex!.2)
+        XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].0, index)
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].1.identifier, item.identifier)
+        XCTAssertNil(writeTransaction.didWriteAtIndexes[0].2)
     }
 
     func test__write_async() {
@@ -137,10 +137,10 @@ class ObjectWithNoMetadataTests: XCTestCase {
         waitForExpectationsWithTimeout(3.0, handler: nil)
         XCTAssertTrue(connection.didAsyncWrite)
         XCTAssertFalse(connection.didWrite)
-        XCTAssertNotNil(writeTransaction.didWriteAtIndex)
-        XCTAssertEqual(writeTransaction.didWriteAtIndex!.0, index)
-        XCTAssertEqual(writeTransaction.didWriteAtIndex!.1.identifier, item.identifier)
-        XCTAssertNil(writeTransaction.didWriteAtIndex!.2)
+        XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].0, index)
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].1.identifier, item.identifier)
+        XCTAssertNil(writeTransaction.didWriteAtIndexes[0].2)
     }
 
     func test__write_operation() {
@@ -157,10 +157,10 @@ class ObjectWithNoMetadataTests: XCTestCase {
         XCTAssertTrue(connection.didWriteBlockOperation)
         XCTAssertFalse(connection.didWrite)
         XCTAssertFalse(connection.didAsyncWrite)
-        XCTAssertNotNil(writeTransaction.didWriteAtIndex)
-        XCTAssertEqual(writeTransaction.didWriteAtIndex!.0, index)
-        XCTAssertEqual(writeTransaction.didWriteAtIndex!.1.identifier, item.identifier)
-        XCTAssertNil(writeTransaction.didWriteAtIndex!.2)
+        XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].0, index)
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].1.identifier, item.identifier)
+        XCTAssertNil(writeTransaction.didWriteAtIndexes[0].2)
     }
 
     // Reading - Internal
@@ -463,7 +463,7 @@ class ObjectWithNoMetadataTests: XCTestCase {
         XCTAssertEqual(missing, Array(keys.suffixFrom(1)))
     }
 
-    // Functional API - Reading
+    // Functional API - Transaction - Reading
 
     func test__transaction_read_at_index_with_data() {
         configureForReadingSingle()
@@ -514,7 +514,24 @@ class ObjectWithNoMetadataTests: XCTestCase {
     }
 
 
+    // Functional API - Transaction - Writing
 
+    func test__transaction_write_item() {
+        writeTransaction.write(item)
+
+        XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].0, index)
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].1.identifier, item.identifier)
+        XCTAssertNil(writeTransaction.didWriteAtIndexes[0].2)
+    }
+
+    func test__transaction_write_items() {
+        writeTransaction.write(items)
+
+        XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes.map { $0.0.key }.sort(), indexes.map { $0.key }.sort())
+        XCTAssertTrue(writeTransaction.didWriteAtIndexes.flatMap { $0.2 }.isEmpty)
+    }
 
 }
 

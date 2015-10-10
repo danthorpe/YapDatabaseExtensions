@@ -118,8 +118,8 @@ class RemovalTests: XCTestCase {
         remover = Remove(item)
         remover.on(writeTransaction)
 
-        XCTAssertNotNil(writeTransaction.didRemoveAtIndex)
-        XCTAssertEqual(writeTransaction.didRemoveAtIndex!, index)
+        XCTAssertFalse(writeTransaction.didRemoveAtIndexes.isEmpty)
+        XCTAssertEqual(writeTransaction.didRemoveAtIndexes[0], index)
     }
 
     func test__remove_sync() {
@@ -127,8 +127,8 @@ class RemovalTests: XCTestCase {
         remover.sync(connection)
 
         XCTAssertTrue(connection.didWrite)
-        XCTAssertNotNil(writeTransaction.didRemoveAtIndex)
-        XCTAssertEqual(writeTransaction.didRemoveAtIndex!, index)
+        XCTAssertFalse(writeTransaction.didRemoveAtIndexes.isEmpty)
+        XCTAssertEqual(writeTransaction.didRemoveAtIndexes[0], index)
     }
 
     func test__remove_async() {
@@ -142,8 +142,8 @@ class RemovalTests: XCTestCase {
         waitForExpectationsWithTimeout(3.0, handler: nil)
         XCTAssertTrue(connection.didAsyncWrite)
         XCTAssertFalse(connection.didWrite)
-        XCTAssertNotNil(writeTransaction.didRemoveAtIndex)
-        XCTAssertEqual(writeTransaction.didRemoveAtIndex!, index)
+        XCTAssertFalse(writeTransaction.didRemoveAtIndexes.isEmpty)
+        XCTAssertEqual(writeTransaction.didRemoveAtIndexes[0], index)
     }
 
     func test__remove_operation() {
@@ -160,8 +160,8 @@ class RemovalTests: XCTestCase {
         XCTAssertTrue(connection.didWriteBlockOperation)
         XCTAssertFalse(connection.didWrite)
         XCTAssertFalse(connection.didAsyncWrite)
-        XCTAssertNotNil(writeTransaction.didRemoveAtIndex)
-        XCTAssertEqual(writeTransaction.didRemoveAtIndex!, index)
+        XCTAssertFalse(writeTransaction.didRemoveAtIndexes.isEmpty)
+        XCTAssertEqual(writeTransaction.didRemoveAtIndexes[0], index)
     }
 }
 

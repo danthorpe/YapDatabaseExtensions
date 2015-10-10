@@ -129,10 +129,10 @@ class ValueWithValueMetadataTests: XCTestCase {
         writer = Write(item)
         writer.on(writeTransaction)
 
-        XCTAssertNotNil(writeTransaction.didWriteAtIndex)
-        XCTAssertEqual(writeTransaction.didWriteAtIndex!.0, index)
-        XCTAssertEqual(Product.unarchive(writeTransaction.didWriteAtIndex!.1)!, item)
-        XCTAssertEqual(Product.MetadataType.unarchive(writeTransaction.didWriteAtIndex!.2), item.metadata)
+        XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].0, index)
+        XCTAssertEqual(Product.unarchive(writeTransaction.didWriteAtIndexes[0].1)!, item)
+        XCTAssertEqual(Product.MetadataType.unarchive(writeTransaction.didWriteAtIndexes[0].2), item.metadata)
     }
 
     func test__write_sync() {
@@ -140,10 +140,10 @@ class ValueWithValueMetadataTests: XCTestCase {
         writer.sync(connection)
 
         XCTAssertTrue(connection.didWrite)
-        XCTAssertNotNil(writeTransaction.didWriteAtIndex)
-        XCTAssertEqual(writeTransaction.didWriteAtIndex!.0, index)
-        XCTAssertEqual(Product.unarchive(writeTransaction.didWriteAtIndex!.1)!, item)
-        XCTAssertEqual(Product.MetadataType.unarchive(writeTransaction.didWriteAtIndex!.2), item.metadata)
+        XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].0, index)
+        XCTAssertEqual(Product.unarchive(writeTransaction.didWriteAtIndexes[0].1)!, item)
+        XCTAssertEqual(Product.MetadataType.unarchive(writeTransaction.didWriteAtIndexes[0].2), item.metadata)
     }
 
     func test__write_async() {
@@ -157,10 +157,10 @@ class ValueWithValueMetadataTests: XCTestCase {
         waitForExpectationsWithTimeout(3.0, handler: nil)
         XCTAssertTrue(connection.didAsyncWrite)
         XCTAssertFalse(connection.didWrite)
-        XCTAssertNotNil(writeTransaction.didWriteAtIndex)
-        XCTAssertEqual(writeTransaction.didWriteAtIndex!.0, index)
-        XCTAssertEqual(Product.unarchive(writeTransaction.didWriteAtIndex!.1)!, item)
-        XCTAssertEqual(Product.MetadataType.unarchive(writeTransaction.didWriteAtIndex!.2), item.metadata)
+        XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].0, index)
+        XCTAssertEqual(Product.unarchive(writeTransaction.didWriteAtIndexes[0].1)!, item)
+        XCTAssertEqual(Product.MetadataType.unarchive(writeTransaction.didWriteAtIndexes[0].2), item.metadata)
     }
 
     func test__write_operation() {
@@ -177,10 +177,10 @@ class ValueWithValueMetadataTests: XCTestCase {
         XCTAssertTrue(connection.didWriteBlockOperation)
         XCTAssertFalse(connection.didWrite)
         XCTAssertFalse(connection.didAsyncWrite)
-        XCTAssertNotNil(writeTransaction.didWriteAtIndex)
-        XCTAssertEqual(writeTransaction.didWriteAtIndex!.0, index)
-        XCTAssertEqual(Product.unarchive(writeTransaction.didWriteAtIndex!.1)!, item)
-        XCTAssertEqual(Product.MetadataType.unarchive(writeTransaction.didWriteAtIndex!.2), item.metadata)
+        XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].0, index)
+        XCTAssertEqual(Product.unarchive(writeTransaction.didWriteAtIndexes[0].1)!, item)
+        XCTAssertEqual(Product.MetadataType.unarchive(writeTransaction.didWriteAtIndexes[0].2), item.metadata)
     }
 
     // Reading - Internal
