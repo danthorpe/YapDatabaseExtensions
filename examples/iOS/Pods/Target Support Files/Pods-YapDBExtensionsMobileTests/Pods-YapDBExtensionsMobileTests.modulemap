@@ -1,6 +1,0 @@
-framework module Pods_YapDBExtensionsMobileTests {
-  umbrella header "Pods-YapDBExtensionsMobileTests-umbrella.h"
-
-  export *
-  module * { export * }
-}
