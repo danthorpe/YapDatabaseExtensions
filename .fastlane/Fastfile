@@ -4,11 +4,23 @@ platform :ios do
 
   desc "Runs all the tests"
   lane :test do
-	xctest scheme: 'YapDatabaseExtensions', 
+	xctest scheme: 'YapDatabaseExtensions-iOS', 
       sdk: 'iphonesimulator',
       destination: 'platform=iOS Simulator,name=iPhone 6,OS=9.0',
       destination_timeout: 120,
-      derivedDataPath: '.fastlane/xcodebuild-data',
-      build_settings: { "ENABLED_CODE_COVERAGE" => true }
-  end  
+      derivedDataPath: '.fastlane/xcodebuild-data'
+  end
+
+end
+
+platform :mac do
+  
+  desc "Runs all the tests"
+  lane :test do
+	xctest scheme: 'YapDatabaseExtensions-OSX', 
+    sdk: 'macosx', 
+    destination: 'platform=OS X',
+    derivedDataPath: '.fastlane/xcodebuild-data'
+  end
+  
 end
