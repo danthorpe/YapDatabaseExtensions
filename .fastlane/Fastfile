@@ -3,7 +3,7 @@ default_platform :ios
 platform :ios do
 
   desc "Runs all the tests"
-  lane :test_ios do
+  lane :test do
 	xctest scheme: 'YapDatabaseExtensions-iOS', 
       sdk: 'iphonesimulator',
       destination: 'platform=iOS Simulator,name=iPhone 6,OS=9.0',
@@ -16,7 +16,7 @@ end
 platform :mac do
   
   desc "Runs all the tests"
-  lane :test_osx do
+  lane :test do
 	xctest scheme: 'YapDatabaseExtensions-OSX', 
     sdk: 'macosx', 
     destination: 'platform=OS X',
