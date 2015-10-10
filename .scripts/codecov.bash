@@ -393,7 +393,8 @@ else
       if [ -f "$profdata" ];
       then
         _dir=$(dirname "$profdata")
-        for _type in app framework xctest
+#        for _type in app framework xctest
+        for _type in framework
         do
           _file=$(find "$_dir" -name "*.$_type" | head -1)
           if [ "$_file" != "" ];
