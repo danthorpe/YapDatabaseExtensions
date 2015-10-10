@@ -10,11 +10,5 @@ platform :ios do
       destination_timeout: 120,
       derivedDataPath: '.fastlane/xcodebuild-data',
       build_settings: { "ENABLED_CODE_COVERAGE" => true }
-  end
-  
-  lcov(
-    project_name: "YapDatabaseExtensions",
-    scheme: "YapDatabaseExtensions",
-    output_dir: "cov_reports" # This value is optional. Default is coverage_reports
-  )
+  end  
 end
