@@ -1,3 +1,6 @@
+# 2.1.1
+1. [[YDB-50](https://github.com/danthorpe/YapDatabaseExtensions/pull/50)]: Breaks up the Read & Write files to reduce the number of lines. Adds a lot more documentation to functions - ~ 64% documentation coverage.
+
 # 2.1.0
 1. [[YDB-42](https://github.com/danthorpe/YapDatabaseExtensions/pull/42)]: Refactors read & write API, correctly supporting metadata.
 2. [[YDB-43](https://github.com/danthorpe/YapDatabaseExtensions/pull/43)]: Makes project cross-platform (iOS & Mac OS)
