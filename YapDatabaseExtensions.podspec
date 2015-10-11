@@ -4,9 +4,8 @@ Pod::Spec.new do |s|
   s.summary           = "Helpers for using value types with YapDatabase."
   s.description       = <<-DESC
   
-  Defines protocols and APIs via Swift extensions to allow for struct
-  and enum types to be used & stored within YapDatabse. In addition to
-  convenience read and write APIs.
+  Defines APIs to conveniently read, write and remove objects and values
+  to or from YapDatabse. See ValueCoding for value type support.
 
                        DESC
   s.homepage          = "https://github.com/danthorpe/YapDatabaseExtensions"
