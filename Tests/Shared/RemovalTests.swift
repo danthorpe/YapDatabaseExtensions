@@ -163,5 +163,58 @@ class RemovalTests: XCTestCase {
         XCTAssertFalse(writeTransaction.didRemoveAtIndexes.isEmpty)
         XCTAssertEqual(writeTransaction.didRemoveAtIndexes[0], index)
     }
+
+    // MARK: - Functional API
+
+    func test__transaction__remove_item() {
+        writeTransaction.remove(item)
+
+        XCTAssertFalse(writeTransaction.didRemoveAtIndexes.isEmpty)
+        XCTAssertEqual(writeTransaction.didRemoveAtIndexes[0], index)
+    }
+
+    func test__transaction__remove_items() {
+        writeTransaction.remove(items)
+
+        XCTAssertFalse(writeTransaction.didRemoveAtIndexes.isEmpty)
+        XCTAssertEqual(writeTransaction.didRemoveAtIndexes.map { $0.key }.sort(), indexes.map { $0.key }.sort())
+    }
+
+    func test__connection__remove_item() {
+        connection.remove(item)
+
+        XCTAssertTrue(connection.didWrite)
+        XCTAssertFalse(writeTransaction.didRemoveAtIndexes.isEmpty)
+        XCTAssertEqual(writeTransaction.didRemoveAtIndexes[0], index)
+    }
+
+    func test__connection__remove_items() {
+        connection.remove(items)
+
+        XCTAssertTrue(connection.didWrite)
+        XCTAssertFalse(writeTransaction.didRemoveAtIndexes.isEmpty)
+        XCTAssertEqual(writeTransaction.didRemoveAtIndexes.map { $0.key }.sort(), indexes.map { $0.key }.sort())
+    }
+
+    func test__connection__async_remove_item() {
+        let expectation = expectationWithDescription("Test: \(__FUNCTION__)")
+        connection.asyncRemove(item) { expectation.fulfill() }
+
+        waitForExpectationsWithTimeout(3.0, handler: nil)
+        XCTAssertTrue(connection.didAsyncWrite)
+        XCTAssertFalse(writeTransaction.didRemoveAtIndexes.isEmpty)
+        XCTAssertEqual(writeTransaction.didRemoveAtIndexes[0], index)
+    }
+
+    func test__connection__async_remove_items() {
+        let expectation = expectationWithDescription("Test: \(__FUNCTION__)")
+        connection.asyncRemove(items) { expectation.fulfill() }
+
+        waitForExpectationsWithTimeout(3.0, handler: nil)
+        XCTAssertTrue(connection.didAsyncWrite)
+        XCTAssertFalse(writeTransaction.didRemoveAtIndexes.isEmpty)
+        XCTAssertEqual(writeTransaction.didRemoveAtIndexes.map { $0.key }.sort(), indexes.map { $0.key }.sort())
+    }
 }
+
 
