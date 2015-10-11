@@ -3,6 +3,8 @@
 //
 //
 
+import Foundation
+import ValueCoding
 import YapDatabase
 
 // MARK: - Readable
@@ -64,7 +66,7 @@ extension Persistable {
     /**
     Returns a type suitable for *reading* from the transaction. The available
     functions will depend on your own types correctly implementing Persistable,
-    MetadataPersistable and Saveable.
+    MetadataPersistable and ValueCoding.
     
     For example, given the key for a `Person` type, and you are in a read
     transaction block, the following would read the object for you.
@@ -86,7 +88,7 @@ extension Persistable {
     /**
     Returns a type suitable for Reading from a database connection. The available
     functions will depend on your own types correctly implementing Persistable,
-    MetadataPersistable and Saveable.
+    MetadataPersistable and ValueCoding.
 
     For example, given the key for a `Person` type, and you have a database 
     connection.
@@ -289,9 +291,9 @@ extension Readable
     where
     ItemType: NSCoding,
     ItemType: MetadataPersistable,
-    ItemType.MetadataType: Saveable,
-    ItemType.MetadataType.ArchiverType: NSCoding,
-    ItemType.MetadataType.ArchiverType.ValueType == ItemType.MetadataType {
+    ItemType.MetadataType: ValueCoding,
+    ItemType.MetadataType.Coder: NSCoding,
+    ItemType.MetadataType.Coder.ValueType == ItemType.MetadataType {
 
     func inTransaction(transaction: Database.Connection.ReadTransaction, atIndex index: YapDB.Index) -> ItemType? {
         return transaction.readAtIndex(index)
@@ -369,13 +371,13 @@ extension Readable
 
 extension Readable
     where
-    ItemType: Saveable,
+    ItemType: ValueCoding,
     ItemType: Persistable,
-    ItemType.ArchiverType: NSCoding,
-    ItemType.ArchiverType.ValueType == ItemType {
+    ItemType.Coder: NSCoding,
+    ItemType.Coder.ValueType == ItemType {
 
     func inTransaction(transaction: Database.Connection.ReadTransaction, atIndex index: YapDB.Index) -> ItemType? {
-        return ItemType.unarchive(transaction.readAtIndex(index))
+        return ItemType.decode(transaction.readAtIndex(index))
     }
 
     // Everything here is the same for all 6 patterns.
@@ -450,10 +452,10 @@ extension Readable
 
 extension Readable
     where
-    ItemType: Saveable,
+    ItemType: ValueCoding,
     ItemType: MetadataPersistable,
-    ItemType.ArchiverType: NSCoding,
-    ItemType.ArchiverType.ValueType == ItemType,
+    ItemType.Coder: NSCoding,
+    ItemType.Coder.ValueType == ItemType,
     ItemType.MetadataType: NSCoding {
 
     func inTransaction(transaction: Database.Connection.ReadTransaction, atIndex index: YapDB.Index) -> ItemType? {
@@ -532,13 +534,13 @@ extension Readable
 
 extension Readable
     where
-    ItemType: Saveable,
+    ItemType: ValueCoding,
     ItemType: MetadataPersistable,
-    ItemType.ArchiverType: NSCoding,
-    ItemType.ArchiverType.ValueType == ItemType,
-    ItemType.MetadataType: Saveable,
-    ItemType.MetadataType.ArchiverType: NSCoding,
-    ItemType.MetadataType.ArchiverType.ValueType == ItemType.MetadataType {
+    ItemType.Coder: NSCoding,
+    ItemType.Coder.ValueType == ItemType,
+    ItemType.MetadataType: ValueCoding,
+    ItemType.MetadataType.Coder: NSCoding,
+    ItemType.MetadataType.Coder.ValueType == ItemType.MetadataType {
 
     func inTransaction(transaction: Database.Connection.ReadTransaction, atIndex index: YapDB.Index) -> ItemType? {
         return transaction.readAtIndex(index)
@@ -706,11 +708,11 @@ extension ReadTransactionType {
         where
         ObjectWithValueMetadata: MetadataPersistable,
         ObjectWithValueMetadata: NSCoding,
-        ObjectWithValueMetadata.MetadataType: Saveable,
-        ObjectWithValueMetadata.MetadataType.ArchiverType: NSCoding,
-        ObjectWithValueMetadata.MetadataType.ArchiverType.ValueType == ObjectWithValueMetadata.MetadataType>(index: YapDB.Index) -> ObjectWithValueMetadata? {
+        ObjectWithValueMetadata.MetadataType: ValueCoding,
+        ObjectWithValueMetadata.MetadataType.Coder: NSCoding,
+        ObjectWithValueMetadata.MetadataType.Coder.ValueType == ObjectWithValueMetadata.MetadataType>(index: YapDB.Index) -> ObjectWithValueMetadata? {
             if var item = readAtIndex(index) as? ObjectWithValueMetadata {
-                item.metadata = ObjectWithValueMetadata.MetadataType.unarchive(readMetadataAtIndex(index))
+                item.metadata = ObjectWithValueMetadata.MetadataType.decode(readMetadataAtIndex(index))
                 return item
             }
             return .None
@@ -721,9 +723,9 @@ extension ReadTransactionType {
         where
         ObjectWithValueMetadata: MetadataPersistable,
         ObjectWithValueMetadata: NSCoding,
-        ObjectWithValueMetadata.MetadataType: Saveable,
-        ObjectWithValueMetadata.MetadataType.ArchiverType: NSCoding,
-        ObjectWithValueMetadata.MetadataType.ArchiverType.ValueType == ObjectWithValueMetadata.MetadataType>(indexes: [YapDB.Index]) -> [ObjectWithValueMetadata] {
+        ObjectWithValueMetadata.MetadataType: ValueCoding,
+        ObjectWithValueMetadata.MetadataType.Coder: NSCoding,
+        ObjectWithValueMetadata.MetadataType.Coder.ValueType == ObjectWithValueMetadata.MetadataType>(indexes: [YapDB.Index]) -> [ObjectWithValueMetadata] {
             return indexes.flatMap(readAtIndex)
     }
 
@@ -732,9 +734,9 @@ extension ReadTransactionType {
         where
         ObjectWithValueMetadata: MetadataPersistable,
         ObjectWithValueMetadata: NSCoding,
-        ObjectWithValueMetadata.MetadataType: Saveable,
-        ObjectWithValueMetadata.MetadataType.ArchiverType: NSCoding,
-        ObjectWithValueMetadata.MetadataType.ArchiverType.ValueType == ObjectWithValueMetadata.MetadataType>(key: String) -> ObjectWithValueMetadata? {
+        ObjectWithValueMetadata.MetadataType: ValueCoding,
+        ObjectWithValueMetadata.MetadataType.Coder: NSCoding,
+        ObjectWithValueMetadata.MetadataType.Coder.ValueType == ObjectWithValueMetadata.MetadataType>(key: String) -> ObjectWithValueMetadata? {
             return readAtIndex(ObjectWithValueMetadata.indexWithKey(key))
     }
 
@@ -743,9 +745,9 @@ extension ReadTransactionType {
         where
         ObjectWithValueMetadata: MetadataPersistable,
         ObjectWithValueMetadata: NSCoding,
-        ObjectWithValueMetadata.MetadataType: Saveable,
-        ObjectWithValueMetadata.MetadataType.ArchiverType: NSCoding,
-        ObjectWithValueMetadata.MetadataType.ArchiverType.ValueType == ObjectWithValueMetadata.MetadataType>(keys: [String]) -> [ObjectWithValueMetadata] {
+        ObjectWithValueMetadata.MetadataType: ValueCoding,
+        ObjectWithValueMetadata.MetadataType.Coder: NSCoding,
+        ObjectWithValueMetadata.MetadataType.Coder.ValueType == ObjectWithValueMetadata.MetadataType>(keys: [String]) -> [ObjectWithValueMetadata] {
             return readAtIndexes(ObjectWithValueMetadata.indexesWithKeys(keys))
     }
 }
@@ -757,9 +759,9 @@ extension ConnectionType {
         where
         ObjectWithValueMetadata: MetadataPersistable,
         ObjectWithValueMetadata: NSCoding,
-        ObjectWithValueMetadata.MetadataType: Saveable,
-        ObjectWithValueMetadata.MetadataType.ArchiverType: NSCoding,
-        ObjectWithValueMetadata.MetadataType.ArchiverType.ValueType == ObjectWithValueMetadata.MetadataType>(index: YapDB.Index) -> ObjectWithValueMetadata? {
+        ObjectWithValueMetadata.MetadataType: ValueCoding,
+        ObjectWithValueMetadata.MetadataType.Coder: NSCoding,
+        ObjectWithValueMetadata.MetadataType.Coder.ValueType == ObjectWithValueMetadata.MetadataType>(index: YapDB.Index) -> ObjectWithValueMetadata? {
             return read { $0.readAtIndex(index) }
     }
 
@@ -768,9 +770,9 @@ extension ConnectionType {
         where
         ObjectWithValueMetadata: MetadataPersistable,
         ObjectWithValueMetadata: NSCoding,
-        ObjectWithValueMetadata.MetadataType: Saveable,
-        ObjectWithValueMetadata.MetadataType.ArchiverType: NSCoding,
-        ObjectWithValueMetadata.MetadataType.ArchiverType.ValueType == ObjectWithValueMetadata.MetadataType>(indexes: [YapDB.Index]) -> [ObjectWithValueMetadata] {
+        ObjectWithValueMetadata.MetadataType: ValueCoding,
+        ObjectWithValueMetadata.MetadataType.Coder: NSCoding,
+        ObjectWithValueMetadata.MetadataType.Coder.ValueType == ObjectWithValueMetadata.MetadataType>(indexes: [YapDB.Index]) -> [ObjectWithValueMetadata] {
             return read { $0.readAtIndexes(indexes) }
     }
 
@@ -779,9 +781,9 @@ extension ConnectionType {
         where
         ObjectWithValueMetadata: MetadataPersistable,
         ObjectWithValueMetadata: NSCoding,
-        ObjectWithValueMetadata.MetadataType: Saveable,
-        ObjectWithValueMetadata.MetadataType.ArchiverType: NSCoding,
-        ObjectWithValueMetadata.MetadataType.ArchiverType.ValueType == ObjectWithValueMetadata.MetadataType>(key: String) -> ObjectWithValueMetadata? {
+        ObjectWithValueMetadata.MetadataType: ValueCoding,
+        ObjectWithValueMetadata.MetadataType.Coder: NSCoding,
+        ObjectWithValueMetadata.MetadataType.Coder.ValueType == ObjectWithValueMetadata.MetadataType>(key: String) -> ObjectWithValueMetadata? {
             return readAtIndex(ObjectWithValueMetadata.indexWithKey(key))
     }
 
@@ -790,9 +792,9 @@ extension ConnectionType {
         where
         ObjectWithValueMetadata: MetadataPersistable,
         ObjectWithValueMetadata: NSCoding,
-        ObjectWithValueMetadata.MetadataType: Saveable,
-        ObjectWithValueMetadata.MetadataType.ArchiverType: NSCoding,
-        ObjectWithValueMetadata.MetadataType.ArchiverType.ValueType == ObjectWithValueMetadata.MetadataType>(keys: [String]) -> [ObjectWithValueMetadata] {
+        ObjectWithValueMetadata.MetadataType: ValueCoding,
+        ObjectWithValueMetadata.MetadataType.Coder: NSCoding,
+        ObjectWithValueMetadata.MetadataType.Coder.ValueType == ObjectWithValueMetadata.MetadataType>(keys: [String]) -> [ObjectWithValueMetadata] {
             return readAtIndexes(ObjectWithValueMetadata.indexesWithKeys(keys))
     }
 }
@@ -805,11 +807,11 @@ extension ReadTransactionType {
         ValueWithObjectMetadata
         where
         ValueWithObjectMetadata: MetadataPersistable,
-        ValueWithObjectMetadata: Saveable,
-        ValueWithObjectMetadata.ArchiverType: NSCoding,
-        ValueWithObjectMetadata.ArchiverType.ValueType == ValueWithObjectMetadata,
+        ValueWithObjectMetadata: ValueCoding,
+        ValueWithObjectMetadata.Coder: NSCoding,
+        ValueWithObjectMetadata.Coder.ValueType == ValueWithObjectMetadata,
         ValueWithObjectMetadata.MetadataType: NSCoding>(index: YapDB.Index) -> ValueWithObjectMetadata? {
-            if var item = ValueWithObjectMetadata.unarchive(readAtIndex(index)) {
+            if var item = ValueWithObjectMetadata.decode(readAtIndex(index)) {
                 item.metadata = readMetadataAtIndex(index) as? ValueWithObjectMetadata.MetadataType
                 return item
             }
@@ -820,9 +822,9 @@ extension ReadTransactionType {
         ValueWithObjectMetadata
         where
         ValueWithObjectMetadata: MetadataPersistable,
-        ValueWithObjectMetadata: Saveable,
-        ValueWithObjectMetadata.ArchiverType: NSCoding,
-        ValueWithObjectMetadata.ArchiverType.ValueType == ValueWithObjectMetadata,
+        ValueWithObjectMetadata: ValueCoding,
+        ValueWithObjectMetadata.Coder: NSCoding,
+        ValueWithObjectMetadata.Coder.ValueType == ValueWithObjectMetadata,
         ValueWithObjectMetadata.MetadataType: NSCoding>(indexes: [YapDB.Index]) -> [ValueWithObjectMetadata] {
             return indexes.flatMap(readAtIndex)
     }
@@ -831,9 +833,9 @@ extension ReadTransactionType {
         ValueWithObjectMetadata
         where
         ValueWithObjectMetadata: MetadataPersistable,
-        ValueWithObjectMetadata: Saveable,
-        ValueWithObjectMetadata.ArchiverType: NSCoding,
-        ValueWithObjectMetadata.ArchiverType.ValueType == ValueWithObjectMetadata,
+        ValueWithObjectMetadata: ValueCoding,
+        ValueWithObjectMetadata.Coder: NSCoding,
+        ValueWithObjectMetadata.Coder.ValueType == ValueWithObjectMetadata,
         ValueWithObjectMetadata.MetadataType: NSCoding>(key: String) -> ValueWithObjectMetadata? {
             return readAtIndex(ValueWithObjectMetadata.indexWithKey(key))
     }
@@ -842,9 +844,9 @@ extension ReadTransactionType {
         ValueWithObjectMetadata
         where
         ValueWithObjectMetadata: MetadataPersistable,
-        ValueWithObjectMetadata: Saveable,
-        ValueWithObjectMetadata.ArchiverType: NSCoding,
-        ValueWithObjectMetadata.ArchiverType.ValueType == ValueWithObjectMetadata,
+        ValueWithObjectMetadata: ValueCoding,
+        ValueWithObjectMetadata.Coder: NSCoding,
+        ValueWithObjectMetadata.Coder.ValueType == ValueWithObjectMetadata,
         ValueWithObjectMetadata.MetadataType: NSCoding>(keys: [String]) -> [ValueWithObjectMetadata] {
             return readAtIndexes(ValueWithObjectMetadata.indexesWithKeys(keys))
     }
@@ -856,9 +858,9 @@ extension ConnectionType {
         ValueWithObjectMetadata
         where
         ValueWithObjectMetadata: MetadataPersistable,
-        ValueWithObjectMetadata: Saveable,
-        ValueWithObjectMetadata.ArchiverType: NSCoding,
-        ValueWithObjectMetadata.ArchiverType.ValueType == ValueWithObjectMetadata,
+        ValueWithObjectMetadata: ValueCoding,
+        ValueWithObjectMetadata.Coder: NSCoding,
+        ValueWithObjectMetadata.Coder.ValueType == ValueWithObjectMetadata,
         ValueWithObjectMetadata.MetadataType: NSCoding>(index: YapDB.Index) -> ValueWithObjectMetadata? {
             return read { $0.readAtIndex(index) }
     }
@@ -867,9 +869,9 @@ extension ConnectionType {
         ValueWithObjectMetadata
         where
         ValueWithObjectMetadata: MetadataPersistable,
-        ValueWithObjectMetadata: Saveable,
-        ValueWithObjectMetadata.ArchiverType: NSCoding,
-        ValueWithObjectMetadata.ArchiverType.ValueType == ValueWithObjectMetadata,
+        ValueWithObjectMetadata: ValueCoding,
+        ValueWithObjectMetadata.Coder: NSCoding,
+        ValueWithObjectMetadata.Coder.ValueType == ValueWithObjectMetadata,
         ValueWithObjectMetadata.MetadataType: NSCoding>(indexes: [YapDB.Index]) -> [ValueWithObjectMetadata] {
             return read { $0.readAtIndexes(indexes) }
     }
@@ -878,9 +880,9 @@ extension ConnectionType {
         ValueWithObjectMetadata
         where
         ValueWithObjectMetadata: MetadataPersistable,
-        ValueWithObjectMetadata: Saveable,
-        ValueWithObjectMetadata.ArchiverType: NSCoding,
-        ValueWithObjectMetadata.ArchiverType.ValueType == ValueWithObjectMetadata,
+        ValueWithObjectMetadata: ValueCoding,
+        ValueWithObjectMetadata.Coder: NSCoding,
+        ValueWithObjectMetadata.Coder.ValueType == ValueWithObjectMetadata,
         ValueWithObjectMetadata.MetadataType: NSCoding>(key: String) -> ValueWithObjectMetadata? {
             return readAtIndex(ValueWithObjectMetadata.indexWithKey(key))
     }
@@ -889,9 +891,9 @@ extension ConnectionType {
         ValueWithObjectMetadata
         where
         ValueWithObjectMetadata: MetadataPersistable,
-        ValueWithObjectMetadata: Saveable,
-        ValueWithObjectMetadata.ArchiverType: NSCoding,
-        ValueWithObjectMetadata.ArchiverType.ValueType == ValueWithObjectMetadata,
+        ValueWithObjectMetadata: ValueCoding,
+        ValueWithObjectMetadata.Coder: NSCoding,
+        ValueWithObjectMetadata.Coder.ValueType == ValueWithObjectMetadata,
         ValueWithObjectMetadata.MetadataType: NSCoding>(keys: [String]) -> [ValueWithObjectMetadata] {
             return readAtIndexes(ValueWithObjectMetadata.indexesWithKeys(keys))
     }
@@ -905,14 +907,14 @@ extension ReadTransactionType {
         ValueWithValueMetadata
         where
         ValueWithValueMetadata: MetadataPersistable,
-        ValueWithValueMetadata: Saveable,
-        ValueWithValueMetadata.ArchiverType: NSCoding,
-        ValueWithValueMetadata.ArchiverType.ValueType == ValueWithValueMetadata,
-        ValueWithValueMetadata.MetadataType: Saveable,
-        ValueWithValueMetadata.MetadataType.ArchiverType: NSCoding,
-        ValueWithValueMetadata.MetadataType.ArchiverType.ValueType == ValueWithValueMetadata.MetadataType>(index: YapDB.Index) -> ValueWithValueMetadata? {
-            if var item = ValueWithValueMetadata.unarchive(readAtIndex(index)) {
-                item.metadata = ValueWithValueMetadata.MetadataType.unarchive(readMetadataAtIndex(index))
+        ValueWithValueMetadata: ValueCoding,
+        ValueWithValueMetadata.Coder: NSCoding,
+        ValueWithValueMetadata.Coder.ValueType == ValueWithValueMetadata,
+        ValueWithValueMetadata.MetadataType: ValueCoding,
+        ValueWithValueMetadata.MetadataType.Coder: NSCoding,
+        ValueWithValueMetadata.MetadataType.Coder.ValueType == ValueWithValueMetadata.MetadataType>(index: YapDB.Index) -> ValueWithValueMetadata? {
+            if var item = ValueWithValueMetadata.decode(readAtIndex(index)) {
+                item.metadata = ValueWithValueMetadata.MetadataType.decode(readMetadataAtIndex(index))
                 return item
             }
             return .None
@@ -922,12 +924,12 @@ extension ReadTransactionType {
         ValueWithValueMetadata
         where
         ValueWithValueMetadata: MetadataPersistable,
-        ValueWithValueMetadata: Saveable,
-        ValueWithValueMetadata.ArchiverType: NSCoding,
-        ValueWithValueMetadata.ArchiverType.ValueType == ValueWithValueMetadata,
-        ValueWithValueMetadata.MetadataType: Saveable,
-        ValueWithValueMetadata.MetadataType.ArchiverType: NSCoding,
-        ValueWithValueMetadata.MetadataType.ArchiverType.ValueType == ValueWithValueMetadata.MetadataType>(indexes: [YapDB.Index]) -> [ValueWithValueMetadata] {
+        ValueWithValueMetadata: ValueCoding,
+        ValueWithValueMetadata.Coder: NSCoding,
+        ValueWithValueMetadata.Coder.ValueType == ValueWithValueMetadata,
+        ValueWithValueMetadata.MetadataType: ValueCoding,
+        ValueWithValueMetadata.MetadataType.Coder: NSCoding,
+        ValueWithValueMetadata.MetadataType.Coder.ValueType == ValueWithValueMetadata.MetadataType>(indexes: [YapDB.Index]) -> [ValueWithValueMetadata] {
             return indexes.flatMap(readAtIndex)
     }
 
@@ -935,12 +937,12 @@ extension ReadTransactionType {
         ValueWithValueMetadata
         where
         ValueWithValueMetadata: MetadataPersistable,
-        ValueWithValueMetadata: Saveable,
-        ValueWithValueMetadata.ArchiverType: NSCoding,
-        ValueWithValueMetadata.ArchiverType.ValueType == ValueWithValueMetadata,
-        ValueWithValueMetadata.MetadataType: Saveable,
-        ValueWithValueMetadata.MetadataType.ArchiverType: NSCoding,
-        ValueWithValueMetadata.MetadataType.ArchiverType.ValueType == ValueWithValueMetadata.MetadataType>(key: String) -> ValueWithValueMetadata? {
+        ValueWithValueMetadata: ValueCoding,
+        ValueWithValueMetadata.Coder: NSCoding,
+        ValueWithValueMetadata.Coder.ValueType == ValueWithValueMetadata,
+        ValueWithValueMetadata.MetadataType: ValueCoding,
+        ValueWithValueMetadata.MetadataType.Coder: NSCoding,
+        ValueWithValueMetadata.MetadataType.Coder.ValueType == ValueWithValueMetadata.MetadataType>(key: String) -> ValueWithValueMetadata? {
             return readAtIndex(ValueWithValueMetadata.indexWithKey(key))
     }
 
@@ -948,12 +950,12 @@ extension ReadTransactionType {
         ValueWithValueMetadata
         where
         ValueWithValueMetadata: MetadataPersistable,
-        ValueWithValueMetadata: Saveable,
-        ValueWithValueMetadata.ArchiverType: NSCoding,
-        ValueWithValueMetadata.ArchiverType.ValueType == ValueWithValueMetadata,
-        ValueWithValueMetadata.MetadataType: Saveable,
-        ValueWithValueMetadata.MetadataType.ArchiverType: NSCoding,
-        ValueWithValueMetadata.MetadataType.ArchiverType.ValueType == ValueWithValueMetadata.MetadataType>(keys: [String]) -> [ValueWithValueMetadata] {
+        ValueWithValueMetadata: ValueCoding,
+        ValueWithValueMetadata.Coder: NSCoding,
+        ValueWithValueMetadata.Coder.ValueType == ValueWithValueMetadata,
+        ValueWithValueMetadata.MetadataType: ValueCoding,
+        ValueWithValueMetadata.MetadataType.Coder: NSCoding,
+        ValueWithValueMetadata.MetadataType.Coder.ValueType == ValueWithValueMetadata.MetadataType>(keys: [String]) -> [ValueWithValueMetadata] {
             return readAtIndexes(ValueWithValueMetadata.indexesWithKeys(keys))
     }
 }
@@ -964,12 +966,12 @@ extension ConnectionType {
         ValueWithValueMetadata
         where
         ValueWithValueMetadata: MetadataPersistable,
-        ValueWithValueMetadata: Saveable,
-        ValueWithValueMetadata.ArchiverType: NSCoding,
-        ValueWithValueMetadata.ArchiverType.ValueType == ValueWithValueMetadata,
-        ValueWithValueMetadata.MetadataType: Saveable,
-        ValueWithValueMetadata.MetadataType.ArchiverType: NSCoding,
-        ValueWithValueMetadata.MetadataType.ArchiverType.ValueType == ValueWithValueMetadata.MetadataType>(index: YapDB.Index) -> ValueWithValueMetadata? {
+        ValueWithValueMetadata: ValueCoding,
+        ValueWithValueMetadata.Coder: NSCoding,
+        ValueWithValueMetadata.Coder.ValueType == ValueWithValueMetadata,
+        ValueWithValueMetadata.MetadataType: ValueCoding,
+        ValueWithValueMetadata.MetadataType.Coder: NSCoding,
+        ValueWithValueMetadata.MetadataType.Coder.ValueType == ValueWithValueMetadata.MetadataType>(index: YapDB.Index) -> ValueWithValueMetadata? {
             return read { $0.readAtIndex(index) }
     }
 
@@ -977,12 +979,12 @@ extension ConnectionType {
         ValueWithValueMetadata
         where
         ValueWithValueMetadata: MetadataPersistable,
-        ValueWithValueMetadata: Saveable,
-        ValueWithValueMetadata.ArchiverType: NSCoding,
-        ValueWithValueMetadata.ArchiverType.ValueType == ValueWithValueMetadata,
-        ValueWithValueMetadata.MetadataType: Saveable,
-        ValueWithValueMetadata.MetadataType.ArchiverType: NSCoding,
-        ValueWithValueMetadata.MetadataType.ArchiverType.ValueType == ValueWithValueMetadata.MetadataType>(indexes: [YapDB.Index]) -> [ValueWithValueMetadata] {
+        ValueWithValueMetadata: ValueCoding,
+        ValueWithValueMetadata.Coder: NSCoding,
+        ValueWithValueMetadata.Coder.ValueType == ValueWithValueMetadata,
+        ValueWithValueMetadata.MetadataType: ValueCoding,
+        ValueWithValueMetadata.MetadataType.Coder: NSCoding,
+        ValueWithValueMetadata.MetadataType.Coder.ValueType == ValueWithValueMetadata.MetadataType>(indexes: [YapDB.Index]) -> [ValueWithValueMetadata] {
             return read { $0.readAtIndexes(indexes) }
     }
 
@@ -990,12 +992,12 @@ extension ConnectionType {
         ValueWithValueMetadata
         where
         ValueWithValueMetadata: MetadataPersistable,
-        ValueWithValueMetadata: Saveable,
-        ValueWithValueMetadata.ArchiverType: NSCoding,
-        ValueWithValueMetadata.ArchiverType.ValueType == ValueWithValueMetadata,
-        ValueWithValueMetadata.MetadataType: Saveable,
-        ValueWithValueMetadata.MetadataType.ArchiverType: NSCoding,
-        ValueWithValueMetadata.MetadataType.ArchiverType.ValueType == ValueWithValueMetadata.MetadataType>(key: String) -> ValueWithValueMetadata? {
+        ValueWithValueMetadata: ValueCoding,
+        ValueWithValueMetadata.Coder: NSCoding,
+        ValueWithValueMetadata.Coder.ValueType == ValueWithValueMetadata,
+        ValueWithValueMetadata.MetadataType: ValueCoding,
+        ValueWithValueMetadata.MetadataType.Coder: NSCoding,
+        ValueWithValueMetadata.MetadataType.Coder.ValueType == ValueWithValueMetadata.MetadataType>(key: String) -> ValueWithValueMetadata? {
             return readAtIndex(ValueWithValueMetadata.indexWithKey(key))
     }
 
@@ -1003,12 +1005,12 @@ extension ConnectionType {
         ValueWithValueMetadata
         where
         ValueWithValueMetadata: MetadataPersistable,
-        ValueWithValueMetadata: Saveable,
-        ValueWithValueMetadata.ArchiverType: NSCoding,
-        ValueWithValueMetadata.ArchiverType.ValueType == ValueWithValueMetadata,
-        ValueWithValueMetadata.MetadataType: Saveable,
-        ValueWithValueMetadata.MetadataType.ArchiverType: NSCoding,
-        ValueWithValueMetadata.MetadataType.ArchiverType.ValueType == ValueWithValueMetadata.MetadataType>(keys: [String]) -> [ValueWithValueMetadata] {
+        ValueWithValueMetadata: ValueCoding,
+        ValueWithValueMetadata.Coder: NSCoding,
+        ValueWithValueMetadata.Coder.ValueType == ValueWithValueMetadata,
+        ValueWithValueMetadata.MetadataType: ValueCoding,
+        ValueWithValueMetadata.MetadataType.Coder: NSCoding,
+        ValueWithValueMetadata.MetadataType.Coder.ValueType == ValueWithValueMetadata.MetadataType>(keys: [String]) -> [ValueWithValueMetadata] {
             return readAtIndexes(ValueWithValueMetadata.indexesWithKeys(keys))
     }
 }

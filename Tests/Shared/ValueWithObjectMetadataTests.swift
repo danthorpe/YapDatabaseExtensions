@@ -103,11 +103,11 @@ class ValueWithObjectMetadataTests: XCTestCase {
     }
 
     func configureForReadingSingle() {
-        readTransaction.object = item.archive
+        readTransaction.object = item.encoded
     }
 
     func configureForReadingMultiple() {
-        readTransaction.objects = items.archives
+        readTransaction.objects = items.encoded
         readTransaction.keys = keys
     }
 
@@ -133,7 +133,7 @@ class ValueWithObjectMetadataTests: XCTestCase {
 
         XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
         XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].0, index)
-        XCTAssertEqual(Inventory.unarchive(writeTransaction.didWriteAtIndexes[0].1)!, item)
+        XCTAssertEqual(Inventory.decode(writeTransaction.didWriteAtIndexes[0].1)!, item)
         XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].2 as? NSNumber, item.metadata)
     }
 
@@ -144,7 +144,7 @@ class ValueWithObjectMetadataTests: XCTestCase {
         XCTAssertTrue(connection.didWrite)
         XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
         XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].0, index)
-        XCTAssertEqual(Inventory.unarchive(writeTransaction.didWriteAtIndexes[0].1)!, item)
+        XCTAssertEqual(Inventory.decode(writeTransaction.didWriteAtIndexes[0].1)!, item)
         XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].2 as? NSNumber, item.metadata)
     }
 
@@ -161,7 +161,7 @@ class ValueWithObjectMetadataTests: XCTestCase {
         XCTAssertFalse(connection.didWrite)
         XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
         XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].0, index)
-        XCTAssertEqual(Inventory.unarchive(writeTransaction.didWriteAtIndexes[0].1)!, item)
+        XCTAssertEqual(Inventory.decode(writeTransaction.didWriteAtIndexes[0].1)!, item)
         XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].2 as? NSNumber, item.metadata)
     }
 
@@ -181,7 +181,7 @@ class ValueWithObjectMetadataTests: XCTestCase {
         XCTAssertFalse(connection.didAsyncWrite)
         XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
         XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].0, index)
-        XCTAssertEqual(Inventory.unarchive(writeTransaction.didWriteAtIndexes[0].1)!, item)
+        XCTAssertEqual(Inventory.decode(writeTransaction.didWriteAtIndexes[0].1)!, item)
         XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].2 as? NSNumber, item.metadata)
     }
 
@@ -593,7 +593,7 @@ class ValueWithObjectMetadataTests: XCTestCase {
 
         XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
         XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].0, index)
-        XCTAssertEqual(Inventory.unarchive(writeTransaction.didWriteAtIndexes[0].1)!, item)
+        XCTAssertEqual(Inventory.decode(writeTransaction.didWriteAtIndexes[0].1)!, item)
         XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].2 as? NSNumber, item.metadata)
     }
 
@@ -613,7 +613,7 @@ class ValueWithObjectMetadataTests: XCTestCase {
         XCTAssertTrue(connection.didWrite)
         XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
         XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].0, index)
-        XCTAssertEqual(Inventory.unarchive(writeTransaction.didWriteAtIndexes[0].1)!, item)
+        XCTAssertEqual(Inventory.decode(writeTransaction.didWriteAtIndexes[0].1)!, item)
         XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].2 as? NSNumber, item.metadata)
     }
 
@@ -634,7 +634,7 @@ class ValueWithObjectMetadataTests: XCTestCase {
         XCTAssertTrue(connection.didAsyncWrite)
         XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
         XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].0, index)
-        XCTAssertEqual(Inventory.unarchive(writeTransaction.didWriteAtIndexes[0].1)!, item)
+        XCTAssertEqual(Inventory.decode(writeTransaction.didWriteAtIndexes[0].1)!, item)
         XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].2 as? NSNumber, item.metadata)
     }
 

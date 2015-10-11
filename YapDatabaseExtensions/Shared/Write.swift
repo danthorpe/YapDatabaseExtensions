@@ -4,6 +4,7 @@
 //
 
 import Foundation
+import ValueCoding
 import YapDatabase
 
 // MARK: - Writable
@@ -47,7 +48,7 @@ extension Persistable {
     Returns a type suitable for *writing* the receiver to the 
     database. The available functions will depend on the receiver
     correctly implementing `Persistable`, `MetadataPersistable` 
-    and `Saveable`.
+    and `ValueCoding`.
     
     For example, given a `Person` object, inside a read write
     transaction, you can write the object like this:
@@ -80,7 +81,7 @@ extension SequenceType where Generator.Element: Persistable {
     Returns a type suitable for *writing* the receiver to the
     database. The available functions will depend on the receive
     correctly implementing `Persistable`, `MetadataPersistable`
-    and `Saveable`.
+    and `ValueCoding`.
 
     For example, given a sequence of `Person` objects, inside 
     a read write transaction, you can write all the objects to
@@ -204,9 +205,9 @@ extension Writable
     where
     ItemType: NSCoding,
     ItemType: MetadataPersistable,
-    ItemType.MetadataType: Saveable,
-    ItemType.MetadataType.ArchiverType: NSCoding,
-    ItemType.MetadataType.ArchiverType.ValueType == ItemType.MetadataType {
+    ItemType.MetadataType: ValueCoding,
+    ItemType.MetadataType.Coder: NSCoding,
+    ItemType.MetadataType.Coder.ValueType == ItemType.MetadataType {
 
     /**
     Write the items using an existing transaction.
@@ -249,10 +250,10 @@ extension Writable
 
 extension Writable
     where
-    ItemType: Saveable,
+    ItemType: ValueCoding,
     ItemType: Persistable,
-    ItemType.ArchiverType: NSCoding,
-    ItemType.ArchiverType.ValueType == ItemType {
+    ItemType.Coder: NSCoding,
+    ItemType.Coder.ValueType == ItemType {
 
     /**
     Write the items using an existing transaction.
@@ -260,7 +261,7 @@ extension Writable
     - parameter transaction: a YapDatabaseReadWriteTransaction
     */
     public func on(transaction: Database.Connection.WriteTransaction) {
-        items.forEach { transaction.writeAtIndex($0.index, object: $0.archive, metadata: .None) }
+        items.forEach { transaction.writeAtIndex($0.index, object: $0.encoded, metadata: .None) }
     }
 
     /**
@@ -295,10 +296,10 @@ extension Writable
 
 extension Writable
     where
-    ItemType: Saveable,
+    ItemType: ValueCoding,
     ItemType: MetadataPersistable,
-    ItemType.ArchiverType: NSCoding,
-    ItemType.ArchiverType.ValueType == ItemType,
+    ItemType.Coder: NSCoding,
+    ItemType.Coder.ValueType == ItemType,
     ItemType.MetadataType: NSCoding {
 
     /**
@@ -342,13 +343,13 @@ extension Writable
 
 extension Writable
     where
-    ItemType: Saveable,
+    ItemType: ValueCoding,
     ItemType: MetadataPersistable,
-    ItemType.ArchiverType: NSCoding,
-    ItemType.ArchiverType.ValueType == ItemType,
-    ItemType.MetadataType: Saveable,
-    ItemType.MetadataType.ArchiverType: NSCoding,
-    ItemType.MetadataType.ArchiverType.ValueType == ItemType.MetadataType {
+    ItemType.Coder: NSCoding,
+    ItemType.Coder.ValueType == ItemType,
+    ItemType.MetadataType: ValueCoding,
+    ItemType.MetadataType.Coder: NSCoding,
+    ItemType.MetadataType.Coder.ValueType == ItemType.MetadataType {
 
     /**
     Write the items using an existing transaction.
@@ -459,10 +460,10 @@ extension WriteTransactionType {
         where
         ObjectWithValueMetadata: MetadataPersistable,
         ObjectWithValueMetadata: NSCoding,
-        ObjectWithValueMetadata.MetadataType: Saveable,
-        ObjectWithValueMetadata.MetadataType.ArchiverType: NSCoding,
-        ObjectWithValueMetadata.MetadataType.ArchiverType.ValueType == ObjectWithValueMetadata.MetadataType>(item: ObjectWithValueMetadata) {
-            writeAtIndex(item.index, object: item, metadata: item.metadata?.archive)
+        ObjectWithValueMetadata.MetadataType: ValueCoding,
+        ObjectWithValueMetadata.MetadataType.Coder: NSCoding,
+        ObjectWithValueMetadata.MetadataType.Coder.ValueType == ObjectWithValueMetadata.MetadataType>(item: ObjectWithValueMetadata) {
+            writeAtIndex(item.index, object: item, metadata: item.metadata?.encoded)
     }
 
     public func write<
@@ -470,9 +471,9 @@ extension WriteTransactionType {
         where
         ObjectWithValueMetadata: MetadataPersistable,
         ObjectWithValueMetadata: NSCoding,
-        ObjectWithValueMetadata.MetadataType: Saveable,
-        ObjectWithValueMetadata.MetadataType.ArchiverType: NSCoding,
-        ObjectWithValueMetadata.MetadataType.ArchiverType.ValueType == ObjectWithValueMetadata.MetadataType>(items: [ObjectWithValueMetadata]) {
+        ObjectWithValueMetadata.MetadataType: ValueCoding,
+        ObjectWithValueMetadata.MetadataType.Coder: NSCoding,
+        ObjectWithValueMetadata.MetadataType.Coder.ValueType == ObjectWithValueMetadata.MetadataType>(items: [ObjectWithValueMetadata]) {
             items.forEach(write)
     }
 }
@@ -484,9 +485,9 @@ extension ConnectionType {
         where
         ObjectWithValueMetadata: MetadataPersistable,
         ObjectWithValueMetadata: NSCoding,
-        ObjectWithValueMetadata.MetadataType: Saveable,
-        ObjectWithValueMetadata.MetadataType.ArchiverType: NSCoding,
-        ObjectWithValueMetadata.MetadataType.ArchiverType.ValueType == ObjectWithValueMetadata.MetadataType>(item: ObjectWithValueMetadata) {
+        ObjectWithValueMetadata.MetadataType: ValueCoding,
+        ObjectWithValueMetadata.MetadataType.Coder: NSCoding,
+        ObjectWithValueMetadata.MetadataType.Coder.ValueType == ObjectWithValueMetadata.MetadataType>(item: ObjectWithValueMetadata) {
             write { $0.write(item) }
     }
 
@@ -495,9 +496,9 @@ extension ConnectionType {
         where
         ObjectWithValueMetadata: MetadataPersistable,
         ObjectWithValueMetadata: NSCoding,
-        ObjectWithValueMetadata.MetadataType: Saveable,
-        ObjectWithValueMetadata.MetadataType.ArchiverType: NSCoding,
-        ObjectWithValueMetadata.MetadataType.ArchiverType.ValueType == ObjectWithValueMetadata.MetadataType>(items: [ObjectWithValueMetadata]) {
+        ObjectWithValueMetadata.MetadataType: ValueCoding,
+        ObjectWithValueMetadata.MetadataType.Coder: NSCoding,
+        ObjectWithValueMetadata.MetadataType.Coder.ValueType == ObjectWithValueMetadata.MetadataType>(items: [ObjectWithValueMetadata]) {
             write { $0.write(items) }
     }
 
@@ -506,9 +507,9 @@ extension ConnectionType {
         where
         ObjectWithValueMetadata: MetadataPersistable,
         ObjectWithValueMetadata: NSCoding,
-        ObjectWithValueMetadata.MetadataType: Saveable,
-        ObjectWithValueMetadata.MetadataType.ArchiverType: NSCoding,
-        ObjectWithValueMetadata.MetadataType.ArchiverType.ValueType == ObjectWithValueMetadata.MetadataType>(item: ObjectWithValueMetadata, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: dispatch_block_t) {
+        ObjectWithValueMetadata.MetadataType: ValueCoding,
+        ObjectWithValueMetadata.MetadataType.Coder: NSCoding,
+        ObjectWithValueMetadata.MetadataType.Coder.ValueType == ObjectWithValueMetadata.MetadataType>(item: ObjectWithValueMetadata, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: dispatch_block_t) {
             asyncWrite({ $0.write(item) }, queue: queue, completion: { _ in completion() })
     }
 
@@ -517,9 +518,9 @@ extension ConnectionType {
         where
         ObjectWithValueMetadata: MetadataPersistable,
         ObjectWithValueMetadata: NSCoding,
-        ObjectWithValueMetadata.MetadataType: Saveable,
-        ObjectWithValueMetadata.MetadataType.ArchiverType: NSCoding,
-        ObjectWithValueMetadata.MetadataType.ArchiverType.ValueType == ObjectWithValueMetadata.MetadataType>(items: [ObjectWithValueMetadata], queue: dispatch_queue_t = dispatch_get_main_queue(), completion: dispatch_block_t) {
+        ObjectWithValueMetadata.MetadataType: ValueCoding,
+        ObjectWithValueMetadata.MetadataType.Coder: NSCoding,
+        ObjectWithValueMetadata.MetadataType.Coder.ValueType == ObjectWithValueMetadata.MetadataType>(items: [ObjectWithValueMetadata], queue: dispatch_queue_t = dispatch_get_main_queue(), completion: dispatch_block_t) {
             asyncWrite({ $0.write(items) }, queue: queue, completion: { _ in completion() })
     }
 }
@@ -532,20 +533,20 @@ extension WriteTransactionType {
         ValueWithObjectMetadata
         where
         ValueWithObjectMetadata: MetadataPersistable,
-        ValueWithObjectMetadata: Saveable,
-        ValueWithObjectMetadata.ArchiverType: NSCoding,
-        ValueWithObjectMetadata.ArchiverType.ValueType == ValueWithObjectMetadata,
+        ValueWithObjectMetadata: ValueCoding,
+        ValueWithObjectMetadata.Coder: NSCoding,
+        ValueWithObjectMetadata.Coder.ValueType == ValueWithObjectMetadata,
         ValueWithObjectMetadata.MetadataType: NSCoding>(item: ValueWithObjectMetadata) {
-            writeAtIndex(item.index, object: item.archive, metadata: item.metadata)
+            writeAtIndex(item.index, object: item.encoded, metadata: item.metadata)
     }
 
     public func write<
         ValueWithObjectMetadata
         where
         ValueWithObjectMetadata: MetadataPersistable,
-        ValueWithObjectMetadata: Saveable,
-        ValueWithObjectMetadata.ArchiverType: NSCoding,
-        ValueWithObjectMetadata.ArchiverType.ValueType == ValueWithObjectMetadata,
+        ValueWithObjectMetadata: ValueCoding,
+        ValueWithObjectMetadata.Coder: NSCoding,
+        ValueWithObjectMetadata.Coder.ValueType == ValueWithObjectMetadata,
         ValueWithObjectMetadata.MetadataType: NSCoding>(items: [ValueWithObjectMetadata]) {
             items.forEach(write)
     }
@@ -557,9 +558,9 @@ extension ConnectionType {
         ValueWithObjectMetadata
         where
         ValueWithObjectMetadata: MetadataPersistable,
-        ValueWithObjectMetadata: Saveable,
-        ValueWithObjectMetadata.ArchiverType: NSCoding,
-        ValueWithObjectMetadata.ArchiverType.ValueType == ValueWithObjectMetadata,
+        ValueWithObjectMetadata: ValueCoding,
+        ValueWithObjectMetadata.Coder: NSCoding,
+        ValueWithObjectMetadata.Coder.ValueType == ValueWithObjectMetadata,
         ValueWithObjectMetadata.MetadataType: NSCoding>(item: ValueWithObjectMetadata) {
             write { $0.write(item) }
     }
@@ -568,9 +569,9 @@ extension ConnectionType {
         ValueWithObjectMetadata
         where
         ValueWithObjectMetadata: MetadataPersistable,
-        ValueWithObjectMetadata: Saveable,
-        ValueWithObjectMetadata.ArchiverType: NSCoding,
-        ValueWithObjectMetadata.ArchiverType.ValueType == ValueWithObjectMetadata,
+        ValueWithObjectMetadata: ValueCoding,
+        ValueWithObjectMetadata.Coder: NSCoding,
+        ValueWithObjectMetadata.Coder.ValueType == ValueWithObjectMetadata,
         ValueWithObjectMetadata.MetadataType: NSCoding>(items: [ValueWithObjectMetadata]) {
             write { $0.write(items) }
     }
@@ -579,9 +580,9 @@ extension ConnectionType {
         ValueWithObjectMetadata
         where
         ValueWithObjectMetadata: MetadataPersistable,
-        ValueWithObjectMetadata: Saveable,
-        ValueWithObjectMetadata.ArchiverType: NSCoding,
-        ValueWithObjectMetadata.ArchiverType.ValueType == ValueWithObjectMetadata,
+        ValueWithObjectMetadata: ValueCoding,
+        ValueWithObjectMetadata.Coder: NSCoding,
+        ValueWithObjectMetadata.Coder.ValueType == ValueWithObjectMetadata,
         ValueWithObjectMetadata.MetadataType: NSCoding>(item: ValueWithObjectMetadata, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: dispatch_block_t) {
             asyncWrite({ $0.write(item) }, queue: queue, completion: { _ in completion() })
     }
@@ -590,9 +591,9 @@ extension ConnectionType {
         ValueWithObjectMetadata
         where
         ValueWithObjectMetadata: MetadataPersistable,
-        ValueWithObjectMetadata: Saveable,
-        ValueWithObjectMetadata.ArchiverType: NSCoding,
-        ValueWithObjectMetadata.ArchiverType.ValueType == ValueWithObjectMetadata,
+        ValueWithObjectMetadata: ValueCoding,
+        ValueWithObjectMetadata.Coder: NSCoding,
+        ValueWithObjectMetadata.Coder.ValueType == ValueWithObjectMetadata,
         ValueWithObjectMetadata.MetadataType: NSCoding>(items: [ValueWithObjectMetadata], queue: dispatch_queue_t = dispatch_get_main_queue(), completion: dispatch_block_t) {
             asyncWrite({ $0.write(items) }, queue: queue, completion: { _ in completion() })
     }
@@ -606,25 +607,25 @@ extension WriteTransactionType {
         ValueWithValueMetadata
         where
         ValueWithValueMetadata: MetadataPersistable,
-        ValueWithValueMetadata: Saveable,
-        ValueWithValueMetadata.ArchiverType: NSCoding,
-        ValueWithValueMetadata.ArchiverType.ValueType == ValueWithValueMetadata,
-        ValueWithValueMetadata.MetadataType: Saveable,
-        ValueWithValueMetadata.MetadataType.ArchiverType: NSCoding,
-        ValueWithValueMetadata.MetadataType.ArchiverType.ValueType == ValueWithValueMetadata.MetadataType>(item: ValueWithValueMetadata) {
-            writeAtIndex(item.index, object: item.archive, metadata: item.metadata?.archive)
+        ValueWithValueMetadata: ValueCoding,
+        ValueWithValueMetadata.Coder: NSCoding,
+        ValueWithValueMetadata.Coder.ValueType == ValueWithValueMetadata,
+        ValueWithValueMetadata.MetadataType: ValueCoding,
+        ValueWithValueMetadata.MetadataType.Coder: NSCoding,
+        ValueWithValueMetadata.MetadataType.Coder.ValueType == ValueWithValueMetadata.MetadataType>(item: ValueWithValueMetadata) {
+            writeAtIndex(item.index, object: item.encoded, metadata: item.metadata?.encoded)
     }
 
     public func write<
         ValueWithValueMetadata
         where
         ValueWithValueMetadata: MetadataPersistable,
-        ValueWithValueMetadata: Saveable,
-        ValueWithValueMetadata.ArchiverType: NSCoding,
-        ValueWithValueMetadata.ArchiverType.ValueType == ValueWithValueMetadata,
-        ValueWithValueMetadata.MetadataType: Saveable,
-        ValueWithValueMetadata.MetadataType.ArchiverType: NSCoding,
-        ValueWithValueMetadata.MetadataType.ArchiverType.ValueType == ValueWithValueMetadata.MetadataType>(items: [ValueWithValueMetadata]) {
+        ValueWithValueMetadata: ValueCoding,
+        ValueWithValueMetadata.Coder: NSCoding,
+        ValueWithValueMetadata.Coder.ValueType == ValueWithValueMetadata,
+        ValueWithValueMetadata.MetadataType: ValueCoding,
+        ValueWithValueMetadata.MetadataType.Coder: NSCoding,
+        ValueWithValueMetadata.MetadataType.Coder.ValueType == ValueWithValueMetadata.MetadataType>(items: [ValueWithValueMetadata]) {
             items.forEach(write)
     }
 }
@@ -635,12 +636,12 @@ extension ConnectionType {
         ValueWithValueMetadata
         where
         ValueWithValueMetadata: MetadataPersistable,
-        ValueWithValueMetadata: Saveable,
-        ValueWithValueMetadata.ArchiverType: NSCoding,
-        ValueWithValueMetadata.ArchiverType.ValueType == ValueWithValueMetadata,
-        ValueWithValueMetadata.MetadataType: Saveable,
-        ValueWithValueMetadata.MetadataType.ArchiverType: NSCoding,
-        ValueWithValueMetadata.MetadataType.ArchiverType.ValueType == ValueWithValueMetadata.MetadataType>(item: ValueWithValueMetadata) {
+        ValueWithValueMetadata: ValueCoding,
+        ValueWithValueMetadata.Coder: NSCoding,
+        ValueWithValueMetadata.Coder.ValueType == ValueWithValueMetadata,
+        ValueWithValueMetadata.MetadataType: ValueCoding,
+        ValueWithValueMetadata.MetadataType.Coder: NSCoding,
+        ValueWithValueMetadata.MetadataType.Coder.ValueType == ValueWithValueMetadata.MetadataType>(item: ValueWithValueMetadata) {
             write { $0.write(item) }
     }
 
@@ -648,12 +649,12 @@ extension ConnectionType {
         ValueWithValueMetadata
         where
         ValueWithValueMetadata: MetadataPersistable,
-        ValueWithValueMetadata: Saveable,
-        ValueWithValueMetadata.ArchiverType: NSCoding,
-        ValueWithValueMetadata.ArchiverType.ValueType == ValueWithValueMetadata,
-        ValueWithValueMetadata.MetadataType: Saveable,
-        ValueWithValueMetadata.MetadataType.ArchiverType: NSCoding,
-        ValueWithValueMetadata.MetadataType.ArchiverType.ValueType == ValueWithValueMetadata.MetadataType>(items: [ValueWithValueMetadata]) {
+        ValueWithValueMetadata: ValueCoding,
+        ValueWithValueMetadata.Coder: NSCoding,
+        ValueWithValueMetadata.Coder.ValueType == ValueWithValueMetadata,
+        ValueWithValueMetadata.MetadataType: ValueCoding,
+        ValueWithValueMetadata.MetadataType.Coder: NSCoding,
+        ValueWithValueMetadata.MetadataType.Coder.ValueType == ValueWithValueMetadata.MetadataType>(items: [ValueWithValueMetadata]) {
             write { $0.write(items) }
     }
 
@@ -661,12 +662,12 @@ extension ConnectionType {
         ValueWithValueMetadata
         where
         ValueWithValueMetadata: MetadataPersistable,
-        ValueWithValueMetadata: Saveable,
-        ValueWithValueMetadata.ArchiverType: NSCoding,
-        ValueWithValueMetadata.ArchiverType.ValueType == ValueWithValueMetadata,
-        ValueWithValueMetadata.MetadataType: Saveable,
-        ValueWithValueMetadata.MetadataType.ArchiverType: NSCoding,
-        ValueWithValueMetadata.MetadataType.ArchiverType.ValueType == ValueWithValueMetadata.MetadataType>(item: ValueWithValueMetadata, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: dispatch_block_t) {
+        ValueWithValueMetadata: ValueCoding,
+        ValueWithValueMetadata.Coder: NSCoding,
+        ValueWithValueMetadata.Coder.ValueType == ValueWithValueMetadata,
+        ValueWithValueMetadata.MetadataType: ValueCoding,
+        ValueWithValueMetadata.MetadataType.Coder: NSCoding,
+        ValueWithValueMetadata.MetadataType.Coder.ValueType == ValueWithValueMetadata.MetadataType>(item: ValueWithValueMetadata, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: dispatch_block_t) {
             asyncWrite({ $0.write(item) }, queue: queue, completion: { _ in completion() })
     }
 
@@ -674,12 +675,12 @@ extension ConnectionType {
         ValueWithValueMetadata
         where
         ValueWithValueMetadata: MetadataPersistable,
-        ValueWithValueMetadata: Saveable,
-        ValueWithValueMetadata.ArchiverType: NSCoding,
-        ValueWithValueMetadata.ArchiverType.ValueType == ValueWithValueMetadata,
-        ValueWithValueMetadata.MetadataType: Saveable,
-        ValueWithValueMetadata.MetadataType.ArchiverType: NSCoding,
-        ValueWithValueMetadata.MetadataType.ArchiverType.ValueType == ValueWithValueMetadata.MetadataType>(items: [ValueWithValueMetadata], queue: dispatch_queue_t = dispatch_get_main_queue(), completion: dispatch_block_t) {
+        ValueWithValueMetadata: ValueCoding,
+        ValueWithValueMetadata.Coder: NSCoding,
+        ValueWithValueMetadata.Coder.ValueType == ValueWithValueMetadata,
+        ValueWithValueMetadata.MetadataType: ValueCoding,
+        ValueWithValueMetadata.MetadataType.Coder: NSCoding,
+        ValueWithValueMetadata.MetadataType.Coder.ValueType == ValueWithValueMetadata.MetadataType>(items: [ValueWithValueMetadata], queue: dispatch_queue_t = dispatch_get_main_queue(), completion: dispatch_block_t) {
             asyncWrite({ $0.write(items) }, queue: queue, completion: { _ in completion() })
     }
 }

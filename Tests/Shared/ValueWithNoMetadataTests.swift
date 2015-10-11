@@ -8,6 +8,7 @@
 
 import Foundation
 import XCTest
+import ValueCoding
 @testable import YapDatabaseExtensions
 
 class ValueWithNoMetadataTests: XCTestCase {
@@ -81,11 +82,11 @@ class ValueWithNoMetadataTests: XCTestCase {
     }
 
     func configureForReadingSingle() {
-        readTransaction.object = item.archive
+        readTransaction.object = item.encoded
     }
 
     func configureForReadingMultiple() {
-        readTransaction.objects = items.archives
+        readTransaction.objects = items.encoded
         readTransaction.keys = keys
     }
 
@@ -111,7 +112,7 @@ class ValueWithNoMetadataTests: XCTestCase {
 
         XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
         XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].0, index)
-        XCTAssertEqual(Barcode.unarchive(writeTransaction.didWriteAtIndexes[0].1)!, item)
+        XCTAssertEqual(Barcode.decode(writeTransaction.didWriteAtIndexes[0].1)!, item)
         XCTAssertNil(writeTransaction.didWriteAtIndexes[0].2)
     }
 
@@ -122,7 +123,7 @@ class ValueWithNoMetadataTests: XCTestCase {
         XCTAssertTrue(connection.didWrite)
         XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
         XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].0, index)
-        XCTAssertEqual(Barcode.unarchive(writeTransaction.didWriteAtIndexes[0].1)!, item)
+        XCTAssertEqual(Barcode.decode(writeTransaction.didWriteAtIndexes[0].1)!, item)
         XCTAssertNil(writeTransaction.didWriteAtIndexes[0].2)
     }
 
@@ -139,7 +140,7 @@ class ValueWithNoMetadataTests: XCTestCase {
         XCTAssertFalse(connection.didWrite)
         XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
         XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].0, index)
-        XCTAssertEqual(Barcode.unarchive(writeTransaction.didWriteAtIndexes[0].1)!, item)
+        XCTAssertEqual(Barcode.decode(writeTransaction.didWriteAtIndexes[0].1)!, item)
         XCTAssertNil(writeTransaction.didWriteAtIndexes[0].2)
     }
 
@@ -159,7 +160,7 @@ class ValueWithNoMetadataTests: XCTestCase {
         XCTAssertFalse(connection.didAsyncWrite)
         XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
         XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].0, index)
-        XCTAssertEqual(Barcode.unarchive(writeTransaction.didWriteAtIndexes[0].1)!, item)
+        XCTAssertEqual(Barcode.decode(writeTransaction.didWriteAtIndexes[0].1)!, item)
         XCTAssertNil(writeTransaction.didWriteAtIndexes[0].2)
     }
 

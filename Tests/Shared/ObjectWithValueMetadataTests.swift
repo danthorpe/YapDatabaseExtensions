@@ -114,7 +114,7 @@ class ObjectWithValueMetadataTests: XCTestCase {
         XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
         XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].0, index)
         XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].1.identifier, item.identifier)
-        XCTAssertEqual(Manager.MetadataType.unarchive(writeTransaction.didWriteAtIndexes[0].2), item.metadata)
+        XCTAssertEqual(Manager.MetadataType.decode(writeTransaction.didWriteAtIndexes[0].2), item.metadata)
     }
 
     func test__write_sync() {
@@ -125,7 +125,7 @@ class ObjectWithValueMetadataTests: XCTestCase {
         XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
         XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].0, index)
         XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].1.identifier, item.identifier)
-        XCTAssertEqual(Manager.MetadataType.unarchive(writeTransaction.didWriteAtIndexes[0].2), item.metadata)
+        XCTAssertEqual(Manager.MetadataType.decode(writeTransaction.didWriteAtIndexes[0].2), item.metadata)
     }
 
     func test__write_async() {
@@ -142,7 +142,7 @@ class ObjectWithValueMetadataTests: XCTestCase {
         XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
         XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].0, index)
         XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].1.identifier, item.identifier)
-        XCTAssertEqual(Manager.MetadataType.unarchive(writeTransaction.didWriteAtIndexes[0].2), item.metadata)
+        XCTAssertEqual(Manager.MetadataType.decode(writeTransaction.didWriteAtIndexes[0].2), item.metadata)
     }
 
     func test__write_operation() {
@@ -162,7 +162,7 @@ class ObjectWithValueMetadataTests: XCTestCase {
         XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
         XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].0, index)
         XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].1.identifier, item.identifier)
-        XCTAssertEqual(Manager.MetadataType.unarchive(writeTransaction.didWriteAtIndexes[0].2), item.metadata)
+        XCTAssertEqual(Manager.MetadataType.decode(writeTransaction.didWriteAtIndexes[0].2), item.metadata)
     }
 
     // Reading - Internal
@@ -574,7 +574,7 @@ class ObjectWithValueMetadataTests: XCTestCase {
         XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
         XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].0, index)
         XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].1.identifier, item.identifier)
-        XCTAssertEqual(Manager.MetadataType.unarchive(writeTransaction.didWriteAtIndexes[0].2), item.metadata)
+        XCTAssertEqual(Manager.MetadataType.decode(writeTransaction.didWriteAtIndexes[0].2), item.metadata)
     }
 
     func test__transaction__write_items() {
@@ -594,7 +594,7 @@ class ObjectWithValueMetadataTests: XCTestCase {
         XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
         XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].0, index)
         XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].1.identifier, item.identifier)
-        XCTAssertEqual(Manager.MetadataType.unarchive(writeTransaction.didWriteAtIndexes[0].2), item.metadata)
+        XCTAssertEqual(Manager.MetadataType.decode(writeTransaction.didWriteAtIndexes[0].2), item.metadata)
     }
 
     func test__connection__write_items() {
@@ -615,7 +615,7 @@ class ObjectWithValueMetadataTests: XCTestCase {
         XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
         XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].0, index)
         XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].1.identifier, item.identifier)
-        XCTAssertEqual(Manager.MetadataType.unarchive(writeTransaction.didWriteAtIndexes[0].2), item.metadata)
+        XCTAssertEqual(Manager.MetadataType.decode(writeTransaction.didWriteAtIndexes[0].2), item.metadata)
     }
 
     func test__connection__async_write_items() {

@@ -2,6 +2,7 @@
 //  Created by Daniel Thorpe on 08/04/2015.
 //
 
+import ValueCoding
 import YapDatabase
 
 /**
@@ -319,102 +320,6 @@ internal enum Handle<D: DatabaseType> {
     case Database(D)
 }
 
-// MARK: - Archiver & Saveable
-
-/// A generic protocol which acts as an archiver for value types.
-public protocol Archiver {
-    typealias ValueType
-
-    /// The value type which is being encoded/decoded
-    var value: ValueType { get }
-
-    /// Required initializer receiving the wrapped value type.
-    init(_: ValueType)
-}
-
-/**
-A generic protocol which can be implemented to vends another
-object capable of archiving the receiver.
-*/
-public protocol Saveable {
-    typealias ArchiverType: Archiver
-
-    var archive: ArchiverType { get }
-}
-
-
-/// Default implementations of archiving/unarchiving.
-extension Archiver where ValueType: Saveable, ValueType.ArchiverType == Self {
-
-    /// Simple helper to unarchive any object, has a default implementation
-    public static func unarchive(object: AnyObject?) -> ValueType? {
-        return (object as? Self)?.value
-    }
-
-    /// Simple helper to unarchive objects, has a default implementation
-    public static func unarchive(objects: [AnyObject]) -> [ValueType] {
-        return objects.reduce([ValueType]()) { (var acc, object) -> [ValueType] in
-            if let value = unarchive(object) {
-                acc.append(value)
-            }
-            return acc
-        }
-    }
-
-    /// Simple helper to archive a value, has a default implementation
-    public static func archive(value: ValueType?) -> Self? {
-        return value?.archive
-    }
-
-    /// Simple helper to archive a values, has a default implementation
-    public static func archive(values: [ValueType]) -> [Self] {
-        return values.map { $0.archive }
-    }
-}
-
-/// Default implementations of archiving/unarchiving.
-extension Saveable where ArchiverType: NSCoding, ArchiverType.ValueType == Self {
-
-    public static func unarchive(object: AnyObject?) -> Self? {
-        return ArchiverType.unarchive(object)
-    }
-
-    public static func unarchive(objects: [AnyObject]) -> [Self] {
-        return ArchiverType.unarchive(objects)
-    }
-
-    public static func archive(value: Self?) -> AnyObject? {
-        return ArchiverType.archive(value)
-    }
-
-    public static func archive(values: [Self]) -> [AnyObject] {
-        return ArchiverType.archive(values)
-    }
-
-    public init?(_ archive: AnyObject?) {
-        if let tmp = ArchiverType.unarchive(archive) {
-            self = tmp
-        }
-        else {
-            return nil
-        }
-    }
-}
-
-extension SequenceType where Generator.Element: Archiver {
-
-    public var values: [Generator.Element.ValueType] {
-        return map { $0.value }
-    }
-}
-
-extension SequenceType where Generator.Element: Saveable {
-
-    public var archives: [Generator.Element.ArchiverType] {
-        return map { $0.archive }
-    }
-}
-
 // MARK: - YapDatabaseReadTransaction
 
 extension YapDatabaseReadTransaction: ReadTransactionType {
@@ -582,17 +487,13 @@ public func == (a: YapDB.Index, b: YapDB.Index) -> Bool {
 
 // MARK: Saveable
 
-extension YapDB.Index: Saveable {
-    public typealias Archiver = YapDBIndexArchiver
-
-    public var archive: Archiver {
-        return Archiver(self)
-    }
+extension YapDB.Index: ValueCoding {
+    public typealias Coder = YapDBIndexCoder
 }
 
 // MARK: Archivers
 
-public final class YapDBIndexArchiver: NSObject, NSCoding, Archiver {
+public final class YapDBIndexCoder: NSObject, NSCoding, CodingType {
     public let value: YapDB.Index
 
     public init(_ v: YapDB.Index) {
@@ -632,6 +533,12 @@ public typealias ObjectMetadataPersistable = MetadataPersistable
 
 @available(*, unavailable, renamed="MetadataPersistable")
 public typealias ValueMetadataPersistable = MetadataPersistable
+
+@available(*, unavailable, renamed="ValueCoding")
+public typealias Saveable = ValueCoding
+
+@available(*, unavailable, renamed="CodingType")
+public typealias Archiver = CodingType
 
 
 
