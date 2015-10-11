@@ -19,7 +19,7 @@ While YapDatabase is great, it’s lacking some out of the box convenience and S
 The support for encoding and decoding value types, previously the `Saveable` and `Archiver` protocols, has been renamed and moved to their own project. [ValueCoding](https://github.com/danthorpe/ValueCoding) is a dependency of this framework (along with YapDatabase itself). See its [README](https://github.com/danthorpe/ValueCoding/blob/development/README.md) for more info. However, essentially, if you used this project before version 2.1, you’ll need to rename some types - and Xcode should present Fix It options. `Saveable` is now `ValueCoding`, its nested type, previously `ArchiverType` is now `Coder`, and this type must conform to a protocol, previously `Archiver`, now `CodingType`. See how they were all mixed up? Now fixed.
 
 ## `Persistable`
-This protocol expresses what is required to support reading from and writing to YapDatabase. Objects are referenced inside the database with a key (a `String`) inside a collection (also a `String).
+This protocol expresses what is required to support reading from and writing to YapDatabase. Objects are referenced inside the database with a key (a `String`) inside a collection (also a `String`).
 
 ```swift
 public protocol Identifiable {
@@ -39,7 +39,7 @@ While not a requirement of YapDatabase, for these extensions, it is required tha
 There is also a `YapDB.Index` struct which composes the key and collection into a single type. This is used internally for all access methods. Properties defined in an extension on `Persistable` provide access to `key` and `index`.
 
 ## `MetadataPersistable`
-YapDatabase supports storing metadata alongside the primary object. `MetadataPersistable` is a generic protocol which enables the automatic reading and writing of metadata as a optional property of the `Persistable` type.
+YapDatabase supports storing metadata alongside the primary object. `MetadataPersistable` is a generic protocol which enables the automatic reading and writing of metadata as an optional property of the `Persistable` type.
 
 ```swift
 public protocol MetadataPersistable: Persistable {
@@ -66,7 +66,7 @@ Item encoding | Metadata encoding | Pattern
 `ValueCoding` | `NSCoding`        | ValueWithObjectMetadata
 `ValueCoding` | `ValueCoding`     | ValueWithValueMetadata
 
-There are also two styles of API. The *functional* API works on `YapDatabase` types, `YapDatabaseReadTransaction`, `YapDatabaseReadWriteTransaction` and `YapDatabaseConnection`. However, these read, write and remove methods are only available if your types is one of the four patterns with metadata. The *persistable* API works on your `Persistable` types, and is available for all six patterns.
+There are also two styles of API. The *functional* API works on `YapDatabase` types, `YapDatabaseReadTransaction`, `YapDatabaseReadWriteTransaction` and `YapDatabaseConnection`. However, these read, write and remove methods are only available if your type is one of the four patterns with metadata. The *persistable* API works on your `Persistable` types, and is available for all six patterns.
 
 ## `Persistable` API
 
