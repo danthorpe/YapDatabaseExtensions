@@ -296,19 +296,83 @@ public protocol WriteTransactionType: ReadTransactionType {
     func removeAtIndexes(indexes: [YapDB.Index])
 }
 
+/// A facade interface for a database connection.
 public protocol ConnectionType {
     typealias ReadTransaction: ReadTransactionType
     typealias WriteTransaction: WriteTransactionType
 
+    /**
+    Synchronously reads from the database on the connection. The closure receives
+    the read transaction, and the function returns the result of the closure. This
+    makes it very suitable as a building block for more functional methods.
+
+    The majority of the wrapped functions provided by these extensions use this as
+    their basis.
+
+    - parameter block: a closure which receives YapDatabaseReadTransaction and returns T
+    - returns: An instance of T
+    */
     func read<T>(block: ReadTransaction -> T) -> T
+
+    /**
+    Synchronously writes to the database on the connection. The closure receives
+    the read write transaction, and the function returns the result of the closure.
+    This makes it very suitable as a building block for more functional methods.
+
+    The majority of the wrapped functions provided by these extensions use this as
+    their basis.
+
+    - parameter block: a closure which receives YapDatabaseReadWriteTransaction and returns T
+    - returns: An instance of T
+    */
     func write<T>(block: WriteTransaction -> T) -> T
 
+    /**
+    Asynchronously reads from the database on the connection. The closure receives
+    the read transaction, and completion block receives the result of the closure.
+    This makes it very suitable as a building block for more functional methods.
+
+    The majority of the wrapped functions provided by these extensions use this as
+    their basis.
+
+    - parameter block: a closure which receives YapDatabaseReadTransaction and returns T
+    - parameter queue: a dispatch_queue_t, defaults to main queue, can be ommitted in most cases.
+    - parameter completion: a closure which receives T and returns Void.
+    */
     func asyncRead<T>(block: ReadTransaction -> T, queue: dispatch_queue_t, completion: (T) -> Void)
+
+    /**
+    Asynchronously writes to the database on the connection. The closure receives
+    the read write transaction, and completion block receives the result of the closure.
+    This makes it very suitable as a building block for more functional methods.
+
+    The majority of the wrapped functions provided by these extensions use this as
+    their basis.
+
+    - parameter block: a closure which receives YapDatabaseReadWriteTransaction and returns T
+    - parameter queue: a dispatch_queue_t, defaults to main queue, can be ommitted in most cases.
+    - parameter completion: a closure which receives T and returns Void.
+    */
     func asyncWrite<T>(block: WriteTransaction -> T, queue: dispatch_queue_t, completion: (T) -> Void)
 
+    /**
+    Execute a read/write block inside a `NSOperation`. The block argument receives a
+    `YapDatabaseReadWriteTransaction`. This method is very handy for writing
+    different item types to the database inside the same transaction. For example
+
+    let operation = connection.writeBlockOperation { transaction in
+    Write(people).sync(transaction)
+    Write(barcode).sync(transaction)
+    }
+    queue.addOperation(operation)
+
+    - parameter block: a closure of type (YapDatabaseReadWriteTransaction) -> Void
+    - returns: an `NSOperation`.
+    */
     func writeBlockOperation(block: WriteTransaction -> Void) -> NSOperation
 }
 
+/// A facade interface for a database.
 public protocol DatabaseType {
     typealias Connection: ConnectionType
     func makeNewConnection() -> Connection
@@ -324,6 +388,12 @@ internal enum Handle<D: DatabaseType> {
 
 extension YapDatabaseReadTransaction: ReadTransactionType {
 
+    /**
+    Returns all the keys in a collection from the database
+
+    - parameter collection: a String.
+    - returns: an array of String values.
+    */
     public func keysInCollection(collection: String) -> [String] {
         return allKeysInCollection(collection) as! [String]
     }
@@ -381,7 +451,7 @@ extension YapDatabaseConnection: ConnectionType {
     The majority of the wrapped functions provided by these extensions use this as 
     their basis.
 
-    :param: block A closure which receives YapDatabaseReadTransaction and returns T
+    - parameter block: a closure which receives YapDatabaseReadTransaction and returns T
     - returns: An instance of T
     */
     public func read<T>(block: YapDatabaseReadTransaction -> T) -> T {
@@ -398,7 +468,7 @@ extension YapDatabaseConnection: ConnectionType {
     The majority of the wrapped functions provided by these extensions use this as
     their basis.
 
-    :param: block A closure which receives YapDatabaseReadWriteTransaction and returns T
+    - parameter block: a closure which receives YapDatabaseReadWriteTransaction and returns T
     - returns: An instance of T
     */
     public func write<T>(block: YapDatabaseReadWriteTransaction -> T) -> T {
@@ -415,9 +485,9 @@ extension YapDatabaseConnection: ConnectionType {
     The majority of the wrapped functions provided by these extensions use this as
     their basis.
 
-    :param: block A closure which receives YapDatabaseReadTransaction and returns T
-    :param: queue A dispatch_queue_t, defaults to main queue, can be ommitted in most cases.
-    :param: completion A closure which receives T and returns Void.
+    - parameter block: a closure which receives YapDatabaseReadTransaction and returns T
+    - parameter queue: a dispatch_queue_t, defaults to main queue, can be ommitted in most cases.
+    - parameter completion: a closure which receives T and returns Void.
     */
     public func asyncRead<T>(block: YapDatabaseReadTransaction -> T, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: (T) -> Void) {
         var result: T! = .None
@@ -432,9 +502,9 @@ extension YapDatabaseConnection: ConnectionType {
     The majority of the wrapped functions provided by these extensions use this as
     their basis.
 
-    :param: block A closure which receives YapDatabaseReadWriteTransaction and returns T
-    :param: queue A dispatch_queue_t, defaults to main queue, can be ommitted in most cases.
-    :param: completion A closure which receives T and returns Void.
+    - parameter block: a closure which receives YapDatabaseReadWriteTransaction and returns T
+    - parameter queue: a dispatch_queue_t, defaults to main queue, can be ommitted in most cases.
+    - parameter completion: a closure which receives T and returns Void.
     */
     public func asyncWrite<T>(block: YapDatabaseReadWriteTransaction -> T, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: (T) -> Void) {
         var result: T! = .None
