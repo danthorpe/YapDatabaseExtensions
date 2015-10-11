@@ -565,10 +565,6 @@ class ObjectWithObjectMetadataTests: XCTestCase {
         XCTAssertTrue(employees.isEmpty)
     }
 
-
-/*
-
-
     // MARK: - Functional API - Transaction - Writing
 
     func test__transaction__write_item() {
@@ -577,7 +573,7 @@ class ObjectWithObjectMetadataTests: XCTestCase {
         XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
         XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].0, index)
         XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].1.identifier, item.identifier)
-        XCTAssertNil(writeTransaction.didWriteAtIndexes[0].2)
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].2 as? NSDate, item.metadata)
     }
 
     func test__transaction__write_items() {
@@ -585,7 +581,7 @@ class ObjectWithObjectMetadataTests: XCTestCase {
 
         XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
         XCTAssertEqual(writeTransaction.didWriteAtIndexes.map { $0.0.key }.sort(), indexes.map { $0.key }.sort())
-        XCTAssertTrue(writeTransaction.didWriteAtIndexes.flatMap { $0.2 }.isEmpty)
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes.map { $0.2 }.count, items.count)
     }
 
     // Functional API - Connection - Writing
@@ -597,7 +593,7 @@ class ObjectWithObjectMetadataTests: XCTestCase {
         XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
         XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].0, index)
         XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].1.identifier, item.identifier)
-        XCTAssertNil(writeTransaction.didWriteAtIndexes[0].2)
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].2 as? NSDate, item.metadata)
     }
 
     func test__connection__write_items() {
@@ -606,7 +602,7 @@ class ObjectWithObjectMetadataTests: XCTestCase {
         XCTAssertTrue(connection.didWrite)
         XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
         XCTAssertEqual(writeTransaction.didWriteAtIndexes.map { $0.0.key }.sort(), indexes.map { $0.key }.sort())
-        XCTAssertTrue(writeTransaction.didWriteAtIndexes.flatMap { $0.2 }.isEmpty)
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes.map { $0.2 }.count, items.count)
     }
 
     func test__connection__async_write_item() {
@@ -618,7 +614,7 @@ class ObjectWithObjectMetadataTests: XCTestCase {
         XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
         XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].0, index)
         XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].1.identifier, item.identifier)
-        XCTAssertNil(writeTransaction.didWriteAtIndexes[0].2)
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].2 as? NSDate, item.metadata)
     }
 
     func test__connection__async_write_items() {
@@ -629,9 +625,7 @@ class ObjectWithObjectMetadataTests: XCTestCase {
         XCTAssertTrue(connection.didAsyncWrite)
         XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
         XCTAssertEqual(writeTransaction.didWriteAtIndexes.map { $0.0.key }.sort(), indexes.map { $0.key }.sort())
-        XCTAssertTrue(writeTransaction.didWriteAtIndexes.flatMap { $0.2 }.isEmpty)
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes.map { $0.2 }.count, items.count)
     }
-*/
-
 }
 
