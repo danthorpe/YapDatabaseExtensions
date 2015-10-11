@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import ValueCoding
 import YapDatabase
 import YapDatabaseExtensions
 
@@ -195,15 +196,10 @@ extension Manager: MetadataPersistable {
 
 // MARK: - Saveable
 
-extension Barcode: Saveable {
-
-    public typealias Archive = BarcodeArchiver
+extension Barcode: ValueCoding {
+    public typealias Coder = BarcodeCoder
 
     enum Kind: Int { case UPCA = 1, QRCode }
-
-    public var archive: Archive {
-        return Archive(self)
-    }
 
     var kind: Kind {
         switch self {
@@ -213,56 +209,30 @@ extension Barcode: Saveable {
     }
 }
 
-extension Product.Category: Saveable {
-
-    public typealias Archive = ProductCategoryArchiver
-
-    public var archive: Archive {
-        return Archive(self)
-    }
+extension Product.Category: ValueCoding {
+    public typealias Coder = ProductCategoryCoder
 }
 
-extension Product.Metadata: Saveable {
-
-    public typealias Archive = ProductMetadataArchiver
-
-    public var archive: Archive {
-        return Archive(self)
-    }
+extension Product.Metadata: ValueCoding {
+    public typealias Coder = ProductMetadataCoder
 }
 
-extension Product: Saveable {
-
-    public typealias Archive = ProductArchiver
-
-    public var archive: Archive {
-        return Archive(self)
-    }
+extension Product: ValueCoding {
+    public typealias Coder = ProductCoder
 }
 
-extension Inventory: Saveable {
-
-    public typealias Archive = InventoryArchiver
-
-    public var archive: Archive {
-        return Archive(self)
-    }
+extension Inventory: ValueCoding {
+    public typealias Coder = InventoryCoder
 }
 
-
-extension Manager.Metadata: Saveable {
-
-    public typealias Archive = ManagerMetadataArchiver
-
-    public var archive: Archive {
-        return Archive(self)
-    }
+extension Manager.Metadata: ValueCoding {
+    public typealias Coder = ManagerMetadataCoder
 }
 
 
 // MARK: - Archivers
 
-public class BarcodeArchiver: NSObject, NSCoding, Archiver {
+public class BarcodeCoder: NSObject, NSCoding, CodingType {
     public let value: Barcode
 
     public required init(_ v: Barcode) {
@@ -302,7 +272,7 @@ public class BarcodeArchiver: NSObject, NSCoding, Archiver {
     }
 }
 
-public class ProductCategoryArchiver: NSObject, NSCoding, Archiver {
+public class ProductCategoryCoder: NSObject, NSCoding, CodingType {
     public let value: Product.Category
 
     public required init(_ v: Product.Category) {
@@ -321,7 +291,7 @@ public class ProductCategoryArchiver: NSObject, NSCoding, Archiver {
     }
 }
 
-public class ProductMetadataArchiver: NSObject, NSCoding, Archiver {
+public class ProductMetadataCoder: NSObject, NSCoding, CodingType {
     public let value: Product.Metadata
 
     public required init(_ v: Product.Metadata) {
@@ -338,7 +308,7 @@ public class ProductMetadataArchiver: NSObject, NSCoding, Archiver {
     }
 }
 
-public class ProductArchiver: NSObject, NSCoding, Archiver {
+public class ProductCoder: NSObject, NSCoding, CodingType {
     public let value: Product
 
     public required init(_ v: Product) {
@@ -348,18 +318,18 @@ public class ProductArchiver: NSObject, NSCoding, Archiver {
     public required init?(coder aDecoder: NSCoder) {
         let identifier = aDecoder.decodeObjectForKey("identifier") as! String
         let name = aDecoder.decodeObjectForKey("name") as! String
-        let barcode = Barcode(aDecoder.decodeObjectForKey("barcode"))
+        let barcode = Barcode.decode(aDecoder.decodeObjectForKey("barcode"))
         value = Product(identifier: identifier, name: name, barcode: barcode!)
     }
 
     public func encodeWithCoder(aCoder: NSCoder) {
         aCoder.encodeObject(value.identifier, forKey: "identifier")
         aCoder.encodeObject(value.name, forKey: "name")
-        aCoder.encodeObject(value.barcode.archive, forKey: "barcode")
+        aCoder.encodeObject(value.barcode.encoded, forKey: "barcode")
     }
 }
 
-public class InventoryArchiver: NSObject, NSCoding, Archiver {
+public class InventoryCoder: NSObject, NSCoding, CodingType {
     public let value: Inventory
 
     public required init(_ v: Inventory) {
@@ -367,17 +337,17 @@ public class InventoryArchiver: NSObject, NSCoding, Archiver {
     }
 
     public required init?(coder aDecoder: NSCoder) {
-        let product = Product.unarchive(aDecoder.decodeObjectForKey("product"))
+        let product = Product.decode(aDecoder.decodeObjectForKey("product"))
         value = Inventory(product: product!, metadata: .None)
     }
 
     public func encodeWithCoder(aCoder: NSCoder) {
-        aCoder.encodeObject(value.product.archive, forKey: "product")
+        aCoder.encodeObject(value.product.encoded, forKey: "product")
     }
 }
 
 
-public class ManagerMetadataArchiver: NSObject, NSCoding, Archiver {
+public class ManagerMetadataCoder: NSObject, NSCoding, CodingType {
     public let value: Manager.Metadata
 
     public required init(_ v: Manager.Metadata) {
@@ -400,7 +370,7 @@ public func products() -> YapDB.Fetch {
 
     let grouping: YapDB.View.Grouping = .ByMetadata({ (_, collection, key, metadata) -> String! in
         if collection == Product.collection {
-            if let metadata = Product.Metadata(metadata) {
+            if let metadata = Product.Metadata.decode(metadata) {
                 return "category: \(metadata.categoryIdentifier)"
             }
         }
@@ -408,8 +378,8 @@ public func products() -> YapDB.Fetch {
     })
 
     let sorting: YapDB.View.Sorting = .ByObject({ (_, group, collection1, key1, object1, collection2, key2, object2) -> NSComparisonResult in
-        if let product1 = Product.unarchive(object1) {
-            if let product2 = Product.unarchive(object2) {
+        if let product1 = Product.decode(object1) {
+            if let product2 = Product.decode(object2) {
                 return product1.name.caseInsensitiveCompare(product2.name)
             }
         }

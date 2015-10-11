@@ -7,6 +7,7 @@
 //
 
 import XCTest
+import ValueCoding
 import YapDatabase
 @testable import YapDatabaseExtensions
 
@@ -36,7 +37,7 @@ class YapDatabaseExtensionsTests: XCTestCase {
 
     func test_YapDBIndex_EncodingAndDecoding() {
         let index = YapDB.Index(collection: "Foo", key: "Bar")
-        let _index = YapDB.Index(index.archive)
+        let _index = YapDB.Index.decode(index.encoded)
         XCTAssertTrue(_index != nil, "Unarchived archive should not be nil")
         XCTAssertEqual(index, _index!, "Unarchived archive should equal the original.")
     }
@@ -261,27 +262,6 @@ class SaveableTests: XCTestCase {
         ]
     }
 
-    func test__single_archiving() {
-        let unarchived = Product.unarchive(Product.archive(item))
-        XCTAssertNotNil(unarchived)
-        XCTAssertEqual(unarchived!, item)
-    }
-
-    func test__multiple_archiving() {
-        let unarchived = Product.unarchive(Product.archive(items))
-        XCTAssertEqual(unarchived, items)
-    }
-
-    func test__initializing_with_nil() {
-        let empty: AnyObject? = .None
-        XCTAssertNil(Barcode(empty))
-    }
-
-    func test__get_values_from_sequence_of_archivers() {
-        let archives = Product.archive(items) as! [Product.ArchiverType]
-        XCTAssertEqual(archives.values, items)
-    }
-
     func test__index_is_hashable() {
         let byHashes: [YapDB.Index: Product] = items.reduce(Dictionary<YapDB.Index, Product>()) { (var dic, product) in
             dic.updateValue(product, forKey: product.index)
@@ -293,10 +273,10 @@ class SaveableTests: XCTestCase {
     func test__index_is_saveable() {
         let db = YapDB.testDatabase()
         db.makeNewConnection().readWriteWithBlock { transaction in
-            transaction.setObject(self.index.archive, forKey: "test-index", inCollection: "test-index-collection")
+            transaction.setObject(self.index.encoded, forKey: "test-index", inCollection: "test-index-collection")
         }
 
-        let unarchived = YapDB.Index(db.makeNewConnection().read { $0.objectForKey("test-index", inCollection: "test-index-collection") })
+        let unarchived = YapDB.Index.decode(db.makeNewConnection().read { $0.objectForKey("test-index", inCollection: "test-index-collection") })
         XCTAssertNotNil(unarchived)
         XCTAssertEqual(unarchived!, index)
     }
