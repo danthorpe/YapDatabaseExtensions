@@ -20,6 +20,7 @@ Pod::Spec.new do |s|
   s.osx.deployment_target = '10.10'
   s.source_files      = 'YapDatabaseExtensions/Shared/*.swift'
 
+  s.dependency 'ValueCoding', '~> 1'
   s.dependency 'YapDatabase', '~> 2'  
 end
 

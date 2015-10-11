@@ -7,21 +7,25 @@ inhibit_all_warnings!
 
 target 'YapDatabaseExtensions-iOS' do
   platform :ios, '8.0'
+  pod 'ValueCoding', '~> 1'
   pod 'YapDatabase', '~> 2'
 end
 
 target 'YapDatabaseExtensions-iOSTests' do
   platform :ios, '8.0'  
+  pod 'ValueCoding', '~> 1' 
   pod 'YapDatabase', '~> 2'
 end
 
 target 'YapDatabaseExtensions-OSX' do
-  platform :osx, '10.8'  
+  platform :osx, '10.10'  
+  pod 'ValueCoding', '~> 1'
   pod 'YapDatabase', '~> 2'
 end
 
 target 'YapDatabaseExtensions-OSXTests' do
-  platform :osx, '10.8'
+  platform :osx, '10.10'
+  pod 'ValueCoding', '~> 1'
   pod 'YapDatabase', '~> 2'
 end
 
