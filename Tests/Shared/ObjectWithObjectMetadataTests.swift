@@ -111,10 +111,10 @@ class ObjectWithObjectMetadataTests: XCTestCase {
         writer = Write(item)
         writer.on(writeTransaction)
 
-        XCTAssertNotNil(writeTransaction.didWriteAtIndex)
-        XCTAssertEqual(writeTransaction.didWriteAtIndex!.0, index)
-        XCTAssertEqual(writeTransaction.didWriteAtIndex!.1.identifier, item.identifier)
-        XCTAssertEqual(writeTransaction.didWriteAtIndex!.2 as? NSDate, item.metadata)
+        XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].0, index)
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].1.identifier, item.identifier)
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].2 as? NSDate, item.metadata)
     }
 
     func test__write_sync() {
@@ -122,10 +122,10 @@ class ObjectWithObjectMetadataTests: XCTestCase {
         writer.sync(connection)
 
         XCTAssertTrue(connection.didWrite)
-        XCTAssertNotNil(writeTransaction.didWriteAtIndex)
-        XCTAssertEqual(writeTransaction.didWriteAtIndex!.0, index)
-        XCTAssertEqual(writeTransaction.didWriteAtIndex!.1.identifier, item.identifier)
-        XCTAssertEqual(writeTransaction.didWriteAtIndex!.2 as? NSDate, item.metadata)
+        XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].0, index)
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].1.identifier, item.identifier)
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].2 as? NSDate, item.metadata)
     }
 
     func test__write_async() {
@@ -139,10 +139,10 @@ class ObjectWithObjectMetadataTests: XCTestCase {
         waitForExpectationsWithTimeout(3.0, handler: nil)
         XCTAssertTrue(connection.didAsyncWrite)
         XCTAssertFalse(connection.didWrite)
-        XCTAssertNotNil(writeTransaction.didWriteAtIndex)
-        XCTAssertEqual(writeTransaction.didWriteAtIndex!.0, index)
-        XCTAssertEqual(writeTransaction.didWriteAtIndex!.1.identifier, item.identifier)
-        XCTAssertEqual(writeTransaction.didWriteAtIndex!.2 as? NSDate, item.metadata)
+        XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].0, index)
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].1.identifier, item.identifier)
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].2 as? NSDate, item.metadata)
     }
 
     func test__write_operation() {
@@ -159,10 +159,10 @@ class ObjectWithObjectMetadataTests: XCTestCase {
         XCTAssertTrue(connection.didWriteBlockOperation)
         XCTAssertFalse(connection.didWrite)
         XCTAssertFalse(connection.didAsyncWrite)
-        XCTAssertNotNil(writeTransaction.didWriteAtIndex)
-        XCTAssertEqual(writeTransaction.didWriteAtIndex!.0, index)
-        XCTAssertEqual(writeTransaction.didWriteAtIndex!.1.identifier, item.identifier)
-        XCTAssertEqual(writeTransaction.didWriteAtIndex!.2 as? NSDate, item.metadata)
+        XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].0, index)
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].1.identifier, item.identifier)
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].2 as? NSDate, item.metadata)
     }
 
     // Reading - Internal
@@ -465,5 +465,167 @@ class ObjectWithObjectMetadataTests: XCTestCase {
         XCTAssertEqual(missing, Array(keys.suffixFrom(1)))
     }
 
+    // Functional API - ReadTransactionType - Reading
+
+    func test__transaction__read_at_index_with_data() {
+        configureForReadingSingle()
+        let employee: Employee? = readTransaction.readAtIndex(index)
+        XCTAssertNotNil(employee)
+        XCTAssertEqual(employee!.identifier, item.identifier)
+    }
+
+    func test__transaction__read_at_index_without_data() {
+        let employee: Employee? = readTransaction.readAtIndex(index)
+        XCTAssertNil(employee)
+    }
+
+    func test__transaction__read_at_indexes_with_data() {
+        configureForReadingMultiple()
+        let employees: [Employee] = readTransaction.readAtIndexes(indexes)
+        XCTAssertEqual(employees.count, items.count)
+    }
+
+    func test__transaction__read_at_indexes_without_data() {
+        let employees: [Employee] = readTransaction.readAtIndexes(indexes)
+        XCTAssertNotNil(employees)
+        XCTAssertTrue(employees.isEmpty)
+    }
+
+    func test__transaction__read_by_key_with_data() {
+        configureForReadingSingle()
+        let employee: Employee? = readTransaction.readByKey(key)
+        XCTAssertNotNil(employee)
+        XCTAssertEqual(employee!.identifier, item.identifier)
+    }
+
+    func test__transaction__read_by_key_without_data() {
+        let employee: Employee? = readTransaction.readByKey(key)
+        XCTAssertNil(employee)
+    }
+
+    func test__transaction__read_by_keys_with_data() {
+        configureForReadingMultiple()
+        let employees: [Employee] = readTransaction.readByKeys(keys)
+        XCTAssertEqual(employees.count, items.count)
+    }
+
+    func test__transaction__read_by_keys_without_data() {
+        let employees: [Employee] = readTransaction.readByKeys(keys)
+        XCTAssertNotNil(employees)
+        XCTAssertTrue(employees.isEmpty)
+    }
+
+    // Functional API - ConnectionType - Reading
+
+    func test__connection__read_at_index_with_data() {
+        configureForReadingSingle()
+        let employee: Employee? = connection.readAtIndex(index)
+        XCTAssertNotNil(employee)
+        XCTAssertEqual(employee!.identifier, item.identifier)
+    }
+
+    func test__connection__read_at_index_without_data() {
+        let employee: Employee? = connection.readAtIndex(index)
+        XCTAssertNil(employee)
+    }
+
+    func test__connection__read_at_indexes_with_data() {
+        configureForReadingMultiple()
+        let employees: [Employee] = connection.readAtIndexes(indexes)
+        XCTAssertEqual(employees.count, items.count)
+    }
+
+    func test__connection__read_at_indexes_without_data() {
+        let employees: [Employee] = connection.readAtIndexes(indexes)
+        XCTAssertNotNil(employees)
+        XCTAssertTrue(employees.isEmpty)
+    }
+
+    func test__connection__read_by_key_with_data() {
+        configureForReadingSingle()
+        let employee: Employee? = connection.readByKey(key)
+        XCTAssertNotNil(employee)
+        XCTAssertEqual(employee!.identifier, item.identifier)
+    }
+
+    func test__connection__read_by_key_without_data() {
+        let employee: Employee? = connection.readByKey(key)
+        XCTAssertNil(employee)
+    }
+
+    func test__connection__read_by_keys_with_data() {
+        configureForReadingMultiple()
+        let employees: [Employee] = connection.readByKeys(keys)
+        XCTAssertEqual(employees.count, items.count)
+    }
+
+    func test__connection__read_by_keys_without_data() {
+        let employees: [Employee] = connection.readByKeys(keys)
+        XCTAssertNotNil(employees)
+        XCTAssertTrue(employees.isEmpty)
+    }
+
+    // MARK: - Functional API - Transaction - Writing
+
+    func test__transaction__write_item() {
+        writeTransaction.write(item)
+
+        XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].0, index)
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].1.identifier, item.identifier)
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].2 as? NSDate, item.metadata)
+    }
+
+    func test__transaction__write_items() {
+        writeTransaction.write(items)
+
+        XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes.map { $0.0.key }.sort(), indexes.map { $0.key }.sort())
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes.map { $0.2 }.count, items.count)
+    }
+
+    // Functional API - Connection - Writing
+
+    func test__connection__write_item() {
+        connection.write(item)
+
+        XCTAssertTrue(connection.didWrite)
+        XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].0, index)
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].1.identifier, item.identifier)
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].2 as? NSDate, item.metadata)
+    }
+
+    func test__connection__write_items() {
+        connection.write(items)
+
+        XCTAssertTrue(connection.didWrite)
+        XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes.map { $0.0.key }.sort(), indexes.map { $0.key }.sort())
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes.map { $0.2 }.count, items.count)
+    }
+
+    func test__connection__async_write_item() {
+        let expectation = expectationWithDescription("Test: \(__FUNCTION__)")
+        connection.asyncWrite(item) { expectation.fulfill() }
+
+        waitForExpectationsWithTimeout(3.0, handler: nil)
+        XCTAssertTrue(connection.didAsyncWrite)
+        XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].0, index)
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].1.identifier, item.identifier)
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].2 as? NSDate, item.metadata)
+    }
+
+    func test__connection__async_write_items() {
+        let expectation = expectationWithDescription("Test: \(__FUNCTION__)")
+        connection.asyncWrite(items) { expectation.fulfill() }
+
+        waitForExpectationsWithTimeout(3.0, handler: nil)
+        XCTAssertTrue(connection.didAsyncWrite)
+        XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes.map { $0.0.key }.sort(), indexes.map { $0.key }.sort())
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes.map { $0.2 }.count, items.count)
+    }
 }
 

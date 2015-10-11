@@ -107,19 +107,20 @@ extension TestableReadTransaction: ReadTransactionType {
 }
 
 class TestableWriteTransaction: TestableReadTransaction {
+    typealias Payload = (YapDB.Index, AnyObject, AnyObject?)
 
-    var didWriteAtIndex: (YapDB.Index, AnyObject, AnyObject?)? = .None
-    var didRemoveAtIndex: YapDB.Index? = .None
+    var didWriteAtIndexes: [Payload] = []
+    var didRemoveAtIndexes: [YapDB.Index] = []
 }
 
 extension TestableWriteTransaction: WriteTransactionType {
 
     func writeAtIndex(index: YapDB.Index, object: AnyObject, metadata: AnyObject?) {
-        didWriteAtIndex = (index, object, metadata)
+        didWriteAtIndexes.append((index, object, metadata))
     }
 
-    func removeAtIndex(index: YapDB.Index) {
-        didRemoveAtIndex = index
+    func removeAtIndexes(indexes: [YapDB.Index]) {
+        didRemoveAtIndexes = indexes
     }
 }
 

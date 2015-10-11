@@ -131,10 +131,10 @@ class ValueWithObjectMetadataTests: XCTestCase {
         writer = Write(item)
         writer.on(writeTransaction)
 
-        XCTAssertNotNil(writeTransaction.didWriteAtIndex)
-        XCTAssertEqual(writeTransaction.didWriteAtIndex!.0, index)
-        XCTAssertEqual(Inventory.unarchive(writeTransaction.didWriteAtIndex!.1)!, item)
-        XCTAssertEqual(writeTransaction.didWriteAtIndex!.2 as? NSNumber, item.metadata)
+        XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].0, index)
+        XCTAssertEqual(Inventory.unarchive(writeTransaction.didWriteAtIndexes[0].1)!, item)
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].2 as? NSNumber, item.metadata)
     }
 
     func test__write_sync() {
@@ -142,10 +142,10 @@ class ValueWithObjectMetadataTests: XCTestCase {
         writer.sync(connection)
 
         XCTAssertTrue(connection.didWrite)
-        XCTAssertNotNil(writeTransaction.didWriteAtIndex)
-        XCTAssertEqual(writeTransaction.didWriteAtIndex!.0, index)
-        XCTAssertEqual(Inventory.unarchive(writeTransaction.didWriteAtIndex!.1)!, item)
-        XCTAssertEqual(writeTransaction.didWriteAtIndex!.2 as? NSNumber, item.metadata)
+        XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].0, index)
+        XCTAssertEqual(Inventory.unarchive(writeTransaction.didWriteAtIndexes[0].1)!, item)
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].2 as? NSNumber, item.metadata)
     }
 
     func test__write_async() {
@@ -159,10 +159,10 @@ class ValueWithObjectMetadataTests: XCTestCase {
         waitForExpectationsWithTimeout(3.0, handler: nil)
         XCTAssertTrue(connection.didAsyncWrite)
         XCTAssertFalse(connection.didWrite)
-        XCTAssertNotNil(writeTransaction.didWriteAtIndex)
-        XCTAssertEqual(writeTransaction.didWriteAtIndex!.0, index)
-        XCTAssertEqual(Inventory.unarchive(writeTransaction.didWriteAtIndex!.1)!, item)
-        XCTAssertEqual(writeTransaction.didWriteAtIndex!.2 as? NSNumber, item.metadata)
+        XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].0, index)
+        XCTAssertEqual(Inventory.unarchive(writeTransaction.didWriteAtIndexes[0].1)!, item)
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].2 as? NSNumber, item.metadata)
     }
 
     func test__write_operation() {
@@ -179,10 +179,10 @@ class ValueWithObjectMetadataTests: XCTestCase {
         XCTAssertTrue(connection.didWriteBlockOperation)
         XCTAssertFalse(connection.didWrite)
         XCTAssertFalse(connection.didAsyncWrite)
-        XCTAssertNotNil(writeTransaction.didWriteAtIndex)
-        XCTAssertEqual(writeTransaction.didWriteAtIndex!.0, index)
-        XCTAssertEqual(Inventory.unarchive(writeTransaction.didWriteAtIndex!.1)!, item)
-        XCTAssertEqual(writeTransaction.didWriteAtIndex!.2 as? NSNumber, item.metadata)
+        XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].0, index)
+        XCTAssertEqual(Inventory.unarchive(writeTransaction.didWriteAtIndexes[0].1)!, item)
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].2 as? NSNumber, item.metadata)
     }
 
     // Reading - Internal
@@ -484,6 +484,171 @@ class ValueWithObjectMetadataTests: XCTestCase {
         XCTAssertEqual(items.map { $0.identifier }, items.prefixUpTo(1).map { $0.identifier })
         XCTAssertEqual(missing, Array(keys.suffixFrom(1)))
     }
+
+
+    // Functional API - ReadTransactionType - Reading
+
+    func test__transaction__read_at_index_with_data() {
+        configureForReadingSingle()
+        let inventory: Inventory? = readTransaction.readAtIndex(index)
+        XCTAssertNotNil(inventory)
+        XCTAssertEqual(inventory!.identifier, item.identifier)
+    }
+
+    func test__transaction__read_at_index_without_data() {
+        let inventory: Inventory? = readTransaction.readAtIndex(index)
+        XCTAssertNil(inventory)
+    }
+
+    func test__transaction__read_at_indexes_with_data() {
+        configureForReadingMultiple()
+        let inventorys: [Inventory] = readTransaction.readAtIndexes(indexes)
+        XCTAssertEqual(inventorys.count, items.count)
+    }
+
+    func test__transaction__read_at_indexes_without_data() {
+        let inventorys: [Inventory] = readTransaction.readAtIndexes(indexes)
+        XCTAssertNotNil(inventorys)
+        XCTAssertTrue(inventorys.isEmpty)
+    }
+
+    func test__transaction__read_by_key_with_data() {
+        configureForReadingSingle()
+        let inventory: Inventory? = readTransaction.readByKey(key)
+        XCTAssertNotNil(inventory)
+        XCTAssertEqual(inventory!.identifier, item.identifier)
+    }
+
+    func test__transaction__read_by_key_without_data() {
+        let inventory: Inventory? = readTransaction.readByKey(key)
+        XCTAssertNil(inventory)
+    }
+
+    func test__transaction__read_by_keys_with_data() {
+        configureForReadingMultiple()
+        let inventorys: [Inventory] = readTransaction.readByKeys(keys)
+        XCTAssertEqual(inventorys.count, items.count)
+    }
+
+    func test__transaction__read_by_keys_without_data() {
+        let inventorys: [Inventory] = readTransaction.readByKeys(keys)
+        XCTAssertNotNil(inventorys)
+        XCTAssertTrue(inventorys.isEmpty)
+    }
+
+    // Functional API - ConnectionType - Reading
+
+    func test__connection__read_at_index_with_data() {
+        configureForReadingSingle()
+        let inventory: Inventory? = connection.readAtIndex(index)
+        XCTAssertNotNil(inventory)
+        XCTAssertEqual(inventory!.identifier, item.identifier)
+    }
+
+    func test__connection__read_at_index_without_data() {
+        let inventory: Inventory? = connection.readAtIndex(index)
+        XCTAssertNil(inventory)
+    }
+
+    func test__connection__read_at_indexes_with_data() {
+        configureForReadingMultiple()
+        let inventorys: [Inventory] = connection.readAtIndexes(indexes)
+        XCTAssertEqual(inventorys.count, items.count)
+    }
+
+    func test__connection__read_at_indexes_without_data() {
+        let inventorys: [Inventory] = connection.readAtIndexes(indexes)
+        XCTAssertNotNil(inventorys)
+        XCTAssertTrue(inventorys.isEmpty)
+    }
+
+    func test__connection__read_by_key_with_data() {
+        configureForReadingSingle()
+        let inventory: Inventory? = connection.readByKey(key)
+        XCTAssertNotNil(inventory)
+        XCTAssertEqual(inventory!.identifier, item.identifier)
+    }
+
+    func test__connection__read_by_key_without_data() {
+        let inventory: Inventory? = connection.readByKey(key)
+        XCTAssertNil(inventory)
+    }
+
+    func test__connection__read_by_keys_with_data() {
+        configureForReadingMultiple()
+        let inventorys: [Inventory] = connection.readByKeys(keys)
+        XCTAssertEqual(inventorys.count, items.count)
+    }
+
+    func test__connection__read_by_keys_without_data() {
+        let inventorys: [Inventory] = connection.readByKeys(keys)
+        XCTAssertNotNil(inventorys)
+        XCTAssertTrue(inventorys.isEmpty)
+    }
+
+    // MARK: - Functional API - Transaction - Writing
+
+    func test__transaction__write_item() {
+        writeTransaction.write(item)
+
+        XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].0, index)
+        XCTAssertEqual(Inventory.unarchive(writeTransaction.didWriteAtIndexes[0].1)!, item)
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].2 as? NSNumber, item.metadata)
+    }
+
+    func test__transaction__write_items() {
+        writeTransaction.write(items)
+
+        XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes.map { $0.0.key }.sort(), indexes.map { $0.key }.sort())
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes.map { $0.2 }.count, items.count)
+    }
+
+    // Functional API - Connection - Writing
+
+    func test__connection__write_item() {
+        connection.write(item)
+
+        XCTAssertTrue(connection.didWrite)
+        XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].0, index)
+        XCTAssertEqual(Inventory.unarchive(writeTransaction.didWriteAtIndexes[0].1)!, item)
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].2 as? NSNumber, item.metadata)
+    }
+
+    func test__connection__write_items() {
+        connection.write(items)
+
+        XCTAssertTrue(connection.didWrite)
+        XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes.map { $0.0.key }.sort(), indexes.map { $0.key }.sort())
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes.map { $0.2 }.count, items.count)
+    }
+
+    func test__connection__async_write_item() {
+        let expectation = expectationWithDescription("Test: \(__FUNCTION__)")
+        connection.asyncWrite(item) { expectation.fulfill() }
+
+        waitForExpectationsWithTimeout(3.0, handler: nil)
+        XCTAssertTrue(connection.didAsyncWrite)
+        XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].0, index)
+        XCTAssertEqual(Inventory.unarchive(writeTransaction.didWriteAtIndexes[0].1)!, item)
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].2 as? NSNumber, item.metadata)
+    }
+
+    func test__connection__async_write_items() {
+        let expectation = expectationWithDescription("Test: \(__FUNCTION__)")
+        connection.asyncWrite(items) { expectation.fulfill() }
+
+        waitForExpectationsWithTimeout(3.0, handler: nil)
+        XCTAssertTrue(connection.didAsyncWrite)
+        XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes.map { $0.0.key }.sort(), indexes.map { $0.key }.sort())
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes.map { $0.2 }.count, items.count)
+    }
+
 
 }
 
