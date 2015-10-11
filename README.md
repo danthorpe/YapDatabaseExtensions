@@ -19,7 +19,7 @@ While YapDatabase is great, it’s lacking some out of the box convenience and S
 The support for encoding and decoding value types, previously the `Saveable` and `Archiver` protocols, has been renamed and moved to their own project. [ValueCoding](https://github.com/yapstudios/ValueCoding) is a dependency of this framework (along with YapDatabase itself). See its [README](https://github.com/danthorpe/ValueCoding/blob/development/README.md) for more info. However, essentially, if you used this project before version 2.1, you’ll need to rename some types - and Xcode should present Fix It options. `Saveable` is now `ValueCoding`, its nested type, previously `ArchiverType` is now `Coder`, and this type must conform to a protocol, previously `Archiver`, now `CodingType`. See how they were all mixed up? Now fixed.
 
 ## `Persistable`
-These two protocols express what is required to support reading from and writing to YapDatabase. Objects are referenced inside the database with a key inside a collection. Both of these are `String` types, and `Persistable` defines the requirement.
+This protocol expresses what is required to support reading from and writing to YapDatabase. Objects are referenced inside the database with a key (a `String`) inside a collection (also a `String).
 
 ```swift
 public protocol Identifiable {
@@ -34,10 +34,12 @@ public protocol Persistable: Identifiable {
 
 The `identifier` property allows the type to support an identifier type such as `NSUUID` or `Int`.
 
-There is also a `YapDB.Index` struct which composes the key and collection in a single unit, and is used internally for all access methods. Properties defined in an extension on `Persistable` provide access to `key` and `index`.
+While not a requirement of YapDatabase, for these extensions, it is required that values of the same type are stored in the same collection - it is a static property.
+
+There is also a `YapDB.Index` struct which composes the key and collection into a single type. This is used internally for all access methods. Properties defined in an extension on `Persistable` provide access to `key` and `index`.
 
 ## `MetadataPersistable`
-YapDatabase support storing metadata alongside the primary object. `MetadataPersistable` is a generic protocol which supports the automatic reading and writing of metadata as a optional property of the `Persistable` type.
+YapDatabase supports storing metadata alongside the primary object. `MetadataPersistable` is a generic protocol which enables the automatic reading and writing of metadata as a optional property of the `Persistable` type.
 
 ```swift
 public protocol MetadataPersistable: Persistable {
@@ -46,12 +48,12 @@ public protocol MetadataPersistable: Persistable {
 }
 ```
 
-When creating a new item, set the metadata property before saving the item to the database. YapDatabaseExtensions will then save the metadata inside YapDatabase correctly. There is no need to encode the metadata inside the primary object. When reading objects which have a valid `MetadataType`, YapDatabaseExtensions will automatically read, decode and set an items metadata before returning it.
+When creating a new item, set the metadata property before saving the item to the database. YapDatabaseExtensions will then save the metadata inside YapDatabase correctly. *There is no need to encode the metadata inside the primary object*. When reading objects which have a valid `MetadataType`, YapDatabaseExtensions will automatically read, decode and set the item’s metadata before returning the item.
 
-Note that previous metadata protocols `ObjectMetadataPersistable` and `ValueMetadataPersistable` have been deprecated.
+Note that previous metadata protocols `ObjectMetadataPersistable` and `ValueMetadataPersistable` have been deprecated in favor of `MetadataPersistable`.
 
 ## “Correct” Type Patterns
-Because the generic protocols, `ValueCoding` and `CodingType` have self-reflective properties, they must be correctly implemented for the APIs to be available. This means that the equality `ValueCoding.Coder.ValueType == Self` is true. The APIs are all composed with this represented in their generic where clauses. This means that if your `ValueCoding` type is not the `ValueType` of its `Coder`, your code will probably not compile.
+Because the generic protocols, `ValueCoding` and `CodingType` have self-reflective properties, they must be correctly implemented for the APIs to be available. This means that the equality `ValueCoding.Coder.ValueType == Self` must be met. The APIs are all composed with this represented in their generic where clauses. This means that if your `ValueCoding` type is not the `ValueType` of its `Coder`, your code will not compile.
 
 Therefore, there are six valid `Persistable` type patterns as described in the table below:
 
@@ -96,10 +98,16 @@ if let item = Item.read(transaction).byIndex(index) {
    // etc - item is correct type, no casting required.
 }
 
+// Read an array of items from an array of YapDB.Index(s)
+let items = Item.read(transaction).atIndexes(indexes)
+
 // Read using a key
 if let item = Item.read(transaction).byKey(key) {
    // etc - item is correct type, no casting required.
 }
+
+// Read an array of items from an array of String(s)
+let items = Item.read(transaction).byKeys(keys)
 
 if let allItems = Item.read(transaction).all() {
    // etc - an array of Item types.
@@ -156,6 +164,29 @@ connection.asyncWrite({ transaction in
     transaction.write(item)
     transaction.write(items) 
 }, completion: { print(“did finish writing”) })
+```
+
+For reading:
+
+```swift
+if let item: Item? = connection.readAtIndex(index) {
+  // etc
+}
+
+let items: [Item] = connection.readAtIndexes(indexes)
+
+if let item: Item? = connection.readByKey(index) {
+  // etc
+}
+
+let items: [Item] = connection.readByKeys(keys)
+
+connection.read { transaction in
+    let a: Item? = transaction.readAtIndex(index)
+    let b: Item? = transaction.readByKey(key)
+    let c: [Item] = transaction.readAtIndexes(indexes)
+    let d: [Item] = transaction.readByKeys(keys)
+}
 ```
 
 ## Installation
