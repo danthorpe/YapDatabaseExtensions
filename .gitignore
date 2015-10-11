@@ -44,3 +44,5 @@ Carthage/Build
 
 .fastlane/report.xml
 .fastlane/xcodebuild-data
+framework.coverage.txt
+xctest.coverage.txt

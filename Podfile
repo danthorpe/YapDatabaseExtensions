@@ -1,19 +1,31 @@
-source 'https://github.com/CocoaPods/Specs.git'
+# Uncomment this line to define a global platform for your project
+# platform :ios, '8.0'
+# Uncomment this line if you're using Swift
 
-inhibit_all_warnings!
 use_frameworks!
+inhibit_all_warnings!
 
-target 'YapDatabaseExtensions' do
+target 'YapDatabaseExtensions-iOS' do
+  platform :ios, '8.0'
+  pod 'ValueCoding', '~> 1'
   pod 'YapDatabase', '~> 2'
-  pod 'PromiseKit/Swift/Promise', :git => 'https://github.com/mxcl/PromiseKit', :branch => 'swift-2.0-beta5'
-  pod 'BrightFutures', :git => 'https://github.com/Thomvis/BrightFutures', :branch => 'swift-2.0'
-  pod 'SwiftTask', :git => 'https://github.com/ReactKit/SwiftTask', :branch => 'swift/2.0'
 end
 
-target 'YapDatabaseExtensionsTests' do
+target 'YapDatabaseExtensions-iOSTests' do
+  platform :ios, '8.0'  
+  pod 'ValueCoding', '~> 1' 
   pod 'YapDatabase', '~> 2'
-  pod 'PromiseKit/Swift/Promise', :git => 'https://github.com/mxcl/PromiseKit', :branch => 'swift-2.0-beta5'
-  pod 'BrightFutures', :git => 'https://github.com/Thomvis/BrightFutures', :branch => 'swift-2.0'
-  pod 'SwiftTask', :git => 'https://github.com/ReactKit/SwiftTask', :branch => 'swift/2.0'
+end
+
+target 'YapDatabaseExtensions-OSX' do
+  platform :osx, '10.10'  
+  pod 'ValueCoding', '~> 1'
+  pod 'YapDatabase', '~> 2'
+end
+
+target 'YapDatabaseExtensions-OSXTests' do
+  platform :osx, '10.10'
+  pod 'ValueCoding', '~> 1'
+  pod 'YapDatabase', '~> 2'
 end
 

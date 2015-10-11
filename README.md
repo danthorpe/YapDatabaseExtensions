@@ -3,29 +3,191 @@
 [![Join the chat at https://gitter.im/danthorpe/YapDatabaseExtensions](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/danthorpe/YapDatabaseExtensions?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 [![Build status](https://badge.buildkite.com/95784c169af7db5e36cefe146d5d3f3899c8339d46096a6349.svg)](https://buildkite.com/danthorpe/yapdatabaseextensions)
+[![codecov.io](http://codecov.io/github/danthorpe/YapDatabaseExtensions/coverage.svg?branch=development)](http://codecov.io/github/danthorpe/YapDatabaseExtensions?branch=development)
 [![CocoaPods version](https://img.shields.io/cocoapods/v/YapDatabaseExtensions.svg)](https://cocoapods.org/pods/YapDatabaseExtensions) 
 [![MIT License](https://img.shields.io/cocoapods/l/YapDatabaseExtensions.svg)](LICENSE) 
 [![Platform iOS OS X](https://img.shields.io/cocoapods/p/YapDatabaseExtensions.svg)](PLATFORM)
 
 Read my introductory blog post about [YapDatabase & YapDatabaseExtensions](http://danthorpe.me/posts/yap-database.html).
 
-## Updates r.e. Xcode 7 & Swift 2.0
+YapDatabaseExtensions is a suite of convenience APIs for working with [YapDatabase](https://github.com/yapstudios/YapDatabase). If you’re not familiar with YapDatabase, it’s a powerful key value database for iOS and Mac - [check it out](https://github.com/yapstudios/YapDatabase)!
 
-The core elements of YapDatabaseExtensions supports Swift 2.0 on the branch `swift_2.0`. Install it using CocoaPods like so:
+## Motivation
+While YapDatabase is great, it’s lacking some out of the box convenience and Swift support. In particular, YapDatabase works heavily with `AnyObject` types, which is fine for Objective-C but means no type fidelity with Swift. Similarly saving value types like structs or enums in YapDatabase is problematic. This framework has evolved through 2015 to tackle these issues.
 
-```ruby
-pod ‘YapDatabaseExtensions’, :git => ‘https://github.com/danthorpe/YapDatabaseExtensions.git', :branch => ‘swift_2.0’
+## Value Types
+The support for encoding and decoding value types, previously the `Saveable` and `Archiver` protocols, has been renamed and moved to their own project. [ValueCoding](https://github.com/yapstudios/ValueCoding) is a dependency of this framework (along with YapDatabase itself). See its [README](https://github.com/danthorpe/ValueCoding/blob/development/README.md) for more info. However, essentially, if you used this project before version 2.1, you’ll need to rename some types - and Xcode should present Fix It options. `Saveable` is now `ValueCoding`, its nested type, previously `ArchiverType` is now `Coder`, and this type must conform to a protocol, previously `Archiver`, now `CodingType`. See how they were all mixed up? Now fixed.
+
+## `Persistable`
+This protocol expresses what is required to support reading from and writing to YapDatabase. Objects are referenced inside the database with a key (a `String`) inside a collection (also a `String).
+
+```swift
+public protocol Identifiable {
+    typealias IdentifierType: CustomStringConvertible
+    var identifier: IdentifierType { get }
+}
+
+public protocol Persistable: Identifiable {
+    static var collection: String { get }
+}
+``` 
+
+The `identifier` property allows the type to support an identifier type such as `NSUUID` or `Int`.
+
+While not a requirement of YapDatabase, for these extensions, it is required that values of the same type are stored in the same collection - it is a static property.
+
+There is also a `YapDB.Index` struct which composes the key and collection into a single type. This is used internally for all access methods. Properties defined in an extension on `Persistable` provide access to `key` and `index`.
+
+## `MetadataPersistable`
+YapDatabase supports storing metadata alongside the primary object. `MetadataPersistable` is a generic protocol which enables the automatic reading and writing of metadata as a optional property of the `Persistable` type.
+
+```swift
+public protocol MetadataPersistable: Persistable {
+    typealias MetadataType
+    var metadata: MetadataType? { get set }
+}
 ```
 
-If you need to use YapDatabaseExtensions in a Swift 2.0 framework using CocoaPods, make sure that you include the line above in the application target’s Podfile to override podspec dependencies.
+When creating a new item, set the metadata property before saving the item to the database. YapDatabaseExtensions will then save the metadata inside YapDatabase correctly. *There is no need to encode the metadata inside the primary object*. When reading objects which have a valid `MetadataType`, YapDatabaseExtensions will automatically read, decode and set the item’s metadata before returning the item.
 
-At the moment, Swift 2.0 support for extensions on FRP libraries  is pending support in those libraries, so it will follow in due course. I won’t merge this branch until it is at feature parity with `master`.
+Note that previous metadata protocols `ObjectMetadataPersistable` and `ValueMetadataPersistable` have been deprecated in favor of `MetadataPersistable`.
 
-Lastly, until `xctool` is updated, continuous integration is not working, however I do have Xcode bots configured, so the quality of the `master`, `development` and `swift-2.0` branches is maintained. Additionally, I can now remote the test coverage of this library, which is currently at 53%, something which I fully intend to improve over the coming month.
+## “Correct” Type Patterns
+Because the generic protocols, `ValueCoding` and `CodingType` have self-reflective properties, they must be correctly implemented for the APIs to be available. This means that the equality `ValueCoding.Coder.ValueType == Self` must be met. The APIs are all composed with this represented in their generic where clauses. This means that if your `ValueCoding` type is not the `ValueType` of its `Coder`, your code will not compile.
 
-## Requirements
+Therefore, there are six valid `Persistable` type patterns as described in the table below:
 
-[YapDatabase](https://github.com/yapstudios/YapDatabase) :)
+Item encoding | Metadata encoding | Pattern
+--------------|-------------------|------------------
+`NSCoding`    | No Metadata       | Object
+`NSCoding`    | `NSCoding`        | ObjectWithObjectMetadata
+`NSCoding`    | `ValueCoding`     | ObjectWithValueMetadata
+`ValueCoding` | No Metadata       | Value
+`ValueCoding` | `NSCoding`        | ValueWithObjectMetadata
+`ValueCoding` | `ValueCoding`     | ValueWithValueMetadata
+
+There are also two styles of API. The *functional* API works on `YapDatabase` types, `YapDatabaseReadTransaction`, `YapDatabaseReadWriteTransaction` and `YapDatabaseConnection`. However, these read, write and remove methods are only available if your types is one of the four patterns with metadata. The *persistable* API works on your `Persistable` types, and is available for all six patterns.
+
+## `Persistable` API
+
+The APIs all work on single or sequences of `Persistable` items. To write to the database:
+
+```swift
+// Use a YapDatabaseReadWriteTransaction.
+item.write.on(transaction)
+
+// Write synchronously using a YapDatabaseConnection.
+item.write.sync(connection)
+
+// Write asynchronously using a YapDatabaseConnection.
+item.write.async(connection) {
+    print(“did finishing writing”)
+}
+
+// Return an NSOperation which will perform an async write on a YapDatabaseConnection.
+let write = item.write.operation(connection)
+``` 
+
+Note that these write functions have no return values.
+
+Reading items from the database is similar.
+
+```swift
+// Read using a YapDB.Index.
+if let item = Item.read(transaction).byIndex(index) {
+   // etc - item is correct type, no casting required.
+}
+
+// Read an array of items from an array of YapDB.Index(s)
+let items = Item.read(transaction).atIndexes(indexes)
+
+// Read using a key
+if let item = Item.read(transaction).byKey(key) {
+   // etc - item is correct type, no casting required.
+}
+
+// Read an array of items from an array of String(s)
+let items = Item.read(transaction).byKeys(keys)
+
+if let allItems = Item.read(transaction).all() {
+   // etc - an array of Item types.
+}
+
+// Get the Items which exist for the given keys, and return the [String] keys which are missing.
+let (items, missingKeys) = Item.read(transaction).filterExisting(someKeys)
+``` 
+
+Similarly, to work directly on a `YapDatabaseConnection`, use the following:
+
+```swift
+if let item = Item.read(connection).byIndex(index) {
+   // etc - item is correct type, no casting required.
+}
+
+if let item = Item.read(connection).byKey(key) {
+   // etc - item is correct type, no casting required.
+}
+
+if let allItems = Item.read(connection).all() {
+   // etc - an array of Item types.
+}
+
+let (items, missingKeys) = Item.read(connection).filterExisting(someKeys)
+```
+
+## Functional API
+
+For types which implement `MetadataPersistable` the following “functional” APIs are also available directly on the `YapDatabase` types.
+
+```swift
+// Get a YapDatabaseConnection
+let connection = db.newConnection()
+
+// Write a single item
+connection.write(item) 
+
+// Write an array of items, using one transaction.
+connection.write(items)
+
+// Write asynchronously
+connection.asyncWrite(item) { print(“did finish writing”) }
+connection.asyncWrite(items) { print(“did finish writing”) }
+
+// Create a write transaction block for multiple writes.
+connection.write { transaction in
+    transaction.write(item)
+    transaction.write(items) 
+}
+
+// Write many items asynchronously
+connection.asyncWrite({ transaction in
+    transaction.write(item)
+    transaction.write(items) 
+}, completion: { print(“did finish writing”) })
+```
+
+For reading:
+
+```swift
+if let item: Item? = connection.readAtIndex(index) {
+  // etc
+}
+
+let items: [Item] = connection.readAtIndexes(indexes)
+
+if let item: Item? = connection.readByKey(index) {
+  // etc
+}
+
+let items: [Item] = connection.readByKeys(keys)
+
+connection.read { transaction in
+    let a: Item? = transaction.readAtIndex(index)
+    let b: Item? = transaction.readByKey(key)
+    let c: [Item] = transaction.readAtIndexes(indexes)
+    let d: [Item] = transaction.readByKeys(keys)
+}
+```
 
 ## Installation
 
@@ -35,179 +197,6 @@ it, simply add the following line to your Podfile:
 ```ruby
 pod 'YapDatabaseExtensions'
 ```
-
-## Usage
-
-This framework extends a `YapDatabaseTransaction` and `YapDatabaseConnection` with type-safe `read`, `write` and `remove` APIs with both synchronous and asynchronous variants. However, to leverage such APIs, your own domain types must conform to some generic protocols.
-
-### Persistable & Identifiable 
-
-The `Persistable` protocol defines how the object will be indexed in YapDatabase. It extends the generic `Identifiable` protocol.
-
-```swift
-
-public protocol Identifiable {
-    typealias IdentifierType: Printable
-    var identifier: IdentifierType { get }
-}
-
-public protocol Persistable: Identifiable {
-    static var collection: String { get }
-}
-
-```
-
-Typically, it would be implemented like so:
-
-```swift
-extension User: Persistable, Identifiable {
-
-    static var collection: String { 
-    	return "Users"
-    }
-    
-    var identifier: Int { 
-    	return userId
-    }
-}
-```
-
-Assuming that `userId` is a unique identifier for the type. Note that `String` doesn't actually conform to `Printable` but it's implemented in an extension on a typealias called `Identifier`.
-
-There is also `MetadataPersistable` protocols which can be used to expose metadata on the type.
-
-### Using value types in YapDatabase
-
-To use struct or enum types with YapDatabase requires implementing the `Saveable` protocol, in addition to `Persistable`. `Saveable` in turn requires an `Archiver` type. This essentially, expose a class which implements `NSCoding` as an archiving adaptor for your value type. 
-
-For example, this is the Barcode enum from "The Swift Programming Language" book:
-
-```swift
-
-enum Barcode {
-    case UPCA(Int, Int, Int, Int)
-    case QRCode(String)
-}
-
-```
-
-It can be saved in YapDatabase with the following extension:
-
-```swift
-
-extension Barcode: Persistable {
-
-    static var collection: String {
-        return "Barcodes"
-    }
-
-    var identifier: Identifier {
-        switch self {
-        case let .UPCA(numberSystem, manufacturer, product, check):
-            return "\(numberSystem).\(manufacturer).\(product).\(check)"
-        case let .QRCode(code):
-            return code
-        }
-    }
-}
-
-extension Barcode: Saveable {
-
-    typealias Archive = BarcodeArchiver
-
-	enum Kind: Int { case UPCA = 1, QRCode }
-
-    var archive: Archive {
-        return Archive(self)
-    }
-
-	var kind: Kind {
-		switch self {
-		case UPCA(_): return Kind.UPCA
-		case QRCode(_): return Kind.QRCode
-		}
-	}
-}
-
-class BarcodeArchiver: NSObject, NSCoding, Archiver {
-	let value: Barcode
-
-    required init(_ v: Barcode) {
-        value = v
-    }
-
-    required init(coder aDecoder: NSCoder) {
-		if let kind = Barcode.Kind(rawValue: aDecoder.decodeIntegerForKey("kind")) {
-			switch kind {
-			case .UPCA:
-				let numberSystem = aDecoder.decodeIntegerForKey("numberSystem")
-				let manufacturer = aDecoder.decodeIntegerForKey("manufacturer")
-				let product = aDecoder.decodeIntegerForKey("product")
-				let check = aDecoder.decodeIntegerForKey("check")
-                value = .UPCA(numberSystem, manufacturer, product, check)
-            case .QRCode:
-                let code = aDecoder.decodeObjectForKey("code") as! String
-                value = .QRCode(code)
-			}
-		}
-		preconditionFailure("Barcode.Kind not correctly encoded.")
-    }
-
-    func encodeWithCoder(aCoder: NSCoder) {
-        aCoder.encodeInteger(value.kind.rawValue, forKey: "kind")
-		switch value {
-		case let .UPCA(numberSystem, manufacturer, product, check):
-			aCoder.encodeInteger(numberSystem, forKey: "numberSystem")
-			aCoder.encodeInteger(manufacturer, forKey: "manufacturer")
-			aCoder.encodeInteger(product, forKey: "product")
-			aCoder.encodeInteger(check, forKey: "check")
-		case let .QRCode(code):
-			aCoder.encodeObject(code, forKey: "code")
-		}
-    }
-}
-
-```
-
-This may look like quite a bit of code, but it's really just NSCoding. And it’s likely this already exists on your classes. Therefore, it’s easy to move it into a bespoke Archiver class. This can help keep your domain types clean and easy to comprehend. See the example project for more examples of implementations of `Saveable`, including nesting value types.
-
-## The Functions
-The framework provides a number of generic functions in extensions on `YapDatabaseReadTransaction`, `YapDatabaseReadWriteTransaction`, `YapDatabaseConnection` and `YapDatabase`. The latter set are provided mostly for ease of use and testing however, and it is strongly recommended that `YapDatabaseConnection` references are owned and operated on.
-
-The functions support synchronous or asynchronous reading of item by index or key, either individually or in arrays. For example:
-
-```swift
-if let barcode: Barcode = connection.read(key) {
-	println(“the barcode: \(barcode)”)
-}
-
-connection.asyncRead(key) { (barcode: Barcode) in 
-	println(“the barcode: \(barcode)”)
-}
-```
-
-### FRP Library support for PromiseKit, BrightFutures etc
-The default subspec provides asynchronous methods using callback closures, see above.
-
-In addition, there is support for asynchronous APIs using some popular 3rd party functional reactive programming libraries. These are available as CocoaPods subspecs, e.g.
-
-```ruby
-pod 'YapDatabaseExtensions/PromiseKit'
-```
-
-will make APIs such as the following possible:
-
-```swift
-connection.asyncRead(key).then { (barcode: Barcode) -> Void in
-  println(“the barcode: \(barcode)”)
-}
-```
-
-The following are supported:
-- [x] [PromiseKit](http://promisekit.org)
-- [x] [Bright Futures](https://github.com/Thomvis/BrightFutures)
-- [x] [SwiftTask](https://github.com/ReactKit/SwiftTask)
-- [ ] [ReactiveCocoa 3.0](https://github.com/ReactiveCocoa/ReactiveCocoa/releases/tag/v3.0-beta.1)
 
 ## API Documentation
 

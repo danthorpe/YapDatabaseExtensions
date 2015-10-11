@@ -1,11 +1,11 @@
 Pod::Spec.new do |s|
   s.name              = "YapDatabaseExtensions"
-  s.version           = "2.0.1"
+  s.version           = "2.1.0"
   s.summary           = "Helpers for using value types with YapDatabase."
   s.description       = <<-DESC
   
-  Defines protocols and APIs via Swift extensions to allow for struct
-  and enum types to be used & stored within YapDatabse.
+  Defines APIs to conveniently read, write and remove objects and values
+  to or from YapDatabse. See ValueCoding for value type support.
 
                        DESC
   s.homepage          = "https://github.com/danthorpe/YapDatabaseExtensions"
@@ -17,37 +17,9 @@ Pod::Spec.new do |s|
   s.requires_arc      = true
   s.ios.deployment_target = '8.0'
   s.osx.deployment_target = '10.10'
+  s.source_files      = 'YapDatabaseExtensions/Shared/*.swift'
 
-  s.dependency 'YapDatabase', '~> 2'
-  
-  s.default_subspec   = 'Common' 
-
-  s.subspec 'Common' do |ss|
-    ss.source_files   = 'YapDatabaseExtensions/Common/*.swift'    
-  end
-
-  # s.subspec 'PromiseKit' do |ss|
-  #   ss.source_files   = 'YapDatabaseExtensions/PromiseKit/*.swift'
-  #   ss.dependency 'YapDatabaseExtensions/Common'
-  #   ss.dependency 'PromiseKit/Swift/Promise', '~> 3'
-  # end
-
-  # s.subspec 'BrightFutures' do |ss|
-  #   ss.source_files   = 'YapDatabaseExtensions/BrightFutures/*.swift'
-  #   ss.dependency 'YapDatabaseExtensions/Common'
-  #   ss.dependency 'BrightFutures', '~> 3'
-  # end
-
-  # s.subspec 'SwiftTask' do |ss|
-  #   ss.source_files   = 'YapDatabaseExtensions/SwiftTask/*.swift'
-  #   ss.dependency 'YapDatabaseExtensions/Common'
-  #   ss.dependency 'SwiftTask', '~> 3'
-  # end
-  
-  # s.subspec 'All' do |ss|
-  #   ss.dependency 'YapDatabaseExtensions/PromiseKit'
-  #  ss.dependency 'YapDatabaseExtensions/BrightFutures'
-  #  ss.dependency 'YapDatabaseExtensions/SwiftTask'
-  # end
+  s.dependency 'ValueCoding', '~> 1'
+  s.dependency 'YapDatabase', '~> 2'  
 end
 

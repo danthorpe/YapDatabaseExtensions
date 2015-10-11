@@ -1,3 +1,17 @@
+# 2.1.0
+1. [[YDB-42](https://github.com/danthorpe/YapDatabaseExtensions/pull/42)]: Refactors read & write API, correctly supporting metadata.
+2. [[YDB-43](https://github.com/danthorpe/YapDatabaseExtensions/pull/43)]: Makes project cross-platform (iOS & Mac OS)
+3. [[YDB-44](https://github.com/danthorpe/YapDatabaseExtensions/pull/44)]: Enables code coverage reporting with CodeCov.io, see reports [here](https://codecov.io/github/danthorpe/YapDatabaseExtensions). 
+4. [[YDB-45](https://github.com/danthorpe/YapDatabaseExtensions/pull/45)]: Adds back functional API.
+5. [[YDB-47](https://github.com/danthorpe/YapDatabaseExtensions/pull/47)]: Updates README.
+6. [[YDB-48](https://github.com/danthorpe/YapDatabaseExtensions/pull/48)]: Removes `Saveable`, created [ValueCoding](https://github.com/danthorpe/ValueCoding) as a standalone project and new dependency.
+
+# 2.0.1
+1. [[YDB-41](https://github.com/danthorpe/YapDatabaseExtensions/pull/41)]: Removes FRP extensions which don’t support Swift 2.0 yet.
+
+# 2.0.0
+1. [[YDB-38](https://github.com/danthorpe/YapDatabaseExtensions/pull/38)]: Preparations for Swift 2.0.
+
 # 1.8.0
 1. [[YDB-36](https://github.com/danthorpe/YapDatabaseExtensions/pull/36)]: Sets the required version of [BrightFutures](https://github.com/Thomvis/BrightFutures) to the latest for Swift 1.2, which is 2.0.1.
 2. [[YDB-37](https://github.com/danthorpe/YapDatabaseExtensions/pull/37)]: Sets the required version of [PromiseKit](https://github.com/mxcl/PromiseKit) to the latest for Swift 1.2, which is 2.2.1 (as submitted to CocoaPods).
