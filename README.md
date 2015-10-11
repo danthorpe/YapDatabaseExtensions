@@ -198,13 +198,24 @@ it, simply add the following line to your Podfile:
 pod 'YapDatabaseExtensions'
 ```
 
+If you don’t want the extensions API on `Persistable`, integrate the Functional subspec like this:
+
+```ruby
+pod 'YapDatabaseExtensions/Functional’
+```
+Note however, that in this case you will need to implement `MetadataPersistable` on your types. If you have no need for metadata, conformance can be achieved like this in your type:
+
+```swift
+var metadata: Void? = .None
+```
+
 ## API Documentation
 
 API documentation is available on [CocoaDocs.org](http://cocoadocs.org/docsets/YapDatabaseExtensions).
 
 ## Author
 
-Daniel Thorpe, @danthorpe
+Daniel Thorpe, [@danthorpe](https://twitter.com/danthorpe)
 
 ## License
 
