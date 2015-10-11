@@ -12,8 +12,7 @@ import YapDatabase
 
 // MARK: - Values with no Metadata
 
-extension Writable
-    where
+extension Writable where
     ItemType: ValueCoding,
     ItemType: Persistable,
     ItemType.Coder: NSCoding,

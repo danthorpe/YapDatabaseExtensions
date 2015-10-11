@@ -15,7 +15,7 @@ import YapDatabase
 extension Writable
     where
     ItemType: NSCoding,
-ItemType: Persistable {
+    ItemType: Persistable {
 
     /**
     Write the items using an existing transaction.

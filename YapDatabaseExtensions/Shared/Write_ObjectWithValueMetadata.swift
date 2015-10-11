@@ -12,8 +12,7 @@ import YapDatabase
 
 // MARK: - Objects with Value Metadata
 
-extension Writable
-    where
+extension Writable where
     ItemType: NSCoding,
     ItemType: MetadataPersistable,
     ItemType.MetadataType: ValueCoding,
@@ -61,9 +60,13 @@ extension Writable
 
 extension WriteTransactionType {
 
+    /**
+    Write the item to the database using the transaction.
+    
+    - parameter item: the item to store.
+    */
     public func write<
-        ObjectWithValueMetadata
-        where
+        ObjectWithValueMetadata where
         ObjectWithValueMetadata: MetadataPersistable,
         ObjectWithValueMetadata: NSCoding,
         ObjectWithValueMetadata.MetadataType: ValueCoding,
@@ -72,9 +75,13 @@ extension WriteTransactionType {
             writeAtIndex(item.index, object: item, metadata: item.metadata?.encoded)
     }
 
+    /**
+    Write the items to the database using the transaction.
+    
+    - parameter items: an array of items to store.
+    */
     public func write<
-        ObjectWithValueMetadata
-        where
+        ObjectWithValueMetadata where
         ObjectWithValueMetadata: MetadataPersistable,
         ObjectWithValueMetadata: NSCoding,
         ObjectWithValueMetadata.MetadataType: ValueCoding,
@@ -86,9 +93,13 @@ extension WriteTransactionType {
 
 extension ConnectionType {
 
+    /**
+    Write the item to the database synchronously using the connection in a new transaction.
+    
+    - parameter item: the item to store.
+    */
     public func write<
-        ObjectWithValueMetadata
-        where
+        ObjectWithValueMetadata where
         ObjectWithValueMetadata: MetadataPersistable,
         ObjectWithValueMetadata: NSCoding,
         ObjectWithValueMetadata.MetadataType: ValueCoding,
@@ -97,9 +108,13 @@ extension ConnectionType {
             write { $0.write(item) }
     }
 
+    /**
+    Write the items to the database synchronously using the connection in a new transaction.
+    
+    - parameter items: an array of items to store.
+    */
     public func write<
-        ObjectWithValueMetadata
-        where
+        ObjectWithValueMetadata where
         ObjectWithValueMetadata: MetadataPersistable,
         ObjectWithValueMetadata: NSCoding,
         ObjectWithValueMetadata.MetadataType: ValueCoding,
@@ -108,9 +123,15 @@ extension ConnectionType {
             write { $0.write(items) }
     }
 
+    /**
+    Write the item to the database asynchronously using the connection in a new transaction.
+    
+    - parameter item: the item to store.
+    - parameter queue: the dispatch_queue_t to run the completion block on.
+    - parameter completion: a dispatch_block_t for completion.
+    */
     public func asyncWrite<
-        ObjectWithValueMetadata
-        where
+        ObjectWithValueMetadata where
         ObjectWithValueMetadata: MetadataPersistable,
         ObjectWithValueMetadata: NSCoding,
         ObjectWithValueMetadata.MetadataType: ValueCoding,
@@ -119,9 +140,15 @@ extension ConnectionType {
             asyncWrite({ $0.write(item) }, queue: queue, completion: { _ in completion() })
     }
 
+    /**
+    Write the items to the database asynchronously using the connection in a new transaction.
+    
+    - parameter items: an array of items to store.
+    - parameter queue: the dispatch_queue_t to run the completion block on.
+    - parameter completion: a dispatch_block_t for completion.
+    */
     public func asyncWrite<
-        ObjectWithValueMetadata
-        where
+        ObjectWithValueMetadata where
         ObjectWithValueMetadata: MetadataPersistable,
         ObjectWithValueMetadata: NSCoding,
         ObjectWithValueMetadata.MetadataType: ValueCoding,

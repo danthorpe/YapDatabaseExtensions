@@ -9,6 +9,7 @@ import YapDatabase
 
 // MARK: - Readable
 
+/// Generic protocol for Reader types.
 public protocol Readable {
     typealias ItemType
     typealias Database: DatabaseType
@@ -17,6 +18,7 @@ public protocol Readable {
     var connection: Database.Connection { get }
 }
 
+/// A generic structure used to read from a database type.
 public struct Read<Item, D: DatabaseType>: Readable {
     public typealias ItemType = Item
     public typealias Database = D

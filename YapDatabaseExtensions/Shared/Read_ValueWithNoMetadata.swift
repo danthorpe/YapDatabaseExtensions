@@ -60,26 +60,61 @@ extension Readable
         }
     }
 
+    /**
+    Reads the item at a given index.
+
+    - parameter index: a YapDB.Index
+    - returns: an optional `ItemType`
+    */
     public func atIndex(index: YapDB.Index) -> ItemType? {
         return sync(atIndexInTransaction(index))
     }
 
+    /**
+    Reads the items at the indexes.
+
+    - parameter indexes: an Array<YapDB.Index>
+    - returns: an array of `ItemType`
+    */
     public func atIndexes(indexes: [YapDB.Index]) -> [ItemType] {
         return sync(atIndexesInTransaction(indexes))
     }
 
+    /**
+    Reads the item at the key.
+
+    - parameter key: a String
+    - returns: an optional `ItemType`
+    */
     public func byKey(key: String) -> ItemType? {
         return sync(byKeyInTransaction(key))
     }
 
+    /**
+    Reads the items by the keys.
+
+    - parameter keys: an array of String
+    - returns: an array of `ItemType`
+    */
     public func byKeys(keys: [String]) -> [ItemType] {
         return sync(byKeysInTransaction(keys))
     }
 
+    /**
+    Reads all the `ItemType` in the database.
+
+    - returns: an array of `ItemType`
+    */
     public func all() -> [ItemType] {
         return sync(byKeysInTransaction())
     }
 
+    /**
+    Returns th existing items and missing keys..
+
+    - parameter keys: an array of String
+    - returns: a tuple of type `([ItemType], [String])`
+    */
     public func filterExisting(keys: [String]) -> (existing: [ItemType], missing: [String]) {
         let existingInTransaction = byKeysInTransaction(keys)
         return sync { transaction -> ([ItemType], [String]) in

@@ -9,6 +9,7 @@ import YapDatabase
 
 // MARK: - Writable
 
+/// Generic protocol for Writer types.
 public protocol Writable {
     typealias ItemType
     typealias Database: DatabaseType

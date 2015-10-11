@@ -12,8 +12,7 @@ import YapDatabase
 
 // MARK: - Object with Object metadata
 
-extension Readable
-    where
+extension Readable where
     ItemType: NSCoding,
     ItemType: MetadataPersistable,
     ItemType.MetadataType: NSCoding {
@@ -59,26 +58,61 @@ extension Readable
         }
     }
 
+    /**
+    Reads the item at a given index.
+
+    - parameter index: a YapDB.Index
+    - returns: an optional `ItemType`
+    */
     public func atIndex(index: YapDB.Index) -> ItemType? {
         return sync(atIndexInTransaction(index))
     }
 
+    /**
+    Reads the items at the indexes.
+
+    - parameter indexes: an Array<YapDB.Index>
+    - returns: an array of `ItemType`
+    */
     public func atIndexes(indexes: [YapDB.Index]) -> [ItemType] {
         return sync(atIndexesInTransaction(indexes))
     }
 
+    /**
+    Reads the item at the key.
+
+    - parameter key: a String
+    - returns: an optional `ItemType`
+    */
     public func byKey(key: String) -> ItemType? {
         return sync(byKeyInTransaction(key))
     }
 
+    /**
+    Reads the items by the keys.
+
+    - parameter keys: an array of String
+    - returns: an array of `ItemType`
+    */
     public func byKeys(keys: [String]) -> [ItemType] {
         return sync(byKeysInTransaction(keys))
     }
 
+    /**
+    Reads all the `ItemType` in the database.
+
+    - returns: an array of `ItemType`
+    */
     public func all() -> [ItemType] {
         return sync(byKeysInTransaction())
     }
 
+    /**
+    Returns th existing items and missing keys..
+
+    - parameter keys: an array of String
+    - returns: a tuple of type `([ItemType], [String])`
+    */
     public func filterExisting(keys: [String]) -> (existing: [ItemType], missing: [String]) {
         let existingInTransaction = byKeysInTransaction(keys)
         return sync { transaction -> ([ItemType], [String]) in
@@ -94,9 +128,14 @@ extension Readable
 
 extension ReadTransactionType {
 
+    /**
+    Reads the item at a given index.
+
+    - parameter index: a YapDB.Index
+    - returns: an optional `ItemType`
+    */
     public func readAtIndex<
-        ObjectWithObjectMetadata
-        where
+        ObjectWithObjectMetadata where
         ObjectWithObjectMetadata: MetadataPersistable,
         ObjectWithObjectMetadata: NSCoding,
         ObjectWithObjectMetadata.MetadataType: NSCoding>(index: YapDB.Index) -> ObjectWithObjectMetadata? {
@@ -107,27 +146,42 @@ extension ReadTransactionType {
             return .None
     }
 
+    /**
+    Reads the items at the indexes.
+
+    - parameter indexes: an Array<YapDB.Index>
+    - returns: an array of `ItemType`
+    */
     public func readAtIndexes<
-        ObjectWithObjectMetadata
-        where
+        ObjectWithObjectMetadata where
         ObjectWithObjectMetadata: MetadataPersistable,
         ObjectWithObjectMetadata: NSCoding,
         ObjectWithObjectMetadata.MetadataType: NSCoding>(indexes: [YapDB.Index]) -> [ObjectWithObjectMetadata] {
             return indexes.flatMap(readAtIndex)
     }
 
+    /**
+    Reads the item at the key.
+
+    - parameter key: a String
+    - returns: an optional `ItemType`
+    */
     public func readByKey<
-        ObjectWithObjectMetadata
-        where
+        ObjectWithObjectMetadata where
         ObjectWithObjectMetadata: MetadataPersistable,
         ObjectWithObjectMetadata: NSCoding,
         ObjectWithObjectMetadata.MetadataType: NSCoding>(key: String) -> ObjectWithObjectMetadata? {
             return readAtIndex(ObjectWithObjectMetadata.indexWithKey(key))
     }
 
+    /**
+    Reads the items by the keys.
+
+    - parameter keys: an array of String
+    - returns: an array of `ItemType`
+    */
     public func readByKeys<
-        ObjectWithObjectMetadata
-        where
+        ObjectWithObjectMetadata where
         ObjectWithObjectMetadata: MetadataPersistable,
         ObjectWithObjectMetadata: NSCoding,
         ObjectWithObjectMetadata.MetadataType: NSCoding>(keys: [String]) -> [ObjectWithObjectMetadata] {
@@ -137,36 +191,56 @@ extension ReadTransactionType {
 
 extension ConnectionType {
 
+    /**
+    Reads the item at a given index.
+
+    - parameter index: a YapDB.Index
+    - returns: an optional `ItemType`
+    */
     public func readAtIndex<
-        ObjectWithObjectMetadata
-        where
+        ObjectWithObjectMetadata where
         ObjectWithObjectMetadata: MetadataPersistable,
         ObjectWithObjectMetadata: NSCoding,
         ObjectWithObjectMetadata.MetadataType: NSCoding>(index: YapDB.Index) -> ObjectWithObjectMetadata? {
             return read { $0.readAtIndex(index) }
     }
 
+    /**
+    Reads the items at the indexes.
+
+    - parameter indexes: an Array<YapDB.Index>
+    - returns: an array of `ItemType`
+    */
     public func readAtIndexes<
-        ObjectWithObjectMetadata
-        where
+        ObjectWithObjectMetadata where
         ObjectWithObjectMetadata: MetadataPersistable,
         ObjectWithObjectMetadata: NSCoding,
         ObjectWithObjectMetadata.MetadataType: NSCoding>(indexes: [YapDB.Index]) -> [ObjectWithObjectMetadata] {
             return read { $0.readAtIndexes(indexes) }
     }
 
+    /**
+    Reads the item at the key.
+
+    - parameter key: a String
+    - returns: an optional `ItemType`
+    */
     public func readByKey<
-        ObjectWithObjectMetadata
-        where
+        ObjectWithObjectMetadata where
         ObjectWithObjectMetadata: MetadataPersistable,
         ObjectWithObjectMetadata: NSCoding,
         ObjectWithObjectMetadata.MetadataType: NSCoding>(key: String) -> ObjectWithObjectMetadata? {
             return readAtIndex(ObjectWithObjectMetadata.indexWithKey(key))
     }
 
+    /**
+    Reads the items by the keys.
+
+    - parameter keys: an array of String
+    - returns: an array of `ItemType`
+    */
     public func readByKeys<
-        ObjectWithObjectMetadata
-        where
+        ObjectWithObjectMetadata where
         ObjectWithObjectMetadata: MetadataPersistable,
         ObjectWithObjectMetadata: NSCoding,
         ObjectWithObjectMetadata.MetadataType: NSCoding>(keys: [String]) -> [ObjectWithObjectMetadata] {

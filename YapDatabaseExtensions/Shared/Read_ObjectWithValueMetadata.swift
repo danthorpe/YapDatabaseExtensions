@@ -12,8 +12,7 @@ import YapDatabase
 
 // MARK: - Object with Value metadata
 
-extension Readable
-    where
+extension Readable where
     ItemType: NSCoding,
     ItemType: MetadataPersistable,
     ItemType.MetadataType: ValueCoding,
@@ -61,26 +60,61 @@ extension Readable
         }
     }
 
+    /**
+    Reads the item at a given index.
+    
+    - parameter index: a YapDB.Index
+    - returns: an optional `ItemType`
+    */
     public func atIndex(index: YapDB.Index) -> ItemType? {
         return sync(atIndexInTransaction(index))
     }
 
+    /**
+    Reads the items at the indexes.
+    
+    - parameter indexes: an Array<YapDB.Index>
+    - returns: an array of `ItemType`
+    */
     public func atIndexes(indexes: [YapDB.Index]) -> [ItemType] {
         return sync(atIndexesInTransaction(indexes))
     }
 
+    /**
+    Reads the item at the key.
+    
+    - parameter key: a String
+    - returns: an optional `ItemType`
+    */
     public func byKey(key: String) -> ItemType? {
         return sync(byKeyInTransaction(key))
     }
 
+    /**
+    Reads the items by the keys.
+    
+    - parameter keys: an array of String
+    - returns: an array of `ItemType`
+    */
     public func byKeys(keys: [String]) -> [ItemType] {
         return sync(byKeysInTransaction(keys))
     }
 
+    /**
+    Reads all the `ItemType` in the database.
+    
+    - returns: an array of `ItemType`
+    */
     public func all() -> [ItemType] {
         return sync(byKeysInTransaction())
     }
 
+    /**
+    Returns th existing items and missing keys..
+    
+    - parameter keys: an array of String
+    - returns: a tuple of type `([ItemType], [String])`
+    */
     public func filterExisting(keys: [String]) -> (existing: [ItemType], missing: [String]) {
         let existingInTransaction = byKeysInTransaction(keys)
         return sync { transaction -> ([ItemType], [String]) in
@@ -96,9 +130,14 @@ extension Readable
 
 extension ReadTransactionType {
 
+    /**
+    Reads the item at a given index.
+    
+    - parameter index: a YapDB.Index
+    - returns: an optional `ItemType`
+    */
     public func readAtIndex<
-        ObjectWithValueMetadata
-        where
+        ObjectWithValueMetadata where
         ObjectWithValueMetadata: MetadataPersistable,
         ObjectWithValueMetadata: NSCoding,
         ObjectWithValueMetadata.MetadataType: ValueCoding,
@@ -111,9 +150,14 @@ extension ReadTransactionType {
             return .None
     }
 
+    /**
+    Reads the items at the indexes.
+    
+    - parameter indexes: an Array<YapDB.Index>
+    - returns: an array of `ItemType`
+    */
     public func readAtIndexes<
-        ObjectWithValueMetadata
-        where
+        ObjectWithValueMetadata where
         ObjectWithValueMetadata: MetadataPersistable,
         ObjectWithValueMetadata: NSCoding,
         ObjectWithValueMetadata.MetadataType: ValueCoding,
@@ -122,9 +166,14 @@ extension ReadTransactionType {
             return indexes.flatMap(readAtIndex)
     }
 
+    /**
+    Reads the item at the key.
+    
+    - parameter key: a String
+    - returns: an optional `ItemType`
+    */
     public func readByKey<
-        ObjectWithValueMetadata
-        where
+        ObjectWithValueMetadata where
         ObjectWithValueMetadata: MetadataPersistable,
         ObjectWithValueMetadata: NSCoding,
         ObjectWithValueMetadata.MetadataType: ValueCoding,
@@ -133,9 +182,14 @@ extension ReadTransactionType {
             return readAtIndex(ObjectWithValueMetadata.indexWithKey(key))
     }
 
+    /**
+    Reads the items by the keys.
+    
+    - parameter keys: an array of String
+    - returns: an array of `ItemType`
+    */
     public func readByKeys<
-        ObjectWithValueMetadata
-        where
+        ObjectWithValueMetadata where
         ObjectWithValueMetadata: MetadataPersistable,
         ObjectWithValueMetadata: NSCoding,
         ObjectWithValueMetadata.MetadataType: ValueCoding,
@@ -147,9 +201,14 @@ extension ReadTransactionType {
 
 extension ConnectionType {
 
+    /**
+    Reads the item at a given index.
+    
+    - parameter index: a YapDB.Index
+    - returns: an optional `ItemType`
+    */
     public func readAtIndex<
-        ObjectWithValueMetadata
-        where
+        ObjectWithValueMetadata where
         ObjectWithValueMetadata: MetadataPersistable,
         ObjectWithValueMetadata: NSCoding,
         ObjectWithValueMetadata.MetadataType: ValueCoding,
@@ -158,9 +217,14 @@ extension ConnectionType {
             return read { $0.readAtIndex(index) }
     }
 
+    /**
+    Reads the items at the indexes.
+    
+    - parameter indexes: an Array<YapDB.Index>
+    - returns: an array of `ItemType`
+    */
     public func readAtIndexes<
-        ObjectWithValueMetadata
-        where
+        ObjectWithValueMetadata where
         ObjectWithValueMetadata: MetadataPersistable,
         ObjectWithValueMetadata: NSCoding,
         ObjectWithValueMetadata.MetadataType: ValueCoding,
@@ -169,9 +233,14 @@ extension ConnectionType {
             return read { $0.readAtIndexes(indexes) }
     }
 
+    /**
+    Reads the item at the key.
+    
+    - parameter key: a String
+    - returns: an optional `ItemType`
+    */
     public func readByKey<
-        ObjectWithValueMetadata
-        where
+        ObjectWithValueMetadata where
         ObjectWithValueMetadata: MetadataPersistable,
         ObjectWithValueMetadata: NSCoding,
         ObjectWithValueMetadata.MetadataType: ValueCoding,
@@ -180,9 +249,14 @@ extension ConnectionType {
             return readAtIndex(ObjectWithValueMetadata.indexWithKey(key))
     }
 
+    /**
+    Reads the items by the keys.
+    
+    - parameter keys: an array of String
+    - returns: an array of `ItemType`
+    */
     public func readByKeys<
-        ObjectWithValueMetadata
-        where
+        ObjectWithValueMetadata where
         ObjectWithValueMetadata: MetadataPersistable,
         ObjectWithValueMetadata: NSCoding,
         ObjectWithValueMetadata.MetadataType: ValueCoding,
