@@ -1,5 +1,5 @@
 //
-//  Read_ObjectWIthNoMetadata.swift
+//  Persistable_ObjectWithNoMetadata.swift
 //  YapDatabaseExtensions
 //
 //  Created by Daniel Thorpe on 11/10/2015.
@@ -10,14 +10,15 @@ import Foundation
 import ValueCoding
 import YapDatabase
 
-// MARK: - Object with no metadata
+// MARK: - Readable
 
 extension Readable where
     ItemType: NSCoding,
-    ItemType: Persistable {
+    ItemType: MetadataPersistable,
+    ItemType.MetadataType: NSCoding {
 
     func inTransaction(transaction: Database.Connection.ReadTransaction, atIndex index: YapDB.Index) -> ItemType? {
-        return transaction.readAtIndex(index) as? ItemType
+        return transaction.readAtIndex(index)
     }
 
     // Everything here is the same for all 6 patterns.
@@ -59,7 +60,7 @@ extension Readable where
 
     /**
     Reads the item at a given index.
-    
+
     - parameter index: a YapDB.Index
     - returns: an optional `ItemType`
     */
@@ -123,3 +124,47 @@ extension Readable where
     }
 }
 
+// MARK: - Writable
+
+extension Writable
+    where
+    ItemType: NSCoding,
+    ItemType: MetadataPersistable,
+    ItemType.MetadataType: NSCoding {
+
+    /**
+    Write the items using an existing transaction.
+
+    - parameter transaction: a YapDatabaseReadWriteTransaction
+    */
+    public func on(transaction: Database.Connection.WriteTransaction) {
+        transaction.write(items)
+    }
+
+    /**
+    Write the items synchronously using a connection.
+
+    - parameter connection: a YapDatabaseConnection
+    */
+    public func sync(connection: Database.Connection) {
+        connection.write(on)
+    }
+
+    /**
+    Write the items asynchronously using a connection.
+
+    - parameter connection: a YapDatabaseConnection
+    */
+    public func async(connection: Database.Connection, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: dispatch_block_t) {
+        connection.asyncWrite(on, queue: queue, completion: completion)
+    }
+
+    /**
+    Write the items inside of an `NSOperation`.
+
+    - parameter connection: a YapDatabaseConnection
+    */
+    public func operation(connection: Database.Connection) -> NSOperation {
+        return connection.writeBlockOperation { self.on($0) }
+    }
+}
