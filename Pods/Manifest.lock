@@ -7,16 +7,19 @@ PODS:
     - CocoaLumberjack/Core
   - CocoaLumberjack/Extensions (2.0.1):
     - CocoaLumberjack/Default
+  - ValueCoding (1.0.1)
   - YapDatabase (2.7.3):
     - YapDatabase/standard (= 2.7.3)
   - YapDatabase/standard (2.7.3):
     - CocoaLumberjack (~> 2)
 
 DEPENDENCIES:
+  - ValueCoding (~> 1)
   - YapDatabase (~> 2)
 
 SPEC CHECKSUMS:
   CocoaLumberjack: 019d1361244274a6138c788c6cb80baabc13fb8f
+  ValueCoding: fc021813824387d66e3ac7ea0dff7cc5910dc0a4
   YapDatabase: 6d6a30e97face6c3158830823c27614afe83e1e0
 
 COCOAPODS: 0.39.0

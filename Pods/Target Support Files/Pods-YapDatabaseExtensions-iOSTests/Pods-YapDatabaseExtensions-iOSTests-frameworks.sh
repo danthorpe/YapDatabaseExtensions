@@ -85,9 +85,11 @@ strip_invalid_archs() {
 
 if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework "Pods-YapDatabaseExtensions-iOSTests/CocoaLumberjack.framework"
+  install_framework "Pods-YapDatabaseExtensions-iOSTests/ValueCoding.framework"
   install_framework "Pods-YapDatabaseExtensions-iOSTests/YapDatabase.framework"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework "Pods-YapDatabaseExtensions-iOSTests/CocoaLumberjack.framework"
+  install_framework "Pods-YapDatabaseExtensions-iOSTests/ValueCoding.framework"
   install_framework "Pods-YapDatabaseExtensions-iOSTests/YapDatabase.framework"
 fi

@@ -1,0 +1,6 @@
+framework module ValueCoding {
+  umbrella header "Pods-YapDatabaseExtensions-OSXTests-ValueCoding-umbrella.h"
+
+  export *
+  module * { export * }
+}
