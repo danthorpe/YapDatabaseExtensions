@@ -58,7 +58,7 @@ Because the generic protocols, `ValueCoding` and `CodingType` have self-reflecti
 Therefore, there are six valid `Persistable` type patterns as described in the table below:
 
 Item encoding | Metadata encoding | Pattern
-——————————————|———————————————————|———————
+--------------|-------------------|------------------
 `NSCoding`    | No Metadata       | Object
 `NSCoding`    | `NSCoding`        | ObjectWithObjectMetadata
 `NSCoding`    | `ValueCoding`     | ObjectWithValueMetadata
