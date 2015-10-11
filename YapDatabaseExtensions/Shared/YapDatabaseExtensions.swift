@@ -288,11 +288,11 @@ public protocol WriteTransactionType: ReadTransactionType {
     func writeAtIndex(index: YapDB.Index, object: AnyObject, metadata: AnyObject?)
 
     /**
-    Remove the object from the database at the index (if it exists), including metadata
+    Remove the sequence object from the database at the indexes (if it exists), including metadata
     
-    - parameter index: the `YapDB.Index` to remove.
+    - parameter indexes: the `[YapDB.Index]` to remove.
     */
-    func removeAtIndex(index: YapDB.Index)
+    func removeAtIndexes(indexes: [YapDB.Index])
 }
 
 public protocol ConnectionType {
@@ -457,8 +457,12 @@ extension YapDatabaseReadWriteTransaction: WriteTransactionType {
         }
     }
 
-    public func removeAtIndex(index: YapDB.Index) {
+    func removeAtIndex(index: YapDB.Index) {
         removeObjectForKey(index.key, inCollection: index.collection)
+    }
+
+    public func removeAtIndexes(indexes: [YapDB.Index]) {
+        indexes.forEach(removeAtIndex)
     }
 }
 

@@ -120,14 +120,14 @@ class YapDatabaseReadWriteTransactionTests: ReadWriteBaseTests {
         XCTAssertEqual(written!.identifier, item.identifier)
     }
 
-    func test__remove_at_index() {
+    func test__remove_at_indexes() {
         let db = YapDB.testDatabase()
 
-        item.write.sync(db.makeNewConnection())
+        items.write.sync(db.makeNewConnection())
         XCTAssertNotNil(Employee.read(db).atIndex(index))
 
         db.makeNewConnection().readWriteWithBlock { transaction in
-            transaction.removeAtIndex(self.index)
+            transaction.removeAtIndexes(self.indexes)
         }
 
         XCTAssertNil(Employee.read(db).atIndex(index))

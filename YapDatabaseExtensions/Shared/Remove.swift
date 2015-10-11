@@ -219,7 +219,7 @@ extension Removable {
     - parameter transaction: a YapDatabaseReadWriteTransaction
     */
     public func on(transaction: Database.Connection.WriteTransaction) {
-        indexes.forEach { transaction.removeAtIndex($0) }
+        transaction.removeAtIndexes(indexes)
     }
 
     /**
@@ -253,11 +253,11 @@ extension Removable {
 extension WriteTransactionType {
 
     public func remove<Item: Persistable>(item: Item) {
-        removeAtIndex(item.index)
+        removeAtIndexes([item.index])
     }
 
     public func remove<Item: Persistable>(items: [Item]) {
-        items.forEach(remove)
+        removeAtIndexes(items.map { $0.index })
     }
 }
 

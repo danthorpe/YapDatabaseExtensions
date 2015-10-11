@@ -167,7 +167,7 @@ extension Writable
     - parameter transaction: a YapDatabaseReadWriteTransaction
     */
     public func on(transaction: Database.Connection.WriteTransaction) {
-        items.forEach { transaction.writeAtIndex($0.index, object: $0, metadata: $0.metadata) }
+        transaction.write(items)
     }
 
     /**
@@ -214,7 +214,7 @@ extension Writable
     - parameter transaction: a YapDatabaseReadWriteTransaction
     */
     public func on(transaction: Database.Connection.WriteTransaction) {
-        items.forEach { transaction.writeAtIndex($0.index, object: $0, metadata: $0.metadata?.archive) }
+        transaction.write(items)
     }
 
     /**
@@ -307,7 +307,7 @@ extension Writable
     - parameter transaction: a YapDatabaseReadWriteTransaction
     */
     public func on(transaction: Database.Connection.WriteTransaction) {
-        items.forEach { transaction.writeAtIndex($0.index, object: $0.archive, metadata: $0.metadata) }
+        transaction.write(items)
     }
 
     /**
@@ -356,7 +356,7 @@ extension Writable
     - parameter transaction: a YapDatabaseReadWriteTransaction
     */
     public func on(transaction: Database.Connection.WriteTransaction) {
-        items.forEach { transaction.writeAtIndex($0.index, object: $0.archive, metadata: $0.metadata?.archive) }
+        transaction.write(items)
     }
 
     /**

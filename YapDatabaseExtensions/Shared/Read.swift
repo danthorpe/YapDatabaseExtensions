@@ -212,11 +212,7 @@ extension Readable
     ItemType.MetadataType: NSCoding {
 
     func inTransaction(transaction: Database.Connection.ReadTransaction, atIndex index: YapDB.Index) -> ItemType? {
-        if var item = transaction.readAtIndex(index) as? ItemType {
-            item.metadata = transaction.readMetadataAtIndex(index) as? ItemType.MetadataType
-            return item
-        }
-        return .None
+        return transaction.readAtIndex(index)
     }
 
     // Everything here is the same for all 6 patterns.
@@ -298,11 +294,7 @@ extension Readable
     ItemType.MetadataType.ArchiverType.ValueType == ItemType.MetadataType {
 
     func inTransaction(transaction: Database.Connection.ReadTransaction, atIndex index: YapDB.Index) -> ItemType? {
-        if var item = transaction.readAtIndex(index) as? ItemType {
-            item.metadata = ItemType.MetadataType.unarchive(transaction.readMetadataAtIndex(index))
-            return item
-        }
-        return .None
+        return transaction.readAtIndex(index)
     }
 
     // Everything here is the same for all 6 patterns.
@@ -465,11 +457,7 @@ extension Readable
     ItemType.MetadataType: NSCoding {
 
     func inTransaction(transaction: Database.Connection.ReadTransaction, atIndex index: YapDB.Index) -> ItemType? {
-        if var item = ItemType.unarchive(transaction.readAtIndex(index)) {
-            item.metadata = transaction.readMetadataAtIndex(index) as? ItemType.MetadataType
-            return item
-        }
-        return .None
+        return transaction.readAtIndex(index)
     }
 
     // Everything here is the same for all 6 patterns.
@@ -553,11 +541,7 @@ extension Readable
     ItemType.MetadataType.ArchiverType.ValueType == ItemType.MetadataType {
 
     func inTransaction(transaction: Database.Connection.ReadTransaction, atIndex index: YapDB.Index) -> ItemType? {
-        if var item = ItemType.unarchive(transaction.readAtIndex(index)) {
-            item.metadata = ItemType.MetadataType.unarchive(transaction.readMetadataAtIndex(index))
-            return item
-        }
-        return .None
+        return transaction.readAtIndex(index)
     }
 
     // Everything here is the same for all 6 patterns.
