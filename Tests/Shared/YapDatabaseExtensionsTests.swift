@@ -192,12 +192,13 @@ class YapDatabaseConnectionTests: ReadWriteBaseTests {
         var didExecuteWithTransaction = false
         let operation = db.makeNewConnection().writeBlockOperation { transaction in
             didExecuteWithTransaction = true
-            expectation.fulfill()
         }
+        operation.completionBlock = { expectation.fulfill() }
 
         operationQueue.addOperation(operation)
 
         waitForExpectationsWithTimeout(3.0, handler: nil)
+        XCTAssertTrue(operation.finished)
         XCTAssertTrue(didExecuteWithTransaction)
     }
 }

@@ -360,11 +360,11 @@ public protocol ConnectionType {
     `YapDatabaseReadWriteTransaction`. This method is very handy for writing
     different item types to the database inside the same transaction. For example
 
-    let operation = connection.writeBlockOperation { transaction in
-    Write(people).sync(transaction)
-    Write(barcode).sync(transaction)
-    }
-    queue.addOperation(operation)
+        let operation = connection.writeBlockOperation { transaction in
+            people.write.on(transaction)
+            barcode.write.on(transaction)
+        }
+        queue.addOperation(operation)
 
     - parameter block: a closure of type (YapDatabaseReadWriteTransaction) -> Void
     - returns: an `NSOperation`.
@@ -516,17 +516,17 @@ extension YapDatabaseConnection: ConnectionType {
     `YapDatabaseReadWriteTransaction`. This method is very handy for writing
     different item types to the database inside the same transaction. For example
 
-    let operation = connection.writeBlockOperation { transaction in
-    Write(people).sync(transaction)
-    Write(barcode).sync(transaction)
-    }
-    queue.addOperation(operation)
+        let operation = connection.writeBlockOperation { transaction in
+            people.write.on(transaction)
+            barcode.write.on(transaction)
+        }
+        queue.addOperation(operation)
 
     - parameter block: a closure of type (YapDatabaseReadWriteTransaction) -> Void
     - returns: an `NSOperation`.
     */
     public func writeBlockOperation(block: (YapDatabaseReadWriteTransaction) -> Void) -> NSOperation {
-        return NSBlockOperation { self.asyncReadWriteWithBlock(block) }
+        return NSBlockOperation { self.readWriteWithBlock(block) }
     }
 }
 
