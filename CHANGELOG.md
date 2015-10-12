@@ -1,3 +1,6 @@
+# 2.1.3
+1. [[YDB-54](https://github.com/danthorpe/YapDatabaseExtensions/pull/54)]: Fixes a bug where using a `writeBlockOperation` on a connection would execute the block inside an asynchronous transaction. This results in the `NSOperation` finishing before the block had completed, most likely leading to unexpected behavior.
+
 # 2.1.2
 1. [[YDB-53](https://github.com/danthorpe/YapDatabaseExtensions/pull/53)]: Fixes to some typos in the README - thanks Ryan (@aranasaurus)!
 2. [[YDB-52](https://github.com/danthorpe/YapDatabaseExtensions/pull/52)]: Modifies the project structure to support a “Functional” API only via CocoaPods subspecs. See [Installation notes](https://github.com/danthorpe/YapDatabaseExtensions#installation).
