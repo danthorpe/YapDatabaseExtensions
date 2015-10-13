@@ -31,7 +31,7 @@ extension ReadTransactionType {
     /**
     Reads the metadata at the indexes.
 
-    - parameter indexes: an Array<YapDB.Index>
+    - parameter indexes: a SequenceType of YapDB.Index values
     - returns: an array of `MetadataType`
     */
     public func readMetadataAtIndexes<
@@ -64,7 +64,7 @@ extension ConnectionType {
     /**
     Reads the metadata at the indexes.
 
-    - parameter indexes: an Array<YapDB.Index>
+    - parameter indexes: a SequenceType of YapDB.Index values
     - returns: an array of `MetadataType`
     */
     public func readMetadataAtIndexes<
