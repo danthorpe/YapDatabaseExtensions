@@ -164,8 +164,8 @@ extension Writable where
 
     - parameter connection: a YapDatabaseConnection
     */
-    public func async(connection: Database.Connection, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: dispatch_block_t) {
-        connection.asyncWrite(on, queue: queue, completion: completion)
+    public func async(connection: Database.Connection, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: dispatch_block_t? = .None) {
+        connection.asyncWrite(on, queue: queue, completion: { _ in completion?() })
     }
 
     /**

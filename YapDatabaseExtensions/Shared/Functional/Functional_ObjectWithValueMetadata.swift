@@ -272,8 +272,8 @@ extension ConnectionType {
         ObjectWithValueMetadata: NSCoding,
         ObjectWithValueMetadata.MetadataType: ValueCoding,
         ObjectWithValueMetadata.MetadataType.Coder: NSCoding,
-        ObjectWithValueMetadata.MetadataType.Coder.ValueType == ObjectWithValueMetadata.MetadataType>(item: ObjectWithValueMetadata, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: dispatch_block_t) {
-            asyncWrite({ $0.write(item) }, queue: queue, completion: { _ in completion() })
+        ObjectWithValueMetadata.MetadataType.Coder.ValueType == ObjectWithValueMetadata.MetadataType>(item: ObjectWithValueMetadata, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: dispatch_block_t? = .None) {
+            asyncWrite({ $0.write(item) }, queue: queue, completion: { _ in completion?() })
     }
 
     /**
@@ -291,8 +291,8 @@ extension ConnectionType {
         ObjectWithValueMetadata: NSCoding,
         ObjectWithValueMetadata.MetadataType: ValueCoding,
         ObjectWithValueMetadata.MetadataType.Coder: NSCoding,
-        ObjectWithValueMetadata.MetadataType.Coder.ValueType == ObjectWithValueMetadata.MetadataType>(items: Items, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: dispatch_block_t) {
-            asyncWrite({ $0.write(items) }, queue: queue, completion: { _ in completion() })
+        ObjectWithValueMetadata.MetadataType.Coder.ValueType == ObjectWithValueMetadata.MetadataType>(items: Items, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: dispatch_block_t? = .None) {
+            asyncWrite({ $0.write(items) }, queue: queue, completion: { _ in completion?() })
     }
 }
 
