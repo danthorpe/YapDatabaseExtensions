@@ -20,7 +20,7 @@ extension Readable where
     ItemType.Coder.ValueType == ItemType {
 
     func inTransaction(transaction: Database.Connection.ReadTransaction, atIndex index: YapDB.Index) -> ItemType? {
-        return ItemType.decode(transaction.readAtIndex(index))
+        return transaction.readAtIndex(index)
     }
 
     // Everything here is the same for all 6 patterns.

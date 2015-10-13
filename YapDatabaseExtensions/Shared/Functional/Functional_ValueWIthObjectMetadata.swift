@@ -28,7 +28,7 @@ extension ReadTransactionType {
         ValueWithObjectMetadata.Coder.ValueType == ValueWithObjectMetadata,
         ValueWithObjectMetadata.MetadataType: NSCoding>(index: YapDB.Index) -> ValueWithObjectMetadata? {
             if var item = ValueWithObjectMetadata.decode(readAtIndex(index)) {
-                item.metadata = readMetadataAtIndex(index) as? ValueWithObjectMetadata.MetadataType
+                item.metadata = readMetadataAtIndex(index)
                 return item
             }
             return .None

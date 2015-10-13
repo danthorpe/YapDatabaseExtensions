@@ -102,10 +102,12 @@ class ValueWithValueMetadataTests: XCTestCase {
 
     func configureForReadingSingle() {
         readTransaction.object = item.encoded
+        readTransaction.metadata = item.metadata?.encoded
     }
 
     func configureForReadingMultiple() {
         readTransaction.objects = items.encoded
+        readTransaction.metadatas = items.map { $0.metadata?.encoded }
         readTransaction.keys = keys
     }
 
@@ -192,6 +194,8 @@ class ValueWithValueMetadataTests: XCTestCase {
         XCTAssertNotNil(result)
         XCTAssertEqual(readTransaction.didReadAtIndex!, index)
         XCTAssertEqual(result!.identifier, item.identifier)
+        XCTAssertEqual(readTransaction.didReadMetadataAtIndex!, index)
+        XCTAssertEqual(result!.metadata, item.metadata)
     }
 
     func test__reader__in_transaction_at_index_2() {
@@ -202,6 +206,8 @@ class ValueWithValueMetadataTests: XCTestCase {
         XCTAssertNotNil(result)
         XCTAssertEqual(readTransaction.didReadAtIndex!, index)
         XCTAssertEqual(result!.identifier, item.identifier)
+        XCTAssertEqual(readTransaction.didReadMetadataAtIndex!, index)
+        XCTAssertEqual(result!.metadata, item.metadata)
     }
 
     func test__reader__at_index_in_transaction() {
@@ -212,14 +218,17 @@ class ValueWithValueMetadataTests: XCTestCase {
         XCTAssertNotNil(result)
         XCTAssertEqual(readTransaction.didReadAtIndex!, index)
         XCTAssertEqual(result!.identifier, item.identifier)
+        XCTAssertEqual(readTransaction.didReadMetadataAtIndex!, index)
+        XCTAssertEqual(result!.metadata, item.metadata)
     }
 
     func test__reader__at_indexes_in_transaction_with_items() {
         configureForReadingMultiple()
         reader = Read(readTransaction)
-        let items = reader.atIndexesInTransaction(indexes)(readTransaction)
+        let result = reader.atIndexesInTransaction(indexes)(readTransaction)
         XCTAssertEqual(readTransaction.didReadAtIndexes, indexes)
-        XCTAssertEqual(items.map { $0.identifier }, items.map { $0.identifier })
+        XCTAssertEqual(readTransaction.didReadMetadataAtIndexes, indexes)
+        XCTAssertEqual(result.map { $0.identifier }, items.map { $0.identifier })
     }
 
     func test__reader__at_indexes_in_transaction_with_no_items() {
@@ -236,6 +245,8 @@ class ValueWithValueMetadataTests: XCTestCase {
         XCTAssertNotNil(result)
         XCTAssertEqual(readTransaction.didReadAtIndex, index)
         XCTAssertEqual(result!.identifier, item.identifier)
+        XCTAssertEqual(readTransaction.didReadMetadataAtIndex!, index)
+        XCTAssertEqual(result!.metadata, item.metadata)
     }
 
     func test__reader__in_transaction_by_key_2() {
@@ -246,6 +257,8 @@ class ValueWithValueMetadataTests: XCTestCase {
         XCTAssertNotNil(result)
         XCTAssertEqual(readTransaction.didReadAtIndex, index)
         XCTAssertEqual(result!.identifier, item.identifier)
+        XCTAssertEqual(readTransaction.didReadMetadataAtIndex!, index)
+        XCTAssertEqual(result!.metadata, item.metadata)
     }
 
     func test__reader__by_key_in_transaction() {
@@ -256,23 +269,27 @@ class ValueWithValueMetadataTests: XCTestCase {
         XCTAssertNotNil(result)
         XCTAssertEqual(readTransaction.didReadAtIndex, index)
         XCTAssertEqual(result!.identifier, item.identifier)
+        XCTAssertEqual(readTransaction.didReadMetadataAtIndex!, index)
+        XCTAssertEqual(result!.metadata, item.metadata)
     }
 
     func test__reader__by_keys_in_transaction_with_items() {
         configureForReadingMultiple()
         reader = Read(readTransaction)
-        let items = reader.byKeysInTransaction(keys)(readTransaction)
+        let result = reader.byKeysInTransaction(keys)(readTransaction)
         XCTAssertEqual(readTransaction.didReadAtIndexes, indexes)
-        XCTAssertEqual(items.map { $0.identifier }, items.map { $0.identifier })
+        XCTAssertEqual(readTransaction.didReadMetadataAtIndexes, indexes)
+        XCTAssertEqual(result.map { $0.identifier }, items.map { $0.identifier })
     }
 
     func test__reader__by_keys_in_transaction_with_items_with_no_keys() {
         configureForReadingMultiple()
         reader = Read(readTransaction)
-        let items = reader.byKeysInTransaction()(readTransaction)
+        let result = reader.byKeysInTransaction()(readTransaction)
         XCTAssertEqual(readTransaction.didReadAtIndexes, indexes)
+        XCTAssertEqual(readTransaction.didReadMetadataAtIndexes, indexes)
         XCTAssertEqual(readTransaction.didKeysInCollection!, Product.collection)
-        XCTAssertEqual(items.map { $0.identifier }, items.map { $0.identifier })
+        XCTAssertEqual(result.map { $0.identifier }, items.map { $0.identifier })
     }
 
     func test__reader__by_keys_in_transaction_with_no_items() {
@@ -291,6 +308,8 @@ class ValueWithValueMetadataTests: XCTestCase {
         XCTAssertNotNil(result)
         XCTAssertEqual(readTransaction.didReadAtIndex!, index)
         XCTAssertEqual(result!.identifier, item.identifier)
+        XCTAssertEqual(readTransaction.didReadMetadataAtIndex!, index)
+        XCTAssertEqual(result!.metadata, item.metadata)
     }
 
     func test__reader_with_transaction__at_index_with_no_item() {
@@ -300,18 +319,54 @@ class ValueWithValueMetadataTests: XCTestCase {
         XCTAssertNil(result)
     }
 
+    func test__reader_with_transaction__metadata_at_index_with_item() {
+        configureForReadingSingle()
+        reader = Read(readTransaction)
+        let result = reader.metadataAtIndex(index)
+        XCTAssertNotNil(result)
+        XCTAssertNil(readTransaction.didReadAtIndex)
+        XCTAssertEqual(readTransaction.didReadMetadataAtIndex!, index)
+        XCTAssertEqual(result, item.metadata)
+    }
+
+    func test__reader_with_transaction__metadata_at_index_with_no_item() {
+        reader = Read(readTransaction)
+        let result = reader.metadataAtIndex(index)
+        XCTAssertNil(readTransaction.didReadAtIndex)
+        XCTAssertEqual(readTransaction.didReadMetadataAtIndex!, index)
+        XCTAssertNil(result)
+    }
+
     func test__reader_with_transaction__at_indexes_with_items() {
         configureForReadingMultiple()
         reader = Read(readTransaction)
-        let items = reader.atIndexes(indexes)
+        let result = reader.atIndexes(indexes)
         XCTAssertEqual(readTransaction.didReadAtIndexes, indexes)
-        XCTAssertEqual(items.map { $0.identifier }, items.map { $0.identifier })
+        XCTAssertEqual(readTransaction.didReadMetadataAtIndexes, indexes)
+        XCTAssertEqual(result.map { $0.identifier }, items.map { $0.identifier })
     }
 
     func test__reader_with_transaction__at_indexes_with_no_items() {
         reader = Read(readTransaction)
         let result = reader.atIndexes(indexes)
         XCTAssertEqual(readTransaction.didReadAtIndexes, indexes)
+        XCTAssertEqual(result, [])
+    }
+
+    func test__reader_with_transaction__metadata_at_indexes_with_items() {
+        configureForReadingMultiple()
+        reader = Read(readTransaction)
+        let result = reader.metadataAtIndexes(indexes)
+        XCTAssertTrue(readTransaction.didReadAtIndexes.isEmpty)
+        XCTAssertEqual(readTransaction.didReadMetadataAtIndexes, indexes)
+        XCTAssertEqual(result.count, items.map { $0.metadata }.count)
+    }
+
+    func test__reader_with_transaction__metadata_at_indexes_with_no_items() {
+        reader = Read(readTransaction)
+        let result = reader.metadataAtIndexes(indexes)
+        XCTAssertTrue(readTransaction.didReadAtIndexes.isEmpty)
+        XCTAssertEqual(readTransaction.didReadMetadataAtIndexes, indexes)
         XCTAssertEqual(result, [])
     }
 
@@ -322,6 +377,8 @@ class ValueWithValueMetadataTests: XCTestCase {
         XCTAssertNotNil(result)
         XCTAssertEqual(readTransaction.didReadAtIndex!, index)
         XCTAssertEqual(result!.identifier, item.identifier)
+        XCTAssertEqual(readTransaction.didReadMetadataAtIndex!, index)
+        XCTAssertEqual(result!.metadata, item.metadata)
     }
 
     func test__reader_with_transaction__by_key_with_no_item() {
@@ -334,9 +391,10 @@ class ValueWithValueMetadataTests: XCTestCase {
     func test__reader_with_transaction__by_keys_with_items() {
         configureForReadingMultiple()
         reader = Read(readTransaction)
-        let items = reader.byKeys(keys)
+        let result = reader.byKeys(keys)
         XCTAssertEqual(readTransaction.didReadAtIndexes, indexes)
-        XCTAssertEqual(items.map { $0.identifier }, items.map { $0.identifier })
+        XCTAssertEqual(readTransaction.didReadMetadataAtIndexes, indexes)
+        XCTAssertEqual(result.map { $0.identifier }, items.map { $0.identifier })
     }
 
     func test__reader_with_transaction__by_keys_with_no_items() {
@@ -349,10 +407,10 @@ class ValueWithValueMetadataTests: XCTestCase {
     func test__reader_with_transaction__all_with_items() {
         configureForReadingMultiple()
         reader = Read(readTransaction)
-        let items = reader.all()
+        let result = reader.all()
         XCTAssertEqual(readTransaction.didKeysInCollection, Product.collection)
         XCTAssertEqual(readTransaction.didReadAtIndexes, indexes)
-        XCTAssertEqual(items.map { $0.identifier }, items.map { $0.identifier })
+        XCTAssertEqual(result.map { $0.identifier }, items.map { $0.identifier })
     }
 
     func test__reader_with_transaction__all_with_no_items() {
@@ -366,9 +424,10 @@ class ValueWithValueMetadataTests: XCTestCase {
     func test__reader_with_transaction__filter() {
         configureForReadingSingle()
         reader = Read(readTransaction)
-        let (items, missing) = reader.filterExisting(keys)
+        let (result, missing) = reader.filterExisting(keys)
         XCTAssertEqual(readTransaction.didReadAtIndexes.first!, indexes.first!)
-        XCTAssertEqual(items.map { $0.identifier }, items.prefixUpTo(1).map { $0.identifier })
+        XCTAssertEqual(readTransaction.didReadMetadataAtIndexes.first!, indexes.first!)
+        XCTAssertEqual(result.map { $0.identifier }, items.prefixUpTo(1).map { $0.identifier })
         XCTAssertEqual(missing, Array(keys.suffixFrom(1)))
     }
 
@@ -382,6 +441,8 @@ class ValueWithValueMetadataTests: XCTestCase {
         XCTAssertTrue(connection.didRead)
         XCTAssertEqual(readTransaction.didReadAtIndex!, index)
         XCTAssertEqual(result!.identifier, item.identifier)
+        XCTAssertEqual(readTransaction.didReadMetadataAtIndex!, index)
+        XCTAssertEqual(result!.metadata, item.metadata)
     }
 
     func test__reader_with_connection__at_index_with_no_item() {
@@ -392,13 +453,34 @@ class ValueWithValueMetadataTests: XCTestCase {
         XCTAssertNil(result)
     }
 
+    func test__reader_with_connection__metadata_at_index_with_item() {
+        configureForReadingSingle()
+        reader = Read(connection)
+        let result = reader.metadataAtIndex(index)
+        XCTAssertNotNil(result)
+        XCTAssertTrue(connection.didRead)
+        XCTAssertNil(readTransaction.didReadAtIndex)
+        XCTAssertEqual(readTransaction.didReadMetadataAtIndex!, index)
+        XCTAssertEqual(result, item.metadata)
+    }
+
+    func test__reader_with_connection__metadata_at_index_with_no_item() {
+        reader = Read(connection)
+        let result = reader.metadataAtIndex(index)
+        XCTAssertTrue(connection.didRead)
+        XCTAssertNil(readTransaction.didReadAtIndex)
+        XCTAssertEqual(readTransaction.didReadMetadataAtIndex!, index)
+        XCTAssertNil(result)
+    }
+
     func test__reader_with_connection__at_indexes_with_items() {
         configureForReadingMultiple()
         reader = Read(connection)
-        let items = reader.atIndexes(indexes)
+        let result = reader.atIndexes(indexes)
         XCTAssertTrue(connection.didRead)
         XCTAssertEqual(readTransaction.didReadAtIndexes, indexes)
-        XCTAssertEqual(items.map { $0.identifier }, items.map { $0.identifier })
+        XCTAssertEqual(readTransaction.didReadMetadataAtIndexes, indexes)
+        XCTAssertEqual(result.map { $0.identifier }, items.map { $0.identifier })
     }
 
     func test__reader_with_connection__at_indexes_with_no_items() {
@@ -406,6 +488,25 @@ class ValueWithValueMetadataTests: XCTestCase {
         let result = reader.atIndexes(indexes)
         XCTAssertTrue(connection.didRead)
         XCTAssertEqual(readTransaction.didReadAtIndexes, indexes)
+        XCTAssertEqual(result, [])
+    }
+
+    func test__reader_with_connection__metadata_at_indexes_with_items() {
+        configureForReadingMultiple()
+        reader = Read(connection)
+        let result = reader.metadataAtIndexes(indexes)
+        XCTAssertTrue(connection.didRead)
+        XCTAssertTrue(readTransaction.didReadAtIndexes.isEmpty)
+        XCTAssertEqual(readTransaction.didReadMetadataAtIndexes, indexes)
+        XCTAssertEqual(result.count, items.map { $0.metadata }.count)
+    }
+
+    func test__reader_with_connection__metadata_at_indexes_with_no_items() {
+        reader = Read(connection)
+        let result = reader.metadataAtIndexes(indexes)
+        XCTAssertTrue(connection.didRead)
+        XCTAssertTrue(readTransaction.didReadAtIndexes.isEmpty)
+        XCTAssertEqual(readTransaction.didReadMetadataAtIndexes, indexes)
         XCTAssertEqual(result, [])
     }
 
@@ -417,6 +518,8 @@ class ValueWithValueMetadataTests: XCTestCase {
         XCTAssertTrue(connection.didRead)
         XCTAssertEqual(readTransaction.didReadAtIndex!, index)
         XCTAssertEqual(result!.identifier, item.identifier)
+        XCTAssertEqual(readTransaction.didReadMetadataAtIndex!, index)
+        XCTAssertEqual(result!.metadata, item.metadata)
     }
 
     func test__reader_with_connection__by_key_with_no_item() {
@@ -430,10 +533,11 @@ class ValueWithValueMetadataTests: XCTestCase {
     func test__reader_with_connection__by_keys_with_items() {
         configureForReadingMultiple()
         reader = Read(connection)
-        let items = reader.byKeys(keys)
+        let result = reader.byKeys(keys)
         XCTAssertTrue(connection.didRead)
         XCTAssertEqual(readTransaction.didReadAtIndexes, indexes)
-        XCTAssertEqual(items.map { $0.identifier }, items.map { $0.identifier })
+        XCTAssertEqual(readTransaction.didReadMetadataAtIndexes, indexes)
+        XCTAssertEqual(result.map { $0.identifier }, items.map { $0.identifier })
     }
 
     func test__reader_with_connection__by_keys_with_no_items() {
@@ -447,11 +551,12 @@ class ValueWithValueMetadataTests: XCTestCase {
     func test__reader_with_connection__all_with_items() {
         configureForReadingMultiple()
         reader = Read(connection)
-        let items = reader.all()
+        let result = reader.all()
         XCTAssertTrue(connection.didRead)
         XCTAssertEqual(readTransaction.didKeysInCollection, Product.collection)
         XCTAssertEqual(readTransaction.didReadAtIndexes, indexes)
-        XCTAssertEqual(items.map { $0.identifier }, items.map { $0.identifier })
+        XCTAssertEqual(readTransaction.didReadMetadataAtIndexes, indexes)
+        XCTAssertEqual(result.map { $0.identifier }, items.map { $0.identifier })
     }
 
     func test__reader_with_connection__all_with_no_items() {
@@ -466,10 +571,11 @@ class ValueWithValueMetadataTests: XCTestCase {
     func test__reader_with_connection__filter() {
         configureForReadingSingle()
         reader = Read(connection)
-        let (items, missing) = reader.filterExisting(keys)
+        let (result, missing) = reader.filterExisting(keys)
         XCTAssertTrue(connection.didRead)
         XCTAssertEqual(readTransaction.didReadAtIndexes.first!, indexes.first!)
-        XCTAssertEqual(items.map { $0.identifier }, items.prefixUpTo(1).map { $0.identifier })
+        XCTAssertEqual(readTransaction.didReadMetadataAtIndexes.first!, indexes.first!)
+        XCTAssertEqual(result.map { $0.identifier }, items.prefixUpTo(1).map { $0.identifier })
         XCTAssertEqual(missing, Array(keys.suffixFrom(1)))
     }
 
@@ -488,6 +594,18 @@ class ValueWithValueMetadataTests: XCTestCase {
         XCTAssertNil(product)
     }
 
+    func test__transaction__read_metadata_at_index_with_data() {
+        configureForReadingSingle()
+        let result: Product.MetadataType? = readTransaction.readMetadataAtIndex(index)
+        XCTAssertNotNil(result)
+        XCTAssertEqual(result!, item.metadata)
+    }
+
+    func test__transaction__read_metadata_at_index_without_data() {
+        let result: Product.MetadataType? = readTransaction.readMetadataAtIndex(index)
+        XCTAssertNil(result)
+    }
+
     func test__transaction__read_at_indexes_with_data() {
         configureForReadingMultiple()
         let products: [Product] = readTransaction.readAtIndexes(indexes)
@@ -498,6 +616,18 @@ class ValueWithValueMetadataTests: XCTestCase {
         let products: [Product] = readTransaction.readAtIndexes(indexes)
         XCTAssertNotNil(products)
         XCTAssertTrue(products.isEmpty)
+    }
+
+    func test__transaction__read_metadata_at_indexes_with_data() {
+        configureForReadingMultiple()
+        let result: [Product.MetadataType] = readTransaction.readMetadataAtIndexes(indexes)
+        XCTAssertEqual(result.count, items.count)
+    }
+
+    func test__transaction__read_metadata_at_indexes_without_data() {
+        let result: [Product.MetadataType] = readTransaction.readMetadataAtIndexes(indexes)
+        XCTAssertNotNil(result)
+        XCTAssertTrue(result.isEmpty)
     }
 
     func test__transaction__read_by_key_with_data() {
@@ -538,6 +668,18 @@ class ValueWithValueMetadataTests: XCTestCase {
         XCTAssertNil(product)
     }
 
+    func test__connection__read_metadata_at_index_with_data() {
+        configureForReadingSingle()
+        let result: Product.MetadataType? = connection.readMetadataAtIndex(index)
+        XCTAssertNotNil(result)
+        XCTAssertEqual(result!, item.metadata)
+    }
+
+    func test__connection__read_metadata_at_index_without_data() {
+        let result: Product.MetadataType? = connection.readMetadataAtIndex(index)
+        XCTAssertNil(result)
+    }
+
     func test__connection__read_at_indexes_with_data() {
         configureForReadingMultiple()
         let products: [Product] = connection.readAtIndexes(indexes)
@@ -548,6 +690,18 @@ class ValueWithValueMetadataTests: XCTestCase {
         let products: [Product] = connection.readAtIndexes(indexes)
         XCTAssertNotNil(products)
         XCTAssertTrue(products.isEmpty)
+    }
+
+    func test__connection__read_metadata_at_indexes_with_data() {
+        configureForReadingMultiple()
+        let result: [Product.MetadataType] = connection.readMetadataAtIndexes(indexes)
+        XCTAssertEqual(result.count, items.count)
+    }
+
+    func test__connection__read_metadata_at_indexes_without_data() {
+        let result: [Product.MetadataType] = connection.readMetadataAtIndexes(indexes)
+        XCTAssertNotNil(result)
+        XCTAssertTrue(result.isEmpty)
     }
 
     func test__connection__read_by_key_with_data() {
