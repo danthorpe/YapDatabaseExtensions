@@ -203,7 +203,7 @@ class YapDatabaseConnectionTests: ReadWriteBaseTests {
     }
 }
 
-class SaveableTests: XCTestCase {
+class ValueCodingTests: XCTestCase {
 
     var item: Product!
     var index: YapDB.Index!
@@ -271,7 +271,7 @@ class SaveableTests: XCTestCase {
         XCTAssertEqual(byHashes.count, items.count)
     }
 
-    func test__index_is_saveable() {
+    func test__index_is_codable() {
         let db = YapDB.testDatabase()
         db.makeNewConnection().readWriteWithBlock { transaction in
             transaction.setObject(self.index.encoded, forKey: "test-index", inCollection: "test-index-collection")

@@ -194,7 +194,7 @@ extension Manager: MetadataPersistable {
 }
 
 
-// MARK: - Saveable
+// MARK: - ValueCoding
 
 extension Barcode: ValueCoding {
     public typealias Coder = BarcodeCoder
@@ -230,7 +230,7 @@ extension Manager.Metadata: ValueCoding {
 }
 
 
-// MARK: - Archivers
+// MARK: - Coders
 
 public class BarcodeCoder: NSObject, NSCoding, CodingType {
     public let value: Barcode
