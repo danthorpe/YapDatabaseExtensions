@@ -47,7 +47,7 @@ extension ReadTransactionType {
     }
 
     /**
-    Reads the item at the key.
+    Reads the item by key.
 
     - parameter key: a String
     - returns: an optional `ItemType`

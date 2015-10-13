@@ -502,6 +502,18 @@ class ObjectWithObjectMetadataTests: XCTestCase {
         XCTAssertNil(employee)
     }
 
+    func test__transaction__read_metadata_at_index_with_data() {
+        configureForReadingSingle()
+        let result: Employee.MetadataType? = readTransaction.readMetadataAtIndex(index)
+        XCTAssertNotNil(result)
+        XCTAssertEqual(result!, item.metadata)
+    }
+
+    func test__transaction__read_metadata_at_index_without_data() {
+        let result: Employee.MetadataType? = readTransaction.readMetadataAtIndex(index)
+        XCTAssertNil(result)
+    }
+
     func test__transaction__read_at_indexes_with_data() {
         configureForReadingMultiple()
         let employees: [Employee] = readTransaction.readAtIndexes(indexes)
@@ -512,6 +524,18 @@ class ObjectWithObjectMetadataTests: XCTestCase {
         let employees: [Employee] = readTransaction.readAtIndexes(indexes)
         XCTAssertNotNil(employees)
         XCTAssertTrue(employees.isEmpty)
+    }
+
+    func test__transaction__read_metadata_at_indexes_with_data() {
+        configureForReadingMultiple()
+        let result: [Employee.MetadataType] = readTransaction.readMetadataAtIndexes(indexes)
+        XCTAssertEqual(result.count, items.count)
+    }
+
+    func test__transaction__read_metadata_at_indexes_without_data() {
+        let result: [Employee.MetadataType] = readTransaction.readMetadataAtIndexes(indexes)
+        XCTAssertNotNil(result)
+        XCTAssertTrue(result.isEmpty)
     }
 
     func test__transaction__read_by_key_with_data() {
@@ -554,6 +578,18 @@ class ObjectWithObjectMetadataTests: XCTestCase {
         XCTAssertNil(employee)
     }
 
+    func test__connection__read_metadata_at_index_with_data() {
+        configureForReadingSingle()
+        let result: Employee.MetadataType? = connection.readMetadataAtIndex(index)
+        XCTAssertNotNil(result)
+        XCTAssertEqual(result!, item.metadata)
+    }
+
+    func test__connection__read_metadata_at_index_without_data() {
+        let result: Employee.MetadataType? = connection.readMetadataAtIndex(index)
+        XCTAssertNil(result)
+    }
+
     func test__connection__read_at_indexes_with_data() {
         configureForReadingMultiple()
         let employees: [Employee] = connection.readAtIndexes(indexes)
@@ -564,6 +600,18 @@ class ObjectWithObjectMetadataTests: XCTestCase {
         let employees: [Employee] = connection.readAtIndexes(indexes)
         XCTAssertNotNil(employees)
         XCTAssertTrue(employees.isEmpty)
+    }
+
+    func test__connection__read_metadata_at_indexes_with_data() {
+        configureForReadingMultiple()
+        let result: [Employee.MetadataType] = connection.readMetadataAtIndexes(indexes)
+        XCTAssertEqual(result.count, items.count)
+    }
+
+    func test__connection__read_metadata_at_indexes_without_data() {
+        let result: [Employee.MetadataType] = connection.readMetadataAtIndexes(indexes)
+        XCTAssertNotNil(result)
+        XCTAssertTrue(result.isEmpty)
     }
 
     func test__connection__read_by_key_with_data() {

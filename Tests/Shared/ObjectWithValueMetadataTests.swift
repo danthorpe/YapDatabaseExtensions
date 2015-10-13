@@ -84,10 +84,12 @@ class ObjectWithValueMetadataTests: XCTestCase {
 
     func configureForReadingSingle() {
         readTransaction.object = item
+        readTransaction.metadata = item.metadata?.encoded
     }
 
     func configureForReadingMultiple() {
         readTransaction.objects = items
+        readTransaction.metadatas = items.map { $0.metadata?.encoded }
         readTransaction.keys = keys
     }
 
@@ -470,6 +472,18 @@ class ObjectWithValueMetadataTests: XCTestCase {
         XCTAssertNil(manager)
     }
 
+    func test__transaction__read_metadata_at_index_with_data() {
+        configureForReadingSingle()
+        let result: Manager.MetadataType? = readTransaction.readMetadataAtIndex(index)
+        XCTAssertNotNil(result)
+        XCTAssertEqual(result!, item.metadata)
+    }
+
+    func test__transaction__read_metadata_at_index_without_data() {
+        let result: Manager.MetadataType? = readTransaction.readMetadataAtIndex(index)
+        XCTAssertNil(result)
+    }
+
     func test__transaction__read_at_indexes_with_data() {
         configureForReadingMultiple()
         let managers: [Manager] = readTransaction.readAtIndexes(indexes)
@@ -480,6 +494,18 @@ class ObjectWithValueMetadataTests: XCTestCase {
         let managers: [Manager] = readTransaction.readAtIndexes(indexes)
         XCTAssertNotNil(managers)
         XCTAssertTrue(managers.isEmpty)
+    }
+
+    func test__transaction__read_metadata_at_indexes_with_data() {
+        configureForReadingMultiple()
+        let result: [Manager.MetadataType] = readTransaction.readMetadataAtIndexes(indexes)
+        XCTAssertEqual(result.count, items.count)
+    }
+
+    func test__transaction__read_metadata_at_indexes_without_data() {
+        let result: [Manager.MetadataType] = readTransaction.readMetadataAtIndexes(indexes)
+        XCTAssertNotNil(result)
+        XCTAssertTrue(result.isEmpty)
     }
 
     func test__transaction__read_by_key_with_data() {
@@ -520,6 +546,18 @@ class ObjectWithValueMetadataTests: XCTestCase {
         XCTAssertNil(manager)
     }
 
+    func test__connection__read_metadata_at_index_with_data() {
+        configureForReadingSingle()
+        let result: Manager.MetadataType? = connection.readMetadataAtIndex(index)
+        XCTAssertNotNil(result)
+        XCTAssertEqual(result!, item.metadata)
+    }
+
+    func test__connection__read_metadata_at_index_without_data() {
+        let result: Manager.MetadataType? = connection.readMetadataAtIndex(index)
+        XCTAssertNil(result)
+    }
+
     func test__connection__read_at_indexes_with_data() {
         configureForReadingMultiple()
         let managers: [Manager] = connection.readAtIndexes(indexes)
@@ -530,6 +568,18 @@ class ObjectWithValueMetadataTests: XCTestCase {
         let managers: [Manager] = connection.readAtIndexes(indexes)
         XCTAssertNotNil(managers)
         XCTAssertTrue(managers.isEmpty)
+    }
+
+    func test__connection__read_metadata_at_indexes_with_data() {
+        configureForReadingMultiple()
+        let result: [Manager.MetadataType] = connection.readMetadataAtIndexes(indexes)
+        XCTAssertEqual(result.count, items.count)
+    }
+
+    func test__connection__read_metadata_at_indexes_without_data() {
+        let result: [Manager.MetadataType] = connection.readMetadataAtIndexes(indexes)
+        XCTAssertNotNil(result)
+        XCTAssertTrue(result.isEmpty)
     }
 
     func test__connection__read_by_key_with_data() {

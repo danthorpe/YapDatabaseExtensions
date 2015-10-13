@@ -102,10 +102,12 @@ class ValueWithValueMetadataTests: XCTestCase {
 
     func configureForReadingSingle() {
         readTransaction.object = item.encoded
+        readTransaction.metadata = item.metadata?.encoded
     }
 
     func configureForReadingMultiple() {
         readTransaction.objects = items.encoded
+        readTransaction.metadatas = items.map { $0.metadata?.encoded }
         readTransaction.keys = keys
     }
 
@@ -488,6 +490,18 @@ class ValueWithValueMetadataTests: XCTestCase {
         XCTAssertNil(product)
     }
 
+    func test__transaction__read_metadata_at_index_with_data() {
+        configureForReadingSingle()
+        let result: Product.MetadataType? = readTransaction.readMetadataAtIndex(index)
+        XCTAssertNotNil(result)
+        XCTAssertEqual(result!, item.metadata)
+    }
+
+    func test__transaction__read_metadata_at_index_without_data() {
+        let result: Product.MetadataType? = readTransaction.readMetadataAtIndex(index)
+        XCTAssertNil(result)
+    }
+
     func test__transaction__read_at_indexes_with_data() {
         configureForReadingMultiple()
         let products: [Product] = readTransaction.readAtIndexes(indexes)
@@ -498,6 +512,18 @@ class ValueWithValueMetadataTests: XCTestCase {
         let products: [Product] = readTransaction.readAtIndexes(indexes)
         XCTAssertNotNil(products)
         XCTAssertTrue(products.isEmpty)
+    }
+
+    func test__transaction__read_metadata_at_indexes_with_data() {
+        configureForReadingMultiple()
+        let result: [Product.MetadataType] = readTransaction.readMetadataAtIndexes(indexes)
+        XCTAssertEqual(result.count, items.count)
+    }
+
+    func test__transaction__read_metadata_at_indexes_without_data() {
+        let result: [Product.MetadataType] = readTransaction.readMetadataAtIndexes(indexes)
+        XCTAssertNotNil(result)
+        XCTAssertTrue(result.isEmpty)
     }
 
     func test__transaction__read_by_key_with_data() {
@@ -538,6 +564,18 @@ class ValueWithValueMetadataTests: XCTestCase {
         XCTAssertNil(product)
     }
 
+    func test__connection__read_metadata_at_index_with_data() {
+        configureForReadingSingle()
+        let result: Product.MetadataType? = connection.readMetadataAtIndex(index)
+        XCTAssertNotNil(result)
+        XCTAssertEqual(result!, item.metadata)
+    }
+
+    func test__connection__read_metadata_at_index_without_data() {
+        let result: Product.MetadataType? = connection.readMetadataAtIndex(index)
+        XCTAssertNil(result)
+    }
+
     func test__connection__read_at_indexes_with_data() {
         configureForReadingMultiple()
         let products: [Product] = connection.readAtIndexes(indexes)
@@ -548,6 +586,18 @@ class ValueWithValueMetadataTests: XCTestCase {
         let products: [Product] = connection.readAtIndexes(indexes)
         XCTAssertNotNil(products)
         XCTAssertTrue(products.isEmpty)
+    }
+
+    func test__connection__read_metadata_at_indexes_with_data() {
+        configureForReadingMultiple()
+        let result: [Product.MetadataType] = connection.readMetadataAtIndexes(indexes)
+        XCTAssertEqual(result.count, items.count)
+    }
+
+    func test__connection__read_metadata_at_indexes_without_data() {
+        let result: [Product.MetadataType] = connection.readMetadataAtIndexes(indexes)
+        XCTAssertNotNil(result)
+        XCTAssertTrue(result.isEmpty)
     }
 
     func test__connection__read_by_key_with_data() {
