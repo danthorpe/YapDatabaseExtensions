@@ -67,6 +67,12 @@
 		65C8DB431BCD24EB002F2C05 /* Persistable_ObjectWithNoMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C557821BCB26010065C96A /* Persistable_ObjectWithNoMetadata.swift */; settings = {ASSET_TAGS = (); }; };
 		65C8DB441BCD24FA002F2C05 /* Persistable_ValueWithNoMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C557851BCB26010065C96A /* Persistable_ValueWithNoMetadata.swift */; settings = {ASSET_TAGS = (); }; };
 		65C8DB451BCD24FB002F2C05 /* Persistable_ValueWithNoMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C557851BCB26010065C96A /* Persistable_ValueWithNoMetadata.swift */; settings = {ASSET_TAGS = (); }; };
+		65C8DB461BCD25E2002F2C05 /* ValueWithNoMetadataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04971BC9820A00AC98FD /* ValueWithNoMetadataTests.swift */; settings = {ASSET_TAGS = (); }; };
+		65C8DB471BCD25E3002F2C05 /* ValueWithNoMetadataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04971BC9820A00AC98FD /* ValueWithNoMetadataTests.swift */; settings = {ASSET_TAGS = (); }; };
+		65C8DB491BCD2676002F2C05 /* Functional_ObjectWithNoMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C8DB481BCD2676002F2C05 /* Functional_ObjectWithNoMetadata.swift */; settings = {ASSET_TAGS = (); }; };
+		65C8DB4A1BCD2676002F2C05 /* Functional_ObjectWithNoMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C8DB481BCD2676002F2C05 /* Functional_ObjectWithNoMetadata.swift */; settings = {ASSET_TAGS = (); }; };
+		65C8DB4C1BCD283D002F2C05 /* Functional_ValueWithNoMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C8DB4B1BCD283D002F2C05 /* Functional_ValueWithNoMetadata.swift */; settings = {ASSET_TAGS = (); }; };
+		65C8DB4D1BCD283D002F2C05 /* Functional_ValueWithNoMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C8DB4B1BCD283D002F2C05 /* Functional_ValueWithNoMetadata.swift */; settings = {ASSET_TAGS = (); }; };
 		AC8FC0BC100A1A0A60C3B18F /* Pods_YapDatabaseExtensions_OSXTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 574741755E625D8A78119A8A /* Pods_YapDatabaseExtensions_OSXTests.framework */; };
 /* End PBXBuildFile section */
 
@@ -128,6 +134,8 @@
 		65C557891BCB26010065C96A /* Remove.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Remove.swift; sourceTree = "<group>"; };
 		65C5578A1BCB26010065C96A /* Write.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Write.swift; sourceTree = "<group>"; };
 		65C557A51BCB26310065C96A /* Functional_Remove.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Functional_Remove.swift; sourceTree = "<group>"; };
+		65C8DB481BCD2676002F2C05 /* Functional_ObjectWithNoMetadata.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Functional_ObjectWithNoMetadata.swift; sourceTree = "<group>"; };
+		65C8DB4B1BCD283D002F2C05 /* Functional_ValueWithNoMetadata.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Functional_ValueWithNoMetadata.swift; sourceTree = "<group>"; };
 		9D7D405FE2B19AF9F31FA60A /* Pods-YapDatabaseExtensions-iOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-YapDatabaseExtensions-iOSTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-YapDatabaseExtensions-iOSTests/Pods-YapDatabaseExtensions-iOSTests.release.xcconfig"; sourceTree = "<group>"; };
 		B26F7704368F3FE50A228AB0 /* Pods-YapDatabaseExtensions-OSX.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-YapDatabaseExtensions-OSX.debug.xcconfig"; path = "Pods/Target Support Files/Pods-YapDatabaseExtensions-OSX/Pods-YapDatabaseExtensions-OSX.debug.xcconfig"; sourceTree = "<group>"; };
 		D13C45EFF8EA26355D7BE26C /* Pods-YapDatabaseExtensions-OSX.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-YapDatabaseExtensions-OSX.release.xcconfig"; path = "Pods/Target Support Files/Pods-YapDatabaseExtensions-OSX/Pods-YapDatabaseExtensions-OSX.release.xcconfig"; sourceTree = "<group>"; };
@@ -257,11 +265,13 @@
 		65C5577C1BCB26010065C96A /* Functional */ = {
 			isa = PBXGroup;
 			children = (
+				65C8DB481BCD2676002F2C05 /* Functional_ObjectWithNoMetadata.swift */,
 				65C5577D1BCB26010065C96A /* Functional_ObjectWithObjectMetadata.swift */,
 				65C5577E1BCB26010065C96A /* Functional_ObjectWithValueMetadata.swift */,
+				65C557A51BCB26310065C96A /* Functional_Remove.swift */,
+				65C8DB4B1BCD283D002F2C05 /* Functional_ValueWithNoMetadata.swift */,
 				65C5577F1BCB26010065C96A /* Functional_ValueWIthObjectMetadata.swift */,
 				65C557801BCB26010065C96A /* Functional_ValueWIthValueMetadata.swift */,
-				65C557A51BCB26310065C96A /* Functional_Remove.swift */,
 			);
 			path = Functional;
 			sourceTree = "<group>";
@@ -649,6 +659,8 @@
 				65C5579B1BCB26010065C96A /* Persistable_ValueWithObjectMetadata.swift in Sources */,
 				65C5579D1BCB26010065C96A /* Persistable_ValueWithValueMetadata.swift in Sources */,
 				65C8DB441BCD24FA002F2C05 /* Persistable_ValueWithNoMetadata.swift in Sources */,
+				65C8DB491BCD2676002F2C05 /* Functional_ObjectWithNoMetadata.swift in Sources */,
+				65C8DB4C1BCD283D002F2C05 /* Functional_ValueWithNoMetadata.swift in Sources */,
 				65C8DB421BCD24EA002F2C05 /* Persistable_ObjectWithNoMetadata.swift in Sources */,
 				65C557A31BCB26010065C96A /* Write.swift in Sources */,
 				65C557911BCB26010065C96A /* Functional_ValueWIthValueMetadata.swift in Sources */,
@@ -668,6 +680,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				653B04AF1BC9824000AC98FD /* RemovalTests.swift in Sources */,
+				65C8DB461BCD25E2002F2C05 /* ValueWithNoMetadataTests.swift in Sources */,
 				653B04AC1BC9824000AC98FD /* ObjectWithObjectMetadataTests.swift in Sources */,
 				653B04AD1BC9824000AC98FD /* ObjectWithValueMetadataTests.swift in Sources */,
 				653B04B21BC9824000AC98FD /* ValueWithObjectMetadataTests.swift in Sources */,
@@ -689,6 +702,8 @@
 				65C5579C1BCB26010065C96A /* Persistable_ValueWithObjectMetadata.swift in Sources */,
 				65C5579E1BCB26010065C96A /* Persistable_ValueWithValueMetadata.swift in Sources */,
 				65C8DB451BCD24FB002F2C05 /* Persistable_ValueWithNoMetadata.swift in Sources */,
+				65C8DB4A1BCD2676002F2C05 /* Functional_ObjectWithNoMetadata.swift in Sources */,
+				65C8DB4D1BCD283D002F2C05 /* Functional_ValueWithNoMetadata.swift in Sources */,
 				65C8DB431BCD24EB002F2C05 /* Persistable_ObjectWithNoMetadata.swift in Sources */,
 				65C557A41BCB26010065C96A /* Write.swift in Sources */,
 				65C557921BCB26010065C96A /* Functional_ValueWIthValueMetadata.swift in Sources */,
@@ -708,6 +723,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				653B04BB1BC9824100AC98FD /* RemovalTests.swift in Sources */,
+				65C8DB471BCD25E3002F2C05 /* ValueWithNoMetadataTests.swift in Sources */,
 				653B04B81BC9824100AC98FD /* ObjectWithObjectMetadataTests.swift in Sources */,
 				653B04B91BC9824100AC98FD /* ObjectWithValueMetadataTests.swift in Sources */,
 				653B04BE1BC9824100AC98FD /* ValueWithObjectMetadataTests.swift in Sources */,

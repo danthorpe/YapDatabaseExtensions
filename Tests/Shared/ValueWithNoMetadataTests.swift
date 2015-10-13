@@ -92,6 +92,15 @@ class ValueWithNoMetadataTests: XCTestCase {
 
     // MARK: Tests
 
+    func test__metadata_is_nil() {
+        XCTAssertNil(item.metadata)
+    }
+
+    func test__metadata_cannot_be_set() {
+        item.metadata = Void()
+        XCTAssertNil(item.metadata)
+    }
+
     // Writing
 
     func test__writer_initializes_with_single_item() {
@@ -463,6 +472,175 @@ class ValueWithNoMetadataTests: XCTestCase {
         XCTAssertEqual(items.map { $0.identifier }, items.prefixUpTo(1).map { $0.identifier })
         XCTAssertEqual(missing, Array(keys.suffixFrom(1)))
     }
+
+    // Functional API - ReadTransactionType - Reading
+
+    func test__transaction__read_at_index_with_data() {
+        configureForReadingSingle()
+        let barcode: Barcode? = readTransaction.readAtIndex(index)
+        XCTAssertNotNil(barcode)
+        XCTAssertEqual(barcode!.identifier, item.identifier)
+        XCTAssertNil(barcode!.metadata)
+    }
+
+    func test__transaction__read_at_index_without_data() {
+        let barcode: Barcode? = readTransaction.readAtIndex(index)
+        XCTAssertNil(barcode)
+    }
+
+    func test__transaction__read_at_indexes_with_data() {
+        configureForReadingMultiple()
+        let barcodes: [Barcode] = readTransaction.readAtIndexes(indexes)
+        XCTAssertEqual(barcodes.count, items.count)
+    }
+
+    func test__transaction__read_at_indexes_without_data() {
+        let barcodes: [Barcode] = readTransaction.readAtIndexes(indexes)
+        XCTAssertNotNil(barcodes)
+        XCTAssertTrue(barcodes.isEmpty)
+    }
+
+    func test__transaction__read_by_key_with_data() {
+        configureForReadingSingle()
+        let barcode: Barcode? = readTransaction.readByKey(key)
+        XCTAssertNotNil(barcode)
+        XCTAssertEqual(barcode!.identifier, item.identifier)
+        XCTAssertNil(barcode!.metadata)
+    }
+
+    func test__transaction__read_by_key_without_data() {
+        let barcode: Barcode? = readTransaction.readByKey(key)
+        XCTAssertNil(barcode)
+    }
+
+    func test__transaction__read_by_keys_with_data() {
+        configureForReadingMultiple()
+        let barcodes: [Barcode] = readTransaction.readByKeys(keys)
+        XCTAssertEqual(barcodes.count, items.count)
+    }
+
+    func test__transaction__read_by_keys_without_data() {
+        let barcodes: [Barcode] = readTransaction.readByKeys(keys)
+        XCTAssertNotNil(barcodes)
+        XCTAssertTrue(barcodes.isEmpty)
+    }
+
+    // Functional API - ConnectionType - Reading
+
+    func test__connection__read_at_index_with_data() {
+        configureForReadingSingle()
+        let barcode: Barcode? = connection.readAtIndex(index)
+        XCTAssertNotNil(barcode)
+        XCTAssertEqual(barcode!.identifier, item.identifier)
+        XCTAssertNil(barcode!.metadata)
+    }
+
+    func test__connection__read_at_index_without_data() {
+        let barcode: Barcode? = connection.readAtIndex(index)
+        XCTAssertNil(barcode)
+    }
+
+    func test__connection__read_at_indexes_with_data() {
+        configureForReadingMultiple()
+        let barcodes: [Barcode] = connection.readAtIndexes(indexes)
+        XCTAssertEqual(barcodes.count, items.count)
+    }
+
+    func test__connection__read_at_indexes_without_data() {
+        let barcodes: [Barcode] = connection.readAtIndexes(indexes)
+        XCTAssertNotNil(barcodes)
+        XCTAssertTrue(barcodes.isEmpty)
+    }
+
+    func test__connection__read_by_key_with_data() {
+        configureForReadingSingle()
+        let barcode: Barcode? = connection.readByKey(key)
+        XCTAssertNotNil(barcode)
+        XCTAssertEqual(barcode!.identifier, item.identifier)
+        XCTAssertNil(barcode!.metadata)
+    }
+
+    func test__connection__read_by_key_without_data() {
+        let barcode: Barcode? = connection.readByKey(key)
+        XCTAssertNil(barcode)
+    }
+
+    func test__connection__read_by_keys_with_data() {
+        configureForReadingMultiple()
+        let barcodes: [Barcode] = connection.readByKeys(keys)
+        XCTAssertEqual(barcodes.count, items.count)
+    }
+
+    func test__connection__read_by_keys_without_data() {
+        let barcodes: [Barcode] = connection.readByKeys(keys)
+        XCTAssertNotNil(barcodes)
+        XCTAssertTrue(barcodes.isEmpty)
+    }
+
+    // MARK: - Functional API - Transaction - Writing
+
+    func test__transaction__write_item() {
+        writeTransaction.write(item)
+
+        XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].0, index)
+        XCTAssertEqual(Barcode.decode(writeTransaction.didWriteAtIndexes[0].1)!, item)
+        XCTAssertNil(writeTransaction.didWriteAtIndexes[0].2)
+    }
+
+    func test__transaction__write_items() {
+        writeTransaction.write(items)
+
+        XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes.map { $0.0.key }.sort(), indexes.map { $0.key }.sort())
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes.map { $0.2 }.count, items.count)
+    }
+
+    // Functional API - Connection - Writing
+
+    func test__connection__write_item() {
+        connection.write(item)
+
+        XCTAssertTrue(connection.didWrite)
+        XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].0, index)
+        XCTAssertEqual(Barcode.decode(writeTransaction.didWriteAtIndexes[0].1)!, item)
+        XCTAssertNil(writeTransaction.didWriteAtIndexes[0].2)
+    }
+
+    func test__connection__write_items() {
+        connection.write(items)
+
+        XCTAssertTrue(connection.didWrite)
+        XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes.map { $0.0.key }.sort(), indexes.map { $0.key }.sort())
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes.map { $0.2 }.count, items.count)
+    }
+
+    func test__connection__async_write_item() {
+        let expectation = expectationWithDescription("Test: \(__FUNCTION__)")
+        connection.asyncWrite(item) { expectation.fulfill() }
+
+        waitForExpectationsWithTimeout(3.0, handler: nil)
+        XCTAssertTrue(connection.didAsyncWrite)
+        XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].0, index)
+        XCTAssertEqual(Barcode.decode(writeTransaction.didWriteAtIndexes[0].1)!, item)
+        XCTAssertNil(writeTransaction.didWriteAtIndexes[0].2)
+    }
+
+    func test__connection__async_write_items() {
+        let expectation = expectationWithDescription("Test: \(__FUNCTION__)")
+        connection.asyncWrite(items) { expectation.fulfill() }
+
+        waitForExpectationsWithTimeout(3.0, handler: nil)
+        XCTAssertTrue(connection.didAsyncWrite)
+        XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes.map { $0.0.key }.sort(), indexes.map { $0.key }.sort())
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes.map { $0.2 }.count, items.count)
+    }
+
+
 
 }
 
