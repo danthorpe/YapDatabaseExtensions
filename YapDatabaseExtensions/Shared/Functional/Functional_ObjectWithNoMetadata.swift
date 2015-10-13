@@ -184,7 +184,7 @@ extension WriteTransactionType {
     /**
     Write the items to the database using the transaction.
 
-    - parameter items: an array of items to store.
+    - parameter items: a SequenceType of items to store.
     */
     public func write<
         Items, ObjectWithNoMetadata where
@@ -215,7 +215,7 @@ extension ConnectionType {
     /**
     Write the items to the database synchronously using the connection in a new transaction.
 
-    - parameter items: an array of items to store.
+    - parameter items: a SequenceType of items to store.
     */
     public func write<
         Items, ObjectWithNoMetadata where
@@ -245,7 +245,7 @@ extension ConnectionType {
     /**
     Write the items to the database asynchronously using the connection in a new transaction.
 
-    - parameter items: an array of items to store.
+    - parameter items: a SequenceType of items to store.
     - parameter queue: the dispatch_queue_t to run the completion block on.
     - parameter completion: a dispatch_block_t for completion.
     */
