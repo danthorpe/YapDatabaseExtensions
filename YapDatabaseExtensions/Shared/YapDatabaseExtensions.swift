@@ -599,10 +599,13 @@ public func indexForPersistable<P: Persistable>(persistable: P) -> YapDB.Index {
 
 // MARK: - Deprecations
 
-@available(*, unavailable, renamed="MetadataPersistable")
+@available(*, unavailable, renamed="Persistable")
+public typealias MetadataPersistable = Persistable
+
+@available(*, unavailable, renamed="Persistable")
 public typealias ObjectMetadataPersistable = Persistable
 
-@available(*, unavailable, renamed="MetadataPersistable")
+@available(*, unavailable, renamed="Persistable")
 public typealias ValueMetadataPersistable = Persistable
 
 @available(*, unavailable, renamed="ValueCoding")
