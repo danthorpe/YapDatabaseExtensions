@@ -221,7 +221,7 @@ extension Persistable {
     }
 
     /**
-    Default metadata property. Override this to re-define your
+    Default metadata property. Implement this to re-define your
     own MetadataType.
     */
     public var metadata: Void? {
