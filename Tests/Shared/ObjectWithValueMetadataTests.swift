@@ -635,6 +635,13 @@ class ObjectWithValueMetadataTests: XCTestCase {
         XCTAssertTrue(managers.isEmpty)
     }
 
+    func test__transaction__read_all_with_data() {
+        configureForReadingMultiple()
+        let result: [Manager] = readTransaction.readAll()
+        XCTAssertEqual(Set(readTransaction.didReadAtIndexes), Set(indexes))
+        XCTAssertEqual(result.count, items.count)
+    }
+
     // Functional API - ConnectionType - Reading
 
     func test__connection__read_at_index_with_data() {
@@ -707,6 +714,14 @@ class ObjectWithValueMetadataTests: XCTestCase {
         let managers: [Manager] = connection.readByKeys(keys)
         XCTAssertNotNil(managers)
         XCTAssertTrue(managers.isEmpty)
+    }
+
+    func test__connection__read_all_with_data() {
+        configureForReadingMultiple()
+        let result: [Manager] = connection.readAll()
+        XCTAssertTrue(connection.didRead)
+        XCTAssertEqual(Set(readTransaction.didReadAtIndexes), Set(indexes))
+        XCTAssertEqual(result.count, items.count)
     }
 
     // MARK: - Functional API - Transaction - Writing

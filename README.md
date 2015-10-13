@@ -190,11 +190,14 @@ if let item: Item? = connection.readByKey(index) {
 
 let items: [Item] = connection.readByKeys(keys)
 
+let all: [Item] = connection.readAll()
+
 connection.read { transaction in
     let a: Item? = transaction.readAtIndex(index)
     let b: Item? = transaction.readByKey(key)
     let c: [Item] = transaction.readAtIndexes(indexes)
     let d: [Item] = transaction.readByKeys(keys)
+    let all: [Item] = transaction.readAll()
 }
 ```
 

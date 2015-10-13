@@ -515,6 +515,13 @@ class ValueWithNoMetadataTests: XCTestCase {
         XCTAssertTrue(barcodes.isEmpty)
     }
 
+    func test__transaction__read_all_with_data() {
+        configureForReadingMultiple()
+        let result: [Barcode] = readTransaction.readAll()
+        XCTAssertEqual(Set(readTransaction.didReadAtIndexes), Set(indexes))
+        XCTAssertEqual(result.count, items.count)
+    }
+
     // Functional API - ConnectionType - Reading
 
     func test__connection__read_at_index_with_data() {
@@ -565,6 +572,14 @@ class ValueWithNoMetadataTests: XCTestCase {
         let barcodes: [Barcode] = connection.readByKeys(keys)
         XCTAssertNotNil(barcodes)
         XCTAssertTrue(barcodes.isEmpty)
+    }
+
+    func test__connection__read_all_with_data() {
+        configureForReadingMultiple()
+        let result: [Barcode] = connection.readAll()
+        XCTAssertTrue(connection.didRead)
+        XCTAssertEqual(Set(readTransaction.didReadAtIndexes), Set(indexes))
+        XCTAssertEqual(result.count, items.count)
     }
 
     // MARK: - Functional API - Transaction - Writing

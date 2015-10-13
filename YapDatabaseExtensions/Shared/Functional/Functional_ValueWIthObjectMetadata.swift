@@ -81,6 +81,21 @@ extension ReadTransactionType {
         ValueWithObjectMetadata.MetadataType: NSCoding>(keys: [String]) -> [ValueWithObjectMetadata] {
             return readAtIndexes(ValueWithObjectMetadata.indexesWithKeys(keys))
     }
+
+    /**
+    Reads all the items in the database.
+
+    - returns: an array of `ItemType`
+    */
+    public func readAll<
+        ValueWithObjectMetadata where
+        ValueWithObjectMetadata: Persistable,
+        ValueWithObjectMetadata: ValueCoding,
+        ValueWithObjectMetadata.Coder: NSCoding,
+        ValueWithObjectMetadata.Coder.ValueType == ValueWithObjectMetadata,
+        ValueWithObjectMetadata.MetadataType: NSCoding>() -> [ValueWithObjectMetadata] {
+            return readByKeys(keysInCollection(ValueWithObjectMetadata.collection))
+    }
 }
 
 extension ConnectionType {
@@ -147,6 +162,21 @@ extension ConnectionType {
         ValueWithObjectMetadata.Coder.ValueType == ValueWithObjectMetadata,
         ValueWithObjectMetadata.MetadataType: NSCoding>(keys: [String]) -> [ValueWithObjectMetadata] {
             return readAtIndexes(ValueWithObjectMetadata.indexesWithKeys(keys))
+    }
+
+    /**
+    Reads all the items in the database.
+
+    - returns: an array of `ItemType`
+    */
+    public func readAll<
+        ValueWithObjectMetadata where
+        ValueWithObjectMetadata: Persistable,
+        ValueWithObjectMetadata: ValueCoding,
+        ValueWithObjectMetadata.Coder: NSCoding,
+        ValueWithObjectMetadata.Coder.ValueType == ValueWithObjectMetadata,
+        ValueWithObjectMetadata.MetadataType: NSCoding>() -> [ValueWithObjectMetadata] {
+            return read { $0.readAll() }
     }
 }
 
