@@ -238,7 +238,7 @@ extension Persistable {
 A generic protocol for Persistable which support YapDatabase metadata.
 
 In order to read/write your metadata types from/to YapDatabase they must
-implement either NSCoding (i.e. be object based) or Saveable (i.e. be 
+implement either NSCoding (i.e. be object based) or ValueCoding (i.e. be
 value based).
 */
 public protocol MetadataPersistable: Persistable {
@@ -555,13 +555,13 @@ public func == (a: YapDB.Index, b: YapDB.Index) -> Bool {
     return (a.collection == b.collection) && (a.key == b.key)
 }
 
-// MARK: Saveable
+// MARK: ValueCoding
 
 extension YapDB.Index: ValueCoding {
     public typealias Coder = YapDBIndexCoder
 }
 
-// MARK: Archivers
+// MARK: Coders
 
 public final class YapDBIndexCoder: NSObject, NSCoding, CodingType {
     public let value: YapDB.Index
