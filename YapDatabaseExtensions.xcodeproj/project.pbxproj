@@ -61,6 +61,12 @@
 		65C557A41BCB26010065C96A /* Write.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C5578A1BCB26010065C96A /* Write.swift */; settings = {ASSET_TAGS = (); }; };
 		65C557A61BCB26310065C96A /* Functional_Remove.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C557A51BCB26310065C96A /* Functional_Remove.swift */; settings = {ASSET_TAGS = (); }; };
 		65C557A71BCB26310065C96A /* Functional_Remove.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C557A51BCB26310065C96A /* Functional_Remove.swift */; settings = {ASSET_TAGS = (); }; };
+		65C8DB401BCD24AF002F2C05 /* ObjectWithNoMetadataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04911BC9820A00AC98FD /* ObjectWithNoMetadataTests.swift */; settings = {ASSET_TAGS = (); }; };
+		65C8DB411BCD24AF002F2C05 /* ObjectWithNoMetadataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04911BC9820A00AC98FD /* ObjectWithNoMetadataTests.swift */; settings = {ASSET_TAGS = (); }; };
+		65C8DB421BCD24EA002F2C05 /* Persistable_ObjectWithNoMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C557821BCB26010065C96A /* Persistable_ObjectWithNoMetadata.swift */; settings = {ASSET_TAGS = (); }; };
+		65C8DB431BCD24EB002F2C05 /* Persistable_ObjectWithNoMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C557821BCB26010065C96A /* Persistable_ObjectWithNoMetadata.swift */; settings = {ASSET_TAGS = (); }; };
+		65C8DB441BCD24FA002F2C05 /* Persistable_ValueWithNoMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C557851BCB26010065C96A /* Persistable_ValueWithNoMetadata.swift */; settings = {ASSET_TAGS = (); }; };
+		65C8DB451BCD24FB002F2C05 /* Persistable_ValueWithNoMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C557851BCB26010065C96A /* Persistable_ValueWithNoMetadata.swift */; settings = {ASSET_TAGS = (); }; };
 		AC8FC0BC100A1A0A60C3B18F /* Pods_YapDatabaseExtensions_OSXTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 574741755E625D8A78119A8A /* Pods_YapDatabaseExtensions_OSXTests.framework */; };
 /* End PBXBuildFile section */
 
@@ -642,6 +648,8 @@
 				65C557A61BCB26310065C96A /* Functional_Remove.swift in Sources */,
 				65C5579B1BCB26010065C96A /* Persistable_ValueWithObjectMetadata.swift in Sources */,
 				65C5579D1BCB26010065C96A /* Persistable_ValueWithValueMetadata.swift in Sources */,
+				65C8DB441BCD24FA002F2C05 /* Persistable_ValueWithNoMetadata.swift in Sources */,
+				65C8DB421BCD24EA002F2C05 /* Persistable_ObjectWithNoMetadata.swift in Sources */,
 				65C557A31BCB26010065C96A /* Write.swift in Sources */,
 				65C557911BCB26010065C96A /* Functional_ValueWIthValueMetadata.swift in Sources */,
 				65C5578F1BCB26010065C96A /* Functional_ValueWIthObjectMetadata.swift in Sources */,
@@ -665,6 +673,7 @@
 				653B04B21BC9824000AC98FD /* ValueWithObjectMetadataTests.swift in Sources */,
 				653B04B41BC9824000AC98FD /* YapDatabaseExtensionsTests.swift in Sources */,
 				653B04B01BC9824000AC98FD /* Support.swift in Sources */,
+				65C8DB401BCD24AF002F2C05 /* ObjectWithNoMetadataTests.swift in Sources */,
 				653B04AA1BC9824000AC98FD /* Models.swift in Sources */,
 				653B04B31BC9824000AC98FD /* ValueWithValueMetadataTests.swift in Sources */,
 				653B04AE1BC9824000AC98FD /* ReadWriteTests.swift in Sources */,
@@ -679,6 +688,8 @@
 				65C557A71BCB26310065C96A /* Functional_Remove.swift in Sources */,
 				65C5579C1BCB26010065C96A /* Persistable_ValueWithObjectMetadata.swift in Sources */,
 				65C5579E1BCB26010065C96A /* Persistable_ValueWithValueMetadata.swift in Sources */,
+				65C8DB451BCD24FB002F2C05 /* Persistable_ValueWithNoMetadata.swift in Sources */,
+				65C8DB431BCD24EB002F2C05 /* Persistable_ObjectWithNoMetadata.swift in Sources */,
 				65C557A41BCB26010065C96A /* Write.swift in Sources */,
 				65C557921BCB26010065C96A /* Functional_ValueWIthValueMetadata.swift in Sources */,
 				65C557901BCB26010065C96A /* Functional_ValueWIthObjectMetadata.swift in Sources */,
@@ -702,6 +713,7 @@
 				653B04BE1BC9824100AC98FD /* ValueWithObjectMetadataTests.swift in Sources */,
 				653B04C01BC9824100AC98FD /* YapDatabaseExtensionsTests.swift in Sources */,
 				653B04BC1BC9824100AC98FD /* Support.swift in Sources */,
+				65C8DB411BCD24AF002F2C05 /* ObjectWithNoMetadataTests.swift in Sources */,
 				653B04B61BC9824100AC98FD /* Models.swift in Sources */,
 				653B04BF1BC9824100AC98FD /* ValueWithValueMetadataTests.swift in Sources */,
 				653B04BA1BC9824100AC98FD /* ReadWriteTests.swift in Sources */,
