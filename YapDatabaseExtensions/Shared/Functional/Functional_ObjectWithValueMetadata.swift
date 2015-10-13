@@ -203,8 +203,9 @@ extension WriteTransactionType {
         ObjectWithValueMetadata: NSCoding,
         ObjectWithValueMetadata.MetadataType: ValueCoding,
         ObjectWithValueMetadata.MetadataType.Coder: NSCoding,
-        ObjectWithValueMetadata.MetadataType.Coder.ValueType == ObjectWithValueMetadata.MetadataType>(item: ObjectWithValueMetadata) {
+        ObjectWithValueMetadata.MetadataType.Coder.ValueType == ObjectWithValueMetadata.MetadataType>(item: ObjectWithValueMetadata) -> ObjectWithValueMetadata {
             writeAtIndex(item.index, object: item, metadata: item.metadata?.encoded)
+            return item
     }
 
     /**
@@ -220,8 +221,8 @@ extension WriteTransactionType {
         ObjectWithValueMetadata: NSCoding,
         ObjectWithValueMetadata.MetadataType: ValueCoding,
         ObjectWithValueMetadata.MetadataType.Coder: NSCoding,
-        ObjectWithValueMetadata.MetadataType.Coder.ValueType == ObjectWithValueMetadata.MetadataType>(items: Items) {
-            items.forEach(write)
+        ObjectWithValueMetadata.MetadataType.Coder.ValueType == ObjectWithValueMetadata.MetadataType>(items: Items) -> [ObjectWithValueMetadata] {
+            return items.map(write)
     }
 }
 
@@ -238,8 +239,8 @@ extension ConnectionType {
         ObjectWithValueMetadata: NSCoding,
         ObjectWithValueMetadata.MetadataType: ValueCoding,
         ObjectWithValueMetadata.MetadataType.Coder: NSCoding,
-        ObjectWithValueMetadata.MetadataType.Coder.ValueType == ObjectWithValueMetadata.MetadataType>(item: ObjectWithValueMetadata) {
-            write { $0.write(item) }
+        ObjectWithValueMetadata.MetadataType.Coder.ValueType == ObjectWithValueMetadata.MetadataType>(item: ObjectWithValueMetadata) -> ObjectWithValueMetadata {
+            return write { $0.write(item) }
     }
 
     /**
@@ -255,8 +256,8 @@ extension ConnectionType {
         ObjectWithValueMetadata: NSCoding,
         ObjectWithValueMetadata.MetadataType: ValueCoding,
         ObjectWithValueMetadata.MetadataType.Coder: NSCoding,
-        ObjectWithValueMetadata.MetadataType.Coder.ValueType == ObjectWithValueMetadata.MetadataType>(items: Items) {
-            write { $0.write(items) }
+        ObjectWithValueMetadata.MetadataType.Coder.ValueType == ObjectWithValueMetadata.MetadataType>(items: Items) -> [ObjectWithValueMetadata] {
+            return write { $0.write(items) }
     }
 
     /**
@@ -272,8 +273,8 @@ extension ConnectionType {
         ObjectWithValueMetadata: NSCoding,
         ObjectWithValueMetadata.MetadataType: ValueCoding,
         ObjectWithValueMetadata.MetadataType.Coder: NSCoding,
-        ObjectWithValueMetadata.MetadataType.Coder.ValueType == ObjectWithValueMetadata.MetadataType>(item: ObjectWithValueMetadata, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: dispatch_block_t? = .None) {
-            asyncWrite({ $0.write(item) }, queue: queue, completion: { _ in completion?() })
+        ObjectWithValueMetadata.MetadataType.Coder.ValueType == ObjectWithValueMetadata.MetadataType>(item: ObjectWithValueMetadata, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: (ObjectWithValueMetadata -> Void)? = .None) {
+            asyncWrite({ $0.write(item) }, queue: queue, completion: completion)
     }
 
     /**
@@ -291,8 +292,8 @@ extension ConnectionType {
         ObjectWithValueMetadata: NSCoding,
         ObjectWithValueMetadata.MetadataType: ValueCoding,
         ObjectWithValueMetadata.MetadataType.Coder: NSCoding,
-        ObjectWithValueMetadata.MetadataType.Coder.ValueType == ObjectWithValueMetadata.MetadataType>(items: Items, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: dispatch_block_t? = .None) {
-            asyncWrite({ $0.write(items) }, queue: queue, completion: { _ in completion?() })
+        ObjectWithValueMetadata.MetadataType.Coder.ValueType == ObjectWithValueMetadata.MetadataType>(items: Items, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: ([ObjectWithValueMetadata] -> Void)? = .None) {
+            asyncWrite({ $0.write(items) }, queue: queue, completion: completion)
     }
 }
 

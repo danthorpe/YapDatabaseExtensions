@@ -217,8 +217,9 @@ extension WriteTransactionType {
         ValueWithValueMetadata.Coder.ValueType == ValueWithValueMetadata,
         ValueWithValueMetadata.MetadataType: ValueCoding,
         ValueWithValueMetadata.MetadataType.Coder: NSCoding,
-        ValueWithValueMetadata.MetadataType.Coder.ValueType == ValueWithValueMetadata.MetadataType>(item: ValueWithValueMetadata) {
+        ValueWithValueMetadata.MetadataType.Coder.ValueType == ValueWithValueMetadata.MetadataType>(item: ValueWithValueMetadata) -> ValueWithValueMetadata {
             writeAtIndex(item.index, object: item.encoded, metadata: item.metadata?.encoded)
+            return item
     }
 
     /**
@@ -234,8 +235,8 @@ extension WriteTransactionType {
         ValueWithValueMetadata.Coder.ValueType == ValueWithValueMetadata,
         ValueWithValueMetadata.MetadataType: ValueCoding,
         ValueWithValueMetadata.MetadataType.Coder: NSCoding,
-        ValueWithValueMetadata.MetadataType.Coder.ValueType == ValueWithValueMetadata.MetadataType>(items: [ValueWithValueMetadata]) {
-            items.forEach(write)
+        ValueWithValueMetadata.MetadataType.Coder.ValueType == ValueWithValueMetadata.MetadataType>(items: [ValueWithValueMetadata]) -> [ValueWithValueMetadata] {
+            return items.map(write)
     }
 }
 
@@ -254,8 +255,8 @@ extension ConnectionType {
         ValueWithValueMetadata.Coder.ValueType == ValueWithValueMetadata,
         ValueWithValueMetadata.MetadataType: ValueCoding,
         ValueWithValueMetadata.MetadataType.Coder: NSCoding,
-        ValueWithValueMetadata.MetadataType.Coder.ValueType == ValueWithValueMetadata.MetadataType>(item: ValueWithValueMetadata) {
-            write { $0.write(item) }
+        ValueWithValueMetadata.MetadataType.Coder.ValueType == ValueWithValueMetadata.MetadataType>(item: ValueWithValueMetadata) -> ValueWithValueMetadata {
+            return write { $0.write(item) }
     }
 
     /**
@@ -271,8 +272,8 @@ extension ConnectionType {
         ValueWithValueMetadata.Coder.ValueType == ValueWithValueMetadata,
         ValueWithValueMetadata.MetadataType: ValueCoding,
         ValueWithValueMetadata.MetadataType.Coder: NSCoding,
-        ValueWithValueMetadata.MetadataType.Coder.ValueType == ValueWithValueMetadata.MetadataType>(items: [ValueWithValueMetadata]) {
-            write { $0.write(items) }
+        ValueWithValueMetadata.MetadataType.Coder.ValueType == ValueWithValueMetadata.MetadataType>(items: [ValueWithValueMetadata]) -> [ValueWithValueMetadata] {
+            return write { $0.write(items) }
     }
 
     /**
@@ -290,8 +291,8 @@ extension ConnectionType {
         ValueWithValueMetadata.Coder.ValueType == ValueWithValueMetadata,
         ValueWithValueMetadata.MetadataType: ValueCoding,
         ValueWithValueMetadata.MetadataType.Coder: NSCoding,
-        ValueWithValueMetadata.MetadataType.Coder.ValueType == ValueWithValueMetadata.MetadataType>(item: ValueWithValueMetadata, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: dispatch_block_t? = .None) {
-            asyncWrite({ $0.write(item) }, queue: queue, completion: { _ in completion?() })
+        ValueWithValueMetadata.MetadataType.Coder.ValueType == ValueWithValueMetadata.MetadataType>(item: ValueWithValueMetadata, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: (ValueWithValueMetadata -> Void)? = .None) {
+            asyncWrite({ $0.write(item) }, queue: queue, completion: completion)
     }
 
     /**
@@ -309,8 +310,8 @@ extension ConnectionType {
         ValueWithValueMetadata.Coder.ValueType == ValueWithValueMetadata,
         ValueWithValueMetadata.MetadataType: ValueCoding,
         ValueWithValueMetadata.MetadataType.Coder: NSCoding,
-        ValueWithValueMetadata.MetadataType.Coder.ValueType == ValueWithValueMetadata.MetadataType>(items: [ValueWithValueMetadata], queue: dispatch_queue_t = dispatch_get_main_queue(), completion: dispatch_block_t? = .None) {
-            asyncWrite({ $0.write(items) }, queue: queue, completion: { _ in completion?() })
+        ValueWithValueMetadata.MetadataType.Coder.ValueType == ValueWithValueMetadata.MetadataType>(items: [ValueWithValueMetadata], queue: dispatch_queue_t = dispatch_get_main_queue(), completion: ([ValueWithValueMetadata] -> Void)? = .None) {
+            asyncWrite({ $0.write(items) }, queue: queue, completion: completion)
     }
 }
 

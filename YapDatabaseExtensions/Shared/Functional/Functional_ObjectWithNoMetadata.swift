@@ -172,19 +172,22 @@ extension WriteTransactionType {
     Write the item to the database using the transaction.
 
     - parameter item: the item to store.
+    - returns: the same item
     */
     public func write<
         ObjectWithNoMetadata where
         ObjectWithNoMetadata: Persistable,
         ObjectWithNoMetadata: NSCoding,
-        ObjectWithNoMetadata.MetadataType == Void>(item: ObjectWithNoMetadata) {
+        ObjectWithNoMetadata.MetadataType == Void>(item: ObjectWithNoMetadata) -> ObjectWithNoMetadata {
             writeAtIndex(item.index, object: item, metadata: .None)
+            return item
     }
 
     /**
     Write the items to the database using the transaction.
 
     - parameter items: a SequenceType of items to store.
+    - returns: the same items, in an array.
     */
     public func write<
         Items, ObjectWithNoMetadata where
@@ -192,8 +195,8 @@ extension WriteTransactionType {
         Items.Generator.Element == ObjectWithNoMetadata,
         ObjectWithNoMetadata: Persistable,
         ObjectWithNoMetadata: NSCoding,
-        ObjectWithNoMetadata.MetadataType == Void>(items: Items) {
-            items.forEach(write)
+        ObjectWithNoMetadata.MetadataType == Void>(items: Items) -> [ObjectWithNoMetadata] {
+            return items.map(write)
     }
 }
 
@@ -203,19 +206,21 @@ extension ConnectionType {
     Write the item to the database synchronously using the connection in a new transaction.
 
     - parameter item: the item to store.
+    - returns: the same item
     */
     public func write<
         ObjectWithNoMetadata where
         ObjectWithNoMetadata: Persistable,
         ObjectWithNoMetadata: NSCoding,
-        ObjectWithNoMetadata.MetadataType == Void>(item: ObjectWithNoMetadata) {
-            write { $0.write(item) }
+        ObjectWithNoMetadata.MetadataType == Void>(item: ObjectWithNoMetadata) -> ObjectWithNoMetadata {
+            return write { $0.write(item) }
     }
 
     /**
     Write the items to the database synchronously using the connection in a new transaction.
 
     - parameter items: a SequenceType of items to store.
+    - returns: the same items, in an array.
     */
     public func write<
         Items, ObjectWithNoMetadata where
@@ -223,8 +228,8 @@ extension ConnectionType {
         Items.Generator.Element == ObjectWithNoMetadata,
         ObjectWithNoMetadata: Persistable,
         ObjectWithNoMetadata: NSCoding,
-        ObjectWithNoMetadata.MetadataType == Void>(items: Items) {
-            write { $0.write(items) }
+        ObjectWithNoMetadata.MetadataType == Void>(items: Items) -> [ObjectWithNoMetadata] {
+            return write { $0.write(items) }
     }
 
     /**
@@ -238,8 +243,8 @@ extension ConnectionType {
         ObjectWithNoMetadata where
         ObjectWithNoMetadata: Persistable,
         ObjectWithNoMetadata: NSCoding,
-        ObjectWithNoMetadata.MetadataType == Void>(item: ObjectWithNoMetadata, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: dispatch_block_t? = .None) {
-            asyncWrite({ $0.write(item) }, queue: queue, completion: { _ in completion?() })
+        ObjectWithNoMetadata.MetadataType == Void>(item: ObjectWithNoMetadata, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: (ObjectWithNoMetadata -> Void)? = .None) {
+            asyncWrite({ $0.write(item) }, queue: queue, completion: completion)
     }
 
     /**
@@ -255,8 +260,8 @@ extension ConnectionType {
         Items.Generator.Element == ObjectWithNoMetadata,
         ObjectWithNoMetadata: Persistable,
         ObjectWithNoMetadata: NSCoding,
-        ObjectWithNoMetadata.MetadataType == Void>(items: Items, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: dispatch_block_t? = .None) {
-            asyncWrite({ $0.write(items) }, queue: queue, completion: { _ in completion?() })
+        ObjectWithNoMetadata.MetadataType == Void>(items: Items, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: ([ObjectWithNoMetadata] -> Void)? = .None) {
+            asyncWrite({ $0.write(items) }, queue: queue, completion: completion)
     }
 }
 

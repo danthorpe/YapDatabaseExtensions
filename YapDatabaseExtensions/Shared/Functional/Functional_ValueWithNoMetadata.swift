@@ -199,8 +199,9 @@ extension WriteTransactionType {
         ValueWithNoMetadata: ValueCoding,
         ValueWithNoMetadata.Coder: NSCoding,
         ValueWithNoMetadata.Coder.ValueType == ValueWithNoMetadata,
-        ValueWithNoMetadata.MetadataType == Void>(item: ValueWithNoMetadata) {
+        ValueWithNoMetadata.MetadataType == Void>(item: ValueWithNoMetadata) -> ValueWithNoMetadata {
             writeAtIndex(item.index, object: item.encoded, metadata: .None)
+            return item
     }
 
     /**
@@ -216,8 +217,8 @@ extension WriteTransactionType {
         ValueWithNoMetadata: ValueCoding,
         ValueWithNoMetadata.Coder: NSCoding,
         ValueWithNoMetadata.Coder.ValueType == ValueWithNoMetadata,
-        ValueWithNoMetadata.MetadataType == Void>(items: Items) {
-            items.forEach(write)
+        ValueWithNoMetadata.MetadataType == Void>(items: Items) -> [ValueWithNoMetadata] {
+            return items.map(write)
     }
 }
 
@@ -234,8 +235,8 @@ extension ConnectionType {
         ValueWithNoMetadata: ValueCoding,
         ValueWithNoMetadata.Coder: NSCoding,
         ValueWithNoMetadata.Coder.ValueType == ValueWithNoMetadata,
-        ValueWithNoMetadata.MetadataType == Void>(item: ValueWithNoMetadata) {
-            write { $0.write(item) }
+        ValueWithNoMetadata.MetadataType == Void>(item: ValueWithNoMetadata) -> ValueWithNoMetadata {
+            return write { $0.write(item) }
     }
 
     /**
@@ -251,8 +252,8 @@ extension ConnectionType {
         ValueWithNoMetadata: ValueCoding,
         ValueWithNoMetadata.Coder: NSCoding,
         ValueWithNoMetadata.Coder.ValueType == ValueWithNoMetadata,
-        ValueWithNoMetadata.MetadataType == Void>(items: Items) {
-            write { $0.write(items) }
+        ValueWithNoMetadata.MetadataType == Void>(items: Items) -> [ValueWithNoMetadata] {
+            return write { $0.write(items) }
     }
 
     /**
@@ -268,8 +269,8 @@ extension ConnectionType {
         ValueWithNoMetadata: ValueCoding,
         ValueWithNoMetadata.Coder: NSCoding,
         ValueWithNoMetadata.Coder.ValueType == ValueWithNoMetadata,
-        ValueWithNoMetadata.MetadataType == Void>(item: ValueWithNoMetadata, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: dispatch_block_t? = .None) {
-            asyncWrite({ $0.write(item) }, queue: queue, completion: { _ in completion?() })
+        ValueWithNoMetadata.MetadataType == Void>(item: ValueWithNoMetadata, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: (ValueWithNoMetadata -> Void)? = .None) {
+            asyncWrite({ $0.write(item) }, queue: queue, completion: completion)
     }
 
     /**
@@ -287,8 +288,8 @@ extension ConnectionType {
         ValueWithNoMetadata: ValueCoding,
         ValueWithNoMetadata.Coder: NSCoding,
         ValueWithNoMetadata.Coder.ValueType == ValueWithNoMetadata,
-        ValueWithNoMetadata.MetadataType == Void>(items: Items, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: dispatch_block_t? = .None) {
-            asyncWrite({ $0.write(items) }, queue: queue, completion: { _ in completion?() })
+        ValueWithNoMetadata.MetadataType == Void>(items: Items, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: ([ValueWithNoMetadata] -> Void)? = .None) {
+            asyncWrite({ $0.write(items) }, queue: queue, completion: completion)
     }
 }
 

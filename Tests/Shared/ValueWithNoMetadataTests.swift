@@ -624,7 +624,7 @@ class ValueWithNoMetadataTests: XCTestCase {
 
     func test__connection__async_write_item() {
         let expectation = expectationWithDescription("Test: \(__FUNCTION__)")
-        connection.asyncWrite(item) { expectation.fulfill() }
+        connection.asyncWrite(item) { _ in expectation.fulfill() }
 
         waitForExpectationsWithTimeout(3.0, handler: nil)
         XCTAssertTrue(connection.didAsyncWrite)
@@ -636,7 +636,7 @@ class ValueWithNoMetadataTests: XCTestCase {
 
     func test__connection__async_write_items() {
         let expectation = expectationWithDescription("Test: \(__FUNCTION__)")
-        connection.asyncWrite(items) { expectation.fulfill() }
+        connection.asyncWrite(items) { _ in expectation.fulfill() }
 
         waitForExpectationsWithTimeout(3.0, handler: nil)
         XCTAssertTrue(connection.didAsyncWrite)

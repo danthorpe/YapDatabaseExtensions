@@ -181,8 +181,9 @@ extension WriteTransactionType {
         ObjectWithObjectMetadata where
         ObjectWithObjectMetadata: Persistable,
         ObjectWithObjectMetadata: NSCoding,
-        ObjectWithObjectMetadata.MetadataType: NSCoding>(item: ObjectWithObjectMetadata) {
+        ObjectWithObjectMetadata.MetadataType: NSCoding>(item: ObjectWithObjectMetadata) -> ObjectWithObjectMetadata {
             writeAtIndex(item.index, object: item, metadata: item.metadata)
+            return item
     }
 
     /**
@@ -196,8 +197,8 @@ extension WriteTransactionType {
         Items.Generator.Element == ObjectWithObjectMetadata,
         ObjectWithObjectMetadata: Persistable,
         ObjectWithObjectMetadata: NSCoding,
-        ObjectWithObjectMetadata.MetadataType: NSCoding>(items: Items) {
-            items.forEach(write)
+        ObjectWithObjectMetadata.MetadataType: NSCoding>(items: Items) -> [ObjectWithObjectMetadata] {
+            return items.map(write)
     }
 }
 
@@ -212,8 +213,8 @@ extension ConnectionType {
         ObjectWithObjectMetadata where
         ObjectWithObjectMetadata: Persistable,
         ObjectWithObjectMetadata: NSCoding,
-        ObjectWithObjectMetadata.MetadataType: NSCoding>(item: ObjectWithObjectMetadata) {
-            write { $0.write(item) }
+        ObjectWithObjectMetadata.MetadataType: NSCoding>(item: ObjectWithObjectMetadata) -> ObjectWithObjectMetadata {
+            return write { $0.write(item) }
     }
 
     /**
@@ -227,8 +228,8 @@ extension ConnectionType {
         Items.Generator.Element == ObjectWithObjectMetadata,
         ObjectWithObjectMetadata: Persistable,
         ObjectWithObjectMetadata: NSCoding,
-        ObjectWithObjectMetadata.MetadataType: NSCoding>(items: Items) {
-            write { $0.write(items) }
+        ObjectWithObjectMetadata.MetadataType: NSCoding>(items: Items) -> [ObjectWithObjectMetadata] {
+            return write { $0.write(items) }
     }
 
     /**
@@ -242,8 +243,8 @@ extension ConnectionType {
         ObjectWithObjectMetadata where
         ObjectWithObjectMetadata: Persistable,
         ObjectWithObjectMetadata: NSCoding,
-        ObjectWithObjectMetadata.MetadataType: NSCoding>(item: ObjectWithObjectMetadata, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: dispatch_block_t? = .None) {
-            asyncWrite({ $0.write(item) }, queue: queue, completion: { _ in completion?() })
+        ObjectWithObjectMetadata.MetadataType: NSCoding>(item: ObjectWithObjectMetadata, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: (ObjectWithObjectMetadata -> Void)? = .None) {
+            asyncWrite({ $0.write(item) }, queue: queue, completion: completion)
     }
 
     /**
@@ -259,8 +260,8 @@ extension ConnectionType {
         Items.Generator.Element == ObjectWithObjectMetadata,
         ObjectWithObjectMetadata: Persistable,
         ObjectWithObjectMetadata: NSCoding,
-        ObjectWithObjectMetadata.MetadataType: NSCoding>(items: Items, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: dispatch_block_t? = .None) {
-            asyncWrite({ $0.write(items) }, queue: queue, completion: { _ in completion?() })
+        ObjectWithObjectMetadata.MetadataType: NSCoding>(items: Items, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: ([ObjectWithObjectMetadata] -> Void)? = .None) {
+            asyncWrite({ $0.write(items) }, queue: queue, completion: completion)
     }
 }
 
