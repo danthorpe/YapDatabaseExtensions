@@ -177,33 +177,30 @@ class ObjectWithNoMetadataTests: XCTestCase {
     func test__reader__in_transaction_at_index() {
         configureForReadingSingle()
         reader = Read(readTransaction)
-        guard let item = reader.inTransaction(readTransaction, atIndex: index) else {
-            XCTFail("Expecting to have an item"); return
-        }
+        let result = reader.inTransaction(readTransaction, atIndex: index)
+        XCTAssertNotNil(result)
         XCTAssertEqual(readTransaction.didReadAtIndex!, index)
-        XCTAssertEqual(item.identifier, item.identifier)
+        XCTAssertEqual(result!.identifier, item.identifier)
     }
 
     func test__reader__in_transaction_at_index_2() {
         configureForReadingSingle()
         reader = Read(readTransaction)
         let atIndex = reader.inTransactionAtIndex(readTransaction)
-        guard let item = atIndex(index) else {
-            XCTFail("Expecting to have an item"); return
-        }
+        let result = atIndex(index)
+        XCTAssertNotNil(result)
         XCTAssertEqual(readTransaction.didReadAtIndex!, index)
-        XCTAssertEqual(item.identifier, item.identifier)
+        XCTAssertEqual(result!.identifier, item.identifier)
     }
 
     func test__reader__at_index_in_transaction() {
         configureForReadingSingle()
         reader = Read(readTransaction)
         let inTransaction = reader.atIndexInTransaction(index)
-        guard let item = inTransaction(readTransaction) else {
-            XCTFail("Expecting to have an item"); return
-        }
+        let result = inTransaction(readTransaction)
+        XCTAssertNotNil(result)
         XCTAssertEqual(readTransaction.didReadAtIndex!, index)
-        XCTAssertEqual(item.identifier, item.identifier)
+        XCTAssertEqual(result!.identifier, item.identifier)
     }
 
     func test__reader__at_indexes_in_transaction_with_items() {
@@ -224,33 +221,30 @@ class ObjectWithNoMetadataTests: XCTestCase {
     func test__reader__in_transaction_by_key() {
         configureForReadingSingle()
         reader = Read(readTransaction)
-        guard let item = reader.inTransaction(readTransaction, byKey: key) else {
-            XCTFail("Expecting to have an item"); return
-        }
+        let result = reader.inTransaction(readTransaction, atIndex: index)
+        XCTAssertNotNil(result)
         XCTAssertEqual(readTransaction.didReadAtIndex, index)
-        XCTAssertEqual(item.identifier, item.identifier)
+        XCTAssertEqual(result!.identifier, item.identifier)
     }
 
     func test__reader__in_transaction_by_key_2() {
         configureForReadingSingle()
         reader = Read(readTransaction)
         let byKey = reader.inTransactionByKey(readTransaction)
-        guard let item = byKey(key) else {
-            XCTFail("Expecting to have an item"); return
-        }
+        let result = byKey(key)
+        XCTAssertNotNil(result)
         XCTAssertEqual(readTransaction.didReadAtIndex, index)
-        XCTAssertEqual(item.identifier, item.identifier)
+        XCTAssertEqual(result!.identifier, item.identifier)
     }
 
     func test__reader__by_key_in_transaction() {
         configureForReadingSingle()
         reader = Read(readTransaction)
         let inTransaction = reader.byKeyInTransaction(key)
-        guard let item = inTransaction(readTransaction) else {
-            XCTFail("Expecting to have an item"); return
-        }
+        let result = inTransaction(readTransaction)
+        XCTAssertNotNil(result)
         XCTAssertEqual(readTransaction.didReadAtIndex, index)
-        XCTAssertEqual(item.identifier, item.identifier)
+        XCTAssertEqual(result!.identifier, item.identifier)
     }
 
     func test__reader__by_keys_in_transaction_with_items() {
@@ -282,11 +276,10 @@ class ObjectWithNoMetadataTests: XCTestCase {
     func test__reader_with_transaction__at_index_with_item() {
         configureForReadingSingle()
         reader = Read(readTransaction)
-        guard let item = reader.atIndex(index) else {
-            XCTFail("Expecting to have an item"); return
-        }
+        let result = reader.inTransaction(readTransaction, atIndex: index)
+        XCTAssertNotNil(result)
         XCTAssertEqual(readTransaction.didReadAtIndex!, index)
-        XCTAssertEqual(item.identifier, item.identifier)
+        XCTAssertEqual(result!.identifier, item.identifier)
     }
 
     func test__reader_with_transaction__at_index_with_no_item() {
@@ -314,11 +307,10 @@ class ObjectWithNoMetadataTests: XCTestCase {
     func test__reader_with_transaction__by_key_with_item() {
         configureForReadingSingle()
         reader = Read(readTransaction)
-        guard let item = reader.byKey(key) else {
-            XCTFail("Expecting to have an item"); return
-        }
+        let result = reader.inTransaction(readTransaction, atIndex: index)
+        XCTAssertNotNil(result)
         XCTAssertEqual(readTransaction.didReadAtIndex!, index)
-        XCTAssertEqual(item.identifier, item.identifier)
+        XCTAssertEqual(result!.identifier, item.identifier)
     }
 
     func test__reader_with_transaction__by_key_with_no_item() {
@@ -374,12 +366,11 @@ class ObjectWithNoMetadataTests: XCTestCase {
     func test__reader_with_connection__at_index_with_item() {
         configureForReadingSingle()
         reader = Read(connection)
-        guard let item = reader.atIndex(index) else {
-            XCTFail("Expecting to have an item"); return
-        }
+        let result = reader.atIndex(index)
+        XCTAssertNotNil(result)
         XCTAssertTrue(connection.didRead)
         XCTAssertEqual(readTransaction.didReadAtIndex!, index)
-        XCTAssertEqual(item.identifier, item.identifier)
+        XCTAssertEqual(result!.identifier, item.identifier)
     }
 
     func test__reader_with_connection__at_index_with_no_item() {
@@ -410,12 +401,11 @@ class ObjectWithNoMetadataTests: XCTestCase {
     func test__reader_with_connection__by_key_with_item() {
         configureForReadingSingle()
         reader = Read(connection)
-        guard let item = reader.byKey(key) else {
-            XCTFail("Expecting to have an item"); return
-        }
+        let result = reader.byKey(key)
+        XCTAssertNotNil(result)
         XCTAssertTrue(connection.didRead)
         XCTAssertEqual(readTransaction.didReadAtIndex!, index)
-        XCTAssertEqual(item.identifier, item.identifier)
+        XCTAssertEqual(result!.identifier, item.identifier)
     }
 
     func test__reader_with_connection__by_key_with_no_item() {

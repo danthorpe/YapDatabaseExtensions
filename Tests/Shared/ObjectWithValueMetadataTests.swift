@@ -170,104 +170,98 @@ class ObjectWithValueMetadataTests: XCTestCase {
     func test__reader__in_transaction_at_index() {
         configureForReadingSingle()
         reader = Read(readTransaction)
-        guard let item = reader.inTransaction(readTransaction, atIndex: index) else {
-            XCTFail("Expecting to have an item"); return
-        }
+        let result = reader.inTransaction(readTransaction, atIndex: index)
+        XCTAssertNotNil(result)
         XCTAssertEqual(readTransaction.didReadAtIndex!, index)
-        XCTAssertEqual(item.identifier, self.item.identifier)
+        XCTAssertEqual(result!.identifier, item.identifier)
     }
 
     func test__reader__in_transaction_at_index_2() {
         configureForReadingSingle()
         reader = Read(readTransaction)
         let atIndex = reader.inTransactionAtIndex(readTransaction)
-        guard let item = atIndex(index) else {
-            XCTFail("Expecting to have an item"); return
-        }
+        let result = atIndex(index)
+        XCTAssertNotNil(result)
         XCTAssertEqual(readTransaction.didReadAtIndex!, index)
-        XCTAssertEqual(item.identifier, self.item.identifier)
+        XCTAssertEqual(result!.identifier, item.identifier)
     }
 
     func test__reader__at_index_in_transaction() {
         configureForReadingSingle()
         reader = Read(readTransaction)
         let inTransaction = reader.atIndexInTransaction(index)
-        guard let item = inTransaction(readTransaction) else {
-            XCTFail("Expecting to have an item"); return
-        }
+        let result = inTransaction(readTransaction)
+        XCTAssertNotNil(result)
         XCTAssertEqual(readTransaction.didReadAtIndex!, index)
-        XCTAssertEqual(item.identifier, self.item.identifier)
+        XCTAssertEqual(result!.identifier, item.identifier)
     }
 
     func test__reader__at_indexes_in_transaction_with_items() {
         configureForReadingMultiple()
         reader = Read(readTransaction)
-        let items = reader.atIndexesInTransaction(indexes)(readTransaction)
+        let result = reader.atIndexesInTransaction(indexes)(readTransaction)
         XCTAssertEqual(readTransaction.didReadAtIndexes, indexes)
-        XCTAssertEqual(items.map { $0.identifier }, items.map { $0.identifier })
+        XCTAssertEqual(result.map { $0.identifier }, items.map { $0.identifier })
     }
 
     func test__reader__at_indexes_in_transaction_with_no_items() {
         reader = Read(readTransaction)
-        let items = reader.atIndexesInTransaction(indexes)(readTransaction)
+        let result = reader.atIndexesInTransaction(indexes)(readTransaction)
         XCTAssertEqual(readTransaction.didReadAtIndexes, indexes)
-        XCTAssertEqual(items, [])
+        XCTAssertEqual(result, [])
     }
 
     func test__reader__in_transaction_by_key() {
         configureForReadingSingle()
         reader = Read(readTransaction)
-        guard let item = reader.inTransaction(readTransaction, byKey: key) else {
-            XCTFail("Expecting to have an item"); return
-        }
+        let result = reader.inTransaction(readTransaction, byKey: key)
+        XCTAssertNotNil(result)
         XCTAssertEqual(readTransaction.didReadAtIndex, index)
-        XCTAssertEqual(item.identifier, self.item.identifier)
+        XCTAssertEqual(result!.identifier, item.identifier)
     }
 
     func test__reader__in_transaction_by_key_2() {
         configureForReadingSingle()
         reader = Read(readTransaction)
         let byKey = reader.inTransactionByKey(readTransaction)
-        guard let item = byKey(key) else {
-            XCTFail("Expecting to have an item"); return
-        }
+        let result = byKey(key)
+        XCTAssertNotNil(result)
         XCTAssertEqual(readTransaction.didReadAtIndex, index)
-        XCTAssertEqual(item.identifier, self.item.identifier)
+        XCTAssertEqual(result!.identifier, item.identifier)
     }
 
     func test__reader__by_key_in_transaction() {
         configureForReadingSingle()
         reader = Read(readTransaction)
         let inTransaction = reader.byKeyInTransaction(key)
-        guard let item = inTransaction(readTransaction) else {
-            XCTFail("Expecting to have an item"); return
-        }
+        let result = inTransaction(readTransaction)
+        XCTAssertNotNil(result)
         XCTAssertEqual(readTransaction.didReadAtIndex, index)
-        XCTAssertEqual(item.identifier, self.item.identifier)
+        XCTAssertEqual(result!.identifier, item.identifier)
     }
 
     func test__reader__by_keys_in_transaction_with_items() {
         configureForReadingMultiple()
         reader = Read(readTransaction)
-        let items = reader.byKeysInTransaction(keys)(readTransaction)
+        let result = reader.byKeysInTransaction(keys)(readTransaction)
         XCTAssertEqual(readTransaction.didReadAtIndexes, indexes)
-        XCTAssertEqual(items.map { $0.identifier }, items.map { $0.identifier })
+        XCTAssertEqual(result.map { $0.identifier }, items.map { $0.identifier })
     }
 
     func test__reader__by_keys_in_transaction_with_items_with_no_keys() {
         configureForReadingMultiple()
         reader = Read(readTransaction)
-        let items = reader.byKeysInTransaction()(readTransaction)
+        let result = reader.byKeysInTransaction()(readTransaction)
         XCTAssertEqual(readTransaction.didReadAtIndexes, indexes)
         XCTAssertEqual(readTransaction.didKeysInCollection!, Manager.collection)
-        XCTAssertEqual(items.map { $0.identifier }, items.map { $0.identifier })
+        XCTAssertEqual(result.map { $0.identifier }, items.map { $0.identifier })
     }
 
     func test__reader__by_keys_in_transaction_with_no_items() {
         reader = Read(readTransaction)
-        let items = reader.byKeysInTransaction(keys)(readTransaction)
+        let result = reader.byKeysInTransaction(keys)(readTransaction)
         XCTAssertEqual(readTransaction.didReadAtIndexes, indexes)
-        XCTAssertEqual(items, [])
+        XCTAssertEqual(result, [])
     }
 
     // Reading - With Transaction
@@ -275,90 +269,88 @@ class ObjectWithValueMetadataTests: XCTestCase {
     func test__reader_with_transaction__at_index_with_item() {
         configureForReadingSingle()
         reader = Read(readTransaction)
-        guard let item = reader.atIndex(index) else {
-            XCTFail("Expecting to have an item"); return
-        }
+        let result = reader.atIndex(index)
+        XCTAssertNotNil(result)
         XCTAssertEqual(readTransaction.didReadAtIndex!, index)
-        XCTAssertEqual(item.identifier, self.item.identifier)
+        XCTAssertEqual(result!.identifier, item.identifier)
     }
 
     func test__reader_with_transaction__at_index_with_no_item() {
         reader = Read(readTransaction)
-        let item = reader.atIndex(index)
+        let result = reader.atIndex(index)
         XCTAssertEqual(readTransaction.didReadAtIndex!, index)
-        XCTAssertNil(item)
+        XCTAssertNil(result)
     }
 
     func test__reader_with_transaction__at_indexes_with_items() {
         configureForReadingMultiple()
         reader = Read(readTransaction)
-        let items = reader.atIndexes(indexes)
+        let result = reader.atIndexes(indexes)
         XCTAssertEqual(readTransaction.didReadAtIndexes, indexes)
-        XCTAssertEqual(items.map { $0.identifier }, items.map { $0.identifier })
+        XCTAssertEqual(result.map { $0.identifier }, items.map { $0.identifier })
     }
 
     func test__reader_with_transaction__at_indexes_with_no_items() {
         reader = Read(readTransaction)
-        let items = reader.atIndexes(indexes)
+        let result = reader.atIndexes(indexes)
         XCTAssertEqual(readTransaction.didReadAtIndexes, indexes)
-        XCTAssertEqual(items, [])
+        XCTAssertEqual(result, [])
     }
 
     func test__reader_with_transaction__by_key_with_item() {
         configureForReadingSingle()
         reader = Read(readTransaction)
-        guard let item = reader.byKey(key) else {
-            XCTFail("Expecting to have an item"); return
-        }
+        let result = reader.byKey(key)
+        XCTAssertNotNil(result)
         XCTAssertEqual(readTransaction.didReadAtIndex!, index)
-        XCTAssertEqual(item.identifier, self.item.identifier)
+        XCTAssertEqual(result!.identifier, item.identifier)
     }
 
     func test__reader_with_transaction__by_key_with_no_item() {
         reader = Read(readTransaction)
-        let item = reader.byKey(key)
+        let result = reader.byKey(key)
         XCTAssertEqual(readTransaction.didReadAtIndex!, index)
-        XCTAssertNil(item)
+        XCTAssertNil(result)
     }
 
     func test__reader_with_transaction__by_keys_with_items() {
         configureForReadingMultiple()
         reader = Read(readTransaction)
-        let items = reader.byKeys(keys)
+        let result = reader.byKeys(keys)
         XCTAssertEqual(readTransaction.didReadAtIndexes, indexes)
-        XCTAssertEqual(items.map { $0.identifier }, items.map { $0.identifier })
+        XCTAssertEqual(result.map { $0.identifier }, items.map { $0.identifier })
     }
 
     func test__reader_with_transaction__by_keys_with_no_items() {
         reader = Read(readTransaction)
-        let items = reader.byKeys(keys)
+        let result = reader.byKeys(keys)
         XCTAssertEqual(readTransaction.didReadAtIndexes, indexes)
-        XCTAssertEqual(items, [])
+        XCTAssertEqual(result, [])
     }
 
     func test__reader_with_transaction__all_with_items() {
         configureForReadingMultiple()
         reader = Read(readTransaction)
-        let items = reader.all()
+        let result = reader.all()
         XCTAssertEqual(readTransaction.didKeysInCollection, Manager.collection)
         XCTAssertEqual(readTransaction.didReadAtIndexes, indexes)
-        XCTAssertEqual(items.map { $0.identifier }, items.map { $0.identifier })
+        XCTAssertEqual(result.map { $0.identifier }, items.map { $0.identifier })
     }
 
     func test__reader_with_transaction__all_with_no_items() {
         reader = Read(readTransaction)
-        let items = reader.all()
+        let result = reader.all()
         XCTAssertEqual(readTransaction.didKeysInCollection, Manager.collection)
         XCTAssertEqual(readTransaction.didReadAtIndexes, [])
-        XCTAssertEqual(items, [])
+        XCTAssertEqual(result, [])
     }
 
     func test__reader_with_transaction__filter() {
         configureForReadingSingle()
         reader = Read(readTransaction)
-        let (items, missing) = reader.filterExisting(keys)
+        let (result, missing) = reader.filterExisting(keys)
         XCTAssertEqual(readTransaction.didReadAtIndexes.first!, indexes.first!)
-        XCTAssertEqual(items.map { $0.identifier }, items.prefixUpTo(1).map { $0.identifier })
+        XCTAssertEqual(result.map { $0.identifier }, items.prefixUpTo(1).map { $0.identifier })
         XCTAssertEqual(missing, Array(keys.suffixFrom(1)))
     }
 
@@ -367,101 +359,99 @@ class ObjectWithValueMetadataTests: XCTestCase {
     func test__reader_with_connection__at_index_with_item() {
         configureForReadingSingle()
         reader = Read(connection)
-        guard let item = reader.atIndex(index) else {
-            XCTFail("Expecting to have an item"); return
-        }
+        let result = reader.atIndex(index)
+        XCTAssertNotNil(result)
         XCTAssertTrue(connection.didRead)
         XCTAssertEqual(readTransaction.didReadAtIndex!, index)
-        XCTAssertEqual(item.identifier, self.item.identifier)
+        XCTAssertEqual(result!.identifier, item.identifier)
     }
 
     func test__reader_with_connection__at_index_with_no_item() {
         reader = Read(connection)
-        let item = reader.atIndex(index)
+        let result = reader.atIndex(index)
         XCTAssertTrue(connection.didRead)
         XCTAssertEqual(readTransaction.didReadAtIndex!, index)
-        XCTAssertNil(item)
+        XCTAssertNil(result)
     }
 
     func test__reader_with_connection__at_indexes_with_items() {
         configureForReadingMultiple()
         reader = Read(connection)
-        let items = reader.atIndexes(indexes)
+        let result = reader.atIndexes(indexes)
         XCTAssertTrue(connection.didRead)
         XCTAssertEqual(readTransaction.didReadAtIndexes, indexes)
-        XCTAssertEqual(items.map { $0.identifier }, items.map { $0.identifier })
+        XCTAssertEqual(result.map { $0.identifier }, items.map { $0.identifier })
     }
 
     func test__reader_with_connection__at_indexes_with_no_items() {
         reader = Read(connection)
-        let items = reader.atIndexes(indexes)
+        let result = reader.atIndexes(indexes)
         XCTAssertTrue(connection.didRead)
         XCTAssertEqual(readTransaction.didReadAtIndexes, indexes)
-        XCTAssertEqual(items, [])
+        XCTAssertEqual(result, [])
     }
 
     func test__reader_with_connection__by_key_with_item() {
         configureForReadingSingle()
         reader = Read(connection)
-        guard let item = reader.byKey(key) else {
-            XCTFail("Expecting to have an item"); return
-        }
+        let result = reader.byKey(key)
+        XCTAssertNotNil(result)
         XCTAssertTrue(connection.didRead)
         XCTAssertEqual(readTransaction.didReadAtIndex!, index)
-        XCTAssertEqual(item.identifier, self.item.identifier)
+        XCTAssertEqual(result!.identifier, item.identifier)
     }
 
     func test__reader_with_connection__by_key_with_no_item() {
         reader = Read(connection)
-        let item = reader.byKey(key)
+        let result = reader.byKey(key)
         XCTAssertTrue(connection.didRead)
         XCTAssertEqual(readTransaction.didReadAtIndex!, index)
-        XCTAssertNil(item)
+        XCTAssertNil(result)
     }
 
     func test__reader_with_connection__by_keys_with_items() {
         configureForReadingMultiple()
         reader = Read(connection)
-        let items = reader.byKeys(keys)
+        let result = reader.byKeys(keys)
         XCTAssertTrue(connection.didRead)
         XCTAssertEqual(readTransaction.didReadAtIndexes, indexes)
-        XCTAssertEqual(items.map { $0.identifier }, items.map { $0.identifier })
+        XCTAssertEqual(result.map { $0.identifier }, items.map { $0.identifier })
     }
 
     func test__reader_with_connection__by_keys_with_no_items() {
         reader = Read(connection)
-        let items = reader.byKeys(keys)
+        let result = reader.byKeys(keys)
         XCTAssertTrue(connection.didRead)
         XCTAssertEqual(readTransaction.didReadAtIndexes, indexes)
-        XCTAssertEqual(items, [])
+        XCTAssertEqual(result, [])
     }
 
     func test__reader_with_connection__all_with_items() {
         configureForReadingMultiple()
         reader = Read(connection)
-        let items = reader.all()
+        let result = reader.all()
         XCTAssertTrue(connection.didRead)
         XCTAssertEqual(readTransaction.didKeysInCollection, Manager.collection)
         XCTAssertEqual(readTransaction.didReadAtIndexes, indexes)
-        XCTAssertEqual(items.map { $0.identifier }, items.map { $0.identifier })
+        XCTAssertEqual(result.map { $0.identifier }, items.map { $0.identifier })
     }
 
     func test__reader_with_connection__all_with_no_items() {
         reader = Read(connection)
-        let items = reader.all()
+        let result = reader.all()
         XCTAssertTrue(connection.didRead)
         XCTAssertEqual(readTransaction.didKeysInCollection, Manager.collection)
         XCTAssertEqual(readTransaction.didReadAtIndexes, [])
-        XCTAssertEqual(items, [])
+        XCTAssertEqual(result, [])
     }
 
     func test__reader_with_connection__filter() {
         configureForReadingSingle()
         reader = Read(connection)
-        let (items, missing) = reader.filterExisting(keys)
+        let (result, missing) = reader.filterExisting(keys)
         XCTAssertTrue(connection.didRead)
         XCTAssertEqual(readTransaction.didReadAtIndexes.first!, indexes.first!)
-        XCTAssertEqual(items.map { $0.identifier }, items.prefixUpTo(1).map { $0.identifier })
+        XCTAssertEqual(result.map { $0.identifier }, items.prefixUpTo(1).map { $0.identifier })
         XCTAssertEqual(missing, Array(keys.suffixFrom(1)))
     }
 
