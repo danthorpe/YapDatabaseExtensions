@@ -22,7 +22,7 @@ extension ReadTransactionType {
     */
     public func readAtIndex<
         ObjectWithValueMetadata where
-        ObjectWithValueMetadata: MetadataPersistable,
+        ObjectWithValueMetadata: Persistable,
         ObjectWithValueMetadata: NSCoding,
         ObjectWithValueMetadata.MetadataType: ValueCoding,
         ObjectWithValueMetadata.MetadataType.Coder: NSCoding,
@@ -42,7 +42,7 @@ extension ReadTransactionType {
     */
     public func readAtIndexes<
         ObjectWithValueMetadata where
-        ObjectWithValueMetadata: MetadataPersistable,
+        ObjectWithValueMetadata: Persistable,
         ObjectWithValueMetadata: NSCoding,
         ObjectWithValueMetadata.MetadataType: ValueCoding,
         ObjectWithValueMetadata.MetadataType.Coder: NSCoding,
@@ -58,7 +58,7 @@ extension ReadTransactionType {
     */
     public func readByKey<
         ObjectWithValueMetadata where
-        ObjectWithValueMetadata: MetadataPersistable,
+        ObjectWithValueMetadata: Persistable,
         ObjectWithValueMetadata: NSCoding,
         ObjectWithValueMetadata.MetadataType: ValueCoding,
         ObjectWithValueMetadata.MetadataType.Coder: NSCoding,
@@ -74,7 +74,7 @@ extension ReadTransactionType {
     */
     public func readByKeys<
         ObjectWithValueMetadata where
-        ObjectWithValueMetadata: MetadataPersistable,
+        ObjectWithValueMetadata: Persistable,
         ObjectWithValueMetadata: NSCoding,
         ObjectWithValueMetadata.MetadataType: ValueCoding,
         ObjectWithValueMetadata.MetadataType.Coder: NSCoding,
@@ -93,7 +93,7 @@ extension ConnectionType {
     */
     public func readAtIndex<
         ObjectWithValueMetadata where
-        ObjectWithValueMetadata: MetadataPersistable,
+        ObjectWithValueMetadata: Persistable,
         ObjectWithValueMetadata: NSCoding,
         ObjectWithValueMetadata.MetadataType: ValueCoding,
         ObjectWithValueMetadata.MetadataType.Coder: NSCoding,
@@ -109,7 +109,7 @@ extension ConnectionType {
     */
     public func readAtIndexes<
         ObjectWithValueMetadata where
-        ObjectWithValueMetadata: MetadataPersistable,
+        ObjectWithValueMetadata: Persistable,
         ObjectWithValueMetadata: NSCoding,
         ObjectWithValueMetadata.MetadataType: ValueCoding,
         ObjectWithValueMetadata.MetadataType.Coder: NSCoding,
@@ -125,7 +125,7 @@ extension ConnectionType {
     */
     public func readByKey<
         ObjectWithValueMetadata where
-        ObjectWithValueMetadata: MetadataPersistable,
+        ObjectWithValueMetadata: Persistable,
         ObjectWithValueMetadata: NSCoding,
         ObjectWithValueMetadata.MetadataType: ValueCoding,
         ObjectWithValueMetadata.MetadataType.Coder: NSCoding,
@@ -141,7 +141,7 @@ extension ConnectionType {
     */
     public func readByKeys<
         ObjectWithValueMetadata where
-        ObjectWithValueMetadata: MetadataPersistable,
+        ObjectWithValueMetadata: Persistable,
         ObjectWithValueMetadata: NSCoding,
         ObjectWithValueMetadata.MetadataType: ValueCoding,
         ObjectWithValueMetadata.MetadataType.Coder: NSCoding,
@@ -161,7 +161,7 @@ extension WriteTransactionType {
     */
     public func write<
         ObjectWithValueMetadata where
-        ObjectWithValueMetadata: MetadataPersistable,
+        ObjectWithValueMetadata: Persistable,
         ObjectWithValueMetadata: NSCoding,
         ObjectWithValueMetadata.MetadataType: ValueCoding,
         ObjectWithValueMetadata.MetadataType.Coder: NSCoding,
@@ -176,7 +176,7 @@ extension WriteTransactionType {
     */
     public func write<
         ObjectWithValueMetadata where
-        ObjectWithValueMetadata: MetadataPersistable,
+        ObjectWithValueMetadata: Persistable,
         ObjectWithValueMetadata: NSCoding,
         ObjectWithValueMetadata.MetadataType: ValueCoding,
         ObjectWithValueMetadata.MetadataType.Coder: NSCoding,
@@ -194,7 +194,7 @@ extension ConnectionType {
     */
     public func write<
         ObjectWithValueMetadata where
-        ObjectWithValueMetadata: MetadataPersistable,
+        ObjectWithValueMetadata: Persistable,
         ObjectWithValueMetadata: NSCoding,
         ObjectWithValueMetadata.MetadataType: ValueCoding,
         ObjectWithValueMetadata.MetadataType.Coder: NSCoding,
@@ -209,7 +209,7 @@ extension ConnectionType {
     */
     public func write<
         ObjectWithValueMetadata where
-        ObjectWithValueMetadata: MetadataPersistable,
+        ObjectWithValueMetadata: Persistable,
         ObjectWithValueMetadata: NSCoding,
         ObjectWithValueMetadata.MetadataType: ValueCoding,
         ObjectWithValueMetadata.MetadataType.Coder: NSCoding,
@@ -226,7 +226,7 @@ extension ConnectionType {
     */
     public func asyncWrite<
         ObjectWithValueMetadata where
-        ObjectWithValueMetadata: MetadataPersistable,
+        ObjectWithValueMetadata: Persistable,
         ObjectWithValueMetadata: NSCoding,
         ObjectWithValueMetadata.MetadataType: ValueCoding,
         ObjectWithValueMetadata.MetadataType.Coder: NSCoding,
@@ -243,7 +243,7 @@ extension ConnectionType {
     */
     public func asyncWrite<
         ObjectWithValueMetadata where
-        ObjectWithValueMetadata: MetadataPersistable,
+        ObjectWithValueMetadata: Persistable,
         ObjectWithValueMetadata: NSCoding,
         ObjectWithValueMetadata.MetadataType: ValueCoding,
         ObjectWithValueMetadata.MetadataType.Coder: NSCoding,

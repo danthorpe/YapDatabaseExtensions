@@ -19,24 +19,20 @@
 		653B048B1BC981D700AC98FD /* YapDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04811BC981D100AC98FD /* YapDB.swift */; settings = {ASSET_TAGS = (); }; };
 		653B049B1BC9820A00AC98FD /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 653B048D1BC9820A00AC98FD /* Info.plist */; settings = {ASSET_TAGS = (); }; };
 		653B04AA1BC9824000AC98FD /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04901BC9820A00AC98FD /* Models.swift */; settings = {ASSET_TAGS = (); }; };
-		653B04AB1BC9824000AC98FD /* ObjectWithNoMetadataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04911BC9820A00AC98FD /* ObjectWithNoMetadataTests.swift */; settings = {ASSET_TAGS = (); }; };
 		653B04AC1BC9824000AC98FD /* ObjectWithObjectMetadataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04921BC9820A00AC98FD /* ObjectWithObjectMetadataTests.swift */; settings = {ASSET_TAGS = (); }; };
 		653B04AD1BC9824000AC98FD /* ObjectWithValueMetadataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04931BC9820A00AC98FD /* ObjectWithValueMetadataTests.swift */; settings = {ASSET_TAGS = (); }; };
 		653B04AE1BC9824000AC98FD /* ReadWriteTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04941BC9820A00AC98FD /* ReadWriteTests.swift */; settings = {ASSET_TAGS = (); }; };
 		653B04AF1BC9824000AC98FD /* RemovalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04951BC9820A00AC98FD /* RemovalTests.swift */; settings = {ASSET_TAGS = (); }; };
 		653B04B01BC9824000AC98FD /* Support.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04961BC9820A00AC98FD /* Support.swift */; settings = {ASSET_TAGS = (); }; };
-		653B04B11BC9824000AC98FD /* ValueWithNoMetadataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04971BC9820A00AC98FD /* ValueWithNoMetadataTests.swift */; settings = {ASSET_TAGS = (); }; };
 		653B04B21BC9824000AC98FD /* ValueWithObjectMetadataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04981BC9820A00AC98FD /* ValueWithObjectMetadataTests.swift */; settings = {ASSET_TAGS = (); }; };
 		653B04B31BC9824000AC98FD /* ValueWithValueMetadataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04991BC9820A00AC98FD /* ValueWithValueMetadataTests.swift */; settings = {ASSET_TAGS = (); }; };
 		653B04B41BC9824000AC98FD /* YapDatabaseExtensionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B049A1BC9820A00AC98FD /* YapDatabaseExtensionsTests.swift */; settings = {ASSET_TAGS = (); }; };
 		653B04B61BC9824100AC98FD /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04901BC9820A00AC98FD /* Models.swift */; settings = {ASSET_TAGS = (); }; };
-		653B04B71BC9824100AC98FD /* ObjectWithNoMetadataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04911BC9820A00AC98FD /* ObjectWithNoMetadataTests.swift */; settings = {ASSET_TAGS = (); }; };
 		653B04B81BC9824100AC98FD /* ObjectWithObjectMetadataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04921BC9820A00AC98FD /* ObjectWithObjectMetadataTests.swift */; settings = {ASSET_TAGS = (); }; };
 		653B04B91BC9824100AC98FD /* ObjectWithValueMetadataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04931BC9820A00AC98FD /* ObjectWithValueMetadataTests.swift */; settings = {ASSET_TAGS = (); }; };
 		653B04BA1BC9824100AC98FD /* ReadWriteTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04941BC9820A00AC98FD /* ReadWriteTests.swift */; settings = {ASSET_TAGS = (); }; };
 		653B04BB1BC9824100AC98FD /* RemovalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04951BC9820A00AC98FD /* RemovalTests.swift */; settings = {ASSET_TAGS = (); }; };
 		653B04BC1BC9824100AC98FD /* Support.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04961BC9820A00AC98FD /* Support.swift */; settings = {ASSET_TAGS = (); }; };
-		653B04BD1BC9824100AC98FD /* ValueWithNoMetadataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04971BC9820A00AC98FD /* ValueWithNoMetadataTests.swift */; settings = {ASSET_TAGS = (); }; };
 		653B04BE1BC9824100AC98FD /* ValueWithObjectMetadataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04981BC9820A00AC98FD /* ValueWithObjectMetadataTests.swift */; settings = {ASSET_TAGS = (); }; };
 		653B04BF1BC9824100AC98FD /* ValueWithValueMetadataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04991BC9820A00AC98FD /* ValueWithValueMetadataTests.swift */; settings = {ASSET_TAGS = (); }; };
 		653B04C01BC9824100AC98FD /* YapDatabaseExtensionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B049A1BC9820A00AC98FD /* YapDatabaseExtensionsTests.swift */; settings = {ASSET_TAGS = (); }; };
@@ -49,14 +45,10 @@
 		65C557901BCB26010065C96A /* Functional_ValueWIthObjectMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C5577F1BCB26010065C96A /* Functional_ValueWIthObjectMetadata.swift */; settings = {ASSET_TAGS = (); }; };
 		65C557911BCB26010065C96A /* Functional_ValueWIthValueMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C557801BCB26010065C96A /* Functional_ValueWIthValueMetadata.swift */; settings = {ASSET_TAGS = (); }; };
 		65C557921BCB26010065C96A /* Functional_ValueWIthValueMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C557801BCB26010065C96A /* Functional_ValueWIthValueMetadata.swift */; settings = {ASSET_TAGS = (); }; };
-		65C557931BCB26010065C96A /* Persistable_ObjectWithNoMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C557821BCB26010065C96A /* Persistable_ObjectWithNoMetadata.swift */; settings = {ASSET_TAGS = (); }; };
-		65C557941BCB26010065C96A /* Persistable_ObjectWithNoMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C557821BCB26010065C96A /* Persistable_ObjectWithNoMetadata.swift */; settings = {ASSET_TAGS = (); }; };
 		65C557951BCB26010065C96A /* Persistable_ObjectWithObjectMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C557831BCB26010065C96A /* Persistable_ObjectWithObjectMetadata.swift */; settings = {ASSET_TAGS = (); }; };
 		65C557961BCB26010065C96A /* Persistable_ObjectWithObjectMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C557831BCB26010065C96A /* Persistable_ObjectWithObjectMetadata.swift */; settings = {ASSET_TAGS = (); }; };
 		65C557971BCB26010065C96A /* Persistable_ObjectWithValueMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C557841BCB26010065C96A /* Persistable_ObjectWithValueMetadata.swift */; settings = {ASSET_TAGS = (); }; };
 		65C557981BCB26010065C96A /* Persistable_ObjectWithValueMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C557841BCB26010065C96A /* Persistable_ObjectWithValueMetadata.swift */; settings = {ASSET_TAGS = (); }; };
-		65C557991BCB26010065C96A /* Persistable_ValueWithNoMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C557851BCB26010065C96A /* Persistable_ValueWithNoMetadata.swift */; settings = {ASSET_TAGS = (); }; };
-		65C5579A1BCB26010065C96A /* Persistable_ValueWithNoMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C557851BCB26010065C96A /* Persistable_ValueWithNoMetadata.swift */; settings = {ASSET_TAGS = (); }; };
 		65C5579B1BCB26010065C96A /* Persistable_ValueWithObjectMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C557861BCB26010065C96A /* Persistable_ValueWithObjectMetadata.swift */; settings = {ASSET_TAGS = (); }; };
 		65C5579C1BCB26010065C96A /* Persistable_ValueWithObjectMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C557861BCB26010065C96A /* Persistable_ValueWithObjectMetadata.swift */; settings = {ASSET_TAGS = (); }; };
 		65C5579D1BCB26010065C96A /* Persistable_ValueWithValueMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C557871BCB26010065C96A /* Persistable_ValueWithValueMetadata.swift */; settings = {ASSET_TAGS = (); }; };
@@ -69,6 +61,18 @@
 		65C557A41BCB26010065C96A /* Write.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C5578A1BCB26010065C96A /* Write.swift */; settings = {ASSET_TAGS = (); }; };
 		65C557A61BCB26310065C96A /* Functional_Remove.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C557A51BCB26310065C96A /* Functional_Remove.swift */; settings = {ASSET_TAGS = (); }; };
 		65C557A71BCB26310065C96A /* Functional_Remove.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C557A51BCB26310065C96A /* Functional_Remove.swift */; settings = {ASSET_TAGS = (); }; };
+		65C8DB401BCD24AF002F2C05 /* ObjectWithNoMetadataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04911BC9820A00AC98FD /* ObjectWithNoMetadataTests.swift */; settings = {ASSET_TAGS = (); }; };
+		65C8DB411BCD24AF002F2C05 /* ObjectWithNoMetadataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04911BC9820A00AC98FD /* ObjectWithNoMetadataTests.swift */; settings = {ASSET_TAGS = (); }; };
+		65C8DB421BCD24EA002F2C05 /* Persistable_ObjectWithNoMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C557821BCB26010065C96A /* Persistable_ObjectWithNoMetadata.swift */; settings = {ASSET_TAGS = (); }; };
+		65C8DB431BCD24EB002F2C05 /* Persistable_ObjectWithNoMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C557821BCB26010065C96A /* Persistable_ObjectWithNoMetadata.swift */; settings = {ASSET_TAGS = (); }; };
+		65C8DB441BCD24FA002F2C05 /* Persistable_ValueWithNoMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C557851BCB26010065C96A /* Persistable_ValueWithNoMetadata.swift */; settings = {ASSET_TAGS = (); }; };
+		65C8DB451BCD24FB002F2C05 /* Persistable_ValueWithNoMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C557851BCB26010065C96A /* Persistable_ValueWithNoMetadata.swift */; settings = {ASSET_TAGS = (); }; };
+		65C8DB461BCD25E2002F2C05 /* ValueWithNoMetadataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04971BC9820A00AC98FD /* ValueWithNoMetadataTests.swift */; settings = {ASSET_TAGS = (); }; };
+		65C8DB471BCD25E3002F2C05 /* ValueWithNoMetadataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04971BC9820A00AC98FD /* ValueWithNoMetadataTests.swift */; settings = {ASSET_TAGS = (); }; };
+		65C8DB491BCD2676002F2C05 /* Functional_ObjectWithNoMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C8DB481BCD2676002F2C05 /* Functional_ObjectWithNoMetadata.swift */; settings = {ASSET_TAGS = (); }; };
+		65C8DB4A1BCD2676002F2C05 /* Functional_ObjectWithNoMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C8DB481BCD2676002F2C05 /* Functional_ObjectWithNoMetadata.swift */; settings = {ASSET_TAGS = (); }; };
+		65C8DB4C1BCD283D002F2C05 /* Functional_ValueWithNoMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C8DB4B1BCD283D002F2C05 /* Functional_ValueWithNoMetadata.swift */; settings = {ASSET_TAGS = (); }; };
+		65C8DB4D1BCD283D002F2C05 /* Functional_ValueWithNoMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C8DB4B1BCD283D002F2C05 /* Functional_ValueWithNoMetadata.swift */; settings = {ASSET_TAGS = (); }; };
 		AC8FC0BC100A1A0A60C3B18F /* Pods_YapDatabaseExtensions_OSXTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 574741755E625D8A78119A8A /* Pods_YapDatabaseExtensions_OSXTests.framework */; };
 /* End PBXBuildFile section */
 
@@ -130,6 +134,8 @@
 		65C557891BCB26010065C96A /* Remove.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Remove.swift; sourceTree = "<group>"; };
 		65C5578A1BCB26010065C96A /* Write.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Write.swift; sourceTree = "<group>"; };
 		65C557A51BCB26310065C96A /* Functional_Remove.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Functional_Remove.swift; sourceTree = "<group>"; };
+		65C8DB481BCD2676002F2C05 /* Functional_ObjectWithNoMetadata.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Functional_ObjectWithNoMetadata.swift; sourceTree = "<group>"; };
+		65C8DB4B1BCD283D002F2C05 /* Functional_ValueWithNoMetadata.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Functional_ValueWithNoMetadata.swift; sourceTree = "<group>"; };
 		9D7D405FE2B19AF9F31FA60A /* Pods-YapDatabaseExtensions-iOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-YapDatabaseExtensions-iOSTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-YapDatabaseExtensions-iOSTests/Pods-YapDatabaseExtensions-iOSTests.release.xcconfig"; sourceTree = "<group>"; };
 		B26F7704368F3FE50A228AB0 /* Pods-YapDatabaseExtensions-OSX.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-YapDatabaseExtensions-OSX.debug.xcconfig"; path = "Pods/Target Support Files/Pods-YapDatabaseExtensions-OSX/Pods-YapDatabaseExtensions-OSX.debug.xcconfig"; sourceTree = "<group>"; };
 		D13C45EFF8EA26355D7BE26C /* Pods-YapDatabaseExtensions-OSX.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-YapDatabaseExtensions-OSX.release.xcconfig"; path = "Pods/Target Support Files/Pods-YapDatabaseExtensions-OSX/Pods-YapDatabaseExtensions-OSX.release.xcconfig"; sourceTree = "<group>"; };
@@ -259,11 +265,13 @@
 		65C5577C1BCB26010065C96A /* Functional */ = {
 			isa = PBXGroup;
 			children = (
+				65C8DB481BCD2676002F2C05 /* Functional_ObjectWithNoMetadata.swift */,
 				65C5577D1BCB26010065C96A /* Functional_ObjectWithObjectMetadata.swift */,
 				65C5577E1BCB26010065C96A /* Functional_ObjectWithValueMetadata.swift */,
+				65C557A51BCB26310065C96A /* Functional_Remove.swift */,
+				65C8DB4B1BCD283D002F2C05 /* Functional_ValueWithNoMetadata.swift */,
 				65C5577F1BCB26010065C96A /* Functional_ValueWIthObjectMetadata.swift */,
 				65C557801BCB26010065C96A /* Functional_ValueWIthValueMetadata.swift */,
-				65C557A51BCB26310065C96A /* Functional_Remove.swift */,
 			);
 			path = Functional;
 			sourceTree = "<group>";
@@ -646,15 +654,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				65C557931BCB26010065C96A /* Persistable_ObjectWithNoMetadata.swift in Sources */,
 				653B04861BC981D100AC98FD /* YapDB.swift in Sources */,
 				65C557A61BCB26310065C96A /* Functional_Remove.swift in Sources */,
 				65C5579B1BCB26010065C96A /* Persistable_ValueWithObjectMetadata.swift in Sources */,
 				65C5579D1BCB26010065C96A /* Persistable_ValueWithValueMetadata.swift in Sources */,
+				65C8DB441BCD24FA002F2C05 /* Persistable_ValueWithNoMetadata.swift in Sources */,
+				65C8DB491BCD2676002F2C05 /* Functional_ObjectWithNoMetadata.swift in Sources */,
+				65C8DB4C1BCD283D002F2C05 /* Functional_ValueWithNoMetadata.swift in Sources */,
+				65C8DB421BCD24EA002F2C05 /* Persistable_ObjectWithNoMetadata.swift in Sources */,
 				65C557A31BCB26010065C96A /* Write.swift in Sources */,
 				65C557911BCB26010065C96A /* Functional_ValueWIthValueMetadata.swift in Sources */,
 				65C5578F1BCB26010065C96A /* Functional_ValueWIthObjectMetadata.swift in Sources */,
-				65C557991BCB26010065C96A /* Persistable_ValueWithNoMetadata.swift in Sources */,
 				653B04851BC981D100AC98FD /* YapDatabaseExtensions.swift in Sources */,
 				65C557951BCB26010065C96A /* Persistable_ObjectWithObjectMetadata.swift in Sources */,
 				65C557A11BCB26010065C96A /* Remove.swift in Sources */,
@@ -670,13 +680,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				653B04AF1BC9824000AC98FD /* RemovalTests.swift in Sources */,
+				65C8DB461BCD25E2002F2C05 /* ValueWithNoMetadataTests.swift in Sources */,
 				653B04AC1BC9824000AC98FD /* ObjectWithObjectMetadataTests.swift in Sources */,
-				653B04AB1BC9824000AC98FD /* ObjectWithNoMetadataTests.swift in Sources */,
 				653B04AD1BC9824000AC98FD /* ObjectWithValueMetadataTests.swift in Sources */,
 				653B04B21BC9824000AC98FD /* ValueWithObjectMetadataTests.swift in Sources */,
 				653B04B41BC9824000AC98FD /* YapDatabaseExtensionsTests.swift in Sources */,
 				653B04B01BC9824000AC98FD /* Support.swift in Sources */,
-				653B04B11BC9824000AC98FD /* ValueWithNoMetadataTests.swift in Sources */,
+				65C8DB401BCD24AF002F2C05 /* ObjectWithNoMetadataTests.swift in Sources */,
 				653B04AA1BC9824000AC98FD /* Models.swift in Sources */,
 				653B04B31BC9824000AC98FD /* ValueWithValueMetadataTests.swift in Sources */,
 				653B04AE1BC9824000AC98FD /* ReadWriteTests.swift in Sources */,
@@ -687,15 +697,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				65C557941BCB26010065C96A /* Persistable_ObjectWithNoMetadata.swift in Sources */,
 				653B048B1BC981D700AC98FD /* YapDB.swift in Sources */,
 				65C557A71BCB26310065C96A /* Functional_Remove.swift in Sources */,
 				65C5579C1BCB26010065C96A /* Persistable_ValueWithObjectMetadata.swift in Sources */,
 				65C5579E1BCB26010065C96A /* Persistable_ValueWithValueMetadata.swift in Sources */,
+				65C8DB451BCD24FB002F2C05 /* Persistable_ValueWithNoMetadata.swift in Sources */,
+				65C8DB4A1BCD2676002F2C05 /* Functional_ObjectWithNoMetadata.swift in Sources */,
+				65C8DB4D1BCD283D002F2C05 /* Functional_ValueWithNoMetadata.swift in Sources */,
+				65C8DB431BCD24EB002F2C05 /* Persistable_ObjectWithNoMetadata.swift in Sources */,
 				65C557A41BCB26010065C96A /* Write.swift in Sources */,
 				65C557921BCB26010065C96A /* Functional_ValueWIthValueMetadata.swift in Sources */,
 				65C557901BCB26010065C96A /* Functional_ValueWIthObjectMetadata.swift in Sources */,
-				65C5579A1BCB26010065C96A /* Persistable_ValueWithNoMetadata.swift in Sources */,
 				653B048A1BC981D700AC98FD /* YapDatabaseExtensions.swift in Sources */,
 				65C557961BCB26010065C96A /* Persistable_ObjectWithObjectMetadata.swift in Sources */,
 				65C557A21BCB26010065C96A /* Remove.swift in Sources */,
@@ -711,13 +723,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				653B04BB1BC9824100AC98FD /* RemovalTests.swift in Sources */,
+				65C8DB471BCD25E3002F2C05 /* ValueWithNoMetadataTests.swift in Sources */,
 				653B04B81BC9824100AC98FD /* ObjectWithObjectMetadataTests.swift in Sources */,
-				653B04B71BC9824100AC98FD /* ObjectWithNoMetadataTests.swift in Sources */,
 				653B04B91BC9824100AC98FD /* ObjectWithValueMetadataTests.swift in Sources */,
 				653B04BE1BC9824100AC98FD /* ValueWithObjectMetadataTests.swift in Sources */,
 				653B04C01BC9824100AC98FD /* YapDatabaseExtensionsTests.swift in Sources */,
 				653B04BC1BC9824100AC98FD /* Support.swift in Sources */,
-				653B04BD1BC9824100AC98FD /* ValueWithNoMetadataTests.swift in Sources */,
+				65C8DB411BCD24AF002F2C05 /* ObjectWithNoMetadataTests.swift in Sources */,
 				653B04B61BC9824100AC98FD /* Models.swift in Sources */,
 				653B04BF1BC9824100AC98FD /* ValueWithValueMetadataTests.swift in Sources */,
 				653B04BA1BC9824100AC98FD /* ReadWriteTests.swift in Sources */,

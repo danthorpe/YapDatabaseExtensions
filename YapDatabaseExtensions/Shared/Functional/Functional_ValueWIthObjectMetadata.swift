@@ -22,7 +22,7 @@ extension ReadTransactionType {
     */
     public func readAtIndex<
         ValueWithObjectMetadata where
-        ValueWithObjectMetadata: MetadataPersistable,
+        ValueWithObjectMetadata: Persistable,
         ValueWithObjectMetadata: ValueCoding,
         ValueWithObjectMetadata.Coder: NSCoding,
         ValueWithObjectMetadata.Coder.ValueType == ValueWithObjectMetadata,
@@ -42,7 +42,7 @@ extension ReadTransactionType {
     */
     public func readAtIndexes<
         ValueWithObjectMetadata where
-        ValueWithObjectMetadata: MetadataPersistable,
+        ValueWithObjectMetadata: Persistable,
         ValueWithObjectMetadata: ValueCoding,
         ValueWithObjectMetadata.Coder: NSCoding,
         ValueWithObjectMetadata.Coder.ValueType == ValueWithObjectMetadata,
@@ -58,7 +58,7 @@ extension ReadTransactionType {
     */
     public func readByKey<
         ValueWithObjectMetadata where
-        ValueWithObjectMetadata: MetadataPersistable,
+        ValueWithObjectMetadata: Persistable,
         ValueWithObjectMetadata: ValueCoding,
         ValueWithObjectMetadata.Coder: NSCoding,
         ValueWithObjectMetadata.Coder.ValueType == ValueWithObjectMetadata,
@@ -74,7 +74,7 @@ extension ReadTransactionType {
     */
     public func readByKeys<
         ValueWithObjectMetadata where
-        ValueWithObjectMetadata: MetadataPersistable,
+        ValueWithObjectMetadata: Persistable,
         ValueWithObjectMetadata: ValueCoding,
         ValueWithObjectMetadata.Coder: NSCoding,
         ValueWithObjectMetadata.Coder.ValueType == ValueWithObjectMetadata,
@@ -93,7 +93,7 @@ extension ConnectionType {
     */
     public func readAtIndex<
         ValueWithObjectMetadata where
-        ValueWithObjectMetadata: MetadataPersistable,
+        ValueWithObjectMetadata: Persistable,
         ValueWithObjectMetadata: ValueCoding,
         ValueWithObjectMetadata.Coder: NSCoding,
         ValueWithObjectMetadata.Coder.ValueType == ValueWithObjectMetadata,
@@ -109,7 +109,7 @@ extension ConnectionType {
     */
     public func readAtIndexes<
         ValueWithObjectMetadata where
-        ValueWithObjectMetadata: MetadataPersistable,
+        ValueWithObjectMetadata: Persistable,
         ValueWithObjectMetadata: ValueCoding,
         ValueWithObjectMetadata.Coder: NSCoding,
         ValueWithObjectMetadata.Coder.ValueType == ValueWithObjectMetadata,
@@ -125,7 +125,7 @@ extension ConnectionType {
     */
     public func readByKey<
         ValueWithObjectMetadata where
-        ValueWithObjectMetadata: MetadataPersistable,
+        ValueWithObjectMetadata: Persistable,
         ValueWithObjectMetadata: ValueCoding,
         ValueWithObjectMetadata.Coder: NSCoding,
         ValueWithObjectMetadata.Coder.ValueType == ValueWithObjectMetadata,
@@ -141,7 +141,7 @@ extension ConnectionType {
     */
     public func readByKeys<
         ValueWithObjectMetadata where
-        ValueWithObjectMetadata: MetadataPersistable,
+        ValueWithObjectMetadata: Persistable,
         ValueWithObjectMetadata: ValueCoding,
         ValueWithObjectMetadata.Coder: NSCoding,
         ValueWithObjectMetadata.Coder.ValueType == ValueWithObjectMetadata,
@@ -161,7 +161,7 @@ extension WriteTransactionType {
     */
     public func write<
         ValueWithObjectMetadata where
-        ValueWithObjectMetadata: MetadataPersistable,
+        ValueWithObjectMetadata: Persistable,
         ValueWithObjectMetadata: ValueCoding,
         ValueWithObjectMetadata.Coder: NSCoding,
         ValueWithObjectMetadata.Coder.ValueType == ValueWithObjectMetadata,
@@ -176,7 +176,7 @@ extension WriteTransactionType {
     */
     public func write<
         ValueWithObjectMetadata where
-        ValueWithObjectMetadata: MetadataPersistable,
+        ValueWithObjectMetadata: Persistable,
         ValueWithObjectMetadata: ValueCoding,
         ValueWithObjectMetadata.Coder: NSCoding,
         ValueWithObjectMetadata.Coder.ValueType == ValueWithObjectMetadata,
@@ -194,7 +194,7 @@ extension ConnectionType {
     */
     public func write<
         ValueWithObjectMetadata where
-        ValueWithObjectMetadata: MetadataPersistable,
+        ValueWithObjectMetadata: Persistable,
         ValueWithObjectMetadata: ValueCoding,
         ValueWithObjectMetadata.Coder: NSCoding,
         ValueWithObjectMetadata.Coder.ValueType == ValueWithObjectMetadata,
@@ -209,7 +209,7 @@ extension ConnectionType {
     */
     public func write<
         ValueWithObjectMetadata where
-        ValueWithObjectMetadata: MetadataPersistable,
+        ValueWithObjectMetadata: Persistable,
         ValueWithObjectMetadata: ValueCoding,
         ValueWithObjectMetadata.Coder: NSCoding,
         ValueWithObjectMetadata.Coder.ValueType == ValueWithObjectMetadata,
@@ -226,7 +226,7 @@ extension ConnectionType {
     */
     public func asyncWrite<
         ValueWithObjectMetadata where
-        ValueWithObjectMetadata: MetadataPersistable,
+        ValueWithObjectMetadata: Persistable,
         ValueWithObjectMetadata: ValueCoding,
         ValueWithObjectMetadata.Coder: NSCoding,
         ValueWithObjectMetadata.Coder.ValueType == ValueWithObjectMetadata,
@@ -243,7 +243,7 @@ extension ConnectionType {
     */
     public func asyncWrite<
         ValueWithObjectMetadata where
-        ValueWithObjectMetadata: MetadataPersistable,
+        ValueWithObjectMetadata: Persistable,
         ValueWithObjectMetadata: ValueCoding,
         ValueWithObjectMetadata.Coder: NSCoding,
         ValueWithObjectMetadata.Coder.ValueType == ValueWithObjectMetadata,

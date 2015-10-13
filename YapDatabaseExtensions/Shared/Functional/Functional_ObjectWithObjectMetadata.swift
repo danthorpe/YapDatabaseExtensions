@@ -22,7 +22,7 @@ extension ReadTransactionType {
     */
     public func readAtIndex<
         ObjectWithObjectMetadata where
-        ObjectWithObjectMetadata: MetadataPersistable,
+        ObjectWithObjectMetadata: Persistable,
         ObjectWithObjectMetadata: NSCoding,
         ObjectWithObjectMetadata.MetadataType: NSCoding>(index: YapDB.Index) -> ObjectWithObjectMetadata? {
             if var item = readAtIndex(index) as? ObjectWithObjectMetadata {
@@ -40,7 +40,7 @@ extension ReadTransactionType {
     */
     public func readAtIndexes<
         ObjectWithObjectMetadata where
-        ObjectWithObjectMetadata: MetadataPersistable,
+        ObjectWithObjectMetadata: Persistable,
         ObjectWithObjectMetadata: NSCoding,
         ObjectWithObjectMetadata.MetadataType: NSCoding>(indexes: [YapDB.Index]) -> [ObjectWithObjectMetadata] {
             return indexes.flatMap(readAtIndex)
@@ -54,7 +54,7 @@ extension ReadTransactionType {
     */
     public func readByKey<
         ObjectWithObjectMetadata where
-        ObjectWithObjectMetadata: MetadataPersistable,
+        ObjectWithObjectMetadata: Persistable,
         ObjectWithObjectMetadata: NSCoding,
         ObjectWithObjectMetadata.MetadataType: NSCoding>(key: String) -> ObjectWithObjectMetadata? {
             return readAtIndex(ObjectWithObjectMetadata.indexWithKey(key))
@@ -68,7 +68,7 @@ extension ReadTransactionType {
     */
     public func readByKeys<
         ObjectWithObjectMetadata where
-        ObjectWithObjectMetadata: MetadataPersistable,
+        ObjectWithObjectMetadata: Persistable,
         ObjectWithObjectMetadata: NSCoding,
         ObjectWithObjectMetadata.MetadataType: NSCoding>(keys: [String]) -> [ObjectWithObjectMetadata] {
             return readAtIndexes(ObjectWithObjectMetadata.indexesWithKeys(keys))
@@ -85,7 +85,7 @@ extension ConnectionType {
     */
     public func readAtIndex<
         ObjectWithObjectMetadata where
-        ObjectWithObjectMetadata: MetadataPersistable,
+        ObjectWithObjectMetadata: Persistable,
         ObjectWithObjectMetadata: NSCoding,
         ObjectWithObjectMetadata.MetadataType: NSCoding>(index: YapDB.Index) -> ObjectWithObjectMetadata? {
             return read { $0.readAtIndex(index) }
@@ -99,7 +99,7 @@ extension ConnectionType {
     */
     public func readAtIndexes<
         ObjectWithObjectMetadata where
-        ObjectWithObjectMetadata: MetadataPersistable,
+        ObjectWithObjectMetadata: Persistable,
         ObjectWithObjectMetadata: NSCoding,
         ObjectWithObjectMetadata.MetadataType: NSCoding>(indexes: [YapDB.Index]) -> [ObjectWithObjectMetadata] {
             return read { $0.readAtIndexes(indexes) }
@@ -113,7 +113,7 @@ extension ConnectionType {
     */
     public func readByKey<
         ObjectWithObjectMetadata where
-        ObjectWithObjectMetadata: MetadataPersistable,
+        ObjectWithObjectMetadata: Persistable,
         ObjectWithObjectMetadata: NSCoding,
         ObjectWithObjectMetadata.MetadataType: NSCoding>(key: String) -> ObjectWithObjectMetadata? {
             return readAtIndex(ObjectWithObjectMetadata.indexWithKey(key))
@@ -127,7 +127,7 @@ extension ConnectionType {
     */
     public func readByKeys<
         ObjectWithObjectMetadata where
-        ObjectWithObjectMetadata: MetadataPersistable,
+        ObjectWithObjectMetadata: Persistable,
         ObjectWithObjectMetadata: NSCoding,
         ObjectWithObjectMetadata.MetadataType: NSCoding>(keys: [String]) -> [ObjectWithObjectMetadata] {
             return readAtIndexes(ObjectWithObjectMetadata.indexesWithKeys(keys))
@@ -145,7 +145,7 @@ extension WriteTransactionType {
     */
     public func write<
         ObjectWithObjectMetadata where
-        ObjectWithObjectMetadata: MetadataPersistable,
+        ObjectWithObjectMetadata: Persistable,
         ObjectWithObjectMetadata: NSCoding,
         ObjectWithObjectMetadata.MetadataType: NSCoding>(item: ObjectWithObjectMetadata) {
             writeAtIndex(item.index, object: item, metadata: item.metadata)
@@ -158,7 +158,7 @@ extension WriteTransactionType {
     */
     public func write<
         ObjectWithObjectMetadata where
-        ObjectWithObjectMetadata: MetadataPersistable,
+        ObjectWithObjectMetadata: Persistable,
         ObjectWithObjectMetadata: NSCoding,
         ObjectWithObjectMetadata.MetadataType: NSCoding>(items: [ObjectWithObjectMetadata]) {
             items.forEach(write)
@@ -174,7 +174,7 @@ extension ConnectionType {
     */
     public func write<
         ObjectWithObjectMetadata where
-        ObjectWithObjectMetadata: MetadataPersistable,
+        ObjectWithObjectMetadata: Persistable,
         ObjectWithObjectMetadata: NSCoding,
         ObjectWithObjectMetadata.MetadataType: NSCoding>(item: ObjectWithObjectMetadata) {
             write { $0.write(item) }
@@ -187,7 +187,7 @@ extension ConnectionType {
     */
     public func write<
         ObjectWithObjectMetadata where
-        ObjectWithObjectMetadata: MetadataPersistable,
+        ObjectWithObjectMetadata: Persistable,
         ObjectWithObjectMetadata: NSCoding,
         ObjectWithObjectMetadata.MetadataType: NSCoding>(items: [ObjectWithObjectMetadata]) {
             write { $0.write(items) }
@@ -202,7 +202,7 @@ extension ConnectionType {
     */
     public func asyncWrite<
         ObjectWithObjectMetadata where
-        ObjectWithObjectMetadata: MetadataPersistable,
+        ObjectWithObjectMetadata: Persistable,
         ObjectWithObjectMetadata: NSCoding,
         ObjectWithObjectMetadata.MetadataType: NSCoding>(item: ObjectWithObjectMetadata, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: dispatch_block_t) {
             asyncWrite({ $0.write(item) }, queue: queue, completion: { _ in completion() })
@@ -217,7 +217,7 @@ extension ConnectionType {
     */
     public func asyncWrite<
         ObjectWithObjectMetadata where
-        ObjectWithObjectMetadata: MetadataPersistable,
+        ObjectWithObjectMetadata: Persistable,
         ObjectWithObjectMetadata: NSCoding,
         ObjectWithObjectMetadata.MetadataType: NSCoding>(items: [ObjectWithObjectMetadata], queue: dispatch_queue_t = dispatch_get_main_queue(), completion: dispatch_block_t) {
             asyncWrite({ $0.write(items) }, queue: queue, completion: { _ in completion() })

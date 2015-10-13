@@ -28,43 +28,21 @@ class TestableReadTransaction {
 
     var didReadAtIndex: YapDB.Index? {
         get { return didReadAtIndexes.first }
-        set {
-            if let newIndex = newValue {
-                didReadAtIndexes = [newIndex]
-            }
-            else {
-                didReadAtIndexes = []
-            }
-        }
     }
 
     var metadata: AnyObject? {
-        get { return metadatas.first }
-        set {
-            if let newObject = newValue {
-                metadatas = [newObject]
-            }
-            else {
-                metadatas = []
-            }
-        }
+        get { return metadatas[0] }
+        set { metadatas = [newValue] }
     }
 
     var didReadMetadataAtIndex: YapDB.Index? {
         get { return didReadMetadataAtIndexes.first }
-        set {
-            if let newIndex = newValue {
-                didReadMetadataAtIndexes = [newIndex]
-            }
-            else {
-                didReadMetadataAtIndexes = []
-            }
-        }
     }
 
     var currentReadIndex = 0
     var objects: [AnyObject] = []
-    var metadatas: [AnyObject] = []
+    var currentMetadataReadIndex = 0
+    var metadatas: [AnyObject?] = []
     var didReadAtIndexes: [YapDB.Index] = []
     var didReadMetadataAtIndexes: [YapDB.Index] = []
 
@@ -79,9 +57,9 @@ class TestableReadTransaction {
     }
 
     func getNextMetadata() -> AnyObject? {
-        if metadatas.endIndex > currentReadIndex {
-            let object = metadatas[currentReadIndex]
-            currentReadIndex += 1
+        if metadatas.endIndex > currentMetadataReadIndex {
+            let object = metadatas[currentMetadataReadIndex]
+            currentMetadataReadIndex += 1
             return object
         }
         return .None
