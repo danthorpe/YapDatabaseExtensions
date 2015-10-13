@@ -32,7 +32,10 @@ extension ReadTransactionType {
     - returns: an array of `MetadataType`
     */
     public func readMetadataAtIndexes<
-        MetadataType: NSCoding>(indexes: [YapDB.Index]) -> [MetadataType] {
+        Indexes, MetadataType where
+        Indexes: SequenceType,
+        Indexes.Generator.Element == YapDB.Index,
+        MetadataType: NSCoding>(indexes: Indexes) -> [MetadataType] {
             return indexes.flatMap(readMetadataAtIndex)
     }
 }
@@ -57,7 +60,10 @@ extension ConnectionType {
     - returns: an array of `MetadataType`
     */
     public func readMetadataAtIndexes<
-        MetadataType: NSCoding>(indexes: [YapDB.Index]) -> [MetadataType] {
+        Indexes, MetadataType where
+        Indexes: SequenceType,
+        Indexes.Generator.Element == YapDB.Index,
+        MetadataType: NSCoding>(indexes: Indexes) -> [MetadataType] {
             return read { $0.readMetadataAtIndexes(indexes) }
     }
 }

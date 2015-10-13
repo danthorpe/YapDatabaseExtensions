@@ -97,8 +97,11 @@ extension TestableWriteTransaction: WriteTransactionType {
         didWriteAtIndexes.append((index, object, metadata))
     }
 
-    func removeAtIndexes(indexes: [YapDB.Index]) {
-        didRemoveAtIndexes = indexes
+    func removeAtIndexes<
+        Indexes where
+        Indexes: SequenceType,
+        Indexes.Generator.Element == YapDB.Index>(indexes: Indexes) {
+            didRemoveAtIndexes = Array(indexes)
     }
 }
 
