@@ -89,6 +89,23 @@ extension ReadTransactionType {
         ValueWithValueMetadata.MetadataType.Coder.ValueType == ValueWithValueMetadata.MetadataType>(keys: [String]) -> [ValueWithValueMetadata] {
             return readAtIndexes(ValueWithValueMetadata.indexesWithKeys(keys))
     }
+
+    /**
+    Reads all the items in the database.
+
+    - returns: an array of `ItemType`
+    */
+    public func readAll<
+        ValueWithValueMetadata where
+        ValueWithValueMetadata: Persistable,
+        ValueWithValueMetadata: ValueCoding,
+        ValueWithValueMetadata.Coder: NSCoding,
+        ValueWithValueMetadata.Coder.ValueType == ValueWithValueMetadata,
+        ValueWithValueMetadata.MetadataType: ValueCoding,
+        ValueWithValueMetadata.MetadataType.Coder: NSCoding,
+        ValueWithValueMetadata.MetadataType.Coder.ValueType == ValueWithValueMetadata.MetadataType>() -> [ValueWithValueMetadata] {
+            return readByKeys(keysInCollection(ValueWithValueMetadata.collection))
+    }
 }
 
 extension ConnectionType {
@@ -163,6 +180,23 @@ extension ConnectionType {
         ValueWithValueMetadata.MetadataType.Coder: NSCoding,
         ValueWithValueMetadata.MetadataType.Coder.ValueType == ValueWithValueMetadata.MetadataType>(keys: [String]) -> [ValueWithValueMetadata] {
             return readAtIndexes(ValueWithValueMetadata.indexesWithKeys(keys))
+    }
+
+    /**
+    Reads all the items in the database.
+
+    - returns: an array of `ItemType`
+    */
+    public func readAll<
+        ValueWithValueMetadata where
+        ValueWithValueMetadata: Persistable,
+        ValueWithValueMetadata: ValueCoding,
+        ValueWithValueMetadata.Coder: NSCoding,
+        ValueWithValueMetadata.Coder.ValueType == ValueWithValueMetadata,
+        ValueWithValueMetadata.MetadataType: ValueCoding,
+        ValueWithValueMetadata.MetadataType.Coder: NSCoding,
+        ValueWithValueMetadata.MetadataType.Coder.ValueType == ValueWithValueMetadata.MetadataType>() -> [ValueWithValueMetadata] {
+            return read { $0.readAll() }
     }
 }
 

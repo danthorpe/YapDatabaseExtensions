@@ -69,6 +69,19 @@ extension ReadTransactionType {
         ObjectWithNoMetadata.MetadataType == Void>(keys: [String]) -> [ObjectWithNoMetadata] {
             return readAtIndexes(ObjectWithNoMetadata.indexesWithKeys(keys))
     }
+
+    /**
+    Reads all the items in the database.
+
+    - returns: an array of `ItemType`
+    */
+    public func readAll<
+        ObjectWithNoMetadata where
+        ObjectWithNoMetadata: Persistable,
+        ObjectWithNoMetadata: NSCoding,
+        ObjectWithNoMetadata.MetadataType == Void>() -> [ObjectWithNoMetadata] {
+            return readByKeys(keysInCollection(ObjectWithNoMetadata.collection))
+    }
 }
 
 extension ConnectionType {
@@ -127,6 +140,19 @@ extension ConnectionType {
         ObjectWithNoMetadata: NSCoding,
         ObjectWithNoMetadata.MetadataType == Void>(keys: [String]) -> [ObjectWithNoMetadata] {
             return readAtIndexes(ObjectWithNoMetadata.indexesWithKeys(keys))
+    }
+
+    /**
+    Reads all the items in the database.
+
+    - returns: an array of `ItemType`
+    */
+    public func readAll<
+        ObjectWithNoMetadata where
+        ObjectWithNoMetadata: Persistable,
+        ObjectWithNoMetadata: NSCoding,
+        ObjectWithNoMetadata.MetadataType == Void>() -> [ObjectWithNoMetadata] {
+            return read { $0.readAll() }
     }
 }
 
