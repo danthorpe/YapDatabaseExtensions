@@ -249,20 +249,6 @@ extension Persistable {
     }
 }
 
-/**
-A generic protocol for Persistable which support YapDatabase metadata.
-
-In order to read/write your metadata types from/to YapDatabase they must
-implement either NSCoding (i.e. be object based) or ValueCoding (i.e. be
-value based).
-*/
-//public protocol MetadataPersistable: Persistable {
-//    typealias MetadataType
-//
-//    /// A metadata which is set when reading, and get when writing.
-//    var metadata: MetadataType? { get set }
-//}
-
 /// A facade interface for a read transaction.
 public protocol ReadTransactionType {
 
