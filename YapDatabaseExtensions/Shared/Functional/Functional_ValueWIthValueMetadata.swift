@@ -30,7 +30,7 @@ extension ReadTransactionType {
         ValueWithValueMetadata.MetadataType.Coder: NSCoding,
         ValueWithValueMetadata.MetadataType.Coder.ValueType == ValueWithValueMetadata.MetadataType>(index: YapDB.Index) -> ValueWithValueMetadata? {
             if var item = ValueWithValueMetadata.decode(readAtIndex(index)) {
-                item.metadata = ValueWithValueMetadata.MetadataType.decode(readMetadataAtIndex(index))
+                item.metadata = readMetadataAtIndex(index)
                 return item
             }
             return .None

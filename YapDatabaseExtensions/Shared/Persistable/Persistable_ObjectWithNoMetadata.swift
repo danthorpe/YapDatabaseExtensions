@@ -18,7 +18,7 @@ extension Readable where
     ItemType.MetadataType == Void {
 
     func inTransaction(transaction: Database.Connection.ReadTransaction, atIndex index: YapDB.Index) -> ItemType? {
-        return transaction.readAtIndex(index) as? ItemType
+        return transaction.readAtIndex(index)
     }
 
     // Everything here is the same for all 6 patterns.
