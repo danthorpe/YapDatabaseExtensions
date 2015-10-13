@@ -29,6 +29,7 @@ public protocol Identifiable {
 
 public protocol Persistable: Identifiable {
     static var collection: String { get }
+    var metadata: MetadataType? { get set }
 }
 ``` 
 
@@ -38,19 +39,27 @@ While not a requirement of YapDatabase, for these extensions, it is required tha
 
 There is also a `YapDB.Index` struct which composes the key and collection into a single type. This is used internally for all access methods. Properties defined in an extension on `Persistable` provide access to `key` and `index`.
 
-## `MetadataPersistable`
-YapDatabase supports storing metadata alongside the primary object. `MetadataPersistable` is a generic protocol which enables the automatic reading and writing of metadata as an optional property of the `Persistable` type.
+### Metadata
+YapDatabase supports storing metadata alongside the primary object. YapDatabaseExtensions supports automatic reading and writing of metadata as an optional property of the `Persistable` type.
+
+By default, all types which conform to `Persistable`, will get a `MetadataType` of `Void` which is synthesized by default. Therefore if you do not want or need a metadata type, there is nothing to do.
+
+To support a custom metadata type, just add the following to your `Persistable` type, e.g.:
 
 ```swift
-public protocol MetadataPersistable: Persistable {
-    typealias MetadataType
-    var metadata: MetadataType? { get set }
+struct MyCustomValue: Persistable, ValueCoding {
+    typealias Coder = MyCustomValueCoder
+    static let collection = “MyCustomValues”
+    var metadata: MyCustomMetadata? = .None
+    let identifier: NSUUID
 }
 ```
 
+where the type (`MyCustomMetadata` in the above snippet) implements either `NSCoding` or `ValueCoding`.
+
 When creating a new item, set the metadata property before saving the item to the database. YapDatabaseExtensions will then save the metadata inside YapDatabase correctly. *There is no need to encode the metadata inside the primary object*. When reading objects which have a valid `MetadataType`, YapDatabaseExtensions will automatically read, decode and set the item’s metadata before returning the item.
 
-Note that previous metadata protocols `ObjectMetadataPersistable` and `ValueMetadataPersistable` have been deprecated in favor of `MetadataPersistable`.
+Note that previous metadata protocols `ObjectMetadataPersistable` and `ValueMetadataPersistable` have been deprecated in favor of `Persistable`.
 
 ## “Correct” Type Patterns
 Because the generic protocols, `ValueCoding` and `CodingType` have self-reflective properties, they must be correctly implemented for the APIs to be available. This means that the equality `ValueCoding.Coder.ValueType == Self` must be met. The APIs are all composed with this represented in their generic where clauses. This means that if your `ValueCoding` type is not the `ValueType` of its `Coder`, your code will not compile.
@@ -59,14 +68,14 @@ Therefore, there are six valid `Persistable` type patterns as described in the t
 
 Item encoding | Metadata encoding | Pattern
 --------------|-------------------|------------------
-`NSCoding`    | No Metadata       | Object
+`NSCoding`    | `Void` Metadata   | Object
 `NSCoding`    | `NSCoding`        | ObjectWithObjectMetadata
 `NSCoding`    | `ValueCoding`     | ObjectWithValueMetadata
-`ValueCoding` | No Metadata       | Value
+`ValueCoding` | `Void` Metadata   | Value
 `ValueCoding` | `NSCoding`        | ValueWithObjectMetadata
 `ValueCoding` | `ValueCoding`     | ValueWithValueMetadata
 
-There are also two styles of API. The *functional* API works on `YapDatabase` types, `YapDatabaseReadTransaction`, `YapDatabaseReadWriteTransaction` and `YapDatabaseConnection`. However, these read, write and remove methods are only available if your type is one of the four patterns with metadata. The *persistable* API works on your `Persistable` types, and is available for all six patterns.
+There are also two styles of API. The *functional* API works on `YapDatabase` types, `YapDatabaseReadTransaction`, `YapDatabaseReadWriteTransaction` and `YapDatabaseConnection`. The *persistable* API works on your `Persistable` types directly, and receives the `YapDatabase` type as arguments.
 
 ## `Persistable` API
 
@@ -84,7 +93,7 @@ item.write.async(connection) {
     print(“did finishing writing”)
 }
 
-// Return an NSOperation which will perform an async write on a YapDatabaseConnection.
+// Return an NSOperation which will perform an sync write on a YapDatabaseConnection.
 let write = item.write.operation(connection)
 ``` 
 
@@ -137,7 +146,7 @@ let (items, missingKeys) = Item.read(connection).filterExisting(someKeys)
 
 ## Functional API
 
-For types which implement `MetadataPersistable` the following “functional” APIs are also available directly on the `YapDatabase` types.
+The following “functional” APIs are also available directly on the `YapDatabase` types.
 
 ```swift
 // Get a YapDatabaseConnection
@@ -202,11 +211,6 @@ If you don’t want the extensions API on `Persistable`, integrate the Functiona
 
 ```ruby
 pod 'YapDatabaseExtensions/Functional’
-```
-Note however, that in this case you will need to implement `MetadataPersistable` on your types. If you have no need for metadata, conformance can be achieved like this in your type:
-
-```swift
-var metadata: Void? = .None
 ```
 
 ## API Documentation
