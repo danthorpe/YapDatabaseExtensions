@@ -238,8 +238,8 @@ extension ConnectionType {
         ObjectWithNoMetadata where
         ObjectWithNoMetadata: Persistable,
         ObjectWithNoMetadata: NSCoding,
-        ObjectWithNoMetadata.MetadataType == Void>(item: ObjectWithNoMetadata, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: dispatch_block_t) {
-            asyncWrite({ $0.write(item) }, queue: queue, completion: { _ in completion() })
+        ObjectWithNoMetadata.MetadataType == Void>(item: ObjectWithNoMetadata, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: dispatch_block_t? = .None) {
+            asyncWrite({ $0.write(item) }, queue: queue, completion: { _ in completion?() })
     }
 
     /**
@@ -255,8 +255,8 @@ extension ConnectionType {
         Items.Generator.Element == ObjectWithNoMetadata,
         ObjectWithNoMetadata: Persistable,
         ObjectWithNoMetadata: NSCoding,
-        ObjectWithNoMetadata.MetadataType == Void>(items: Items, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: dispatch_block_t) {
-            asyncWrite({ $0.write(items) }, queue: queue, completion: { _ in completion() })
+        ObjectWithNoMetadata.MetadataType == Void>(items: Items, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: dispatch_block_t? = .None) {
+            asyncWrite({ $0.write(items) }, queue: queue, completion: { _ in completion?() })
     }
 }
 

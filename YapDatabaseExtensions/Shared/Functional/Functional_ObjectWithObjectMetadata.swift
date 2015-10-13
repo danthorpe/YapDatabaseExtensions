@@ -242,8 +242,8 @@ extension ConnectionType {
         ObjectWithObjectMetadata where
         ObjectWithObjectMetadata: Persistable,
         ObjectWithObjectMetadata: NSCoding,
-        ObjectWithObjectMetadata.MetadataType: NSCoding>(item: ObjectWithObjectMetadata, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: dispatch_block_t) {
-            asyncWrite({ $0.write(item) }, queue: queue, completion: { _ in completion() })
+        ObjectWithObjectMetadata.MetadataType: NSCoding>(item: ObjectWithObjectMetadata, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: dispatch_block_t? = .None) {
+            asyncWrite({ $0.write(item) }, queue: queue, completion: { _ in completion?() })
     }
 
     /**
@@ -259,8 +259,8 @@ extension ConnectionType {
         Items.Generator.Element == ObjectWithObjectMetadata,
         ObjectWithObjectMetadata: Persistable,
         ObjectWithObjectMetadata: NSCoding,
-        ObjectWithObjectMetadata.MetadataType: NSCoding>(items: Items, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: dispatch_block_t) {
-            asyncWrite({ $0.write(items) }, queue: queue, completion: { _ in completion() })
+        ObjectWithObjectMetadata.MetadataType: NSCoding>(items: Items, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: dispatch_block_t? = .None) {
+            asyncWrite({ $0.write(items) }, queue: queue, completion: { _ in completion?() })
     }
 }
 
