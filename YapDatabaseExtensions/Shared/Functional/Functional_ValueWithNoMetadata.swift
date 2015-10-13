@@ -33,16 +33,18 @@ extension ReadTransactionType {
     /**
     Reads the items at the indexes.
 
-    - parameter indexes: an Array<YapDB.Index>
+    - parameter indexes: a SequenceType of YapDB.Index values
     - returns: an array of `ItemType`
     */
     public func readAtIndexes<
-        ValueWithNoMetadata where
+        Indexes, ValueWithNoMetadata where
+        Indexes: SequenceType,
+        Indexes.Generator.Element == YapDB.Index,
         ValueWithNoMetadata: Persistable,
         ValueWithNoMetadata: ValueCoding,
         ValueWithNoMetadata.Coder: NSCoding,
         ValueWithNoMetadata.Coder.ValueType == ValueWithNoMetadata,
-        ValueWithNoMetadata.MetadataType == Void>(indexes: [YapDB.Index]) -> [ValueWithNoMetadata] {
+        ValueWithNoMetadata.MetadataType == Void>(indexes: Indexes) -> [ValueWithNoMetadata] {
             return indexes.flatMap(readAtIndex)
     }
 
@@ -65,16 +67,18 @@ extension ReadTransactionType {
     /**
     Reads the items by the keys.
 
-    - parameter keys: an array of String
+    - parameter keys: a SequenceType of String values
     - returns: an array of `ItemType`
     */
     public func readByKeys<
-        ValueWithNoMetadata where
+        Keys, ValueWithNoMetadata where
+        Keys: SequenceType,
+        Keys.Generator.Element == String,
         ValueWithNoMetadata: Persistable,
         ValueWithNoMetadata: ValueCoding,
         ValueWithNoMetadata.Coder: NSCoding,
         ValueWithNoMetadata.Coder.ValueType == ValueWithNoMetadata,
-        ValueWithNoMetadata.MetadataType == Void>(keys: [String]) -> [ValueWithNoMetadata] {
+        ValueWithNoMetadata.MetadataType == Void>(keys: Keys) -> [ValueWithNoMetadata] {
             return readAtIndexes(ValueWithNoMetadata.indexesWithKeys(keys))
     }
 
@@ -115,16 +119,18 @@ extension ConnectionType {
     /**
     Reads the items at the indexes.
 
-    - parameter indexes: an Array<YapDB.Index>
+    - parameter indexes: a SequenceType of YapDB.Index values
     - returns: an array of `ItemType`
     */
     public func readAtIndexes<
-        ValueWithNoMetadata where
+        Indexes, ValueWithNoMetadata where
+        Indexes: SequenceType,
+        Indexes.Generator.Element == YapDB.Index,
         ValueWithNoMetadata: Persistable,
         ValueWithNoMetadata: ValueCoding,
         ValueWithNoMetadata.Coder: NSCoding,
         ValueWithNoMetadata.Coder.ValueType == ValueWithNoMetadata,
-        ValueWithNoMetadata.MetadataType == Void>(indexes: [YapDB.Index]) -> [ValueWithNoMetadata] {
+        ValueWithNoMetadata.MetadataType == Void>(indexes: Indexes) -> [ValueWithNoMetadata] {
             return read { $0.readAtIndexes(indexes) }
     }
 
@@ -147,16 +153,18 @@ extension ConnectionType {
     /**
     Reads the items by the keys.
 
-    - parameter keys: an array of String
+    - parameter keys: a SequenceType of String values
     - returns: an array of `ItemType`
     */
     public func readByKeys<
-        ValueWithNoMetadata where
+        Keys, ValueWithNoMetadata where
+        Keys: SequenceType,
+        Keys.Generator.Element == String,
         ValueWithNoMetadata: Persistable,
         ValueWithNoMetadata: ValueCoding,
         ValueWithNoMetadata.Coder: NSCoding,
         ValueWithNoMetadata.Coder.ValueType == ValueWithNoMetadata,
-        ValueWithNoMetadata.MetadataType == Void>(keys: [String]) -> [ValueWithNoMetadata] {
+        ValueWithNoMetadata.MetadataType == Void>(keys: Keys) -> [ValueWithNoMetadata] {
             return readAtIndexes(ValueWithNoMetadata.indexesWithKeys(keys))
     }
 
@@ -201,12 +209,14 @@ extension WriteTransactionType {
     - parameter items: an array of items to store.
     */
     public func write<
-        ValueWithNoMetadata where
+        Items, ValueWithNoMetadata where
+        Items: SequenceType,
+        Items.Generator.Element == ValueWithNoMetadata,
         ValueWithNoMetadata: Persistable,
         ValueWithNoMetadata: ValueCoding,
         ValueWithNoMetadata.Coder: NSCoding,
         ValueWithNoMetadata.Coder.ValueType == ValueWithNoMetadata,
-        ValueWithNoMetadata.MetadataType == Void>(items: [ValueWithNoMetadata]) {
+        ValueWithNoMetadata.MetadataType == Void>(items: Items) {
             items.forEach(write)
     }
 }
@@ -234,12 +244,14 @@ extension ConnectionType {
     - parameter items: an array of items to store.
     */
     public func write<
-        ValueWithNoMetadata where
+        Items, ValueWithNoMetadata where
+        Items: SequenceType,
+        Items.Generator.Element == ValueWithNoMetadata,
         ValueWithNoMetadata: Persistable,
         ValueWithNoMetadata: ValueCoding,
         ValueWithNoMetadata.Coder: NSCoding,
         ValueWithNoMetadata.Coder.ValueType == ValueWithNoMetadata,
-        ValueWithNoMetadata.MetadataType == Void>(items: [ValueWithNoMetadata]) {
+        ValueWithNoMetadata.MetadataType == Void>(items: Items) {
             write { $0.write(items) }
     }
 
@@ -268,12 +280,14 @@ extension ConnectionType {
     - parameter completion: a dispatch_block_t for completion.
     */
     public func asyncWrite<
-        ValueWithNoMetadata where
+        Items, ValueWithNoMetadata where
+        Items: SequenceType,
+        Items.Generator.Element == ValueWithNoMetadata,
         ValueWithNoMetadata: Persistable,
         ValueWithNoMetadata: ValueCoding,
         ValueWithNoMetadata.Coder: NSCoding,
         ValueWithNoMetadata.Coder.ValueType == ValueWithNoMetadata,
-        ValueWithNoMetadata.MetadataType == Void>(items: [ValueWithNoMetadata], queue: dispatch_queue_t = dispatch_get_main_queue(), completion: dispatch_block_t) {
+        ValueWithNoMetadata.MetadataType == Void>(items: Items, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: dispatch_block_t) {
             asyncWrite({ $0.write(items) }, queue: queue, completion: { _ in completion() })
     }
 }

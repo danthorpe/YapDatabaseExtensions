@@ -28,11 +28,12 @@ extension Readable where
         return { self.metadataInTransaction(transaction, atIndex: $0) }
     }
 
-    func metadataAtIndexesInTransaction(indexes: [YapDB.Index]) -> Database.Connection.ReadTransaction -> [ItemType.MetadataType] {
-        let atIndex = metadataInTransactionAtIndex
-        return { transaction in
-            indexes.flatMap(atIndex(transaction))
-        }
+    func metadataAtIndexesInTransaction<
+        Indexes where
+        Indexes: SequenceType,
+        Indexes.Generator.Element == YapDB.Index>(indexes: Indexes) -> Database.Connection.ReadTransaction -> [ItemType.MetadataType] {
+            let atIndex = metadataInTransactionAtIndex
+            return { indexes.flatMap(atIndex($0)) }
     }
 
     /**
@@ -48,10 +49,13 @@ extension Readable where
     /**
     Reads the metadata at the indexes.
 
-    - parameter indexes: an Array<YapDB.Index>
+    - parameter indexes: a SequenceType of YapDB.Index values
     - returns: an array of `ItemType.MetadataType`
     */
-    public func metadataAtIndexes(indexes: [YapDB.Index]) -> [ItemType.MetadataType] {
-        return sync(metadataAtIndexesInTransaction(indexes))
+    public func metadataAtIndexes<
+        Indexes where
+        Indexes: SequenceType,
+        Indexes.Generator.Element == YapDB.Index>(indexes: Indexes) -> [ItemType.MetadataType] {
+            return sync(metadataAtIndexesInTransaction(indexes))
     }
 }

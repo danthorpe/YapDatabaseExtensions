@@ -216,8 +216,11 @@ extension Persistable {
     - parameter keys: a sequence of `String`s
     - returns: an array of `YapDB.Index` values.
     */
-    public static func indexesWithKeys<Keys: SequenceType where Keys.Generator.Element == String>(keys: Keys) -> [YapDB.Index] {
-        return Set(keys).map { YapDB.Index(collection: collection, key: $0) }
+    public static func indexesWithKeys<
+        Keys where
+        Keys: SequenceType,
+        Keys.Generator.Element == String>(keys: Keys) -> [YapDB.Index] {
+            return Set(keys).map { YapDB.Index(collection: collection, key: $0) }
     }
 
     /**
@@ -294,7 +297,10 @@ public protocol WriteTransactionType: ReadTransactionType {
     
     - parameter indexes: the `[YapDB.Index]` to remove.
     */
-    func removeAtIndexes(indexes: [YapDB.Index])
+    func removeAtIndexes<
+        Indexes where
+        Indexes: SequenceType,
+        Indexes.Generator.Element == YapDB.Index>(indexes: Indexes)
 }
 
 /// A facade interface for a database connection.
@@ -437,8 +443,11 @@ extension YapDatabaseReadWriteTransaction: WriteTransactionType {
         removeObjectForKey(index.key, inCollection: index.collection)
     }
 
-    public func removeAtIndexes(indexes: [YapDB.Index]) {
-        indexes.forEach(removeAtIndex)
+    public func removeAtIndexes<
+        Indexes where
+        Indexes: SequenceType,
+        Indexes.Generator.Element == YapDB.Index>(indexes: Indexes) {
+            indexes.forEach(removeAtIndex)
     }
 }
 
