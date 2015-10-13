@@ -91,6 +91,15 @@ class ObjectWithNoMetadataTests: XCTestCase {
 
     // MARK: Tests
 
+    func test__metadata_is_nil() {
+        XCTAssertNil(item.metadata)
+    }
+
+    func test__metadata_cannot_be_set() {
+        item.metadata = Void()
+        XCTAssertNil(item.metadata)
+    }
+
     // Writing
 
     func test__writer_initializes_with_single_item() {
