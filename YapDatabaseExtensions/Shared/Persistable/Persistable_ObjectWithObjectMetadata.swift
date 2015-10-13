@@ -14,7 +14,7 @@ import YapDatabase
 
 extension Readable where
     ItemType: NSCoding,
-    ItemType: MetadataPersistable,
+    ItemType: Persistable,
     ItemType.MetadataType: NSCoding {
 
     func inTransaction(transaction: Database.Connection.ReadTransaction, atIndex index: YapDB.Index) -> ItemType? {
@@ -129,7 +129,7 @@ extension Readable where
 extension Writable
     where
     ItemType: NSCoding,
-    ItemType: MetadataPersistable,
+    ItemType: Persistable,
     ItemType.MetadataType: NSCoding {
 
     /**

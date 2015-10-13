@@ -14,7 +14,7 @@ import YapDatabase
 
 extension Readable where
     ItemType: ValueCoding,
-    ItemType: MetadataPersistable,
+    ItemType: Persistable,
     ItemType.Coder: NSCoding,
     ItemType.Coder.ValueType == ItemType,
     ItemType.MetadataType: ValueCoding,
@@ -132,7 +132,7 @@ extension Readable where
 
 extension Writable where
     ItemType: ValueCoding,
-    ItemType: MetadataPersistable,
+    ItemType: Persistable,
     ItemType.Coder: NSCoding,
     ItemType.Coder.ValueType == ItemType,
     ItemType.MetadataType: ValueCoding,

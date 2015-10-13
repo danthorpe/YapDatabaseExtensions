@@ -158,14 +158,14 @@ extension Product.Category: Persistable {
     }
 }
 
-extension Product: MetadataPersistable {
+extension Product: Persistable {
 
     public static var collection: String {
         return "Products"
     }
 }
 
-extension Inventory: MetadataPersistable {
+extension Inventory: Persistable {
 
     public static var collection: String {
         return "Inventory"
@@ -179,14 +179,14 @@ extension Person: Persistable {
     }
 }
 
-extension Employee: MetadataPersistable {
+extension Employee: Persistable {
 
     public static var collection: String {
         return "Employees"
     }
 }
 
-extension Manager: MetadataPersistable {
+extension Manager: Persistable {
 
     public static var collection: String {
         return "Managers"

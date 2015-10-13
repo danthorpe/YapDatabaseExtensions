@@ -194,7 +194,7 @@ class ValueWithObjectMetadataTests: XCTestCase {
             XCTFail("Expecting to have an item"); return
         }
         XCTAssertEqual(readTransaction.didReadAtIndex!, index)
-        XCTAssertEqual(item.identifier, item.identifier)
+        XCTAssertEqual(item.identifier, self.item.identifier)
     }
 
     func test__reader__in_transaction_at_index_2() {
@@ -205,7 +205,7 @@ class ValueWithObjectMetadataTests: XCTestCase {
             XCTFail("Expecting to have an item"); return
         }
         XCTAssertEqual(readTransaction.didReadAtIndex!, index)
-        XCTAssertEqual(item.identifier, item.identifier)
+        XCTAssertEqual(item.identifier, self.item.identifier)
     }
 
     func test__reader__at_index_in_transaction() {
@@ -216,7 +216,7 @@ class ValueWithObjectMetadataTests: XCTestCase {
             XCTFail("Expecting to have an item"); return
         }
         XCTAssertEqual(readTransaction.didReadAtIndex!, index)
-        XCTAssertEqual(item.identifier, item.identifier)
+        XCTAssertEqual(item.identifier, self.item.identifier)
     }
 
     func test__reader__at_indexes_in_transaction_with_items() {
@@ -241,7 +241,7 @@ class ValueWithObjectMetadataTests: XCTestCase {
             XCTFail("Expecting to have an item"); return
         }
         XCTAssertEqual(readTransaction.didReadAtIndex, index)
-        XCTAssertEqual(item.identifier, item.identifier)
+        XCTAssertEqual(item.identifier, self.item.identifier)
     }
 
     func test__reader__in_transaction_by_key_2() {
@@ -252,7 +252,7 @@ class ValueWithObjectMetadataTests: XCTestCase {
             XCTFail("Expecting to have an item"); return
         }
         XCTAssertEqual(readTransaction.didReadAtIndex, index)
-        XCTAssertEqual(item.identifier, item.identifier)
+        XCTAssertEqual(item.identifier, self.item.identifier)
     }
 
     func test__reader__by_key_in_transaction() {
@@ -263,7 +263,7 @@ class ValueWithObjectMetadataTests: XCTestCase {
             XCTFail("Expecting to have an item"); return
         }
         XCTAssertEqual(readTransaction.didReadAtIndex, index)
-        XCTAssertEqual(item.identifier, item.identifier)
+        XCTAssertEqual(item.identifier, self.item.identifier)
     }
 
     func test__reader__by_keys_in_transaction_with_items() {
@@ -299,7 +299,7 @@ class ValueWithObjectMetadataTests: XCTestCase {
             XCTFail("Expecting to have an item"); return
         }
         XCTAssertEqual(readTransaction.didReadAtIndex!, index)
-        XCTAssertEqual(item.identifier, item.identifier)
+        XCTAssertEqual(item.identifier, self.item.identifier)
     }
 
     func test__reader_with_transaction__at_index_with_no_item() {
@@ -331,7 +331,7 @@ class ValueWithObjectMetadataTests: XCTestCase {
             XCTFail("Expecting to have an item"); return
         }
         XCTAssertEqual(readTransaction.didReadAtIndex!, index)
-        XCTAssertEqual(item.identifier, item.identifier)
+        XCTAssertEqual(item.identifier, self.item.identifier)
     }
 
     func test__reader_with_transaction__by_key_with_no_item() {
@@ -392,7 +392,7 @@ class ValueWithObjectMetadataTests: XCTestCase {
         }
         XCTAssertTrue(connection.didRead)
         XCTAssertEqual(readTransaction.didReadAtIndex!, index)
-        XCTAssertEqual(item.identifier, item.identifier)
+        XCTAssertEqual(item.identifier, self.item.identifier)
     }
 
     func test__reader_with_connection__at_index_with_no_item() {
@@ -428,7 +428,7 @@ class ValueWithObjectMetadataTests: XCTestCase {
         }
         XCTAssertTrue(connection.didRead)
         XCTAssertEqual(readTransaction.didReadAtIndex!, index)
-        XCTAssertEqual(item.identifier, item.identifier)
+        XCTAssertEqual(item.identifier, self.item.identifier)
     }
 
     func test__reader_with_connection__by_key_with_no_item() {

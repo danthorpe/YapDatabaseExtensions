@@ -183,8 +183,14 @@ are stored in the same YapDatabase collection.
 */
 public protocol Persistable: Identifiable {
 
+    /// The nested type of the metadata. Defaults to Void.
+    typealias MetadataType
+
     /// The YapDatabase collection name the type is stored in.
     static var collection: String { get }
+
+    /// A metadata which is set when reading, and get when writing.
+    var metadata: MetadataType? { get set }
 }
 
 extension Persistable {
@@ -215,6 +221,15 @@ extension Persistable {
     }
 
     /**
+    Default metadata property. Override this to re-define your
+    own MetadataType.
+    */
+    public var metadata: Void? {
+        get { return .None }
+        set { }
+    }
+
+    /**
     Convenience computed property to get the key
     for a persistable, which is just the identifier's description.
 
@@ -241,12 +256,12 @@ In order to read/write your metadata types from/to YapDatabase they must
 implement either NSCoding (i.e. be object based) or ValueCoding (i.e. be
 value based).
 */
-public protocol MetadataPersistable: Persistable {
-    typealias MetadataType
-
-    /// A metadata which is set when reading, and get when writing.
-    var metadata: MetadataType? { get set }
-}
+//public protocol MetadataPersistable: Persistable {
+//    typealias MetadataType
+//
+//    /// A metadata which is set when reading, and get when writing.
+//    var metadata: MetadataType? { get set }
+//}
 
 /// A facade interface for a read transaction.
 public protocol ReadTransactionType {
@@ -599,10 +614,10 @@ public func indexForPersistable<P: Persistable>(persistable: P) -> YapDB.Index {
 // MARK: - Deprecations
 
 @available(*, unavailable, renamed="MetadataPersistable")
-public typealias ObjectMetadataPersistable = MetadataPersistable
+public typealias ObjectMetadataPersistable = Persistable
 
 @available(*, unavailable, renamed="MetadataPersistable")
-public typealias ValueMetadataPersistable = MetadataPersistable
+public typealias ValueMetadataPersistable = Persistable
 
 @available(*, unavailable, renamed="ValueCoding")
 public typealias Saveable = ValueCoding
