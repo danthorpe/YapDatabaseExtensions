@@ -301,6 +301,24 @@ class ObjectWithObjectMetadataTests: XCTestCase {
         XCTAssertNil(result)
     }
 
+    func test__reader_with_transaction__metadata_at_index_with_item() {
+        configureForReadingSingle()
+        reader = Read(readTransaction)
+        let result = reader.metadataAtIndex(index)
+        XCTAssertNotNil(result)
+        XCTAssertNil(readTransaction.didReadAtIndex)
+        XCTAssertEqual(readTransaction.didReadMetadataAtIndex!, index)
+        XCTAssertEqual(result, item.metadata)
+    }
+
+    func test__reader_with_transaction__metadata_at_index_with_no_item() {
+        reader = Read(readTransaction)
+        let result = reader.metadataAtIndex(index)
+        XCTAssertNil(readTransaction.didReadAtIndex)
+        XCTAssertEqual(readTransaction.didReadMetadataAtIndex!, index)
+        XCTAssertNil(result)
+    }
+
     func test__reader_with_transaction__at_indexes_with_items() {
         configureForReadingMultiple()
         reader = Read(readTransaction)
@@ -314,6 +332,23 @@ class ObjectWithObjectMetadataTests: XCTestCase {
         reader = Read(readTransaction)
         let result = reader.atIndexes(indexes)
         XCTAssertEqual(readTransaction.didReadAtIndexes, indexes)
+        XCTAssertEqual(result, [])
+    }
+
+    func test__reader_with_transaction__metadata_at_indexes_with_items() {
+        configureForReadingMultiple()
+        reader = Read(readTransaction)
+        let result = reader.metadataAtIndexes(indexes)
+        XCTAssertTrue(readTransaction.didReadAtIndexes.isEmpty)
+        XCTAssertEqual(readTransaction.didReadMetadataAtIndexes, indexes)
+        XCTAssertEqual(result.count, items.map { $0.metadata }.count)
+    }
+
+    func test__reader_with_transaction__metadata_at_indexes_with_no_items() {
+        reader = Read(readTransaction)
+        let result = reader.metadataAtIndexes(indexes)
+        XCTAssertTrue(readTransaction.didReadAtIndexes.isEmpty)
+        XCTAssertEqual(readTransaction.didReadMetadataAtIndexes, indexes)
         XCTAssertEqual(result, [])
     }
 
@@ -400,6 +435,26 @@ class ObjectWithObjectMetadataTests: XCTestCase {
         XCTAssertNil(result)
     }
 
+    func test__reader_with_connection__metadata_at_index_with_item() {
+        configureForReadingSingle()
+        reader = Read(connection)
+        let result = reader.metadataAtIndex(index)
+        XCTAssertNotNil(result)
+        XCTAssertTrue(connection.didRead)
+        XCTAssertNil(readTransaction.didReadAtIndex)
+        XCTAssertEqual(readTransaction.didReadMetadataAtIndex!, index)
+        XCTAssertEqual(result, item.metadata)
+    }
+
+    func test__reader_with_connection__metadata_at_index_with_no_item() {
+        reader = Read(connection)
+        let result = reader.metadataAtIndex(index)
+        XCTAssertTrue(connection.didRead)
+        XCTAssertNil(readTransaction.didReadAtIndex)
+        XCTAssertEqual(readTransaction.didReadMetadataAtIndex!, index)
+        XCTAssertNil(result)
+    }
+
     func test__reader_with_connection__at_indexes_with_items() {
         configureForReadingMultiple()
         reader = Read(connection)
@@ -415,6 +470,25 @@ class ObjectWithObjectMetadataTests: XCTestCase {
         let result = reader.atIndexes(indexes)
         XCTAssertTrue(connection.didRead)
         XCTAssertEqual(readTransaction.didReadAtIndexes, indexes)
+        XCTAssertEqual(result, [])
+    }
+
+    func test__reader_with_connection__metadata_at_indexes_with_items() {
+        configureForReadingMultiple()
+        reader = Read(connection)
+        let result = reader.metadataAtIndexes(indexes)
+        XCTAssertTrue(connection.didRead)
+        XCTAssertTrue(readTransaction.didReadAtIndexes.isEmpty)
+        XCTAssertEqual(readTransaction.didReadMetadataAtIndexes, indexes)
+        XCTAssertEqual(result.count, items.map { $0.metadata }.count)
+    }
+
+    func test__reader_with_connection__metadata_at_indexes_with_no_items() {
+        reader = Read(connection)
+        let result = reader.metadataAtIndexes(indexes)
+        XCTAssertTrue(connection.didRead)
+        XCTAssertTrue(readTransaction.didReadAtIndexes.isEmpty)
+        XCTAssertEqual(readTransaction.didReadMetadataAtIndexes, indexes)
         XCTAssertEqual(result, [])
     }
 
