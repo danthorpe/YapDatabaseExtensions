@@ -21,8 +21,6 @@ extension Readable where
         return transaction.readAtIndex(index)
     }
 
-    // Everything here is the same for all 6 patterns.
-
     func inTransactionAtIndex(transaction: Database.Connection.ReadTransaction) -> YapDB.Index -> ItemType? {
         return { self.inTransaction(transaction, atIndex: $0) }
     }
@@ -31,11 +29,12 @@ extension Readable where
         return { self.inTransaction($0, atIndex: index) }
     }
 
-    func atIndexesInTransaction(indexes: [YapDB.Index]) -> Database.Connection.ReadTransaction -> [ItemType] {
-        let atIndex = inTransactionAtIndex
-        return { transaction in
-            indexes.flatMap(atIndex(transaction))
-        }
+    func atIndexesInTransaction<
+        Indexes where
+        Indexes: SequenceType,
+        Indexes.Generator.Element == YapDB.Index>(indexes: Indexes) -> Database.Connection.ReadTransaction -> [ItemType] {
+            let atIndex = inTransactionAtIndex
+            return { indexes.flatMap(atIndex($0)) }
     }
 
     func inTransaction(transaction: Database.Connection.ReadTransaction, byKey key: String) -> ItemType? {
@@ -50,10 +49,10 @@ extension Readable where
         return { self.inTransaction($0, byKey: key) }
     }
 
-    func byKeysInTransaction(_keys: [String]? = .None) -> Database.Connection.ReadTransaction -> [ItemType] {
+    func byKeysInTransaction(keys: [String]? = .None) -> Database.Connection.ReadTransaction -> [ItemType] {
         let byKey = inTransactionByKey
         return { transaction in
-            let keys = _keys ?? transaction.keysInCollection(ItemType.collection)
+            let keys = keys ?? transaction.keysInCollection(ItemType.collection)
             return keys.flatMap(byKey(transaction))
         }
     }
@@ -71,11 +70,14 @@ extension Readable where
     /**
     Reads the items at the indexes.
 
-    - parameter indexes: an Array<YapDB.Index>
+    - parameter indexes: a SequenceType of YapDB.Index values
     - returns: an array of `ItemType`
     */
-    public func atIndexes(indexes: [YapDB.Index]) -> [ItemType] {
-        return sync(atIndexesInTransaction(indexes))
+    public func atIndexes<
+        Indexes where
+        Indexes: SequenceType,
+        Indexes.Generator.Element == YapDB.Index>(indexes: Indexes) -> [ItemType] {
+            return sync(atIndexesInTransaction(indexes))
     }
 
     /**
@@ -91,11 +93,14 @@ extension Readable where
     /**
     Reads the items by the keys.
 
-    - parameter keys: an array of String
+    - parameter keys: a SequenceType of String values
     - returns: an array of `ItemType`
     */
-    public func byKeys(keys: [String]) -> [ItemType] {
-        return sync(byKeysInTransaction(keys))
+    public func byKeys<
+        Keys where
+        Keys: SequenceType,
+        Keys.Generator.Element == String>(keys: Keys) -> [ItemType] {
+            return sync(byKeysInTransaction(Array(keys)))
     }
 
     /**
@@ -110,7 +115,7 @@ extension Readable where
     /**
     Returns th existing items and missing keys..
 
-    - parameter keys: an array of String
+    - parameter keys: a SequenceType of String values
     - returns: a tuple of type `([ItemType], [String])`
     */
     public func filterExisting(keys: [String]) -> (existing: [ItemType], missing: [String]) {
