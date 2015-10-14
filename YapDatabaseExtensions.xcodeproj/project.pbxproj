@@ -15,6 +15,11 @@
 		651DD4A61BCEF4D700DD94E2 /* Curried_ValueWithNoMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651DD4A11BCEF4D700DD94E2 /* Curried_ValueWithNoMetadata.swift */; settings = {ASSET_TAGS = (); }; };
 		651DD4A71BCEF4D700DD94E2 /* Curried_ValueWithObjectMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651DD4A21BCEF4D700DD94E2 /* Curried_ValueWithObjectMetadata.swift */; settings = {ASSET_TAGS = (); }; };
 		651DD4A81BCEF4D700DD94E2 /* Curried_ValueWithValueMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651DD4A31BCEF4D700DD94E2 /* Curried_ValueWithValueMetadata.swift */; settings = {ASSET_TAGS = (); }; };
+		652DE6591BCEF8D700B5E668 /* Curried_ObjectWithObjectMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651DD49F1BCEF4D700DD94E2 /* Curried_ObjectWithObjectMetadata.swift */; settings = {ASSET_TAGS = (); }; };
+		652DE65A1BCEF8D700B5E668 /* Curried_ObjectWithValueMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651DD4A01BCEF4D700DD94E2 /* Curried_ObjectWithValueMetadata.swift */; settings = {ASSET_TAGS = (); }; };
+		652DE65B1BCEF8D700B5E668 /* Curried_ValueWithNoMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651DD4A11BCEF4D700DD94E2 /* Curried_ValueWithNoMetadata.swift */; settings = {ASSET_TAGS = (); }; };
+		652DE65C1BCEF8D700B5E668 /* Curried_ValueWithObjectMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651DD4A21BCEF4D700DD94E2 /* Curried_ValueWithObjectMetadata.swift */; settings = {ASSET_TAGS = (); }; };
+		652DE65D1BCEF8D700B5E668 /* Curried_ValueWithValueMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651DD4A31BCEF4D700DD94E2 /* Curried_ValueWithValueMetadata.swift */; settings = {ASSET_TAGS = (); }; };
 		653B044E1BC97ED700AC98FD /* YapDatabaseExtensions.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 653B04431BC97ED700AC98FD /* YapDatabaseExtensions.framework */; settings = {ASSET_TAGS = (); }; };
 		653B046A1BC9805D00AC98FD /* YapDatabaseExtensions.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 653B04601BC9805D00AC98FD /* YapDatabaseExtensions.framework */; settings = {ASSET_TAGS = (); }; };
 		653B047B1BC9816D00AC98FD /* YapDatabaseExtensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 653B04791BC9816D00AC98FD /* YapDatabaseExtensions.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -756,7 +761,10 @@
 				65C557A71BCB26310065C96A /* Functional_Remove.swift in Sources */,
 				65C5579C1BCB26010065C96A /* Persistable_ValueWithObjectMetadata.swift in Sources */,
 				65C5579E1BCB26010065C96A /* Persistable_ValueWithValueMetadata.swift in Sources */,
+				652DE65A1BCEF8D700B5E668 /* Curried_ObjectWithValueMetadata.swift in Sources */,
+				652DE65D1BCEF8D700B5E668 /* Curried_ValueWithValueMetadata.swift in Sources */,
 				65C8DB451BCD24FB002F2C05 /* Persistable_ValueWithNoMetadata.swift in Sources */,
+				652DE65B1BCEF8D700B5E668 /* Curried_ValueWithNoMetadata.swift in Sources */,
 				65C8DB4A1BCD2676002F2C05 /* Functional_ObjectWithNoMetadata.swift in Sources */,
 				65C8DB4D1BCD283D002F2C05 /* Functional_ValueWithNoMetadata.swift in Sources */,
 				65C8DB431BCD24EB002F2C05 /* Persistable_ObjectWithNoMetadata.swift in Sources */,
@@ -765,8 +773,10 @@
 				65C557921BCB26010065C96A /* Functional_ValueWIthValueMetadata.swift in Sources */,
 				65BCF8C11BCED9D00023ED13 /* Curried_ObjectWithNoMetadata.swift in Sources */,
 				65C557901BCB26010065C96A /* Functional_ValueWIthObjectMetadata.swift in Sources */,
+				652DE65C1BCEF8D700B5E668 /* Curried_ValueWithObjectMetadata.swift in Sources */,
 				653B048A1BC981D700AC98FD /* YapDatabaseExtensions.swift in Sources */,
 				65C557961BCB26010065C96A /* Persistable_ObjectWithObjectMetadata.swift in Sources */,
+				652DE6591BCEF8D700B5E668 /* Curried_ObjectWithObjectMetadata.swift in Sources */,
 				654EAE7D1BCD4C6B0093AB0C /* Persistable_AnyWithObjectMetadata.swift in Sources */,
 				65C557A21BCB26010065C96A /* Remove.swift in Sources */,
 				65C557981BCB26010065C96A /* Persistable_ObjectWithValueMetadata.swift in Sources */,
