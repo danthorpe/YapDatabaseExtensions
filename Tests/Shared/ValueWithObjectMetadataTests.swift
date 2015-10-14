@@ -12,11 +12,13 @@ import XCTest
 
 class ValueWithObjectMetadataTests: XCTestCase {
 
-    var item: Inventory!
+    typealias TypeUnderTest = Inventory
+
+    var item: TypeUnderTest!
     var index: YapDB.Index!
     var key: String!
 
-    var items: [Inventory]!
+    var items: [TypeUnderTest]!
     var indexes: [YapDB.Index]!
     var keys: [String]!
 
@@ -25,8 +27,8 @@ class ValueWithObjectMetadataTests: XCTestCase {
     var writeTransaction: TestableWriteTransaction!
     var readTransaction: TestableReadTransaction!
 
-    var reader: Read<Inventory, TestableDatabase>!
-    var writer: Write<Inventory, TestableDatabase>!
+    var reader: Read<TypeUnderTest, TestableDatabase>!
+    var writer: Write<TypeUnderTest, TestableDatabase>!
 
     var dispatchQueue: dispatch_queue_t!
     var operationQueue: NSOperationQueue!
@@ -98,7 +100,7 @@ class ValueWithObjectMetadataTests: XCTestCase {
                 )
             ]
 
-        items = products.map { Inventory(product: $0, metadata: NSNumber(integer: 12)) }
+        items = products.map { TypeUnderTest(product: $0, metadata: NSNumber(integer: 12)) }
         item = items[0]
     }
 
@@ -135,7 +137,7 @@ class ValueWithObjectMetadataTests: XCTestCase {
 
         XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
         XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].0, index)
-        XCTAssertEqual(Inventory.decode(writeTransaction.didWriteAtIndexes[0].1)!, item)
+        XCTAssertEqual(TypeUnderTest.decode(writeTransaction.didWriteAtIndexes[0].1)!, item)
         XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].2 as? NSNumber, item.metadata)
     }
 
@@ -146,7 +148,7 @@ class ValueWithObjectMetadataTests: XCTestCase {
         XCTAssertTrue(connection.didWrite)
         XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
         XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].0, index)
-        XCTAssertEqual(Inventory.decode(writeTransaction.didWriteAtIndexes[0].1)!, item)
+        XCTAssertEqual(TypeUnderTest.decode(writeTransaction.didWriteAtIndexes[0].1)!, item)
         XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].2 as? NSNumber, item.metadata)
     }
 
@@ -163,7 +165,7 @@ class ValueWithObjectMetadataTests: XCTestCase {
         XCTAssertFalse(connection.didWrite)
         XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
         XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].0, index)
-        XCTAssertEqual(Inventory.decode(writeTransaction.didWriteAtIndexes[0].1)!, item)
+        XCTAssertEqual(TypeUnderTest.decode(writeTransaction.didWriteAtIndexes[0].1)!, item)
         XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].2 as? NSNumber, item.metadata)
     }
 
@@ -183,7 +185,7 @@ class ValueWithObjectMetadataTests: XCTestCase {
         XCTAssertFalse(connection.didAsyncWrite)
         XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
         XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].0, index)
-        XCTAssertEqual(Inventory.decode(writeTransaction.didWriteAtIndexes[0].1)!, item)
+        XCTAssertEqual(TypeUnderTest.decode(writeTransaction.didWriteAtIndexes[0].1)!, item)
         XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].2 as? NSNumber, item.metadata)
     }
 
@@ -290,7 +292,7 @@ class ValueWithObjectMetadataTests: XCTestCase {
         let result = reader.byKeysInTransaction()(readTransaction)
         XCTAssertEqual(readTransaction.didReadAtIndexes, indexes)
         XCTAssertEqual(readTransaction.didReadMetadataAtIndexes, indexes)
-        XCTAssertEqual(readTransaction.didKeysInCollection!, Inventory.collection)
+        XCTAssertEqual(readTransaction.didKeysInCollection!, TypeUnderTest.collection)
         XCTAssertEqual(result.map { $0.identifier }, items.map { $0.identifier })
     }
 
@@ -410,7 +412,7 @@ class ValueWithObjectMetadataTests: XCTestCase {
         configureForReadingMultiple()
         reader = Read(readTransaction)
         let result = reader.all()
-        XCTAssertEqual(readTransaction.didKeysInCollection, Inventory.collection)
+        XCTAssertEqual(readTransaction.didKeysInCollection, TypeUnderTest.collection)
         XCTAssertEqual(readTransaction.didReadAtIndexes, indexes)
         XCTAssertEqual(result.map { $0.identifier }, items.map { $0.identifier })
     }
@@ -418,7 +420,7 @@ class ValueWithObjectMetadataTests: XCTestCase {
     func test__reader_with_transaction__all_with_no_items() {
         reader = Read(readTransaction)
         let result = reader.all()
-        XCTAssertEqual(readTransaction.didKeysInCollection, Inventory.collection)
+        XCTAssertEqual(readTransaction.didKeysInCollection, TypeUnderTest.collection)
         XCTAssertEqual(readTransaction.didReadAtIndexes, [])
         XCTAssertEqual(result, [])
     }
@@ -555,7 +557,7 @@ class ValueWithObjectMetadataTests: XCTestCase {
         reader = Read(connection)
         let result = reader.all()
         XCTAssertTrue(connection.didRead)
-        XCTAssertEqual(readTransaction.didKeysInCollection, Inventory.collection)
+        XCTAssertEqual(readTransaction.didKeysInCollection, TypeUnderTest.collection)
         XCTAssertEqual(readTransaction.didReadAtIndexes, indexes)
         XCTAssertEqual(readTransaction.didReadMetadataAtIndexes, indexes)
         XCTAssertEqual(result.map { $0.identifier }, items.map { $0.identifier })
@@ -565,7 +567,7 @@ class ValueWithObjectMetadataTests: XCTestCase {
         reader = Read(connection)
         let result = reader.all()
         XCTAssertTrue(connection.didRead)
-        XCTAssertEqual(readTransaction.didKeysInCollection, Inventory.collection)
+        XCTAssertEqual(readTransaction.didKeysInCollection, TypeUnderTest.collection)
         XCTAssertEqual(readTransaction.didReadAtIndexes, [])
         XCTAssertEqual(result, [])
     }
@@ -585,79 +587,99 @@ class ValueWithObjectMetadataTests: XCTestCase {
 
     func test__transaction__read_at_index_with_data() {
         configureForReadingSingle()
-        let inventory: Inventory? = readTransaction.readAtIndex(index)
-        XCTAssertNotNil(inventory)
-        XCTAssertEqual(inventory!.identifier, item.identifier)
+        let result: TypeUnderTest? = readTransaction.readAtIndex(index)
+        XCTAssertNotNil(result)
+        XCTAssertEqual(result!.identifier, item.identifier)
+        XCTAssertEqual(result!.metadata, item.metadata)
     }
 
     func test__transaction__read_at_index_without_data() {
-        let inventory: Inventory? = readTransaction.readAtIndex(index)
-        XCTAssertNil(inventory)
+        let result: TypeUnderTest? = readTransaction.readAtIndex(index)
+        XCTAssertNil(result)
     }
 
     func test__transaction__read_metadata_at_index_with_data() {
         configureForReadingSingle()
-        let result: Inventory.MetadataType? = readTransaction.readMetadataAtIndex(index)
+        let result: TypeUnderTest.MetadataType? = readTransaction.readMetadataAtIndex(index)
         XCTAssertNotNil(result)
         XCTAssertEqual(result!, item.metadata)
     }
 
     func test__transaction__read_metadata_at_index_without_data() {
-        let result: Inventory.MetadataType? = readTransaction.readMetadataAtIndex(index)
+        let result: TypeUnderTest.MetadataType? = readTransaction.readMetadataAtIndex(index)
         XCTAssertNil(result)
     }
 
     func test__transaction__read_at_indexes_with_data() {
         configureForReadingMultiple()
-        let inventorys: [Inventory] = readTransaction.readAtIndexes(indexes)
-        XCTAssertEqual(inventorys.count, items.count)
+        let result: [TypeUnderTest] = readTransaction.readAtIndexes(indexes)
+        XCTAssertEqual(result.count, items.count)
+    }
+
+    func test__transaction__read_at_indexes_with_data_2() {
+        configureForReadingMultiple()
+        let result: [TypeUnderTest] = readTransaction.readAtIndexes(Set(indexes))
+        XCTAssertEqual(result.count, items.count)
     }
 
     func test__transaction__read_at_indexes_without_data() {
-        let inventorys: [Inventory] = readTransaction.readAtIndexes(indexes)
-        XCTAssertNotNil(inventorys)
-        XCTAssertTrue(inventorys.isEmpty)
+        let result: [TypeUnderTest] = readTransaction.readAtIndexes(indexes)
+        XCTAssertNotNil(result)
+        XCTAssertTrue(result.isEmpty)
     }
 
     func test__transaction__read_metadata_at_indexes_with_data() {
         configureForReadingMultiple()
-        let result: [Inventory.MetadataType] = readTransaction.readMetadataAtIndexes(indexes)
+        let result: [TypeUnderTest.MetadataType] = readTransaction.readMetadataAtIndexes(indexes)
+        XCTAssertEqual(result.count, items.count)
+    }
+
+    func test__transaction__read_metadata_at_indexes_with_data_2() {
+        configureForReadingMultiple()
+        let result: [TypeUnderTest.MetadataType] = readTransaction.readMetadataAtIndexes(Set(indexes))
         XCTAssertEqual(result.count, items.count)
     }
 
     func test__transaction__read_metadata_at_indexes_without_data() {
-        let result: [Inventory.MetadataType] = readTransaction.readMetadataAtIndexes(indexes)
+        let result: [TypeUnderTest.MetadataType] = readTransaction.readMetadataAtIndexes(indexes)
         XCTAssertNotNil(result)
         XCTAssertTrue(result.isEmpty)
     }
 
     func test__transaction__read_by_key_with_data() {
         configureForReadingSingle()
-        let inventory: Inventory? = readTransaction.readByKey(key)
-        XCTAssertNotNil(inventory)
-        XCTAssertEqual(inventory!.identifier, item.identifier)
+        let result: TypeUnderTest? = readTransaction.readByKey(key)
+        XCTAssertNotNil(result)
+        XCTAssertEqual(result!.identifier, item.identifier)
+        XCTAssertEqual(result!.metadata, item.metadata)
     }
 
     func test__transaction__read_by_key_without_data() {
-        let inventory: Inventory? = readTransaction.readByKey(key)
-        XCTAssertNil(inventory)
+        let result: TypeUnderTest? = readTransaction.readByKey(key)
+        XCTAssertNil(result)
     }
 
     func test__transaction__read_by_keys_with_data() {
         configureForReadingMultiple()
-        let inventorys: [Inventory] = readTransaction.readByKeys(keys)
-        XCTAssertEqual(inventorys.count, items.count)
+        let result: [TypeUnderTest] = readTransaction.readByKeys(keys)
+        XCTAssertEqual(result.count, items.count)
+    }
+
+    func test__transaction__read_by_keys_with_data_2() {
+        configureForReadingMultiple()
+        let result: [TypeUnderTest] = readTransaction.readByKeys(Set(keys))
+        XCTAssertEqual(result.count, items.count)
     }
 
     func test__transaction__read_by_keys_without_data() {
-        let inventorys: [Inventory] = readTransaction.readByKeys(keys)
-        XCTAssertNotNil(inventorys)
-        XCTAssertTrue(inventorys.isEmpty)
+        let result: [TypeUnderTest] = readTransaction.readByKeys(keys)
+        XCTAssertNotNil(result)
+        XCTAssertTrue(result.isEmpty)
     }
 
     func test__transaction__read_all_with_data() {
         configureForReadingMultiple()
-        let result: [Inventory] = readTransaction.readAll()
+        let result: [TypeUnderTest] = readTransaction.readAll()
         XCTAssertEqual(Set(readTransaction.didReadAtIndexes), Set(indexes))
         XCTAssertEqual(result.count, items.count)
     }
@@ -666,79 +688,99 @@ class ValueWithObjectMetadataTests: XCTestCase {
 
     func test__connection__read_at_index_with_data() {
         configureForReadingSingle()
-        let inventory: Inventory? = connection.readAtIndex(index)
-        XCTAssertNotNil(inventory)
-        XCTAssertEqual(inventory!.identifier, item.identifier)
+        let result: TypeUnderTest? = connection.readAtIndex(index)
+        XCTAssertNotNil(result)
+        XCTAssertEqual(result!.identifier, item.identifier)
+        XCTAssertEqual(result!.metadata, item.metadata)
     }
 
     func test__connection__read_at_index_without_data() {
-        let inventory: Inventory? = connection.readAtIndex(index)
-        XCTAssertNil(inventory)
+        let result: TypeUnderTest? = connection.readAtIndex(index)
+        XCTAssertNil(result)
     }
 
     func test__connection__read_metadata_at_index_with_data() {
         configureForReadingSingle()
-        let result: Inventory.MetadataType? = connection.readMetadataAtIndex(index)
+        let result: TypeUnderTest.MetadataType? = connection.readMetadataAtIndex(index)
         XCTAssertNotNil(result)
         XCTAssertEqual(result!, item.metadata)
     }
 
     func test__connection__read_metadata_at_index_without_data() {
-        let result: Inventory.MetadataType? = connection.readMetadataAtIndex(index)
+        let result: TypeUnderTest.MetadataType? = connection.readMetadataAtIndex(index)
         XCTAssertNil(result)
     }
 
     func test__connection__read_at_indexes_with_data() {
         configureForReadingMultiple()
-        let inventorys: [Inventory] = connection.readAtIndexes(indexes)
-        XCTAssertEqual(inventorys.count, items.count)
+        let result: [TypeUnderTest] = connection.readAtIndexes(indexes)
+        XCTAssertEqual(result.count, items.count)
+    }
+
+    func test__connection__read_at_indexes_with_data_2() {
+        configureForReadingMultiple()
+        let result: [TypeUnderTest] = connection.readAtIndexes(Set(indexes))
+        XCTAssertEqual(result.count, items.count)
     }
 
     func test__connection__read_at_indexes_without_data() {
-        let inventorys: [Inventory] = connection.readAtIndexes(indexes)
-        XCTAssertNotNil(inventorys)
-        XCTAssertTrue(inventorys.isEmpty)
+        let result: [TypeUnderTest] = connection.readAtIndexes(indexes)
+        XCTAssertNotNil(result)
+        XCTAssertTrue(result.isEmpty)
     }
 
     func test__connection__read_metadata_at_indexes_with_data() {
         configureForReadingMultiple()
-        let result: [Inventory.MetadataType] = connection.readMetadataAtIndexes(indexes)
+        let result: [TypeUnderTest.MetadataType] = connection.readMetadataAtIndexes(indexes)
+        XCTAssertEqual(result.count, items.count)
+    }
+
+    func test__connection__read_metadata_at_indexes_with_data_2() {
+        configureForReadingMultiple()
+        let result: [TypeUnderTest.MetadataType] = connection.readMetadataAtIndexes(Set(indexes))
         XCTAssertEqual(result.count, items.count)
     }
 
     func test__connection__read_metadata_at_indexes_without_data() {
-        let result: [Inventory.MetadataType] = connection.readMetadataAtIndexes(indexes)
+        let result: [TypeUnderTest.MetadataType] = connection.readMetadataAtIndexes(indexes)
         XCTAssertNotNil(result)
         XCTAssertTrue(result.isEmpty)
     }
 
     func test__connection__read_by_key_with_data() {
         configureForReadingSingle()
-        let inventory: Inventory? = connection.readByKey(key)
-        XCTAssertNotNil(inventory)
-        XCTAssertEqual(inventory!.identifier, item.identifier)
+        let result: TypeUnderTest? = connection.readByKey(key)
+        XCTAssertNotNil(result)
+        XCTAssertEqual(result!.identifier, item.identifier)
+        XCTAssertEqual(result!.metadata, item.metadata)
     }
 
     func test__connection__read_by_key_without_data() {
-        let inventory: Inventory? = connection.readByKey(key)
-        XCTAssertNil(inventory)
+        let result: TypeUnderTest? = connection.readByKey(key)
+        XCTAssertNil(result)
     }
 
     func test__connection__read_by_keys_with_data() {
         configureForReadingMultiple()
-        let inventorys: [Inventory] = connection.readByKeys(keys)
-        XCTAssertEqual(inventorys.count, items.count)
+        let result: [TypeUnderTest] = connection.readByKeys(keys)
+        XCTAssertEqual(result.count, items.count)
+    }
+
+    func test__connection__read_by_keys_with_data_2() {
+        configureForReadingMultiple()
+        let result: [TypeUnderTest] = connection.readByKeys(Set(keys))
+        XCTAssertEqual(result.count, items.count)
     }
 
     func test__connection__read_by_keys_without_data() {
-        let inventorys: [Inventory] = connection.readByKeys(keys)
-        XCTAssertNotNil(inventorys)
-        XCTAssertTrue(inventorys.isEmpty)
+        let result: [TypeUnderTest] = connection.readByKeys(keys)
+        XCTAssertNotNil(result)
+        XCTAssertTrue(result.isEmpty)
     }
 
     func test__connection__read_all_with_data() {
         configureForReadingMultiple()
-        let result: [Inventory] = connection.readAll()
+        let result: [TypeUnderTest] = connection.readAll()
         XCTAssertTrue(connection.didRead)
         XCTAssertEqual(Set(readTransaction.didReadAtIndexes), Set(indexes))
         XCTAssertEqual(result.count, items.count)
@@ -751,12 +793,20 @@ class ValueWithObjectMetadataTests: XCTestCase {
 
         XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
         XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].0, index)
-        XCTAssertEqual(Inventory.decode(writeTransaction.didWriteAtIndexes[0].1)!, item)
+        XCTAssertEqual(TypeUnderTest.decode(writeTransaction.didWriteAtIndexes[0].1)!, item)
         XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].2 as? NSNumber, item.metadata)
     }
 
     func test__transaction__write_items() {
         writeTransaction.write(items)
+
+        XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes.map { $0.0.key }.sort(), indexes.map { $0.key }.sort())
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes.map { $0.2 }.count, items.count)
+    }
+
+    func test__transaction__write_items_2() {
+        writeTransaction.write(Set(items))
 
         XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
         XCTAssertEqual(writeTransaction.didWriteAtIndexes.map { $0.0.key }.sort(), indexes.map { $0.key }.sort())
@@ -771,11 +821,20 @@ class ValueWithObjectMetadataTests: XCTestCase {
         XCTAssertTrue(connection.didWrite)
         XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
         XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].0, index)
-        XCTAssertEqual(Inventory.decode(writeTransaction.didWriteAtIndexes[0].1)!, item)
+        XCTAssertEqual(TypeUnderTest.decode(writeTransaction.didWriteAtIndexes[0].1)!, item)
         XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].2 as? NSNumber, item.metadata)
     }
 
     func test__connection__write_items() {
+        connection.write(items)
+
+        XCTAssertTrue(connection.didWrite)
+        XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes.map { $0.0.key }.sort(), indexes.map { $0.key }.sort())
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes.map { $0.2 }.count, items.count)
+    }
+
+    func test__connection__write_items_2() {
         connection.write(items)
 
         XCTAssertTrue(connection.didWrite)
@@ -792,19 +851,25 @@ class ValueWithObjectMetadataTests: XCTestCase {
         XCTAssertTrue(connection.didAsyncWrite)
         XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
         XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].0, index)
-        XCTAssertEqual(Inventory.decode(writeTransaction.didWriteAtIndexes[0].1)!, item)
+        XCTAssertEqual(TypeUnderTest.decode(writeTransaction.didWriteAtIndexes[0].1)!, item)
         XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].2 as? NSNumber, item.metadata)
     }
 
     func test__connection__async_write_items() {
         let expectation = expectationWithDescription("Test: \(__FUNCTION__)")
-        connection.asyncWrite(items) { _ in expectation.fulfill() }
+        var result: [TypeUnderTest] = []
+        connection.asyncWrite(items) { received in
+            result = received
+            expectation.fulfill()
+        }
 
         waitForExpectationsWithTimeout(3.0, handler: nil)
         XCTAssertTrue(connection.didAsyncWrite)
         XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
         XCTAssertEqual(writeTransaction.didWriteAtIndexes.map { $0.0.key }.sort(), indexes.map { $0.key }.sort())
         XCTAssertEqual(writeTransaction.didWriteAtIndexes.map { $0.2 }.count, items.count)
+        XCTAssertFalse(result.isEmpty)
+        XCTAssertEqual(result, items)
     }
 
 
