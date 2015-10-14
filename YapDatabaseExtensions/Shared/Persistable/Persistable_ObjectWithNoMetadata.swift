@@ -8,7 +8,6 @@
 
 import Foundation
 import ValueCoding
-import YapDatabase
 
 // MARK: - Readable
 
@@ -174,4 +173,6 @@ extension Writable
         return connection.writeBlockOperation { self.on($0) }
     }
 }
+
+
 

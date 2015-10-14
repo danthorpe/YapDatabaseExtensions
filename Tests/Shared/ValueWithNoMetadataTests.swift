@@ -13,11 +13,13 @@ import ValueCoding
 
 class ValueWithNoMetadataTests: XCTestCase {
 
-    var item: Barcode!
+    typealias TypeUnderTest = Barcode
+
+    var item: TypeUnderTest!
     var index: YapDB.Index!
     var key: String!
 
-    var items: [Barcode]!
+    var items: [TypeUnderTest]!
     var indexes: [YapDB.Index]!
     var keys: [String]!
 
@@ -26,8 +28,8 @@ class ValueWithNoMetadataTests: XCTestCase {
     var writeTransaction: TestableWriteTransaction!
     var readTransaction: TestableReadTransaction!
 
-    var reader: Read<Barcode, TestableDatabase>!
-    var writer: Write<Barcode, TestableDatabase>!
+    var reader: Read<TypeUnderTest, TestableDatabase>!
+    var writer: Write<TypeUnderTest, TestableDatabase>!
 
     var dispatchQueue: dispatch_queue_t!
     var operationQueue: NSOperationQueue!
@@ -121,7 +123,7 @@ class ValueWithNoMetadataTests: XCTestCase {
 
         XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
         XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].0, index)
-        XCTAssertEqual(Barcode.decode(writeTransaction.didWriteAtIndexes[0].1)!, item)
+        XCTAssertEqual(TypeUnderTest.decode(writeTransaction.didWriteAtIndexes[0].1)!, item)
         XCTAssertNil(writeTransaction.didWriteAtIndexes[0].2)
     }
 
@@ -132,7 +134,7 @@ class ValueWithNoMetadataTests: XCTestCase {
         XCTAssertTrue(connection.didWrite)
         XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
         XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].0, index)
-        XCTAssertEqual(Barcode.decode(writeTransaction.didWriteAtIndexes[0].1)!, item)
+        XCTAssertEqual(TypeUnderTest.decode(writeTransaction.didWriteAtIndexes[0].1)!, item)
         XCTAssertNil(writeTransaction.didWriteAtIndexes[0].2)
     }
 
@@ -149,7 +151,7 @@ class ValueWithNoMetadataTests: XCTestCase {
         XCTAssertFalse(connection.didWrite)
         XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
         XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].0, index)
-        XCTAssertEqual(Barcode.decode(writeTransaction.didWriteAtIndexes[0].1)!, item)
+        XCTAssertEqual(TypeUnderTest.decode(writeTransaction.didWriteAtIndexes[0].1)!, item)
         XCTAssertNil(writeTransaction.didWriteAtIndexes[0].2)
     }
 
@@ -169,7 +171,7 @@ class ValueWithNoMetadataTests: XCTestCase {
         XCTAssertFalse(connection.didAsyncWrite)
         XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
         XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].0, index)
-        XCTAssertEqual(Barcode.decode(writeTransaction.didWriteAtIndexes[0].1)!, item)
+        XCTAssertEqual(TypeUnderTest.decode(writeTransaction.didWriteAtIndexes[0].1)!, item)
         XCTAssertNil(writeTransaction.didWriteAtIndexes[0].2)
     }
 
@@ -261,7 +263,7 @@ class ValueWithNoMetadataTests: XCTestCase {
         reader = Read(readTransaction)
         let result = reader.byKeysInTransaction()(readTransaction)
         XCTAssertEqual(readTransaction.didReadAtIndexes, indexes)
-        XCTAssertEqual(readTransaction.didKeysInCollection!, Barcode.collection)
+        XCTAssertEqual(readTransaction.didKeysInCollection!, TypeUnderTest.collection)
         XCTAssertEqual(result.map { $0.identifier }, items.map { $0.identifier })
     }
 
@@ -340,7 +342,7 @@ class ValueWithNoMetadataTests: XCTestCase {
         configureForReadingMultiple()
         reader = Read(readTransaction)
         let result = reader.all()
-        XCTAssertEqual(readTransaction.didKeysInCollection, Barcode.collection)
+        XCTAssertEqual(readTransaction.didKeysInCollection, TypeUnderTest.collection)
         XCTAssertEqual(readTransaction.didReadAtIndexes, indexes)
         XCTAssertEqual(result.map { $0.identifier }, items.map { $0.identifier })
     }
@@ -348,7 +350,7 @@ class ValueWithNoMetadataTests: XCTestCase {
     func test__reader_with_transaction__all_with_no_items() {
         reader = Read(readTransaction)
         let result = reader.all()
-        XCTAssertEqual(readTransaction.didKeysInCollection, Barcode.collection)
+        XCTAssertEqual(readTransaction.didKeysInCollection, TypeUnderTest.collection)
         XCTAssertEqual(readTransaction.didReadAtIndexes, [])
         XCTAssertEqual(result, [])
     }
@@ -439,7 +441,7 @@ class ValueWithNoMetadataTests: XCTestCase {
         reader = Read(connection)
         let result = reader.all()
         XCTAssertTrue(connection.didRead)
-        XCTAssertEqual(readTransaction.didKeysInCollection, Barcode.collection)
+        XCTAssertEqual(readTransaction.didKeysInCollection, TypeUnderTest.collection)
         XCTAssertEqual(readTransaction.didReadAtIndexes, indexes)
         XCTAssertEqual(result.map { $0.identifier }, items.map { $0.identifier })
     }
@@ -448,7 +450,7 @@ class ValueWithNoMetadataTests: XCTestCase {
         reader = Read(connection)
         let result = reader.all()
         XCTAssertTrue(connection.didRead)
-        XCTAssertEqual(readTransaction.didKeysInCollection, Barcode.collection)
+        XCTAssertEqual(readTransaction.didKeysInCollection, TypeUnderTest.collection)
         XCTAssertEqual(readTransaction.didReadAtIndexes, [])
         XCTAssertEqual(result, [])
     }
@@ -463,61 +465,126 @@ class ValueWithNoMetadataTests: XCTestCase {
         XCTAssertEqual(missing, Array(keys.suffixFrom(1)))
     }
 
+    // Persistable Curried API - Reading
+
+    func test__curried__read_at_index_with_data() {
+        configureForReadingSingle()
+        let result = connection.read(TypeUnderTest.readAtIndex(index))
+        XCTAssertNotNil(result)
+        XCTAssertEqual(result!.identifier, item.identifier)
+        XCTAssertNil(result!.metadata)
+    }
+
+    func test__curried__read_at_index_with_no_data() {
+        let result = connection.read(TypeUnderTest.readAtIndex(index))
+        XCTAssertNil(result)
+    }
+
+    func test__curried__read_at_indexes_with_data() {
+        configureForReadingMultiple()
+        let result = connection.read(TypeUnderTest.readAtIndexes(indexes))
+        XCTAssertEqual(result.count, items.count)
+    }
+
+    func test__curried__read_at_indexes_with_no_data() {
+        let result = connection.read(TypeUnderTest.readAtIndexes(indexes))
+        XCTAssertNotNil(result)
+        XCTAssertTrue(result.isEmpty)
+    }
+
+    func test__curried__read_by_key_with_data() {
+        configureForReadingSingle()
+        let result = connection.read(TypeUnderTest.readByKey(key))
+        XCTAssertNotNil(result)
+        XCTAssertEqual(result!.identifier, item.identifier)
+        XCTAssertNil(result!.metadata)
+    }
+
+    func test__curried__read_by_key_with_no_data() {
+        let result = connection.read(TypeUnderTest.readByKey(key))
+        XCTAssertNil(result)
+    }
+
+    func test__curried__read_by_keys_with_data() {
+        configureForReadingMultiple()
+        let result = connection.read(TypeUnderTest.readByKeys(keys))
+        XCTAssertEqual(result.count, items.count)
+    }
+
+    func test__curried__read_by_keys_with_no_data() {
+        let result = connection.read(TypeUnderTest.readByKeys(keys))
+        XCTAssertNotNil(result)
+        XCTAssertTrue(result.isEmpty)
+    }
+
+    // Persistable Curried API - Writing
+
+    func test__curried__writeOn() {
+        let result = connection.write(item.writeOn())
+
+        XCTAssertTrue(connection.didWrite)        
+        XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].0, index)
+        XCTAssertEqual(TypeUnderTest.decode(writeTransaction.didWriteAtIndexes[0].1)!, item)
+        XCTAssertNil(writeTransaction.didWriteAtIndexes[0].2)
+        XCTAssertEqual(result, item)
+    }
+
     // Functional API - ReadTransactionType - Reading
 
     func test__transaction__read_at_index_with_data() {
         configureForReadingSingle()
-        let barcode: Barcode? = readTransaction.readAtIndex(index)
-        XCTAssertNotNil(barcode)
-        XCTAssertEqual(barcode!.identifier, item.identifier)
-        XCTAssertNil(barcode!.metadata)
+        let result: TypeUnderTest? = readTransaction.readAtIndex(index)
+        XCTAssertNotNil(result)
+        XCTAssertEqual(result!.identifier, item.identifier)
+        XCTAssertNil(result!.metadata)
     }
 
     func test__transaction__read_at_index_without_data() {
-        let barcode: Barcode? = readTransaction.readAtIndex(index)
-        XCTAssertNil(barcode)
+        let result: TypeUnderTest? = readTransaction.readAtIndex(index)
+        XCTAssertNil(result)
     }
 
     func test__transaction__read_at_indexes_with_data() {
         configureForReadingMultiple()
-        let barcodes: [Barcode] = readTransaction.readAtIndexes(indexes)
-        XCTAssertEqual(barcodes.count, items.count)
+        let result: [TypeUnderTest] = readTransaction.readAtIndexes(indexes)
+        XCTAssertEqual(result.count, items.count)
     }
 
     func test__transaction__read_at_indexes_without_data() {
-        let barcodes: [Barcode] = readTransaction.readAtIndexes(indexes)
-        XCTAssertNotNil(barcodes)
-        XCTAssertTrue(barcodes.isEmpty)
+        let result: [TypeUnderTest] = readTransaction.readAtIndexes(indexes)
+        XCTAssertNotNil(result)
+        XCTAssertTrue(result.isEmpty)
     }
 
     func test__transaction__read_by_key_with_data() {
         configureForReadingSingle()
-        let barcode: Barcode? = readTransaction.readByKey(key)
-        XCTAssertNotNil(barcode)
-        XCTAssertEqual(barcode!.identifier, item.identifier)
-        XCTAssertNil(barcode!.metadata)
+        let result: TypeUnderTest? = readTransaction.readByKey(key)
+        XCTAssertNotNil(result)
+        XCTAssertEqual(result!.identifier, item.identifier)
+        XCTAssertNil(result!.metadata)
     }
 
     func test__transaction__read_by_key_without_data() {
-        let barcode: Barcode? = readTransaction.readByKey(key)
-        XCTAssertNil(barcode)
+        let result: TypeUnderTest? = readTransaction.readByKey(key)
+        XCTAssertNil(result)
     }
 
     func test__transaction__read_by_keys_with_data() {
         configureForReadingMultiple()
-        let barcodes: [Barcode] = readTransaction.readByKeys(keys)
-        XCTAssertEqual(barcodes.count, items.count)
+        let result: [TypeUnderTest] = readTransaction.readByKeys(keys)
+        XCTAssertEqual(result.count, items.count)
     }
 
     func test__transaction__read_by_keys_without_data() {
-        let barcodes: [Barcode] = readTransaction.readByKeys(keys)
-        XCTAssertNotNil(barcodes)
-        XCTAssertTrue(barcodes.isEmpty)
+        let result: [TypeUnderTest] = readTransaction.readByKeys(keys)
+        XCTAssertNotNil(result)
+        XCTAssertTrue(result.isEmpty)
     }
 
     func test__transaction__read_all_with_data() {
         configureForReadingMultiple()
-        let result: [Barcode] = readTransaction.readAll()
+        let result: [TypeUnderTest] = readTransaction.readAll()
         XCTAssertEqual(Set(readTransaction.didReadAtIndexes), Set(indexes))
         XCTAssertEqual(result.count, items.count)
     }
@@ -526,57 +593,57 @@ class ValueWithNoMetadataTests: XCTestCase {
 
     func test__connection__read_at_index_with_data() {
         configureForReadingSingle()
-        let barcode: Barcode? = connection.readAtIndex(index)
-        XCTAssertNotNil(barcode)
-        XCTAssertEqual(barcode!.identifier, item.identifier)
-        XCTAssertNil(barcode!.metadata)
+        let result: TypeUnderTest? = connection.readAtIndex(index)
+        XCTAssertNotNil(result)
+        XCTAssertEqual(result!.identifier, item.identifier)
+        XCTAssertNil(result!.metadata)
     }
 
     func test__connection__read_at_index_without_data() {
-        let barcode: Barcode? = connection.readAtIndex(index)
-        XCTAssertNil(barcode)
+        let result: TypeUnderTest? = connection.readAtIndex(index)
+        XCTAssertNil(result)
     }
 
     func test__connection__read_at_indexes_with_data() {
         configureForReadingMultiple()
-        let barcodes: [Barcode] = connection.readAtIndexes(indexes)
-        XCTAssertEqual(barcodes.count, items.count)
+        let result: [TypeUnderTest] = connection.readAtIndexes(indexes)
+        XCTAssertEqual(result.count, items.count)
     }
 
     func test__connection__read_at_indexes_without_data() {
-        let barcodes: [Barcode] = connection.readAtIndexes(indexes)
-        XCTAssertNotNil(barcodes)
-        XCTAssertTrue(barcodes.isEmpty)
+        let result: [TypeUnderTest] = connection.readAtIndexes(indexes)
+        XCTAssertNotNil(result)
+        XCTAssertTrue(result.isEmpty)
     }
 
     func test__connection__read_by_key_with_data() {
         configureForReadingSingle()
-        let barcode: Barcode? = connection.readByKey(key)
-        XCTAssertNotNil(barcode)
-        XCTAssertEqual(barcode!.identifier, item.identifier)
-        XCTAssertNil(barcode!.metadata)
+        let result: TypeUnderTest? = connection.readByKey(key)
+        XCTAssertNotNil(result)
+        XCTAssertEqual(result!.identifier, item.identifier)
+        XCTAssertNil(result!.metadata)
     }
 
     func test__connection__read_by_key_without_data() {
-        let barcode: Barcode? = connection.readByKey(key)
-        XCTAssertNil(barcode)
+        let result: TypeUnderTest? = connection.readByKey(key)
+        XCTAssertNil(result)
     }
 
     func test__connection__read_by_keys_with_data() {
         configureForReadingMultiple()
-        let barcodes: [Barcode] = connection.readByKeys(keys)
-        XCTAssertEqual(barcodes.count, items.count)
+        let result: [TypeUnderTest] = connection.readByKeys(keys)
+        XCTAssertEqual(result.count, items.count)
     }
 
     func test__connection__read_by_keys_without_data() {
-        let barcodes: [Barcode] = connection.readByKeys(keys)
-        XCTAssertNotNil(barcodes)
-        XCTAssertTrue(barcodes.isEmpty)
+        let result: [TypeUnderTest] = connection.readByKeys(keys)
+        XCTAssertNotNil(result)
+        XCTAssertTrue(result.isEmpty)
     }
 
     func test__connection__read_all_with_data() {
         configureForReadingMultiple()
-        let result: [Barcode] = connection.readAll()
+        let result: [TypeUnderTest] = connection.readAll()
         XCTAssertTrue(connection.didRead)
         XCTAssertEqual(Set(readTransaction.didReadAtIndexes), Set(indexes))
         XCTAssertEqual(result.count, items.count)
@@ -589,7 +656,7 @@ class ValueWithNoMetadataTests: XCTestCase {
 
         XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
         XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].0, index)
-        XCTAssertEqual(Barcode.decode(writeTransaction.didWriteAtIndexes[0].1)!, item)
+        XCTAssertEqual(TypeUnderTest.decode(writeTransaction.didWriteAtIndexes[0].1)!, item)
         XCTAssertNil(writeTransaction.didWriteAtIndexes[0].2)
     }
 
@@ -609,7 +676,7 @@ class ValueWithNoMetadataTests: XCTestCase {
         XCTAssertTrue(connection.didWrite)
         XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
         XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].0, index)
-        XCTAssertEqual(Barcode.decode(writeTransaction.didWriteAtIndexes[0].1)!, item)
+        XCTAssertEqual(TypeUnderTest.decode(writeTransaction.didWriteAtIndexes[0].1)!, item)
         XCTAssertNil(writeTransaction.didWriteAtIndexes[0].2)
     }
 
@@ -630,7 +697,7 @@ class ValueWithNoMetadataTests: XCTestCase {
         XCTAssertTrue(connection.didAsyncWrite)
         XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
         XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].0, index)
-        XCTAssertEqual(Barcode.decode(writeTransaction.didWriteAtIndexes[0].1)!, item)
+        XCTAssertEqual(TypeUnderTest.decode(writeTransaction.didWriteAtIndexes[0].1)!, item)
         XCTAssertNil(writeTransaction.didWriteAtIndexes[0].2)
     }
 
