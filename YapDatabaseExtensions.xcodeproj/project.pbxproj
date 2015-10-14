@@ -10,6 +10,11 @@
 		00EFE0D3D9A2DDD7C6BF526A /* Pods_YapDatabaseExtensions_iOSTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5550DE9AA69FDA43AE8D0D51 /* Pods_YapDatabaseExtensions_iOSTests.framework */; };
 		085C9EA234EAEF057CC78041 /* Pods_YapDatabaseExtensions_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EE3D86AD60BF064ADA4CC71C /* Pods_YapDatabaseExtensions_iOS.framework */; };
 		371109FDB091F2E45241BC22 /* Pods_YapDatabaseExtensions_OSX.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DB4702C82EB6B1579DB4EF99 /* Pods_YapDatabaseExtensions_OSX.framework */; };
+		651DD4A41BCEF4D700DD94E2 /* Curried_ObjectWithObjectMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651DD49F1BCEF4D700DD94E2 /* Curried_ObjectWithObjectMetadata.swift */; settings = {ASSET_TAGS = (); }; };
+		651DD4A51BCEF4D700DD94E2 /* Curried_ObjectWithValueMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651DD4A01BCEF4D700DD94E2 /* Curried_ObjectWithValueMetadata.swift */; settings = {ASSET_TAGS = (); }; };
+		651DD4A61BCEF4D700DD94E2 /* Curried_ValueWithNoMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651DD4A11BCEF4D700DD94E2 /* Curried_ValueWithNoMetadata.swift */; settings = {ASSET_TAGS = (); }; };
+		651DD4A71BCEF4D700DD94E2 /* Curried_ValueWithObjectMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651DD4A21BCEF4D700DD94E2 /* Curried_ValueWithObjectMetadata.swift */; settings = {ASSET_TAGS = (); }; };
+		651DD4A81BCEF4D700DD94E2 /* Curried_ValueWithValueMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651DD4A31BCEF4D700DD94E2 /* Curried_ValueWithValueMetadata.swift */; settings = {ASSET_TAGS = (); }; };
 		653B044E1BC97ED700AC98FD /* YapDatabaseExtensions.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 653B04431BC97ED700AC98FD /* YapDatabaseExtensions.framework */; settings = {ASSET_TAGS = (); }; };
 		653B046A1BC9805D00AC98FD /* YapDatabaseExtensions.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 653B04601BC9805D00AC98FD /* YapDatabaseExtensions.framework */; settings = {ASSET_TAGS = (); }; };
 		653B047B1BC9816D00AC98FD /* YapDatabaseExtensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 653B04791BC9816D00AC98FD /* YapDatabaseExtensions.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -45,6 +50,8 @@
 		654EAE7D1BCD4C6B0093AB0C /* Persistable_AnyWithObjectMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 654EAE7B1BCD4C6B0093AB0C /* Persistable_AnyWithObjectMetadata.swift */; settings = {ASSET_TAGS = (); }; };
 		654EAE7F1BCD4CD70093AB0C /* Persistable_AnyWithValueMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 654EAE7E1BCD4CD70093AB0C /* Persistable_AnyWithValueMetadata.swift */; settings = {ASSET_TAGS = (); }; };
 		654EAE801BCD4CD70093AB0C /* Persistable_AnyWithValueMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 654EAE7E1BCD4CD70093AB0C /* Persistable_AnyWithValueMetadata.swift */; settings = {ASSET_TAGS = (); }; };
+		65BCF8C01BCED9D00023ED13 /* Curried_ObjectWithNoMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65BCF8BF1BCED9D00023ED13 /* Curried_ObjectWithNoMetadata.swift */; settings = {ASSET_TAGS = (); }; };
+		65BCF8C11BCED9D00023ED13 /* Curried_ObjectWithNoMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65BCF8BF1BCED9D00023ED13 /* Curried_ObjectWithNoMetadata.swift */; settings = {ASSET_TAGS = (); }; };
 		65C5578B1BCB26010065C96A /* Functional_ObjectWithObjectMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C5577D1BCB26010065C96A /* Functional_ObjectWithObjectMetadata.swift */; settings = {ASSET_TAGS = (); }; };
 		65C5578C1BCB26010065C96A /* Functional_ObjectWithObjectMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C5577D1BCB26010065C96A /* Functional_ObjectWithObjectMetadata.swift */; settings = {ASSET_TAGS = (); }; };
 		65C5578D1BCB26010065C96A /* Functional_ObjectWithValueMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C5577E1BCB26010065C96A /* Functional_ObjectWithValueMetadata.swift */; settings = {ASSET_TAGS = (); }; };
@@ -108,6 +115,11 @@
 		574741755E625D8A78119A8A /* Pods_YapDatabaseExtensions_OSXTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_YapDatabaseExtensions_OSXTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		598392EAD289EAEAE8D3B2CD /* Pods-YapDatabaseExtensions-iOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-YapDatabaseExtensions-iOS.release.xcconfig"; path = "Pods/Target Support Files/Pods-YapDatabaseExtensions-iOS/Pods-YapDatabaseExtensions-iOS.release.xcconfig"; sourceTree = "<group>"; };
 		5AC602528D550B8182F7A0C6 /* Pods-YapDatabaseExtensions-iOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-YapDatabaseExtensions-iOS.debug.xcconfig"; path = "Pods/Target Support Files/Pods-YapDatabaseExtensions-iOS/Pods-YapDatabaseExtensions-iOS.debug.xcconfig"; sourceTree = "<group>"; };
+		651DD49F1BCEF4D700DD94E2 /* Curried_ObjectWithObjectMetadata.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Curried_ObjectWithObjectMetadata.swift; path = Curried/Curried_ObjectWithObjectMetadata.swift; sourceTree = "<group>"; };
+		651DD4A01BCEF4D700DD94E2 /* Curried_ObjectWithValueMetadata.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Curried_ObjectWithValueMetadata.swift; path = Curried/Curried_ObjectWithValueMetadata.swift; sourceTree = "<group>"; };
+		651DD4A11BCEF4D700DD94E2 /* Curried_ValueWithNoMetadata.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Curried_ValueWithNoMetadata.swift; path = Curried/Curried_ValueWithNoMetadata.swift; sourceTree = "<group>"; };
+		651DD4A21BCEF4D700DD94E2 /* Curried_ValueWithObjectMetadata.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Curried_ValueWithObjectMetadata.swift; path = Curried/Curried_ValueWithObjectMetadata.swift; sourceTree = "<group>"; };
+		651DD4A31BCEF4D700DD94E2 /* Curried_ValueWithValueMetadata.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Curried_ValueWithValueMetadata.swift; path = Curried/Curried_ValueWithValueMetadata.swift; sourceTree = "<group>"; };
 		653B04431BC97ED700AC98FD /* YapDatabaseExtensions.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = YapDatabaseExtensions.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		653B044D1BC97ED700AC98FD /* YapDatabaseExtensions-iOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "YapDatabaseExtensions-iOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		653B04601BC9805D00AC98FD /* YapDatabaseExtensions.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = YapDatabaseExtensions.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -132,6 +144,7 @@
 		654EAE781BCD45480093AB0C /* Functional_AnyWithValueMetadata.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Functional_AnyWithValueMetadata.swift; sourceTree = "<group>"; };
 		654EAE7B1BCD4C6B0093AB0C /* Persistable_AnyWithObjectMetadata.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Persistable_AnyWithObjectMetadata.swift; sourceTree = "<group>"; };
 		654EAE7E1BCD4CD70093AB0C /* Persistable_AnyWithValueMetadata.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Persistable_AnyWithValueMetadata.swift; sourceTree = "<group>"; };
+		65BCF8BF1BCED9D00023ED13 /* Curried_ObjectWithNoMetadata.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Curried_ObjectWithNoMetadata.swift; path = Curried/Curried_ObjectWithNoMetadata.swift; sourceTree = "<group>"; };
 		65C5577D1BCB26010065C96A /* Functional_ObjectWithObjectMetadata.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Functional_ObjectWithObjectMetadata.swift; sourceTree = "<group>"; };
 		65C5577E1BCB26010065C96A /* Functional_ObjectWithValueMetadata.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Functional_ObjectWithValueMetadata.swift; sourceTree = "<group>"; };
 		65C5577F1BCB26010065C96A /* Functional_ValueWIthObjectMetadata.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Functional_ValueWIthObjectMetadata.swift; sourceTree = "<group>"; };
@@ -230,10 +243,11 @@
 		653B047C1BC981D100AC98FD /* Shared */ = {
 			isa = PBXGroup;
 			children = (
-				65C5577C1BCB26010065C96A /* Functional */,
-				65C557811BCB26010065C96A /* Persistable */,
 				653B04801BC981D100AC98FD /* YapDatabaseExtensions.swift */,
 				653B04811BC981D100AC98FD /* YapDB.swift */,
+				65C5577C1BCB26010065C96A /* Functional */,
+				65BCF8C21BCED9D80023ED13 /* Curried */,
+				65C557811BCB26010065C96A /* Persistable */,
 			);
 			name = Shared;
 			path = YapDatabaseExtensions/Shared;
@@ -272,6 +286,19 @@
 				653B047C1BC981D100AC98FD /* Shared */,
 			);
 			name = YapDatabaseExtensions;
+			sourceTree = "<group>";
+		};
+		65BCF8C21BCED9D80023ED13 /* Curried */ = {
+			isa = PBXGroup;
+			children = (
+				65BCF8BF1BCED9D00023ED13 /* Curried_ObjectWithNoMetadata.swift */,
+				651DD49F1BCEF4D700DD94E2 /* Curried_ObjectWithObjectMetadata.swift */,
+				651DD4A01BCEF4D700DD94E2 /* Curried_ObjectWithValueMetadata.swift */,
+				651DD4A11BCEF4D700DD94E2 /* Curried_ValueWithNoMetadata.swift */,
+				651DD4A21BCEF4D700DD94E2 /* Curried_ValueWithObjectMetadata.swift */,
+				651DD4A31BCEF4D700DD94E2 /* Curried_ValueWithValueMetadata.swift */,
+			);
+			name = Curried;
 			sourceTree = "<group>";
 		};
 		65C5577C1BCB26010065C96A /* Functional */ = {
@@ -676,16 +703,22 @@
 				65C557A61BCB26310065C96A /* Functional_Remove.swift in Sources */,
 				65C5579B1BCB26010065C96A /* Persistable_ValueWithObjectMetadata.swift in Sources */,
 				65C5579D1BCB26010065C96A /* Persistable_ValueWithValueMetadata.swift in Sources */,
+				651DD4A51BCEF4D700DD94E2 /* Curried_ObjectWithValueMetadata.swift in Sources */,
+				651DD4A81BCEF4D700DD94E2 /* Curried_ValueWithValueMetadata.swift in Sources */,
 				65C8DB441BCD24FA002F2C05 /* Persistable_ValueWithNoMetadata.swift in Sources */,
+				651DD4A61BCEF4D700DD94E2 /* Curried_ValueWithNoMetadata.swift in Sources */,
 				65C8DB491BCD2676002F2C05 /* Functional_ObjectWithNoMetadata.swift in Sources */,
 				65C8DB4C1BCD283D002F2C05 /* Functional_ValueWithNoMetadata.swift in Sources */,
 				65C8DB421BCD24EA002F2C05 /* Persistable_ObjectWithNoMetadata.swift in Sources */,
 				654EAE761BCD44D90093AB0C /* Functional_AnyWithObjectMetadata.swift in Sources */,
 				65C557A31BCB26010065C96A /* Write.swift in Sources */,
 				65C557911BCB26010065C96A /* Functional_ValueWIthValueMetadata.swift in Sources */,
+				65BCF8C01BCED9D00023ED13 /* Curried_ObjectWithNoMetadata.swift in Sources */,
 				65C5578F1BCB26010065C96A /* Functional_ValueWIthObjectMetadata.swift in Sources */,
+				651DD4A71BCEF4D700DD94E2 /* Curried_ValueWithObjectMetadata.swift in Sources */,
 				653B04851BC981D100AC98FD /* YapDatabaseExtensions.swift in Sources */,
 				65C557951BCB26010065C96A /* Persistable_ObjectWithObjectMetadata.swift in Sources */,
+				651DD4A41BCEF4D700DD94E2 /* Curried_ObjectWithObjectMetadata.swift in Sources */,
 				654EAE7C1BCD4C6B0093AB0C /* Persistable_AnyWithObjectMetadata.swift in Sources */,
 				65C557A11BCB26010065C96A /* Remove.swift in Sources */,
 				65C557971BCB26010065C96A /* Persistable_ObjectWithValueMetadata.swift in Sources */,
@@ -730,6 +763,7 @@
 				654EAE771BCD44D90093AB0C /* Functional_AnyWithObjectMetadata.swift in Sources */,
 				65C557A41BCB26010065C96A /* Write.swift in Sources */,
 				65C557921BCB26010065C96A /* Functional_ValueWIthValueMetadata.swift in Sources */,
+				65BCF8C11BCED9D00023ED13 /* Curried_ObjectWithNoMetadata.swift in Sources */,
 				65C557901BCB26010065C96A /* Functional_ValueWIthObjectMetadata.swift in Sources */,
 				653B048A1BC981D700AC98FD /* YapDatabaseExtensions.swift in Sources */,
 				65C557961BCB26010065C96A /* Persistable_ObjectWithObjectMetadata.swift in Sources */,

@@ -683,6 +683,71 @@ class ValueWithValueMetadataTests: XCTestCase {
         XCTAssertEqual(result.count, items.count)
     }
 
+    // Persistable Curried API - Reading
+
+    func test__curried__read_at_index_with_data() {
+        configureForReadingSingle()
+        let result = connection.read(TypeUnderTest.readAtIndex(index))
+        XCTAssertNotNil(result)
+        XCTAssertEqual(result!.identifier, item.identifier)
+        XCTAssertEqual(result!.metadata, item.metadata)
+    }
+
+    func test__curried__read_at_index_with_no_data() {
+        let result = connection.read(TypeUnderTest.readAtIndex(index))
+        XCTAssertNil(result)
+    }
+
+    func test__curried__read_at_indexes_with_data() {
+        configureForReadingMultiple()
+        let result = connection.read(TypeUnderTest.readAtIndexes(indexes))
+        XCTAssertEqual(result.count, items.count)
+    }
+
+    func test__curried__read_at_indexes_with_no_data() {
+        let result = connection.read(TypeUnderTest.readAtIndexes(indexes))
+        XCTAssertNotNil(result)
+        XCTAssertTrue(result.isEmpty)
+    }
+
+    func test__curried__read_by_key_with_data() {
+        configureForReadingSingle()
+        let result = connection.read(TypeUnderTest.readByKey(key))
+        XCTAssertNotNil(result)
+        XCTAssertEqual(result!.identifier, item.identifier)
+        XCTAssertEqual(result!.metadata, item.metadata)
+    }
+
+    func test__curried__read_by_key_with_no_data() {
+        let result = connection.read(TypeUnderTest.readByKey(key))
+        XCTAssertNil(result)
+    }
+
+    func test__curried__read_by_keys_with_data() {
+        configureForReadingMultiple()
+        let result = connection.read(TypeUnderTest.readByKeys(keys))
+        XCTAssertEqual(result.count, items.count)
+    }
+
+    func test__curried__read_by_keys_with_no_data() {
+        let result = connection.read(TypeUnderTest.readByKeys(keys))
+        XCTAssertNotNil(result)
+        XCTAssertTrue(result.isEmpty)
+    }
+
+    // Persistable Curried API - Writing
+
+    func test__curried__writeOn() {
+        let result = connection.write(item.writeOn())
+
+        XCTAssertTrue(connection.didWrite)
+        XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].0, index)
+        XCTAssertEqual(TypeUnderTest.decode(writeTransaction.didWriteAtIndexes[0].1)!, item)
+        XCTAssertEqual(TypeUnderTest.MetadataType.decode(writeTransaction.didWriteAtIndexes[0].2), item.metadata)
+        XCTAssertEqual(result, item)
+    }
+
     // Functional API - ConnectionType - Reading
 
     func test__connection__read_at_index_with_data() {

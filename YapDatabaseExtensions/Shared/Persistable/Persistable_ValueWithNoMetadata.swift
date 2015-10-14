@@ -8,7 +8,6 @@
 
 import Foundation
 import ValueCoding
-import YapDatabase
 
 // MARK: - Readable
 
