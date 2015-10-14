@@ -360,7 +360,7 @@ public protocol ConnectionType {
     - parameter queue: a dispatch_queue_t, defaults to main queue, can be ommitted in most cases.
     - parameter completion: a closure which receives T and returns Void.
     */
-    func asyncWrite<T>(block: WriteTransaction -> T, queue: dispatch_queue_t, completion: (T) -> Void)
+    func asyncWrite<T>(block: WriteTransaction -> T, queue: dispatch_queue_t, completion: (T -> Void)?)
 
     /**
     Execute a read/write block inside a `NSOperation`. The block argument receives a
@@ -516,9 +516,9 @@ extension YapDatabaseConnection: ConnectionType {
     - parameter queue: a dispatch_queue_t, defaults to main queue, can be ommitted in most cases.
     - parameter completion: a closure which receives T and returns Void.
     */
-    public func asyncWrite<T>(block: YapDatabaseReadWriteTransaction -> T, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: (T) -> Void) {
+    public func asyncWrite<T>(block: YapDatabaseReadWriteTransaction -> T, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: (T -> Void)?) {
         var result: T! = .None
-        asyncReadWriteWithBlock({ result = block($0) }, completionQueue: queue) { completion(result) }
+        asyncReadWriteWithBlock({ result = block($0) }, completionQueue: queue) { completion?(result) }
     }
 
     /**

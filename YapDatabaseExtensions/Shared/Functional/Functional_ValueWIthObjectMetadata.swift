@@ -203,8 +203,9 @@ extension WriteTransactionType {
         ValueWithObjectMetadata: ValueCoding,
         ValueWithObjectMetadata.Coder: NSCoding,
         ValueWithObjectMetadata.Coder.ValueType == ValueWithObjectMetadata,
-        ValueWithObjectMetadata.MetadataType: NSCoding>(item: ValueWithObjectMetadata) {
+        ValueWithObjectMetadata.MetadataType: NSCoding>(item: ValueWithObjectMetadata) -> ValueWithObjectMetadata {
             writeAtIndex(item.index, object: item.encoded, metadata: item.metadata)
+            return item
     }
 
     /**
@@ -220,8 +221,8 @@ extension WriteTransactionType {
         ValueWithObjectMetadata: ValueCoding,
         ValueWithObjectMetadata.Coder: NSCoding,
         ValueWithObjectMetadata.Coder.ValueType == ValueWithObjectMetadata,
-        ValueWithObjectMetadata.MetadataType: NSCoding>(items: Items) {
-            items.forEach(write)
+        ValueWithObjectMetadata.MetadataType: NSCoding>(items: Items) -> [ValueWithObjectMetadata] {
+            return items.map(write)
     }
 }
 
@@ -238,8 +239,8 @@ extension ConnectionType {
         ValueWithObjectMetadata: ValueCoding,
         ValueWithObjectMetadata.Coder: NSCoding,
         ValueWithObjectMetadata.Coder.ValueType == ValueWithObjectMetadata,
-        ValueWithObjectMetadata.MetadataType: NSCoding>(item: ValueWithObjectMetadata) {
-            write { $0.write(item) }
+        ValueWithObjectMetadata.MetadataType: NSCoding>(item: ValueWithObjectMetadata) -> ValueWithObjectMetadata {
+            return write { $0.write(item) }
     }
 
     /**
@@ -255,8 +256,8 @@ extension ConnectionType {
         ValueWithObjectMetadata: ValueCoding,
         ValueWithObjectMetadata.Coder: NSCoding,
         ValueWithObjectMetadata.Coder.ValueType == ValueWithObjectMetadata,
-        ValueWithObjectMetadata.MetadataType: NSCoding>(items: Items) {
-            write { $0.write(items) }
+        ValueWithObjectMetadata.MetadataType: NSCoding>(items: Items) -> [ValueWithObjectMetadata] {
+            return write { $0.write(items) }
     }
 
     /**
@@ -272,8 +273,8 @@ extension ConnectionType {
         ValueWithObjectMetadata: ValueCoding,
         ValueWithObjectMetadata.Coder: NSCoding,
         ValueWithObjectMetadata.Coder.ValueType == ValueWithObjectMetadata,
-        ValueWithObjectMetadata.MetadataType: NSCoding>(item: ValueWithObjectMetadata, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: dispatch_block_t? = .None) {
-            asyncWrite({ $0.write(item) }, queue: queue, completion: { _ in completion?() })
+        ValueWithObjectMetadata.MetadataType: NSCoding>(item: ValueWithObjectMetadata, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: (ValueWithObjectMetadata -> Void)? = .None) {
+            asyncWrite({ $0.write(item) }, queue: queue, completion: completion)
     }
 
     /**
@@ -291,8 +292,8 @@ extension ConnectionType {
         ValueWithObjectMetadata: ValueCoding,
         ValueWithObjectMetadata.Coder: NSCoding,
         ValueWithObjectMetadata.Coder.ValueType == ValueWithObjectMetadata,
-        ValueWithObjectMetadata.MetadataType: NSCoding>(items: Items, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: dispatch_block_t? = .None) {
-            asyncWrite({ $0.write(items) }, queue: queue, completion: { _ in completion?() })
+        ValueWithObjectMetadata.MetadataType: NSCoding>(items: Items, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: ([ValueWithObjectMetadata] -> Void)? = .None) {
+            asyncWrite({ $0.write(items) }, queue: queue, completion: completion)
     }
 }
 
