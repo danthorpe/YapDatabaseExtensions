@@ -50,7 +50,7 @@ class ReadWriteBaseTests: XCTestCase {
     }
 
     func writeItemsToDatabase(db: YapDatabase) {
-        items.write.sync(db.makeNewConnection())
+        db.makeNewConnection().write(items)
     }
 }
 
@@ -106,23 +106,6 @@ class ReadTests: ReadWriteBaseTests {
         XCTAssertNotNil(reader)
         XCTAssertNil(reader.transaction)
         XCTAssertNotNil(reader.connection)
-    }
-}
-
-class WriteTests: ReadWriteBaseTests {
-
-    var writer: Write<Employee, YapDatabase>!
-
-    func test__initializing_with_single_item() {
-        writer = item.write
-        XCTAssertNotNil(writer)
-        XCTAssertEqual(writer.items.first!.identifier, item.identifier)
-    }
-
-    func test__initializing_with_multiple_items() {
-        writer = items.write
-        XCTAssertNotNil(writer)
-        XCTAssertEqual(writer.items, items)
     }
 }
 

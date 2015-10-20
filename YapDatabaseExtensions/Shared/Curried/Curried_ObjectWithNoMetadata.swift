@@ -78,7 +78,7 @@ extension Persistable where
     - warning: Be aware that this will capure `self`.
     - returns: a (WriteTransaction) -> Self closure
     */
-    public func writeOn<WriteTransaction: WriteTransactionType>() -> WriteTransaction -> Self {
+    public func write<WriteTransaction: WriteTransactionType>() -> WriteTransaction -> Self {
         return { $0.write(self) }
     }
 }

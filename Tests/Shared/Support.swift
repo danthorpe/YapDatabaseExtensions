@@ -138,7 +138,8 @@ extension TestableConnection: ConnectionType {
     func asyncWrite<T>(block: TestableWriteTransaction -> T, queue: dispatch_queue_t, completion: (T -> Void)? = .None) {
         didAsyncWrite = true
         dispatch_async(queue) { [transaction = self.writeTransaction] in
-            completion?(block(transaction))
+            let result = block(transaction)
+            completion?(result)
         }
     }
 

@@ -77,8 +77,6 @@
 		65C557A01BCB26010065C96A /* Read.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C557881BCB26010065C96A /* Read.swift */; settings = {ASSET_TAGS = (); }; };
 		65C557A11BCB26010065C96A /* Remove.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C557891BCB26010065C96A /* Remove.swift */; settings = {ASSET_TAGS = (); }; };
 		65C557A21BCB26010065C96A /* Remove.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C557891BCB26010065C96A /* Remove.swift */; settings = {ASSET_TAGS = (); }; };
-		65C557A31BCB26010065C96A /* Write.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C5578A1BCB26010065C96A /* Write.swift */; settings = {ASSET_TAGS = (); }; };
-		65C557A41BCB26010065C96A /* Write.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C5578A1BCB26010065C96A /* Write.swift */; settings = {ASSET_TAGS = (); }; };
 		65C557A61BCB26310065C96A /* Functional_Remove.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C557A51BCB26310065C96A /* Functional_Remove.swift */; settings = {ASSET_TAGS = (); }; };
 		65C557A71BCB26310065C96A /* Functional_Remove.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C557A51BCB26310065C96A /* Functional_Remove.swift */; settings = {ASSET_TAGS = (); }; };
 		65C8DB401BCD24AF002F2C05 /* ObjectWithNoMetadataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04911BC9820A00AC98FD /* ObjectWithNoMetadataTests.swift */; settings = {ASSET_TAGS = (); }; };
@@ -162,7 +160,6 @@
 		65C557871BCB26010065C96A /* Persistable_ValueWithValueMetadata.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Persistable_ValueWithValueMetadata.swift; sourceTree = "<group>"; };
 		65C557881BCB26010065C96A /* Read.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Read.swift; sourceTree = "<group>"; };
 		65C557891BCB26010065C96A /* Remove.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Remove.swift; sourceTree = "<group>"; };
-		65C5578A1BCB26010065C96A /* Write.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Write.swift; sourceTree = "<group>"; };
 		65C557A51BCB26310065C96A /* Functional_Remove.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Functional_Remove.swift; sourceTree = "<group>"; };
 		65C8DB481BCD2676002F2C05 /* Functional_ObjectWithNoMetadata.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Functional_ObjectWithNoMetadata.swift; sourceTree = "<group>"; };
 		65C8DB4B1BCD283D002F2C05 /* Functional_ValueWithNoMetadata.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Functional_ValueWithNoMetadata.swift; sourceTree = "<group>"; };
@@ -335,7 +332,6 @@
 				65C557871BCB26010065C96A /* Persistable_ValueWithValueMetadata.swift */,
 				65C557881BCB26010065C96A /* Read.swift */,
 				65C557891BCB26010065C96A /* Remove.swift */,
-				65C5578A1BCB26010065C96A /* Write.swift */,
 			);
 			path = Persistable;
 			sourceTree = "<group>";
@@ -716,7 +712,6 @@
 				65C8DB4C1BCD283D002F2C05 /* Functional_ValueWithNoMetadata.swift in Sources */,
 				65C8DB421BCD24EA002F2C05 /* Persistable_ObjectWithNoMetadata.swift in Sources */,
 				654EAE761BCD44D90093AB0C /* Functional_AnyWithObjectMetadata.swift in Sources */,
-				65C557A31BCB26010065C96A /* Write.swift in Sources */,
 				65C557911BCB26010065C96A /* Functional_ValueWIthValueMetadata.swift in Sources */,
 				65BCF8C01BCED9D00023ED13 /* Curried_ObjectWithNoMetadata.swift in Sources */,
 				65C5578F1BCB26010065C96A /* Functional_ValueWIthObjectMetadata.swift in Sources */,
@@ -769,7 +764,6 @@
 				65C8DB4D1BCD283D002F2C05 /* Functional_ValueWithNoMetadata.swift in Sources */,
 				65C8DB431BCD24EB002F2C05 /* Persistable_ObjectWithNoMetadata.swift in Sources */,
 				654EAE771BCD44D90093AB0C /* Functional_AnyWithObjectMetadata.swift in Sources */,
-				65C557A41BCB26010065C96A /* Write.swift in Sources */,
 				65C557921BCB26010065C96A /* Functional_ValueWIthValueMetadata.swift in Sources */,
 				65BCF8C11BCED9D00023ED13 /* Curried_ObjectWithNoMetadata.swift in Sources */,
 				65C557901BCB26010065C96A /* Functional_ValueWIthObjectMetadata.swift in Sources */,

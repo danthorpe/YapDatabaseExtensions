@@ -9,6 +9,81 @@
 import Foundation
 import ValueCoding
 
+// MARK: - Persistable
+
+extension Persistable where
+    Self: NSCoding,
+    Self.MetadataType == Void {
+
+    // Writing
+
+    /**
+    Write the item using an existing transaction.
+
+    - parameter transaction: a YapDatabaseReadWriteTransaction
+    - returns: the receiver.
+    */
+    public func write<WriteTransaction: WriteTransactionType>(transaction: WriteTransaction) -> Self {
+        return transaction.write(self)
+    }
+
+    /**
+    Write the item synchronously using a connection.
+
+    - parameter connection: a YapDatabaseConnection
+    - returns: the receiver.
+    */
+    public func write<Connection: ConnectionType>(connection: Connection) -> Self {
+        return connection.write(write())
+    }
+
+    /**
+    Write the item asynchronously using a connection.
+
+    - parameter connection: a YapDatabaseConnection
+    - returns: a closure which receives as an argument the receiver of this function.
+    */
+    public func asyncWrite<Connection: ConnectionType>(connection: Connection, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: (Self -> Void)? = .None) {
+        return connection.asyncWrite(write(), queue: queue, completion: completion)
+    }
+}
+
+extension SequenceType where
+    Generator.Element: Persistable,
+    Generator.Element: NSCoding,
+    Generator.Element.MetadataType == Void {
+
+    /**
+    Write the items using an existing transaction.
+
+    - parameter transaction: a WriteTransactionType e.g. YapDatabaseReadWriteTransaction
+    - returns: the receiver.
+    */
+    public func write<WriteTransaction: WriteTransactionType>(transaction: WriteTransaction) -> [Generator.Element] {
+        return transaction.write(self)
+    }
+
+    /**
+    Write the items synchronously using a connection.
+
+    - parameter connection: a ConnectionType e.g. YapDatabaseConnection
+    - returns: the receiver.
+    */
+    public func write<Connection: ConnectionType>(connection: Connection) -> [Generator.Element] {
+        return connection.write(self)
+    }
+
+    /**
+    Write the items asynchronously using a connection.
+
+    - parameter connection: a ConnectionType e.g. YapDatabaseConnection
+    - returns: a closure which receives as an argument the receiver of this function.
+    */
+    public func asyncWrite<Connection: ConnectionType>(connection: Connection, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: ([Generator.Element] -> Void)? = .None) {
+        return connection.asyncWrite(self, queue: queue, completion: completion)
+    }
+}
+
 // MARK: - Readable
 
 extension Readable where
@@ -127,52 +202,4 @@ extension Readable where
         }
     }
 }
-
-
-// MARK: - Writeable
-
-extension Writable
-    where
-    ItemType: NSCoding,
-    ItemType: Persistable,
-    ItemType.MetadataType == Void {
-
-    /**
-    Write the items using an existing transaction.
-
-    - parameter transaction: a YapDatabaseReadWriteTransaction
-    */
-    public func on(transaction: Database.Connection.WriteTransaction) {
-        items.forEach { transaction.writeAtIndex($0.index, object: $0, metadata: .None) }
-    }
-
-    /**
-    Write the items synchronously using a connection.
-
-    - parameter connection: a YapDatabaseConnection
-    */
-    public func sync(connection: Database.Connection) {
-        connection.write(on)
-    }
-
-    /**
-    Write the items asynchronously using a connection.
-
-    - parameter connection: a YapDatabaseConnection
-    */
-    public func async(connection: Database.Connection, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: dispatch_block_t? = .None) {
-        connection.asyncWrite(on, queue: queue, completion: { _ in completion?() })
-    }
-
-    /**
-    Write the items inside of an `NSOperation`.
-
-    - parameter connection: a YapDatabaseConnection
-    */
-    public func operation(connection: Database.Connection) -> NSOperation {
-        return connection.writeBlockOperation { self.on($0) }
-    }
-}
-
-
 
