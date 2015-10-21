@@ -754,6 +754,23 @@ class Persistable_Write_ValueWithObjectMetadataTests: ValueWithObjectMetadataTes
         XCTAssertTrue(connection.didAsyncWrite)
     }
 
+    func test__item_persistable__write_using_opertion() {
+        let expectation = expectationWithDescription("Test: \(__FUNCTION__)")
+
+        let operation: NSOperation = item.write(connection)
+        operation.completionBlock = {
+            expectation.fulfill()
+        }
+
+        operationQueue.addOperation(operation)
+        waitForExpectationsWithTimeout(3.0, handler: nil)
+        XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].0, index)
+        XCTAssertEqual(TypeUnderTest.decode(writeTransaction.didWriteAtIndexes[0].1)!, item)
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].2 as? NSNumber, item.metadata)
+        XCTAssertTrue(connection.didWrite)
+    }
+
     func test__items_persistable__write_using_transaction() {
         checkTransactionDidWriteItems(items.write(writeTransaction))
     }
@@ -775,4 +792,20 @@ class Persistable_Write_ValueWithObjectMetadataTests: ValueWithObjectMetadataTes
         checkTransactionDidWriteItems(result)
         XCTAssertTrue(connection.didAsyncWrite)
     }
+
+    func test__items_persistable__write_using_opertion() {
+        let expectation = expectationWithDescription("Test: \(__FUNCTION__)")
+
+        let operation: NSOperation = items.write(connection)
+        operation.completionBlock = {
+            expectation.fulfill()
+        }
+
+        operationQueue.addOperation(operation)
+        waitForExpectationsWithTimeout(3.0, handler: nil)
+        XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes.map { $0.0.key }.sort(), indexes.map { $0.key }.sort())
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes.map { $0.2 }.count, items.count)
+        XCTAssertTrue(connection.didWrite)
+    }    
 }
