@@ -1,3 +1,6 @@
+# 2.2.1
+1. [[YDB-68](https://github.com/danthorpe/YapDatabaseExtensions/pull/68)]: Fixes some issues with the remove API, to make it consistent with write. Also renamed the methods which return `NSOperation` instances to `writeOperation` and `removeOperation` respectively.
+
 # 2.2.0
 1. [[YDB-55](https://github.com/danthorpe/YapDatabaseExtensions/pull/55)]: Removes some leftover references to Saveable.
 2. [[YDB-58](https://github.com/danthorpe/YapDatabaseExtensions/pull/58)]: Fixes support for Metadata, removes `MetadataPersistable` entirely.
