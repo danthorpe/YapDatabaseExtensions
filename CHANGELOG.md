@@ -1,3 +1,18 @@
+# 2.2.0
+1. [[YDB-55](https://github.com/danthorpe/YapDatabaseExtensions/pull/55)]: Removes some leftover references to Saveable.
+2. [[YDB-58](https://github.com/danthorpe/YapDatabaseExtensions/pull/58)]: Fixes support for Metadata, removes `MetadataPersistable` entirely.
+3. [[YDB-56](https://github.com/danthorpe/YapDatabaseExtensions/pull/56)]: Adds readMetadataAtIndex functional API.
+4. [[YDB-57](https://github.com/danthorpe/YapDatabaseExtensions/pull/57)]: Adds readAll functional API
+5. [[YDB-59](https://github.com/danthorpe/YapDatabaseExtensions/pull/59)]: Updates APIs to use SequenceType instead of Array.
+6. [[YDB-60](https://github.com/danthorpe/YapDatabaseExtensions/pull/60)]: Fixes documentation issues.
+7. [[YDB-61](https://github.com/danthorpe/YapDatabaseExtensions/pull/61)]: Makes async completion block arguments optional, default to .None.
+8. [[YDB-62](https://github.com/danthorpe/YapDatabaseExtensions/pull/62)]: Restores the return value behavior of the write functional API.
+9. [[YDB-64](https://github.com/danthorpe/YapDatabaseExtensions/pull/64)]: Adds missing sequence type for value with value metadata pattern. Somehow missed this earlier.
+10. [[YDB-65](https://github.com/danthorpe/YapDatabaseExtensions/pull/65)]: Adds a small Curried API, which returns closures accepting transactions.
+11. [[YDB-66](https://github.com/danthorpe/YapDatabaseExtensions/pull/66)]: Updates the Persistable write API - no longer needs an intermediary generic type. Has correct return values.
+
+Thanks a lot to Ryan ([@aranasaurus](https://github.com/aranasaurus)) for helping me with all these changes - effectively a rewrite of the whole framework.
+
 # 2.1.3
 1. [[YDB-54](https://github.com/danthorpe/YapDatabaseExtensions/pull/54)]: Fixes a bug where using a `writeBlockOperation` on a connection would execute the block inside an asynchronous transaction. This results in the `NSOperation` finishing before the block had completed, most likely leading to unexpected behavior.
 

@@ -38,7 +38,7 @@ extension Persistable where
     - returns: the receiver.
     */
     public func write<Connection: ConnectionType>(connection: Connection) -> Self {
-        return connection.write(write())
+        return connection.write(self)
     }
 
     /**
@@ -48,7 +48,7 @@ extension Persistable where
     - returns: a closure which receives as an argument the receiver of this function.
     */
     public func asyncWrite<Connection: ConnectionType>(connection: Connection, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: (Self -> Void)? = .None) {
-        return connection.asyncWrite(write(), queue: queue, completion: completion)
+        return connection.asyncWrite(self, queue: queue, completion: completion)
     }
 
     /**
@@ -58,7 +58,7 @@ extension Persistable where
     - returns: an `NSOperation`
     */
     public func write<Connection: ConnectionType>(connection: Connection) -> NSOperation {
-        return NSBlockOperation { connection.write(write()) }
+        return NSBlockOperation { connection.write(self) }
     }
 }
 
