@@ -87,13 +87,7 @@ public class Manager: NamedEntity {
     public var metadata: Metadata? = .None
 }
 
-// MARK: - Hashable etc
-
-extension Barcode: Hashable {
-    public var hashValue: Int {
-        return identifier
-    }
-}
+// MARK: - Equatable
 
 public func == (a: Barcode, b: Barcode) -> Bool {
     switch (a, b) {
@@ -124,6 +118,26 @@ public func == (a: NamedEntity, b: NamedEntity) -> Bool {
 
 public func == (a: Manager.Metadata, b: Manager.Metadata) -> Bool {
     return a.numberOfDirectReports == b.numberOfDirectReports
+}
+
+// MARK: - Hashable etc
+
+extension Barcode: Hashable {
+    public var hashValue: Int {
+        return identifier
+    }
+}
+
+extension Product: Hashable {
+    public var hashValue: Int {
+        return barcode.hashValue
+    }
+}
+
+extension Inventory: Hashable {
+    public var hashValue: Int {
+        return product.hashValue
+    }
 }
 
 extension NamedEntity {
@@ -158,14 +172,14 @@ extension Product.Category: Persistable {
     }
 }
 
-extension Product: MetadataPersistable {
+extension Product: Persistable {
 
     public static var collection: String {
         return "Products"
     }
 }
 
-extension Inventory: MetadataPersistable {
+extension Inventory: Persistable {
 
     public static var collection: String {
         return "Inventory"
@@ -179,14 +193,14 @@ extension Person: Persistable {
     }
 }
 
-extension Employee: MetadataPersistable {
+extension Employee: Persistable {
 
     public static var collection: String {
         return "Employees"
     }
 }
 
-extension Manager: MetadataPersistable {
+extension Manager: Persistable {
 
     public static var collection: String {
         return "Managers"
@@ -194,7 +208,7 @@ extension Manager: MetadataPersistable {
 }
 
 
-// MARK: - Saveable
+// MARK: - ValueCoding
 
 extension Barcode: ValueCoding {
     public typealias Coder = BarcodeCoder
@@ -230,7 +244,7 @@ extension Manager.Metadata: ValueCoding {
 }
 
 
-// MARK: - Archivers
+// MARK: - Coders
 
 public class BarcodeCoder: NSObject, NSCoding, CodingType {
     public let value: Barcode

@@ -10,6 +10,16 @@
 		00EFE0D3D9A2DDD7C6BF526A /* Pods_YapDatabaseExtensions_iOSTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5550DE9AA69FDA43AE8D0D51 /* Pods_YapDatabaseExtensions_iOSTests.framework */; };
 		085C9EA234EAEF057CC78041 /* Pods_YapDatabaseExtensions_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EE3D86AD60BF064ADA4CC71C /* Pods_YapDatabaseExtensions_iOS.framework */; };
 		371109FDB091F2E45241BC22 /* Pods_YapDatabaseExtensions_OSX.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DB4702C82EB6B1579DB4EF99 /* Pods_YapDatabaseExtensions_OSX.framework */; };
+		651DD4A41BCEF4D700DD94E2 /* Curried_ObjectWithObjectMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651DD49F1BCEF4D700DD94E2 /* Curried_ObjectWithObjectMetadata.swift */; settings = {ASSET_TAGS = (); }; };
+		651DD4A51BCEF4D700DD94E2 /* Curried_ObjectWithValueMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651DD4A01BCEF4D700DD94E2 /* Curried_ObjectWithValueMetadata.swift */; settings = {ASSET_TAGS = (); }; };
+		651DD4A61BCEF4D700DD94E2 /* Curried_ValueWithNoMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651DD4A11BCEF4D700DD94E2 /* Curried_ValueWithNoMetadata.swift */; settings = {ASSET_TAGS = (); }; };
+		651DD4A71BCEF4D700DD94E2 /* Curried_ValueWithObjectMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651DD4A21BCEF4D700DD94E2 /* Curried_ValueWithObjectMetadata.swift */; settings = {ASSET_TAGS = (); }; };
+		651DD4A81BCEF4D700DD94E2 /* Curried_ValueWithValueMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651DD4A31BCEF4D700DD94E2 /* Curried_ValueWithValueMetadata.swift */; settings = {ASSET_TAGS = (); }; };
+		652DE6591BCEF8D700B5E668 /* Curried_ObjectWithObjectMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651DD49F1BCEF4D700DD94E2 /* Curried_ObjectWithObjectMetadata.swift */; settings = {ASSET_TAGS = (); }; };
+		652DE65A1BCEF8D700B5E668 /* Curried_ObjectWithValueMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651DD4A01BCEF4D700DD94E2 /* Curried_ObjectWithValueMetadata.swift */; settings = {ASSET_TAGS = (); }; };
+		652DE65B1BCEF8D700B5E668 /* Curried_ValueWithNoMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651DD4A11BCEF4D700DD94E2 /* Curried_ValueWithNoMetadata.swift */; settings = {ASSET_TAGS = (); }; };
+		652DE65C1BCEF8D700B5E668 /* Curried_ValueWithObjectMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651DD4A21BCEF4D700DD94E2 /* Curried_ValueWithObjectMetadata.swift */; settings = {ASSET_TAGS = (); }; };
+		652DE65D1BCEF8D700B5E668 /* Curried_ValueWithValueMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651DD4A31BCEF4D700DD94E2 /* Curried_ValueWithValueMetadata.swift */; settings = {ASSET_TAGS = (); }; };
 		653B044E1BC97ED700AC98FD /* YapDatabaseExtensions.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 653B04431BC97ED700AC98FD /* YapDatabaseExtensions.framework */; settings = {ASSET_TAGS = (); }; };
 		653B046A1BC9805D00AC98FD /* YapDatabaseExtensions.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 653B04601BC9805D00AC98FD /* YapDatabaseExtensions.framework */; settings = {ASSET_TAGS = (); }; };
 		653B047B1BC9816D00AC98FD /* YapDatabaseExtensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 653B04791BC9816D00AC98FD /* YapDatabaseExtensions.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -19,28 +29,34 @@
 		653B048B1BC981D700AC98FD /* YapDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04811BC981D100AC98FD /* YapDB.swift */; settings = {ASSET_TAGS = (); }; };
 		653B049B1BC9820A00AC98FD /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 653B048D1BC9820A00AC98FD /* Info.plist */; settings = {ASSET_TAGS = (); }; };
 		653B04AA1BC9824000AC98FD /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04901BC9820A00AC98FD /* Models.swift */; settings = {ASSET_TAGS = (); }; };
-		653B04AB1BC9824000AC98FD /* ObjectWithNoMetadataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04911BC9820A00AC98FD /* ObjectWithNoMetadataTests.swift */; settings = {ASSET_TAGS = (); }; };
 		653B04AC1BC9824000AC98FD /* ObjectWithObjectMetadataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04921BC9820A00AC98FD /* ObjectWithObjectMetadataTests.swift */; settings = {ASSET_TAGS = (); }; };
 		653B04AD1BC9824000AC98FD /* ObjectWithValueMetadataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04931BC9820A00AC98FD /* ObjectWithValueMetadataTests.swift */; settings = {ASSET_TAGS = (); }; };
 		653B04AE1BC9824000AC98FD /* ReadWriteTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04941BC9820A00AC98FD /* ReadWriteTests.swift */; settings = {ASSET_TAGS = (); }; };
 		653B04AF1BC9824000AC98FD /* RemovalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04951BC9820A00AC98FD /* RemovalTests.swift */; settings = {ASSET_TAGS = (); }; };
 		653B04B01BC9824000AC98FD /* Support.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04961BC9820A00AC98FD /* Support.swift */; settings = {ASSET_TAGS = (); }; };
-		653B04B11BC9824000AC98FD /* ValueWithNoMetadataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04971BC9820A00AC98FD /* ValueWithNoMetadataTests.swift */; settings = {ASSET_TAGS = (); }; };
 		653B04B21BC9824000AC98FD /* ValueWithObjectMetadataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04981BC9820A00AC98FD /* ValueWithObjectMetadataTests.swift */; settings = {ASSET_TAGS = (); }; };
 		653B04B31BC9824000AC98FD /* ValueWithValueMetadataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04991BC9820A00AC98FD /* ValueWithValueMetadataTests.swift */; settings = {ASSET_TAGS = (); }; };
 		653B04B41BC9824000AC98FD /* YapDatabaseExtensionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B049A1BC9820A00AC98FD /* YapDatabaseExtensionsTests.swift */; settings = {ASSET_TAGS = (); }; };
 		653B04B61BC9824100AC98FD /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04901BC9820A00AC98FD /* Models.swift */; settings = {ASSET_TAGS = (); }; };
-		653B04B71BC9824100AC98FD /* ObjectWithNoMetadataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04911BC9820A00AC98FD /* ObjectWithNoMetadataTests.swift */; settings = {ASSET_TAGS = (); }; };
 		653B04B81BC9824100AC98FD /* ObjectWithObjectMetadataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04921BC9820A00AC98FD /* ObjectWithObjectMetadataTests.swift */; settings = {ASSET_TAGS = (); }; };
 		653B04B91BC9824100AC98FD /* ObjectWithValueMetadataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04931BC9820A00AC98FD /* ObjectWithValueMetadataTests.swift */; settings = {ASSET_TAGS = (); }; };
 		653B04BA1BC9824100AC98FD /* ReadWriteTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04941BC9820A00AC98FD /* ReadWriteTests.swift */; settings = {ASSET_TAGS = (); }; };
 		653B04BB1BC9824100AC98FD /* RemovalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04951BC9820A00AC98FD /* RemovalTests.swift */; settings = {ASSET_TAGS = (); }; };
 		653B04BC1BC9824100AC98FD /* Support.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04961BC9820A00AC98FD /* Support.swift */; settings = {ASSET_TAGS = (); }; };
-		653B04BD1BC9824100AC98FD /* ValueWithNoMetadataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04971BC9820A00AC98FD /* ValueWithNoMetadataTests.swift */; settings = {ASSET_TAGS = (); }; };
 		653B04BE1BC9824100AC98FD /* ValueWithObjectMetadataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04981BC9820A00AC98FD /* ValueWithObjectMetadataTests.swift */; settings = {ASSET_TAGS = (); }; };
 		653B04BF1BC9824100AC98FD /* ValueWithValueMetadataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04991BC9820A00AC98FD /* ValueWithValueMetadataTests.swift */; settings = {ASSET_TAGS = (); }; };
 		653B04C01BC9824100AC98FD /* YapDatabaseExtensionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B049A1BC9820A00AC98FD /* YapDatabaseExtensionsTests.swift */; settings = {ASSET_TAGS = (); }; };
 		653B04C11BC982CC00AC98FD /* YapDatabaseExtensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 653B04791BC9816D00AC98FD /* YapDatabaseExtensions.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		654EAE761BCD44D90093AB0C /* Functional_AnyWithObjectMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 654EAE751BCD44D90093AB0C /* Functional_AnyWithObjectMetadata.swift */; settings = {ASSET_TAGS = (); }; };
+		654EAE771BCD44D90093AB0C /* Functional_AnyWithObjectMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 654EAE751BCD44D90093AB0C /* Functional_AnyWithObjectMetadata.swift */; settings = {ASSET_TAGS = (); }; };
+		654EAE791BCD45480093AB0C /* Functional_AnyWithValueMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 654EAE781BCD45480093AB0C /* Functional_AnyWithValueMetadata.swift */; settings = {ASSET_TAGS = (); }; };
+		654EAE7A1BCD45480093AB0C /* Functional_AnyWithValueMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 654EAE781BCD45480093AB0C /* Functional_AnyWithValueMetadata.swift */; settings = {ASSET_TAGS = (); }; };
+		654EAE7C1BCD4C6B0093AB0C /* Persistable_AnyWithObjectMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 654EAE7B1BCD4C6B0093AB0C /* Persistable_AnyWithObjectMetadata.swift */; settings = {ASSET_TAGS = (); }; };
+		654EAE7D1BCD4C6B0093AB0C /* Persistable_AnyWithObjectMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 654EAE7B1BCD4C6B0093AB0C /* Persistable_AnyWithObjectMetadata.swift */; settings = {ASSET_TAGS = (); }; };
+		654EAE7F1BCD4CD70093AB0C /* Persistable_AnyWithValueMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 654EAE7E1BCD4CD70093AB0C /* Persistable_AnyWithValueMetadata.swift */; settings = {ASSET_TAGS = (); }; };
+		654EAE801BCD4CD70093AB0C /* Persistable_AnyWithValueMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 654EAE7E1BCD4CD70093AB0C /* Persistable_AnyWithValueMetadata.swift */; settings = {ASSET_TAGS = (); }; };
+		65BCF8C01BCED9D00023ED13 /* Curried_ObjectWithNoMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65BCF8BF1BCED9D00023ED13 /* Curried_ObjectWithNoMetadata.swift */; settings = {ASSET_TAGS = (); }; };
+		65BCF8C11BCED9D00023ED13 /* Curried_ObjectWithNoMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65BCF8BF1BCED9D00023ED13 /* Curried_ObjectWithNoMetadata.swift */; settings = {ASSET_TAGS = (); }; };
 		65C5578B1BCB26010065C96A /* Functional_ObjectWithObjectMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C5577D1BCB26010065C96A /* Functional_ObjectWithObjectMetadata.swift */; settings = {ASSET_TAGS = (); }; };
 		65C5578C1BCB26010065C96A /* Functional_ObjectWithObjectMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C5577D1BCB26010065C96A /* Functional_ObjectWithObjectMetadata.swift */; settings = {ASSET_TAGS = (); }; };
 		65C5578D1BCB26010065C96A /* Functional_ObjectWithValueMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C5577E1BCB26010065C96A /* Functional_ObjectWithValueMetadata.swift */; settings = {ASSET_TAGS = (); }; };
@@ -49,14 +65,10 @@
 		65C557901BCB26010065C96A /* Functional_ValueWIthObjectMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C5577F1BCB26010065C96A /* Functional_ValueWIthObjectMetadata.swift */; settings = {ASSET_TAGS = (); }; };
 		65C557911BCB26010065C96A /* Functional_ValueWIthValueMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C557801BCB26010065C96A /* Functional_ValueWIthValueMetadata.swift */; settings = {ASSET_TAGS = (); }; };
 		65C557921BCB26010065C96A /* Functional_ValueWIthValueMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C557801BCB26010065C96A /* Functional_ValueWIthValueMetadata.swift */; settings = {ASSET_TAGS = (); }; };
-		65C557931BCB26010065C96A /* Persistable_ObjectWithNoMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C557821BCB26010065C96A /* Persistable_ObjectWithNoMetadata.swift */; settings = {ASSET_TAGS = (); }; };
-		65C557941BCB26010065C96A /* Persistable_ObjectWithNoMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C557821BCB26010065C96A /* Persistable_ObjectWithNoMetadata.swift */; settings = {ASSET_TAGS = (); }; };
 		65C557951BCB26010065C96A /* Persistable_ObjectWithObjectMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C557831BCB26010065C96A /* Persistable_ObjectWithObjectMetadata.swift */; settings = {ASSET_TAGS = (); }; };
 		65C557961BCB26010065C96A /* Persistable_ObjectWithObjectMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C557831BCB26010065C96A /* Persistable_ObjectWithObjectMetadata.swift */; settings = {ASSET_TAGS = (); }; };
 		65C557971BCB26010065C96A /* Persistable_ObjectWithValueMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C557841BCB26010065C96A /* Persistable_ObjectWithValueMetadata.swift */; settings = {ASSET_TAGS = (); }; };
 		65C557981BCB26010065C96A /* Persistable_ObjectWithValueMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C557841BCB26010065C96A /* Persistable_ObjectWithValueMetadata.swift */; settings = {ASSET_TAGS = (); }; };
-		65C557991BCB26010065C96A /* Persistable_ValueWithNoMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C557851BCB26010065C96A /* Persistable_ValueWithNoMetadata.swift */; settings = {ASSET_TAGS = (); }; };
-		65C5579A1BCB26010065C96A /* Persistable_ValueWithNoMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C557851BCB26010065C96A /* Persistable_ValueWithNoMetadata.swift */; settings = {ASSET_TAGS = (); }; };
 		65C5579B1BCB26010065C96A /* Persistable_ValueWithObjectMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C557861BCB26010065C96A /* Persistable_ValueWithObjectMetadata.swift */; settings = {ASSET_TAGS = (); }; };
 		65C5579C1BCB26010065C96A /* Persistable_ValueWithObjectMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C557861BCB26010065C96A /* Persistable_ValueWithObjectMetadata.swift */; settings = {ASSET_TAGS = (); }; };
 		65C5579D1BCB26010065C96A /* Persistable_ValueWithValueMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C557871BCB26010065C96A /* Persistable_ValueWithValueMetadata.swift */; settings = {ASSET_TAGS = (); }; };
@@ -65,10 +77,20 @@
 		65C557A01BCB26010065C96A /* Read.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C557881BCB26010065C96A /* Read.swift */; settings = {ASSET_TAGS = (); }; };
 		65C557A11BCB26010065C96A /* Remove.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C557891BCB26010065C96A /* Remove.swift */; settings = {ASSET_TAGS = (); }; };
 		65C557A21BCB26010065C96A /* Remove.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C557891BCB26010065C96A /* Remove.swift */; settings = {ASSET_TAGS = (); }; };
-		65C557A31BCB26010065C96A /* Write.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C5578A1BCB26010065C96A /* Write.swift */; settings = {ASSET_TAGS = (); }; };
-		65C557A41BCB26010065C96A /* Write.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C5578A1BCB26010065C96A /* Write.swift */; settings = {ASSET_TAGS = (); }; };
 		65C557A61BCB26310065C96A /* Functional_Remove.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C557A51BCB26310065C96A /* Functional_Remove.swift */; settings = {ASSET_TAGS = (); }; };
 		65C557A71BCB26310065C96A /* Functional_Remove.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C557A51BCB26310065C96A /* Functional_Remove.swift */; settings = {ASSET_TAGS = (); }; };
+		65C8DB401BCD24AF002F2C05 /* ObjectWithNoMetadataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04911BC9820A00AC98FD /* ObjectWithNoMetadataTests.swift */; settings = {ASSET_TAGS = (); }; };
+		65C8DB411BCD24AF002F2C05 /* ObjectWithNoMetadataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04911BC9820A00AC98FD /* ObjectWithNoMetadataTests.swift */; settings = {ASSET_TAGS = (); }; };
+		65C8DB421BCD24EA002F2C05 /* Persistable_ObjectWithNoMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C557821BCB26010065C96A /* Persistable_ObjectWithNoMetadata.swift */; settings = {ASSET_TAGS = (); }; };
+		65C8DB431BCD24EB002F2C05 /* Persistable_ObjectWithNoMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C557821BCB26010065C96A /* Persistable_ObjectWithNoMetadata.swift */; settings = {ASSET_TAGS = (); }; };
+		65C8DB441BCD24FA002F2C05 /* Persistable_ValueWithNoMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C557851BCB26010065C96A /* Persistable_ValueWithNoMetadata.swift */; settings = {ASSET_TAGS = (); }; };
+		65C8DB451BCD24FB002F2C05 /* Persistable_ValueWithNoMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C557851BCB26010065C96A /* Persistable_ValueWithNoMetadata.swift */; settings = {ASSET_TAGS = (); }; };
+		65C8DB461BCD25E2002F2C05 /* ValueWithNoMetadataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04971BC9820A00AC98FD /* ValueWithNoMetadataTests.swift */; settings = {ASSET_TAGS = (); }; };
+		65C8DB471BCD25E3002F2C05 /* ValueWithNoMetadataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04971BC9820A00AC98FD /* ValueWithNoMetadataTests.swift */; settings = {ASSET_TAGS = (); }; };
+		65C8DB491BCD2676002F2C05 /* Functional_ObjectWithNoMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C8DB481BCD2676002F2C05 /* Functional_ObjectWithNoMetadata.swift */; settings = {ASSET_TAGS = (); }; };
+		65C8DB4A1BCD2676002F2C05 /* Functional_ObjectWithNoMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C8DB481BCD2676002F2C05 /* Functional_ObjectWithNoMetadata.swift */; settings = {ASSET_TAGS = (); }; };
+		65C8DB4C1BCD283D002F2C05 /* Functional_ValueWithNoMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C8DB4B1BCD283D002F2C05 /* Functional_ValueWithNoMetadata.swift */; settings = {ASSET_TAGS = (); }; };
+		65C8DB4D1BCD283D002F2C05 /* Functional_ValueWithNoMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C8DB4B1BCD283D002F2C05 /* Functional_ValueWithNoMetadata.swift */; settings = {ASSET_TAGS = (); }; };
 		AC8FC0BC100A1A0A60C3B18F /* Pods_YapDatabaseExtensions_OSXTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 574741755E625D8A78119A8A /* Pods_YapDatabaseExtensions_OSXTests.framework */; };
 /* End PBXBuildFile section */
 
@@ -96,6 +118,11 @@
 		574741755E625D8A78119A8A /* Pods_YapDatabaseExtensions_OSXTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_YapDatabaseExtensions_OSXTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		598392EAD289EAEAE8D3B2CD /* Pods-YapDatabaseExtensions-iOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-YapDatabaseExtensions-iOS.release.xcconfig"; path = "Pods/Target Support Files/Pods-YapDatabaseExtensions-iOS/Pods-YapDatabaseExtensions-iOS.release.xcconfig"; sourceTree = "<group>"; };
 		5AC602528D550B8182F7A0C6 /* Pods-YapDatabaseExtensions-iOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-YapDatabaseExtensions-iOS.debug.xcconfig"; path = "Pods/Target Support Files/Pods-YapDatabaseExtensions-iOS/Pods-YapDatabaseExtensions-iOS.debug.xcconfig"; sourceTree = "<group>"; };
+		651DD49F1BCEF4D700DD94E2 /* Curried_ObjectWithObjectMetadata.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Curried_ObjectWithObjectMetadata.swift; path = Curried/Curried_ObjectWithObjectMetadata.swift; sourceTree = "<group>"; };
+		651DD4A01BCEF4D700DD94E2 /* Curried_ObjectWithValueMetadata.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Curried_ObjectWithValueMetadata.swift; path = Curried/Curried_ObjectWithValueMetadata.swift; sourceTree = "<group>"; };
+		651DD4A11BCEF4D700DD94E2 /* Curried_ValueWithNoMetadata.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Curried_ValueWithNoMetadata.swift; path = Curried/Curried_ValueWithNoMetadata.swift; sourceTree = "<group>"; };
+		651DD4A21BCEF4D700DD94E2 /* Curried_ValueWithObjectMetadata.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Curried_ValueWithObjectMetadata.swift; path = Curried/Curried_ValueWithObjectMetadata.swift; sourceTree = "<group>"; };
+		651DD4A31BCEF4D700DD94E2 /* Curried_ValueWithValueMetadata.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Curried_ValueWithValueMetadata.swift; path = Curried/Curried_ValueWithValueMetadata.swift; sourceTree = "<group>"; };
 		653B04431BC97ED700AC98FD /* YapDatabaseExtensions.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = YapDatabaseExtensions.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		653B044D1BC97ED700AC98FD /* YapDatabaseExtensions-iOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "YapDatabaseExtensions-iOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		653B04601BC9805D00AC98FD /* YapDatabaseExtensions.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = YapDatabaseExtensions.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -116,6 +143,11 @@
 		653B04981BC9820A00AC98FD /* ValueWithObjectMetadataTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ValueWithObjectMetadataTests.swift; sourceTree = "<group>"; };
 		653B04991BC9820A00AC98FD /* ValueWithValueMetadataTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ValueWithValueMetadataTests.swift; sourceTree = "<group>"; };
 		653B049A1BC9820A00AC98FD /* YapDatabaseExtensionsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YapDatabaseExtensionsTests.swift; sourceTree = "<group>"; };
+		654EAE751BCD44D90093AB0C /* Functional_AnyWithObjectMetadata.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Functional_AnyWithObjectMetadata.swift; sourceTree = "<group>"; };
+		654EAE781BCD45480093AB0C /* Functional_AnyWithValueMetadata.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Functional_AnyWithValueMetadata.swift; sourceTree = "<group>"; };
+		654EAE7B1BCD4C6B0093AB0C /* Persistable_AnyWithObjectMetadata.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Persistable_AnyWithObjectMetadata.swift; sourceTree = "<group>"; };
+		654EAE7E1BCD4CD70093AB0C /* Persistable_AnyWithValueMetadata.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Persistable_AnyWithValueMetadata.swift; sourceTree = "<group>"; };
+		65BCF8BF1BCED9D00023ED13 /* Curried_ObjectWithNoMetadata.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Curried_ObjectWithNoMetadata.swift; path = Curried/Curried_ObjectWithNoMetadata.swift; sourceTree = "<group>"; };
 		65C5577D1BCB26010065C96A /* Functional_ObjectWithObjectMetadata.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Functional_ObjectWithObjectMetadata.swift; sourceTree = "<group>"; };
 		65C5577E1BCB26010065C96A /* Functional_ObjectWithValueMetadata.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Functional_ObjectWithValueMetadata.swift; sourceTree = "<group>"; };
 		65C5577F1BCB26010065C96A /* Functional_ValueWIthObjectMetadata.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Functional_ValueWIthObjectMetadata.swift; sourceTree = "<group>"; };
@@ -128,8 +160,9 @@
 		65C557871BCB26010065C96A /* Persistable_ValueWithValueMetadata.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Persistable_ValueWithValueMetadata.swift; sourceTree = "<group>"; };
 		65C557881BCB26010065C96A /* Read.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Read.swift; sourceTree = "<group>"; };
 		65C557891BCB26010065C96A /* Remove.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Remove.swift; sourceTree = "<group>"; };
-		65C5578A1BCB26010065C96A /* Write.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Write.swift; sourceTree = "<group>"; };
 		65C557A51BCB26310065C96A /* Functional_Remove.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Functional_Remove.swift; sourceTree = "<group>"; };
+		65C8DB481BCD2676002F2C05 /* Functional_ObjectWithNoMetadata.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Functional_ObjectWithNoMetadata.swift; sourceTree = "<group>"; };
+		65C8DB4B1BCD283D002F2C05 /* Functional_ValueWithNoMetadata.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Functional_ValueWithNoMetadata.swift; sourceTree = "<group>"; };
 		9D7D405FE2B19AF9F31FA60A /* Pods-YapDatabaseExtensions-iOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-YapDatabaseExtensions-iOSTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-YapDatabaseExtensions-iOSTests/Pods-YapDatabaseExtensions-iOSTests.release.xcconfig"; sourceTree = "<group>"; };
 		B26F7704368F3FE50A228AB0 /* Pods-YapDatabaseExtensions-OSX.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-YapDatabaseExtensions-OSX.debug.xcconfig"; path = "Pods/Target Support Files/Pods-YapDatabaseExtensions-OSX/Pods-YapDatabaseExtensions-OSX.debug.xcconfig"; sourceTree = "<group>"; };
 		D13C45EFF8EA26355D7BE26C /* Pods-YapDatabaseExtensions-OSX.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-YapDatabaseExtensions-OSX.release.xcconfig"; path = "Pods/Target Support Files/Pods-YapDatabaseExtensions-OSX/Pods-YapDatabaseExtensions-OSX.release.xcconfig"; sourceTree = "<group>"; };
@@ -212,10 +245,11 @@
 		653B047C1BC981D100AC98FD /* Shared */ = {
 			isa = PBXGroup;
 			children = (
-				65C5577C1BCB26010065C96A /* Functional */,
-				65C557811BCB26010065C96A /* Persistable */,
 				653B04801BC981D100AC98FD /* YapDatabaseExtensions.swift */,
 				653B04811BC981D100AC98FD /* YapDB.swift */,
+				65C5577C1BCB26010065C96A /* Functional */,
+				65BCF8C21BCED9D80023ED13 /* Curried */,
+				65C557811BCB26010065C96A /* Persistable */,
 			);
 			name = Shared;
 			path = YapDatabaseExtensions/Shared;
@@ -256,14 +290,31 @@
 			name = YapDatabaseExtensions;
 			sourceTree = "<group>";
 		};
+		65BCF8C21BCED9D80023ED13 /* Curried */ = {
+			isa = PBXGroup;
+			children = (
+				65BCF8BF1BCED9D00023ED13 /* Curried_ObjectWithNoMetadata.swift */,
+				651DD49F1BCEF4D700DD94E2 /* Curried_ObjectWithObjectMetadata.swift */,
+				651DD4A01BCEF4D700DD94E2 /* Curried_ObjectWithValueMetadata.swift */,
+				651DD4A11BCEF4D700DD94E2 /* Curried_ValueWithNoMetadata.swift */,
+				651DD4A21BCEF4D700DD94E2 /* Curried_ValueWithObjectMetadata.swift */,
+				651DD4A31BCEF4D700DD94E2 /* Curried_ValueWithValueMetadata.swift */,
+			);
+			name = Curried;
+			sourceTree = "<group>";
+		};
 		65C5577C1BCB26010065C96A /* Functional */ = {
 			isa = PBXGroup;
 			children = (
+				654EAE751BCD44D90093AB0C /* Functional_AnyWithObjectMetadata.swift */,
+				654EAE781BCD45480093AB0C /* Functional_AnyWithValueMetadata.swift */,
+				65C8DB481BCD2676002F2C05 /* Functional_ObjectWithNoMetadata.swift */,
 				65C5577D1BCB26010065C96A /* Functional_ObjectWithObjectMetadata.swift */,
 				65C5577E1BCB26010065C96A /* Functional_ObjectWithValueMetadata.swift */,
+				65C557A51BCB26310065C96A /* Functional_Remove.swift */,
+				65C8DB4B1BCD283D002F2C05 /* Functional_ValueWithNoMetadata.swift */,
 				65C5577F1BCB26010065C96A /* Functional_ValueWIthObjectMetadata.swift */,
 				65C557801BCB26010065C96A /* Functional_ValueWIthValueMetadata.swift */,
-				65C557A51BCB26310065C96A /* Functional_Remove.swift */,
 			);
 			path = Functional;
 			sourceTree = "<group>";
@@ -271,6 +322,8 @@
 		65C557811BCB26010065C96A /* Persistable */ = {
 			isa = PBXGroup;
 			children = (
+				654EAE7B1BCD4C6B0093AB0C /* Persistable_AnyWithObjectMetadata.swift */,
+				654EAE7E1BCD4CD70093AB0C /* Persistable_AnyWithValueMetadata.swift */,
 				65C557821BCB26010065C96A /* Persistable_ObjectWithNoMetadata.swift */,
 				65C557831BCB26010065C96A /* Persistable_ObjectWithObjectMetadata.swift */,
 				65C557841BCB26010065C96A /* Persistable_ObjectWithValueMetadata.swift */,
@@ -279,7 +332,6 @@
 				65C557871BCB26010065C96A /* Persistable_ValueWithValueMetadata.swift */,
 				65C557881BCB26010065C96A /* Read.swift */,
 				65C557891BCB26010065C96A /* Remove.swift */,
-				65C5578A1BCB26010065C96A /* Write.swift */,
 			);
 			path = Persistable;
 			sourceTree = "<group>";
@@ -646,17 +698,28 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				65C557931BCB26010065C96A /* Persistable_ObjectWithNoMetadata.swift in Sources */,
+				654EAE791BCD45480093AB0C /* Functional_AnyWithValueMetadata.swift in Sources */,
 				653B04861BC981D100AC98FD /* YapDB.swift in Sources */,
+				654EAE7F1BCD4CD70093AB0C /* Persistable_AnyWithValueMetadata.swift in Sources */,
 				65C557A61BCB26310065C96A /* Functional_Remove.swift in Sources */,
 				65C5579B1BCB26010065C96A /* Persistable_ValueWithObjectMetadata.swift in Sources */,
 				65C5579D1BCB26010065C96A /* Persistable_ValueWithValueMetadata.swift in Sources */,
-				65C557A31BCB26010065C96A /* Write.swift in Sources */,
+				651DD4A51BCEF4D700DD94E2 /* Curried_ObjectWithValueMetadata.swift in Sources */,
+				651DD4A81BCEF4D700DD94E2 /* Curried_ValueWithValueMetadata.swift in Sources */,
+				65C8DB441BCD24FA002F2C05 /* Persistable_ValueWithNoMetadata.swift in Sources */,
+				651DD4A61BCEF4D700DD94E2 /* Curried_ValueWithNoMetadata.swift in Sources */,
+				65C8DB491BCD2676002F2C05 /* Functional_ObjectWithNoMetadata.swift in Sources */,
+				65C8DB4C1BCD283D002F2C05 /* Functional_ValueWithNoMetadata.swift in Sources */,
+				65C8DB421BCD24EA002F2C05 /* Persistable_ObjectWithNoMetadata.swift in Sources */,
+				654EAE761BCD44D90093AB0C /* Functional_AnyWithObjectMetadata.swift in Sources */,
 				65C557911BCB26010065C96A /* Functional_ValueWIthValueMetadata.swift in Sources */,
+				65BCF8C01BCED9D00023ED13 /* Curried_ObjectWithNoMetadata.swift in Sources */,
 				65C5578F1BCB26010065C96A /* Functional_ValueWIthObjectMetadata.swift in Sources */,
-				65C557991BCB26010065C96A /* Persistable_ValueWithNoMetadata.swift in Sources */,
+				651DD4A71BCEF4D700DD94E2 /* Curried_ValueWithObjectMetadata.swift in Sources */,
 				653B04851BC981D100AC98FD /* YapDatabaseExtensions.swift in Sources */,
 				65C557951BCB26010065C96A /* Persistable_ObjectWithObjectMetadata.swift in Sources */,
+				651DD4A41BCEF4D700DD94E2 /* Curried_ObjectWithObjectMetadata.swift in Sources */,
+				654EAE7C1BCD4C6B0093AB0C /* Persistable_AnyWithObjectMetadata.swift in Sources */,
 				65C557A11BCB26010065C96A /* Remove.swift in Sources */,
 				65C557971BCB26010065C96A /* Persistable_ObjectWithValueMetadata.swift in Sources */,
 				65C5579F1BCB26010065C96A /* Read.swift in Sources */,
@@ -670,13 +733,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				653B04AF1BC9824000AC98FD /* RemovalTests.swift in Sources */,
+				65C8DB461BCD25E2002F2C05 /* ValueWithNoMetadataTests.swift in Sources */,
 				653B04AC1BC9824000AC98FD /* ObjectWithObjectMetadataTests.swift in Sources */,
-				653B04AB1BC9824000AC98FD /* ObjectWithNoMetadataTests.swift in Sources */,
 				653B04AD1BC9824000AC98FD /* ObjectWithValueMetadataTests.swift in Sources */,
 				653B04B21BC9824000AC98FD /* ValueWithObjectMetadataTests.swift in Sources */,
 				653B04B41BC9824000AC98FD /* YapDatabaseExtensionsTests.swift in Sources */,
 				653B04B01BC9824000AC98FD /* Support.swift in Sources */,
-				653B04B11BC9824000AC98FD /* ValueWithNoMetadataTests.swift in Sources */,
+				65C8DB401BCD24AF002F2C05 /* ObjectWithNoMetadataTests.swift in Sources */,
 				653B04AA1BC9824000AC98FD /* Models.swift in Sources */,
 				653B04B31BC9824000AC98FD /* ValueWithValueMetadataTests.swift in Sources */,
 				653B04AE1BC9824000AC98FD /* ReadWriteTests.swift in Sources */,
@@ -687,17 +750,28 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				65C557941BCB26010065C96A /* Persistable_ObjectWithNoMetadata.swift in Sources */,
+				654EAE7A1BCD45480093AB0C /* Functional_AnyWithValueMetadata.swift in Sources */,
 				653B048B1BC981D700AC98FD /* YapDB.swift in Sources */,
+				654EAE801BCD4CD70093AB0C /* Persistable_AnyWithValueMetadata.swift in Sources */,
 				65C557A71BCB26310065C96A /* Functional_Remove.swift in Sources */,
 				65C5579C1BCB26010065C96A /* Persistable_ValueWithObjectMetadata.swift in Sources */,
 				65C5579E1BCB26010065C96A /* Persistable_ValueWithValueMetadata.swift in Sources */,
-				65C557A41BCB26010065C96A /* Write.swift in Sources */,
+				652DE65A1BCEF8D700B5E668 /* Curried_ObjectWithValueMetadata.swift in Sources */,
+				652DE65D1BCEF8D700B5E668 /* Curried_ValueWithValueMetadata.swift in Sources */,
+				65C8DB451BCD24FB002F2C05 /* Persistable_ValueWithNoMetadata.swift in Sources */,
+				652DE65B1BCEF8D700B5E668 /* Curried_ValueWithNoMetadata.swift in Sources */,
+				65C8DB4A1BCD2676002F2C05 /* Functional_ObjectWithNoMetadata.swift in Sources */,
+				65C8DB4D1BCD283D002F2C05 /* Functional_ValueWithNoMetadata.swift in Sources */,
+				65C8DB431BCD24EB002F2C05 /* Persistable_ObjectWithNoMetadata.swift in Sources */,
+				654EAE771BCD44D90093AB0C /* Functional_AnyWithObjectMetadata.swift in Sources */,
 				65C557921BCB26010065C96A /* Functional_ValueWIthValueMetadata.swift in Sources */,
+				65BCF8C11BCED9D00023ED13 /* Curried_ObjectWithNoMetadata.swift in Sources */,
 				65C557901BCB26010065C96A /* Functional_ValueWIthObjectMetadata.swift in Sources */,
-				65C5579A1BCB26010065C96A /* Persistable_ValueWithNoMetadata.swift in Sources */,
+				652DE65C1BCEF8D700B5E668 /* Curried_ValueWithObjectMetadata.swift in Sources */,
 				653B048A1BC981D700AC98FD /* YapDatabaseExtensions.swift in Sources */,
 				65C557961BCB26010065C96A /* Persistable_ObjectWithObjectMetadata.swift in Sources */,
+				652DE6591BCEF8D700B5E668 /* Curried_ObjectWithObjectMetadata.swift in Sources */,
+				654EAE7D1BCD4C6B0093AB0C /* Persistable_AnyWithObjectMetadata.swift in Sources */,
 				65C557A21BCB26010065C96A /* Remove.swift in Sources */,
 				65C557981BCB26010065C96A /* Persistable_ObjectWithValueMetadata.swift in Sources */,
 				65C557A01BCB26010065C96A /* Read.swift in Sources */,
@@ -711,13 +785,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				653B04BB1BC9824100AC98FD /* RemovalTests.swift in Sources */,
+				65C8DB471BCD25E3002F2C05 /* ValueWithNoMetadataTests.swift in Sources */,
 				653B04B81BC9824100AC98FD /* ObjectWithObjectMetadataTests.swift in Sources */,
-				653B04B71BC9824100AC98FD /* ObjectWithNoMetadataTests.swift in Sources */,
 				653B04B91BC9824100AC98FD /* ObjectWithValueMetadataTests.swift in Sources */,
 				653B04BE1BC9824100AC98FD /* ValueWithObjectMetadataTests.swift in Sources */,
 				653B04C01BC9824100AC98FD /* YapDatabaseExtensionsTests.swift in Sources */,
 				653B04BC1BC9824100AC98FD /* Support.swift in Sources */,
-				653B04BD1BC9824100AC98FD /* ValueWithNoMetadataTests.swift in Sources */,
+				65C8DB411BCD24AF002F2C05 /* ObjectWithNoMetadataTests.swift in Sources */,
 				653B04B61BC9824100AC98FD /* Models.swift in Sources */,
 				653B04BF1BC9824100AC98FD /* ValueWithValueMetadataTests.swift in Sources */,
 				653B04BA1BC9824100AC98FD /* ReadWriteTests.swift in Sources */,
@@ -746,7 +820,7 @@
 				INFOPLIST_FILE = "$(SRCROOT)/YapDatabaseExtensions/Supporting Files/Info.plist";
 				PRODUCT_BUNDLE_IDENTIFIER = "me.danthorpe.$(PRODUCT_NAME)";
 				PRODUCT_NAME = YapDatabaseExtensions;
-				PROJECT_VERSION = 2.1.3;
+				PROJECT_VERSION = 2.2.0;
 			};
 			name = Debug;
 		};
@@ -756,7 +830,7 @@
 				INFOPLIST_FILE = "$(SRCROOT)/YapDatabaseExtensions/Supporting Files/Info.plist";
 				PRODUCT_BUNDLE_IDENTIFIER = "me.danthorpe.$(PRODUCT_NAME)";
 				PRODUCT_NAME = YapDatabaseExtensions;
-				PROJECT_VERSION = 2.1.3;
+				PROJECT_VERSION = 2.2.0;
 			};
 			name = Release;
 		};

@@ -48,8 +48,8 @@ extension YapDB {
         /**
         Utility function which can check if the extension is already registed in YapDatabase.
         
-        :param: database A YapDatabase instance
-        :returns: A Bool
+        - parameter database: a YapDatabase instance
+        - returns: a Bool
         */
         public func isRegisteredInDatabase(database: YapDatabase) -> Bool {
             return registrar.isRegisteredInDatabase(database)
@@ -58,8 +58,8 @@ extension YapDB {
         /**
         Utility function can register the extensions in YapDatabase, optionally using the supplied connection.
 
-        :param: database A YapDatabase instance
-        :param: connection An optiona YapDatabaseConnection, defaults to .None
+        - parameter database: a YapDatabase instance
+        - parameter connection: an optional YapDatabaseConnection, defaults to .None
         */
         public func registerInDatabase(database: YapDatabase, withConnection connection: YapDatabaseConnection? = .None) {
             registrar.registerInDatabase(database, withConnection: connection)
@@ -68,8 +68,8 @@ extension YapDB {
         /**
         Creates the YapDatabaseViewMappings object. Ensures that any database extensions are registered before returning.
 
-        :param: database A YapDatabase instance
-        :param: connection An optiona YapDatabaseConnection, defaults to .None
+        - parameter database: a YapDatabase instance
+        - parameter connection: an optional YapDatabaseConnection, defaults to .None
         */
         public func createViewMappings(mappings: Mappings, inDatabase database: YapDatabase, withConnection connection: YapDatabaseConnection? = .None) -> YapDatabaseViewMappings {
             registerInDatabase(database, withConnection: connection)
@@ -96,8 +96,8 @@ extension YapDB {
         /**
         Utility function which can check if the extension is already registed in YapDatabase.
 
-        :param: database A YapDatabase instance
-        :returns: A Bool
+        - parameter database: a YapDatabase instance
+        - returns: A Bool
         */
         public func isRegisteredInDatabase(database: YapDatabase) -> Bool {
             return (database.registeredExtension(name) as? YapDatabaseView) != .None
@@ -177,12 +177,12 @@ extension YapDB {
         /**
         Initializer for a View. 
         
-        :param: name A String, the name of the extension
-        :param: grouping A Grouping instance - how should the view group the database items?
-        :param: sorting A Sorting instance - inside each group, how should the view sort the items?
-        :param: version A String, defaults to "1.0"
-        :param: persistent A Bool, defaults to true - meaning that the contents of the view will be stored in YapDatabase between launches.
-        :param: collections An optional array of collections which is used to white list the collections searched when populating the view.
+        - parameter name: a String, the name of the extension
+        - parameter grouping: a Grouping instance - how should the view group the database items?
+        - parameter sorting: a Sorting instance - inside each group, how should the view sort the items?
+        - parameter version: a String, defaults to "1.0"
+        - parameter persistent: a Bool, defaults to true - meaning that the contents of the view will be stored in YapDatabase between launches.
+        - parameter collections: an optional array of collections which is used to white list the collections searched when populating the view.
         */
         public init(name: String, grouping g: Grouping, sorting s: Sorting, version: String = "1.0", persistent: Bool = true, collections: [String]? = .None) {
             grouping = g
@@ -244,12 +244,12 @@ extension YapDB {
         /**
         Initializer for a Filter
         
-        :param: name A String, the name of the extension
-        :param: parent A YapDB.Fetch instance, the parent extensions which will be filtered.
-        :param: filtering A Filtering, simple filtering of each item in the parent view.
-        :param: version A String, defaults to "1.0"
-        :param: persistent A Bool, defaults to true - meaning that the contents of the view will be stored in YapDatabase between launches.
-        :param: collections An optional array of collections which is used to white list the collections searched when populating the view.
+        - parameter name: a String, the name of the extension
+        - parameter parent: a YapDB.Fetch instance, the parent extensions which will be filtered.
+        - parameter filtering: a Filtering, simple filtering of each item in the parent view.
+        - parameter version: a String, defaults to "1.0"
+        - parameter persistent: a Bool, defaults to true - meaning that the contents of the view will be stored in YapDatabase between launches.
+        - parameter collections: an optional array of collections which is used to white list the collections searched when populating the view.
         */
         public init(name: String, parent p: YapDB.Fetch, filtering f: Filtering, version: String = "1.0", persistent: Bool = true, collections: [String]? = .None) {
             parent = p
@@ -314,14 +314,14 @@ extension YapDB {
         /**
         Initializer for a Search
 
-        :param: name A String, the name of the search results view extension
-        :param: parent A YapDB.Fetch instance, the parent extensions which will be filtered.
-        :param: search A String, this is the name of full text search handler extension
-        :param: columnNames An array of String instances, the column names are the dictionary keys used by the handler.
-        :param: handler A Handler instance.
-        :param: version A String, defaults to "1.0"
-        :param: persistent A Bool, defaults to true - meaning that the contents of the view will be stored in YapDatabase between launches.
-        :param: collections An optional array of collections which is used to white list the collections searched when populating the view.
+        - parameter name: a String, the name of the search results view extension
+        - parameter parent: a YapDB.Fetch instance, the parent extensions which will be filtered.
+        - parameter search: a String, this is the name of full text search handler extension
+        - parameter columnNames: an array of String instances, the column names are the dictionary keys used by the handler.
+        - parameter handler: a Handler instance.
+        - parameter version: a String, defaults to "1.0"
+        - parameter persistent: a Bool, defaults to true - meaning that the contents of the view will be stored in YapDatabase between launches.
+        - parameter collections: an optional array of collections which is used to white list the collections searched when populating the view.
         */
         public init(name: String, parent p: YapDB.Fetch, search: String, columnNames cn: [String], handler h: Handler, version: String = "1.0", persistent: Bool = true, collections: [String]? = .None) {
             parent = p

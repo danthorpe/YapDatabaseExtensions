@@ -183,8 +183,14 @@ are stored in the same YapDatabase collection.
 */
 public protocol Persistable: Identifiable {
 
+    /// The nested type of the metadata. Defaults to Void.
+    typealias MetadataType
+
     /// The YapDatabase collection name the type is stored in.
     static var collection: String { get }
+
+    /// A metadata which is set when reading, and get when writing.
+    var metadata: MetadataType? { get set }
 }
 
 extension Persistable {
@@ -210,8 +216,20 @@ extension Persistable {
     - parameter keys: a sequence of `String`s
     - returns: an array of `YapDB.Index` values.
     */
-    public static func indexesWithKeys<Keys: SequenceType where Keys.Generator.Element == String>(keys: Keys) -> [YapDB.Index] {
-        return Set(keys).map { YapDB.Index(collection: collection, key: $0) }
+    public static func indexesWithKeys<
+        Keys where
+        Keys: SequenceType,
+        Keys.Generator.Element == String>(keys: Keys) -> [YapDB.Index] {
+            return Set(keys).map { YapDB.Index(collection: collection, key: $0) }
+    }
+
+    /**
+    Default metadata property. Implement this to re-define your
+    own MetadataType.
+    */
+    public var metadata: Void? {
+        get { return .None }
+        set { }
     }
 
     /**
@@ -232,20 +250,6 @@ extension Persistable {
     public var index: YapDB.Index {
         return self.dynamicType.indexWithKey(key)
     }
-}
-
-/**
-A generic protocol for Persistable which support YapDatabase metadata.
-
-In order to read/write your metadata types from/to YapDatabase they must
-implement either NSCoding (i.e. be object based) or Saveable (i.e. be 
-value based).
-*/
-public protocol MetadataPersistable: Persistable {
-    typealias MetadataType
-
-    /// A metadata which is set when reading, and get when writing.
-    var metadata: MetadataType? { get set }
 }
 
 /// A facade interface for a read transaction.
@@ -293,7 +297,10 @@ public protocol WriteTransactionType: ReadTransactionType {
     
     - parameter indexes: the `[YapDB.Index]` to remove.
     */
-    func removeAtIndexes(indexes: [YapDB.Index])
+    func removeAtIndexes<
+        Indexes where
+        Indexes: SequenceType,
+        Indexes.Generator.Element == YapDB.Index>(indexes: Indexes)
 }
 
 /// A facade interface for a database connection.
@@ -353,7 +360,7 @@ public protocol ConnectionType {
     - parameter queue: a dispatch_queue_t, defaults to main queue, can be ommitted in most cases.
     - parameter completion: a closure which receives T and returns Void.
     */
-    func asyncWrite<T>(block: WriteTransaction -> T, queue: dispatch_queue_t, completion: (T) -> Void)
+    func asyncWrite<T>(block: WriteTransaction -> T, queue: dispatch_queue_t, completion: (T -> Void)?)
 
     /**
     Execute a read/write block inside a `NSOperation`. The block argument receives a
@@ -436,8 +443,11 @@ extension YapDatabaseReadWriteTransaction: WriteTransactionType {
         removeObjectForKey(index.key, inCollection: index.collection)
     }
 
-    public func removeAtIndexes(indexes: [YapDB.Index]) {
-        indexes.forEach(removeAtIndex)
+    public func removeAtIndexes<
+        Indexes where
+        Indexes: SequenceType,
+        Indexes.Generator.Element == YapDB.Index>(indexes: Indexes) {
+            indexes.forEach(removeAtIndex)
     }
 }
 
@@ -506,9 +516,9 @@ extension YapDatabaseConnection: ConnectionType {
     - parameter queue: a dispatch_queue_t, defaults to main queue, can be ommitted in most cases.
     - parameter completion: a closure which receives T and returns Void.
     */
-    public func asyncWrite<T>(block: YapDatabaseReadWriteTransaction -> T, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: (T) -> Void) {
+    public func asyncWrite<T>(block: YapDatabaseReadWriteTransaction -> T, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: (T -> Void)?) {
         var result: T! = .None
-        asyncReadWriteWithBlock({ result = block($0) }, completionQueue: queue) { completion(result) }
+        asyncReadWriteWithBlock({ result = block($0) }, completionQueue: queue) { completion?(result) }
     }
 
     /**
@@ -555,13 +565,13 @@ public func == (a: YapDB.Index, b: YapDB.Index) -> Bool {
     return (a.collection == b.collection) && (a.key == b.key)
 }
 
-// MARK: Saveable
+// MARK: ValueCoding
 
 extension YapDB.Index: ValueCoding {
     public typealias Coder = YapDBIndexCoder
 }
 
-// MARK: Archivers
+// MARK: Coders
 
 public final class YapDBIndexCoder: NSObject, NSCoding, CodingType {
     public let value: YapDB.Index
@@ -598,11 +608,14 @@ public func indexForPersistable<P: Persistable>(persistable: P) -> YapDB.Index {
 
 // MARK: - Deprecations
 
-@available(*, unavailable, renamed="MetadataPersistable")
-public typealias ObjectMetadataPersistable = MetadataPersistable
+@available(*, unavailable, renamed="Persistable")
+public typealias MetadataPersistable = Persistable
 
-@available(*, unavailable, renamed="MetadataPersistable")
-public typealias ValueMetadataPersistable = MetadataPersistable
+@available(*, unavailable, renamed="Persistable")
+public typealias ObjectMetadataPersistable = Persistable
+
+@available(*, unavailable, renamed="Persistable")
+public typealias ValueMetadataPersistable = Persistable
 
 @available(*, unavailable, renamed="ValueCoding")
 public typealias Saveable = ValueCoding

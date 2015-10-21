@@ -124,7 +124,7 @@ class YapDatabaseReadWriteTransactionTests: ReadWriteBaseTests {
     func test__remove_at_indexes() {
         let db = YapDB.testDatabase()
 
-        items.write.sync(db.makeNewConnection())
+        db.makeNewConnection().write(items)
         XCTAssertNotNil(Employee.read(db).atIndex(index))
 
         db.makeNewConnection().readWriteWithBlock { transaction in
@@ -150,7 +150,7 @@ class YapDatabaseConnectionTests: ReadWriteBaseTests {
         let db = YapDB.testDatabase()
         let expectation = expectationWithDescription("Test: \(__FUNCTION__)")
 
-        item.write.sync(db.makeNewConnection())
+        db.makeNewConnection().write(item)
         XCTAssertNotNil(Employee.read(db).atIndex(index))
 
         var received: Employee? = .None
@@ -203,7 +203,7 @@ class YapDatabaseConnectionTests: ReadWriteBaseTests {
     }
 }
 
-class SaveableTests: XCTestCase {
+class ValueCodingTests: XCTestCase {
 
     var item: Product!
     var index: YapDB.Index!
@@ -271,7 +271,7 @@ class SaveableTests: XCTestCase {
         XCTAssertEqual(byHashes.count, items.count)
     }
 
-    func test__index_is_saveable() {
+    func test__index_is_codable() {
         let db = YapDB.testDatabase()
         db.makeNewConnection().readWriteWithBlock { transaction in
             transaction.setObject(self.index.encoded, forKey: "test-index", inCollection: "test-index-collection")
