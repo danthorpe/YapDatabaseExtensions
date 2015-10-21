@@ -57,7 +57,7 @@ extension Persistable where
     - parameter connection: a YapDatabaseConnection
     - returns: an `NSOperation`
     */
-    public func write<Connection: ConnectionType>(connection: Connection) -> NSOperation {
+    public func writeOperation<Connection: ConnectionType>(connection: Connection) -> NSOperation {
         return NSBlockOperation { connection.write(self) }
     }
 }
@@ -107,7 +107,7 @@ extension SequenceType where
     - parameter connection: a YapDatabaseConnection
     - returns: an `NSOperation`
     */
-    public func write<Connection: ConnectionType>(connection: Connection) -> NSOperation {
+    public func writeOperation<Connection: ConnectionType>(connection: Connection) -> NSOperation {
         return NSBlockOperation { connection.write(self) }
     }
 }
