@@ -83,7 +83,7 @@ extension Persistable {
     - parameter transaction: a type conforming to ReadTransactionType such as
     YapDatabaseReadTransaction
     */
-    public static func read(transaction: YapDatabaseReadTransaction) -> Read<Self, YapDatabase> {
+    public static func read<D: DatabaseType>(transaction: D.Connection.ReadTransaction) -> Read<Self, D> {
         return Read(transaction)
     }
 
@@ -105,11 +105,11 @@ extension Persistable {
     - parameter connection: a type conforming to ConnectionType such as
     YapDatabaseConnection.
     */
-    public static func read(connection: YapDatabaseConnection) -> Read<Self, YapDatabase> {
+    public static func read<D: DatabaseType>(connection: D.Connection) -> Read<Self, D> {
         return Read(connection)
     }
 
-    internal static func read(database: YapDatabase) -> Read<Self, YapDatabase> {
+    internal static func read<D: DatabaseType>(database: D) -> Read<Self, D> {
         return Read(database)
     }
 }

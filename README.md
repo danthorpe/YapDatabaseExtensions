@@ -8,7 +8,7 @@
 [![MIT License](https://img.shields.io/cocoapods/l/YapDatabaseExtensions.svg)](LICENSE) 
 [![Platform iOS OS X](https://img.shields.io/cocoapods/p/YapDatabaseExtensions.svg)](PLATFORM)
 
-Read my introductory blog post about [YapDatabase & YapDatabaseExtensions](http://danthorpe.me/posts/yap-database.html).
+Read my introductory blog post about [YapDatabase & YapDatabaseExtensions](http://danthorpe.me/posts/yap-database.html), and a follow up on [YapDatabaseExtensions 2](http://danthorpe.me/posts/yapdatabaseextensions-two--the-swiftening.html).
 
 YapDatabaseExtensions is a suite of convenience APIs for working with [YapDatabase](https://github.com/yapstudios/YapDatabase). If you’re not familiar with YapDatabase, it’s a powerful key value database for iOS and Mac - [check it out](https://github.com/yapstudios/YapDatabase)!
 
@@ -77,29 +77,89 @@ Item encoding | Metadata encoding | Pattern
 
 There are also two styles of API. The *functional* API works on `YapDatabase` types, `YapDatabaseReadTransaction`, `YapDatabaseReadWriteTransaction` and `YapDatabaseConnection`. The *persistable* API works on your `Persistable` types directly, and receives the `YapDatabase` type as arguments.
 
+## Functional API
+
+The following “functional” APIs are available directly on the `YapDatabase` types.
+
+```swift
+// Get a YapDatabaseConnection
+let connection = db.newConnection()
+
+// Write a single item
+connection.write(item) 
+
+// Write an array of items, using one transaction.
+connection.write(items)
+
+// Write asynchronously
+connection.asyncWrite(item) { print(“did finish writing”) }
+connection.asyncWrite(items) { print(“did finish writing”) }
+
+// Create a write transaction block for multiple writes.
+connection.write { transaction in
+    transaction.write(item)
+    transaction.write(items) 
+}
+
+// Write many items asynchronously
+connection.asyncWrite({ transaction in
+    transaction.write(item)
+    transaction.write(items) 
+}, completion: { print(“did finish writing”) })
+```
+
+For reading:
+
+```swift
+if let item: Item? = connection.readAtIndex(index) {
+  // etc
+}
+
+if let meta: Item.MetadataType? = connection.readMetadataAtIndex(index) {
+  // etc
+}
+
+let items: [Item] = connection.readAtIndexes(indexes)
+
+if let item: Item? = connection.readByKey(index) {
+  // etc
+}
+
+let items: [Item] = connection.readByKeys(keys)
+
+let all: [Item] = connection.readAll()
+
+connection.read { transaction in
+    let a: Item? = transaction.readAtIndex(index)
+    let b: Item? = transaction.readByKey(key)
+    let c: [Item] = transaction.readAtIndexes(indexes)
+    let d: [Item] = transaction.readByKeys(keys)
+    let all: [Item] = transaction.readAll()
+    let meta: [Item.MetadataType] = transaction.readMetadataAtIndexes(indexes)
+}
+```
+
 ## `Persistable` API
 
 The APIs all work on single or sequences of `Persistable` items. To write to the database:
 
 ```swift
 // Use a YapDatabaseReadWriteTransaction.
-item.write.on(transaction)
+let written = item.write(transaction)
 
 // Write synchronously using a YapDatabaseConnection.
-item.write.sync(connection)
+let written = item.write(connection)
 
 // Write asynchronously using a YapDatabaseConnection.
-item.write.async(connection) {
+item.asyncWrite(connection) { written in
     print(“did finishing writing”)
 }
 
 // Return an NSOperation which will perform an sync write on a YapDatabaseConnection.
-let write = item.write.operation(connection)
+let write: NSOperation = item.write(connection)
 ``` 
 
-Note that these write functions have no return values.
-
-Reading items from the database is similar.
+Reading items from the database is a little different.
 
 ```swift
 // Read using a YapDB.Index.
@@ -142,63 +202,6 @@ if let allItems = Item.read(connection).all() {
 }
 
 let (items, missingKeys) = Item.read(connection).filterExisting(someKeys)
-```
-
-## Functional API
-
-The following “functional” APIs are also available directly on the `YapDatabase` types.
-
-```swift
-// Get a YapDatabaseConnection
-let connection = db.newConnection()
-
-// Write a single item
-connection.write(item) 
-
-// Write an array of items, using one transaction.
-connection.write(items)
-
-// Write asynchronously
-connection.asyncWrite(item) { print(“did finish writing”) }
-connection.asyncWrite(items) { print(“did finish writing”) }
-
-// Create a write transaction block for multiple writes.
-connection.write { transaction in
-    transaction.write(item)
-    transaction.write(items) 
-}
-
-// Write many items asynchronously
-connection.asyncWrite({ transaction in
-    transaction.write(item)
-    transaction.write(items) 
-}, completion: { print(“did finish writing”) })
-```
-
-For reading:
-
-```swift
-if let item: Item? = connection.readAtIndex(index) {
-  // etc
-}
-
-let items: [Item] = connection.readAtIndexes(indexes)
-
-if let item: Item? = connection.readByKey(index) {
-  // etc
-}
-
-let items: [Item] = connection.readByKeys(keys)
-
-let all: [Item] = connection.readAll()
-
-connection.read { transaction in
-    let a: Item? = transaction.readAtIndex(index)
-    let b: Item? = transaction.readByKey(key)
-    let c: [Item] = transaction.readAtIndexes(indexes)
-    let d: [Item] = transaction.readByKeys(keys)
-    let all: [Item] = transaction.readAll()
-}
 ```
 
 ## Installation
