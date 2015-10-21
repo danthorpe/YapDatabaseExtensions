@@ -621,7 +621,7 @@ class Persistable_Write_ObjectWithValueMetadataTests: ObjectWithValueMetadataTes
     func test__item_persistable__write_using_opertion() {
         let expectation = expectationWithDescription("Test: \(__FUNCTION__)")
 
-        let operation: NSOperation = item.write(connection)
+        let operation = item.writeOperation(connection)
         operation.completionBlock = {
             expectation.fulfill()
         }
@@ -660,7 +660,7 @@ class Persistable_Write_ObjectWithValueMetadataTests: ObjectWithValueMetadataTes
     func test__items_persistable__write_using_opertion() {
         let expectation = expectationWithDescription("Test: \(__FUNCTION__)")
 
-        let operation: NSOperation = items.write(connection)
+        let operation = items.writeOperation(connection)
         operation.completionBlock = {
             expectation.fulfill()
         }
