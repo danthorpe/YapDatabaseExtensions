@@ -109,6 +109,7 @@ class ReadTests: ReadWriteBaseTests {
     }
 }
 
+/*
 class RemoveTests: ReadWriteBaseTests {
 
     var remover: Remove<YapDatabase>!
@@ -143,5 +144,6 @@ class RemoveTests: ReadWriteBaseTests {
         XCTAssertEqual(remover.indexes, indexes)
     }
 }
+*/
 
 

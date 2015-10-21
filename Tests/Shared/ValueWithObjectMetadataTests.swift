@@ -170,6 +170,14 @@ class ValueWithObjectMetadataTests: XCTestCase {
         return true
     }
 
+    func checkTransactionDidRemoveItem() {
+        XCTAssertEqual(writeTransaction.didRemoveAtIndexes.count, 1)
+        XCTAssertEqual(writeTransaction.didRemoveAtIndexes.first!, index)
+    }
+
+    func checkTransactionDidRemoveItems() {
+        XCTAssertEqual(writeTransaction.didRemoveAtIndexes, indexes)
+    }
 }
 
 
@@ -397,6 +405,57 @@ class Functional_Write_ValueWithObjectMetadataTests: ValueWithObjectMetadataTest
         }
         waitForExpectationsWithTimeout(3.0, handler: nil)
         checkTransactionDidWriteItems(result)
+        XCTAssertTrue(connection.didAsyncWrite)
+    }
+}
+
+class Functional_Remove_ValueWithObjectMetadataTests: ValueWithObjectMetadataTests {
+
+    func test__transaction_remove_item() {
+        configureForReadingSingle()
+        writeTransaction.remove(item)
+        checkTransactionDidRemoveItem()
+    }
+
+    func test__transaction_remove_items() {
+        configureForReadingMultiple()
+        writeTransaction.remove(items)
+        checkTransactionDidRemoveItems()
+    }
+
+    func test__connection_remove_item() {
+        configureForReadingSingle()
+        connection.remove(item)
+        checkTransactionDidRemoveItem()
+        XCTAssertTrue(connection.didWrite)
+    }
+
+    func test__connection_remove_items() {
+        configureForReadingMultiple()
+        connection.remove(items)
+        checkTransactionDidRemoveItems()
+        XCTAssertTrue(connection.didWrite)
+    }
+
+    func test__connection_async_remove_item() {
+        let expectation = expectationWithDescription("Test: \(__FUNCTION__)")
+        configureForReadingSingle()
+        connection.asyncRemove(item) {
+            expectation.fulfill()
+        }
+        waitForExpectationsWithTimeout(3.0, handler: nil)
+        checkTransactionDidRemoveItem()
+        XCTAssertTrue(connection.didAsyncWrite)
+    }
+
+    func test__connection_async_remove_items() {
+        let expectation = expectationWithDescription("Test: \(__FUNCTION__)")
+        configureForReadingMultiple()
+        connection.asyncRemove(items) {
+            expectation.fulfill()
+        }
+        waitForExpectationsWithTimeout(3.0, handler: nil)
+        checkTransactionDidRemoveItems()
         XCTAssertTrue(connection.didAsyncWrite)
     }
 }
@@ -757,7 +816,7 @@ class Persistable_Write_ValueWithObjectMetadataTests: ValueWithObjectMetadataTes
     func test__item_persistable__write_using_opertion() {
         let expectation = expectationWithDescription("Test: \(__FUNCTION__)")
 
-        let operation: NSOperation = item.write(connection)
+        let operation = item.writeOperation(connection)
         operation.completionBlock = {
             expectation.fulfill()
         }
@@ -796,7 +855,7 @@ class Persistable_Write_ValueWithObjectMetadataTests: ValueWithObjectMetadataTes
     func test__items_persistable__write_using_opertion() {
         let expectation = expectationWithDescription("Test: \(__FUNCTION__)")
 
-        let operation: NSOperation = items.write(connection)
+        let operation = items.writeOperation(connection)
         operation.completionBlock = {
             expectation.fulfill()
         }
@@ -808,4 +867,82 @@ class Persistable_Write_ValueWithObjectMetadataTests: ValueWithObjectMetadataTes
         XCTAssertEqual(writeTransaction.didWriteAtIndexes.map { $0.2 }.count, items.count)
         XCTAssertTrue(connection.didWrite)
     }    
+}
+
+class Persistable_Remove_ValueWithObjectMetadataTests: ValueWithObjectMetadataTests {
+
+    func test__transaction__remove_item() {
+        configureForReadingSingle()
+        item.remove(writeTransaction)
+        checkTransactionDidRemoveItem()
+    }
+
+    func test__connection_remove_item() {
+        configureForReadingSingle()
+        item.remove(connection)
+        checkTransactionDidRemoveItem()
+        XCTAssertTrue(connection.didWrite)
+    }
+
+    func test__connection_async_remove_item() {
+        let expectation = expectationWithDescription("Test: \(__FUNCTION__)")
+        configureForReadingSingle()
+        item.asyncRemove(connection) {
+            expectation.fulfill()
+        }
+        waitForExpectationsWithTimeout(3.0, handler: nil)
+        checkTransactionDidRemoveItem()
+        XCTAssertTrue(connection.didAsyncWrite)
+    }
+
+    func test__connection_operation_remove_item() {
+        let expectation = expectationWithDescription("Test: \(__FUNCTION__)")
+        configureForReadingSingle()
+        let operation = item.removeOperation(connection)
+        operation.completionBlock = {
+            expectation.fulfill()
+        }
+        operationQueue.addOperation(operation)
+        waitForExpectationsWithTimeout(3.0, handler: nil)
+        checkTransactionDidRemoveItem()
+        XCTAssertTrue(connection.didWrite)
+    }
+
+    func test__transaction__remove_items() {
+        configureForReadingMultiple()
+        items.remove(writeTransaction)
+        checkTransactionDidRemoveItems()
+    }
+
+
+    func test__connection_remove_items() {
+        configureForReadingMultiple()
+        items.remove(connection)
+        checkTransactionDidRemoveItems()
+        XCTAssertTrue(connection.didWrite)
+    }
+
+    func test__connection_async_remove_items() {
+        let expectation = expectationWithDescription("Test: \(__FUNCTION__)")
+        configureForReadingMultiple()
+        items.asyncRemove(connection) {
+            expectation.fulfill()
+        }
+        waitForExpectationsWithTimeout(3.0, handler: nil)
+        checkTransactionDidRemoveItems()
+        XCTAssertTrue(connection.didAsyncWrite)
+    }
+
+    func test__connection_operation_remove_items() {
+        let expectation = expectationWithDescription("Test: \(__FUNCTION__)")
+        configureForReadingMultiple()
+        let operation = items.removeOperation(connection)
+        operation.completionBlock = {
+            expectation.fulfill()
+        }
+        operationQueue.addOperation(operation)
+        waitForExpectationsWithTimeout(3.0, handler: nil)
+        checkTransactionDidRemoveItems()
+        XCTAssertTrue(connection.didWrite)
+    }
 }
