@@ -115,6 +115,10 @@ if let item: Item? = connection.readAtIndex(index) {
   // etc
 }
 
+if let meta: Item.MetadataType? = connection.readMetadataAtIndex(index) {
+  // etc
+}
+
 let items: [Item] = connection.readAtIndexes(indexes)
 
 if let item: Item? = connection.readByKey(index) {
@@ -131,6 +135,7 @@ connection.read { transaction in
     let c: [Item] = transaction.readAtIndexes(indexes)
     let d: [Item] = transaction.readByKeys(keys)
     let all: [Item] = transaction.readAll()
+    let meta: [Item.MetadataType] = transaction.readMetadataAtIndexes(indexes)
 }
 ```
 
@@ -151,10 +156,8 @@ item.asyncWrite(connection) { written in
 }
 
 // Return an NSOperation which will perform an sync write on a YapDatabaseConnection.
-let write = item.write.operation(connection)
+let write: NSOperation = item.write(connection)
 ``` 
-
-Note that these write functions have no return values.
 
 Reading items from the database is a little different.
 
