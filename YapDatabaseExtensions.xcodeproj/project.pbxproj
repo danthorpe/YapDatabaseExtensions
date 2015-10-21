@@ -323,11 +323,11 @@
 				65C557821BCB26010065C96A /* Persistable_ObjectWithNoMetadata.swift */,
 				65C557831BCB26010065C96A /* Persistable_ObjectWithObjectMetadata.swift */,
 				65C557841BCB26010065C96A /* Persistable_ObjectWithValueMetadata.swift */,
+				65C557891BCB26010065C96A /* Persistable_Remove.swift */,
 				65C557851BCB26010065C96A /* Persistable_ValueWithNoMetadata.swift */,
 				65C557861BCB26010065C96A /* Persistable_ValueWithObjectMetadata.swift */,
 				65C557871BCB26010065C96A /* Persistable_ValueWithValueMetadata.swift */,
 				65C557881BCB26010065C96A /* Read.swift */,
-				65C557891BCB26010065C96A /* Persistable_Remove.swift */,
 			);
 			path = Persistable;
 			sourceTree = "<group>";
