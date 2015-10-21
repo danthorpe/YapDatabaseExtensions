@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name              = "YapDatabaseExtensions"
-  s.version           = "2.1.3"
+  s.version           = "2.2.0"
   s.summary           = "Helpers for using value types with YapDatabase."
   s.description       = <<-DESC
   

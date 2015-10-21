@@ -820,7 +820,7 @@
 				INFOPLIST_FILE = "$(SRCROOT)/YapDatabaseExtensions/Supporting Files/Info.plist";
 				PRODUCT_BUNDLE_IDENTIFIER = "me.danthorpe.$(PRODUCT_NAME)";
 				PRODUCT_NAME = YapDatabaseExtensions;
-				PROJECT_VERSION = 2.1.3;
+				PROJECT_VERSION = 2.2.0;
 			};
 			name = Debug;
 		};
@@ -830,7 +830,7 @@
 				INFOPLIST_FILE = "$(SRCROOT)/YapDatabaseExtensions/Supporting Files/Info.plist";
 				PRODUCT_BUNDLE_IDENTIFIER = "me.danthorpe.$(PRODUCT_NAME)";
 				PRODUCT_NAME = YapDatabaseExtensions;
-				PROJECT_VERSION = 2.1.3;
+				PROJECT_VERSION = 2.2.0;
 			};
 			name = Release;
 		};
