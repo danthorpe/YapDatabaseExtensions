@@ -77,76 +77,9 @@ Item encoding | Metadata encoding | Pattern
 
 There are also two styles of API. The *functional* API works on `YapDatabase` types, `YapDatabaseReadTransaction`, `YapDatabaseReadWriteTransaction` and `YapDatabaseConnection`. The *persistable* API works on your `Persistable` types directly, and receives the `YapDatabase` type as arguments.
 
-## `Persistable` API
-
-The APIs all work on single or sequences of `Persistable` items. To write to the database:
-
-```swift
-// Use a YapDatabaseReadWriteTransaction.
-item.write.on(transaction)
-
-// Write synchronously using a YapDatabaseConnection.
-item.write.sync(connection)
-
-// Write asynchronously using a YapDatabaseConnection.
-item.write.async(connection) {
-    print(“did finishing writing”)
-}
-
-// Return an NSOperation which will perform an sync write on a YapDatabaseConnection.
-let write = item.write.operation(connection)
-``` 
-
-Note that these write functions have no return values.
-
-Reading items from the database is similar.
-
-```swift
-// Read using a YapDB.Index.
-if let item = Item.read(transaction).byIndex(index) {
-   // etc - item is correct type, no casting required.
-}
-
-// Read an array of items from an array of YapDB.Index(s)
-let items = Item.read(transaction).atIndexes(indexes)
-
-// Read using a key
-if let item = Item.read(transaction).byKey(key) {
-   // etc - item is correct type, no casting required.
-}
-
-// Read an array of items from an array of String(s)
-let items = Item.read(transaction).byKeys(keys)
-
-if let allItems = Item.read(transaction).all() {
-   // etc - an array of Item types.
-}
-
-// Get the Items which exist for the given keys, and return the [String] keys which are missing.
-let (items, missingKeys) = Item.read(transaction).filterExisting(someKeys)
-``` 
-
-Similarly, to work directly on a `YapDatabaseConnection`, use the following:
-
-```swift
-if let item = Item.read(connection).byIndex(index) {
-   // etc - item is correct type, no casting required.
-}
-
-if let item = Item.read(connection).byKey(key) {
-   // etc - item is correct type, no casting required.
-}
-
-if let allItems = Item.read(connection).all() {
-   // etc - an array of Item types.
-}
-
-let (items, missingKeys) = Item.read(connection).filterExisting(someKeys)
-```
-
 ## Functional API
 
-The following “functional” APIs are also available directly on the `YapDatabase` types.
+The following “functional” APIs are available directly on the `YapDatabase` types.
 
 ```swift
 // Get a YapDatabaseConnection
@@ -199,6 +132,73 @@ connection.read { transaction in
     let d: [Item] = transaction.readByKeys(keys)
     let all: [Item] = transaction.readAll()
 }
+```
+
+## `Persistable` API
+
+The APIs all work on single or sequences of `Persistable` items. To write to the database:
+
+```swift
+// Use a YapDatabaseReadWriteTransaction.
+let written = item.write(transaction)
+
+// Write synchronously using a YapDatabaseConnection.
+let written = item.write(connection)
+
+// Write asynchronously using a YapDatabaseConnection.
+item.asyncWrite(connection) { written in
+    print(“did finishing writing”)
+}
+
+// Return an NSOperation which will perform an sync write on a YapDatabaseConnection.
+let write = item.write.operation(connection)
+``` 
+
+Note that these write functions have no return values.
+
+Reading items from the database is a little different.
+
+```swift
+// Read using a YapDB.Index.
+if let item = Item.read(transaction).byIndex(index) {
+   // etc - item is correct type, no casting required.
+}
+
+// Read an array of items from an array of YapDB.Index(s)
+let items = Item.read(transaction).atIndexes(indexes)
+
+// Read using a key
+if let item = Item.read(transaction).byKey(key) {
+   // etc - item is correct type, no casting required.
+}
+
+// Read an array of items from an array of String(s)
+let items = Item.read(transaction).byKeys(keys)
+
+if let allItems = Item.read(transaction).all() {
+   // etc - an array of Item types.
+}
+
+// Get the Items which exist for the given keys, and return the [String] keys which are missing.
+let (items, missingKeys) = Item.read(transaction).filterExisting(someKeys)
+``` 
+
+Similarly, to work directly on a `YapDatabaseConnection`, use the following:
+
+```swift
+if let item = Item.read(connection).byIndex(index) {
+   // etc - item is correct type, no casting required.
+}
+
+if let item = Item.read(connection).byKey(key) {
+   // etc - item is correct type, no casting required.
+}
+
+if let allItems = Item.read(connection).all() {
+   // etc - an array of Item types.
+}
+
+let (items, missingKeys) = Item.read(connection).filterExisting(someKeys)
 ```
 
 ## Installation
