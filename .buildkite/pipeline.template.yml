@@ -1,5 +1,10 @@
 steps:
   -
+    name: ":bundler: Update Bundler"
+    command: .scripts/update-bundler.sh
+    agents:
+      name: "$BUILDKITE_AGENT_META_DATA_NAME"	
+  -
     name: ":fastlane: Test Mac OS X"
     command: .scripts/test-osx.sh
     agents:
