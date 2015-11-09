@@ -4,7 +4,7 @@
 [![codecov.io](http://codecov.io/github/danthorpe/YapDatabaseExtensions/coverage.svg?branch=development)](http://codecov.io/github/danthorpe/YapDatabaseExtensions?branch=development)
 [![Cocoapods Compatible](https://img.shields.io/cocoapods/YapDatabaseExtensions.svg)](https://img.shields.io/cocoapods/v/YapDatabaseExtensions.svg)
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
-[![Platform](https://img.shields.io/cocoapods/p/Money.svg?style=flat)](http://cocoadocs.org/docsets/Money)
+[![Platform](https://img.shields.io/cocoapods/p/YapDatabaseExtensions.svg?style=flat)](http://cocoadocs.org/docsets/YapDatabaseExtensions)
 [![Join the chat at https://gitter.im/danthorpe/YapDatabaseExtensions](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/danthorpe/YapDatabaseExtensions?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 
