@@ -1,4 +1,6 @@
-default_platform :ios
+before_all do |lane|
+  carthage
+end
 
 platform :ios do
 
@@ -6,9 +8,9 @@ platform :ios do
   lane :test do
 	xctest scheme: 'YapDatabaseExtensions-iOS', 
       sdk: 'iphonesimulator',
-      destination: 'platform=iOS Simulator,name=iPhone 6,OS=9.0',
+      destination: 'platform=iOS Simulator,name=iPhone 6,OS=9.1',
       destination_timeout: 120,
-      derivedDataPath: '.fastlane/xcodebuild-data'
+      derivedDataPath: '.ci/xcodebuild-data'
   end
 
 end
@@ -20,7 +22,7 @@ platform :mac do
 	xctest scheme: 'YapDatabaseExtensions-OSX', 
     sdk: 'macosx', 
     destination: 'platform=OS X',
-    derivedDataPath: '.fastlane/xcodebuild-data'
+    derivedDataPath: '.ci/xcodebuild-data'
   end
   
 end

@@ -1,3 +1,6 @@
+# 2.3.0
+1. [[YDB-70](https://github.com/danthorpe/YapDatabaseExtensions/pull/70), [YDB-71](https://github.com/danthorpe/YapDatabaseExtensions/pull/71)]: Changes changes necessary for compatibility with YapDatabase 2.7.4 which added sub-module support for most extensions.
+
 # 2.2.1
 1. [[YDB-68](https://github.com/danthorpe/YapDatabaseExtensions/pull/68)]: Fixes some issues with the remove API, to make it consistent with write. Also renamed the methods which return `NSOperation` instances to `writeOperation` and `removeOperation` respectively.
 

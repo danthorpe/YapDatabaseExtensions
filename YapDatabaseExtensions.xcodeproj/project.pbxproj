@@ -7,89 +7,96 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		00EFE0D3D9A2DDD7C6BF526A /* Pods_YapDatabaseExtensions_iOSTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5550DE9AA69FDA43AE8D0D51 /* Pods_YapDatabaseExtensions_iOSTests.framework */; };
-		085C9EA234EAEF057CC78041 /* Pods_YapDatabaseExtensions_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EE3D86AD60BF064ADA4CC71C /* Pods_YapDatabaseExtensions_iOS.framework */; };
-		371109FDB091F2E45241BC22 /* Pods_YapDatabaseExtensions_OSX.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DB4702C82EB6B1579DB4EF99 /* Pods_YapDatabaseExtensions_OSX.framework */; };
-		651DD4A41BCEF4D700DD94E2 /* Curried_ObjectWithObjectMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651DD49F1BCEF4D700DD94E2 /* Curried_ObjectWithObjectMetadata.swift */; settings = {ASSET_TAGS = (); }; };
-		651DD4A51BCEF4D700DD94E2 /* Curried_ObjectWithValueMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651DD4A01BCEF4D700DD94E2 /* Curried_ObjectWithValueMetadata.swift */; settings = {ASSET_TAGS = (); }; };
-		651DD4A61BCEF4D700DD94E2 /* Curried_ValueWithNoMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651DD4A11BCEF4D700DD94E2 /* Curried_ValueWithNoMetadata.swift */; settings = {ASSET_TAGS = (); }; };
-		651DD4A71BCEF4D700DD94E2 /* Curried_ValueWithObjectMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651DD4A21BCEF4D700DD94E2 /* Curried_ValueWithObjectMetadata.swift */; settings = {ASSET_TAGS = (); }; };
-		651DD4A81BCEF4D700DD94E2 /* Curried_ValueWithValueMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651DD4A31BCEF4D700DD94E2 /* Curried_ValueWithValueMetadata.swift */; settings = {ASSET_TAGS = (); }; };
-		652DE6591BCEF8D700B5E668 /* Curried_ObjectWithObjectMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651DD49F1BCEF4D700DD94E2 /* Curried_ObjectWithObjectMetadata.swift */; settings = {ASSET_TAGS = (); }; };
-		652DE65A1BCEF8D700B5E668 /* Curried_ObjectWithValueMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651DD4A01BCEF4D700DD94E2 /* Curried_ObjectWithValueMetadata.swift */; settings = {ASSET_TAGS = (); }; };
-		652DE65B1BCEF8D700B5E668 /* Curried_ValueWithNoMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651DD4A11BCEF4D700DD94E2 /* Curried_ValueWithNoMetadata.swift */; settings = {ASSET_TAGS = (); }; };
-		652DE65C1BCEF8D700B5E668 /* Curried_ValueWithObjectMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651DD4A21BCEF4D700DD94E2 /* Curried_ValueWithObjectMetadata.swift */; settings = {ASSET_TAGS = (); }; };
-		652DE65D1BCEF8D700B5E668 /* Curried_ValueWithValueMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651DD4A31BCEF4D700DD94E2 /* Curried_ValueWithValueMetadata.swift */; settings = {ASSET_TAGS = (); }; };
-		653B044E1BC97ED700AC98FD /* YapDatabaseExtensions.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 653B04431BC97ED700AC98FD /* YapDatabaseExtensions.framework */; settings = {ASSET_TAGS = (); }; };
-		653B046A1BC9805D00AC98FD /* YapDatabaseExtensions.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 653B04601BC9805D00AC98FD /* YapDatabaseExtensions.framework */; settings = {ASSET_TAGS = (); }; };
+		651DD4A41BCEF4D700DD94E2 /* Curried_ObjectWithObjectMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651DD49F1BCEF4D700DD94E2 /* Curried_ObjectWithObjectMetadata.swift */; };
+		651DD4A51BCEF4D700DD94E2 /* Curried_ObjectWithValueMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651DD4A01BCEF4D700DD94E2 /* Curried_ObjectWithValueMetadata.swift */; };
+		651DD4A61BCEF4D700DD94E2 /* Curried_ValueWithNoMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651DD4A11BCEF4D700DD94E2 /* Curried_ValueWithNoMetadata.swift */; };
+		651DD4A71BCEF4D700DD94E2 /* Curried_ValueWithObjectMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651DD4A21BCEF4D700DD94E2 /* Curried_ValueWithObjectMetadata.swift */; };
+		651DD4A81BCEF4D700DD94E2 /* Curried_ValueWithValueMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651DD4A31BCEF4D700DD94E2 /* Curried_ValueWithValueMetadata.swift */; };
+		652DE6591BCEF8D700B5E668 /* Curried_ObjectWithObjectMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651DD49F1BCEF4D700DD94E2 /* Curried_ObjectWithObjectMetadata.swift */; };
+		652DE65A1BCEF8D700B5E668 /* Curried_ObjectWithValueMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651DD4A01BCEF4D700DD94E2 /* Curried_ObjectWithValueMetadata.swift */; };
+		652DE65B1BCEF8D700B5E668 /* Curried_ValueWithNoMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651DD4A11BCEF4D700DD94E2 /* Curried_ValueWithNoMetadata.swift */; };
+		652DE65C1BCEF8D700B5E668 /* Curried_ValueWithObjectMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651DD4A21BCEF4D700DD94E2 /* Curried_ValueWithObjectMetadata.swift */; };
+		652DE65D1BCEF8D700B5E668 /* Curried_ValueWithValueMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651DD4A31BCEF4D700DD94E2 /* Curried_ValueWithValueMetadata.swift */; };
+		653B044E1BC97ED700AC98FD /* YapDatabaseExtensions.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 653B04431BC97ED700AC98FD /* YapDatabaseExtensions.framework */; };
+		653B046A1BC9805D00AC98FD /* YapDatabaseExtensions.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 653B04601BC9805D00AC98FD /* YapDatabaseExtensions.framework */; };
 		653B047B1BC9816D00AC98FD /* YapDatabaseExtensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 653B04791BC9816D00AC98FD /* YapDatabaseExtensions.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		653B04851BC981D100AC98FD /* YapDatabaseExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04801BC981D100AC98FD /* YapDatabaseExtensions.swift */; settings = {ASSET_TAGS = (); }; };
-		653B04861BC981D100AC98FD /* YapDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04811BC981D100AC98FD /* YapDB.swift */; settings = {ASSET_TAGS = (); }; };
-		653B048A1BC981D700AC98FD /* YapDatabaseExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04801BC981D100AC98FD /* YapDatabaseExtensions.swift */; settings = {ASSET_TAGS = (); }; };
-		653B048B1BC981D700AC98FD /* YapDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04811BC981D100AC98FD /* YapDB.swift */; settings = {ASSET_TAGS = (); }; };
-		653B049B1BC9820A00AC98FD /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 653B048D1BC9820A00AC98FD /* Info.plist */; settings = {ASSET_TAGS = (); }; };
-		653B04AA1BC9824000AC98FD /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04901BC9820A00AC98FD /* Models.swift */; settings = {ASSET_TAGS = (); }; };
-		653B04AC1BC9824000AC98FD /* ObjectWithObjectMetadataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04921BC9820A00AC98FD /* ObjectWithObjectMetadataTests.swift */; settings = {ASSET_TAGS = (); }; };
-		653B04AD1BC9824000AC98FD /* ObjectWithValueMetadataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04931BC9820A00AC98FD /* ObjectWithValueMetadataTests.swift */; settings = {ASSET_TAGS = (); }; };
-		653B04AE1BC9824000AC98FD /* ReadWriteTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04941BC9820A00AC98FD /* ReadWriteTests.swift */; settings = {ASSET_TAGS = (); }; };
-		653B04B01BC9824000AC98FD /* Support.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04961BC9820A00AC98FD /* Support.swift */; settings = {ASSET_TAGS = (); }; };
-		653B04B21BC9824000AC98FD /* ValueWithObjectMetadataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04981BC9820A00AC98FD /* ValueWithObjectMetadataTests.swift */; settings = {ASSET_TAGS = (); }; };
-		653B04B31BC9824000AC98FD /* ValueWithValueMetadataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04991BC9820A00AC98FD /* ValueWithValueMetadataTests.swift */; settings = {ASSET_TAGS = (); }; };
-		653B04B41BC9824000AC98FD /* YapDatabaseExtensionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B049A1BC9820A00AC98FD /* YapDatabaseExtensionsTests.swift */; settings = {ASSET_TAGS = (); }; };
-		653B04B61BC9824100AC98FD /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04901BC9820A00AC98FD /* Models.swift */; settings = {ASSET_TAGS = (); }; };
-		653B04B81BC9824100AC98FD /* ObjectWithObjectMetadataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04921BC9820A00AC98FD /* ObjectWithObjectMetadataTests.swift */; settings = {ASSET_TAGS = (); }; };
-		653B04B91BC9824100AC98FD /* ObjectWithValueMetadataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04931BC9820A00AC98FD /* ObjectWithValueMetadataTests.swift */; settings = {ASSET_TAGS = (); }; };
-		653B04BA1BC9824100AC98FD /* ReadWriteTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04941BC9820A00AC98FD /* ReadWriteTests.swift */; settings = {ASSET_TAGS = (); }; };
-		653B04BC1BC9824100AC98FD /* Support.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04961BC9820A00AC98FD /* Support.swift */; settings = {ASSET_TAGS = (); }; };
-		653B04BE1BC9824100AC98FD /* ValueWithObjectMetadataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04981BC9820A00AC98FD /* ValueWithObjectMetadataTests.swift */; settings = {ASSET_TAGS = (); }; };
-		653B04BF1BC9824100AC98FD /* ValueWithValueMetadataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04991BC9820A00AC98FD /* ValueWithValueMetadataTests.swift */; settings = {ASSET_TAGS = (); }; };
-		653B04C01BC9824100AC98FD /* YapDatabaseExtensionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B049A1BC9820A00AC98FD /* YapDatabaseExtensionsTests.swift */; settings = {ASSET_TAGS = (); }; };
+		653B04851BC981D100AC98FD /* YapDatabaseExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04801BC981D100AC98FD /* YapDatabaseExtensions.swift */; };
+		653B04861BC981D100AC98FD /* YapDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04811BC981D100AC98FD /* YapDB.swift */; };
+		653B048A1BC981D700AC98FD /* YapDatabaseExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04801BC981D100AC98FD /* YapDatabaseExtensions.swift */; };
+		653B048B1BC981D700AC98FD /* YapDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04811BC981D100AC98FD /* YapDB.swift */; };
+		653B04AA1BC9824000AC98FD /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04901BC9820A00AC98FD /* Models.swift */; };
+		653B04AC1BC9824000AC98FD /* ObjectWithObjectMetadataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04921BC9820A00AC98FD /* ObjectWithObjectMetadataTests.swift */; };
+		653B04AD1BC9824000AC98FD /* ObjectWithValueMetadataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04931BC9820A00AC98FD /* ObjectWithValueMetadataTests.swift */; };
+		653B04AE1BC9824000AC98FD /* ReadWriteTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04941BC9820A00AC98FD /* ReadWriteTests.swift */; };
+		653B04B01BC9824000AC98FD /* Support.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04961BC9820A00AC98FD /* Support.swift */; };
+		653B04B21BC9824000AC98FD /* ValueWithObjectMetadataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04981BC9820A00AC98FD /* ValueWithObjectMetadataTests.swift */; };
+		653B04B31BC9824000AC98FD /* ValueWithValueMetadataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04991BC9820A00AC98FD /* ValueWithValueMetadataTests.swift */; };
+		653B04B41BC9824000AC98FD /* YapDatabaseExtensionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B049A1BC9820A00AC98FD /* YapDatabaseExtensionsTests.swift */; };
+		653B04B61BC9824100AC98FD /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04901BC9820A00AC98FD /* Models.swift */; };
+		653B04B81BC9824100AC98FD /* ObjectWithObjectMetadataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04921BC9820A00AC98FD /* ObjectWithObjectMetadataTests.swift */; };
+		653B04B91BC9824100AC98FD /* ObjectWithValueMetadataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04931BC9820A00AC98FD /* ObjectWithValueMetadataTests.swift */; };
+		653B04BA1BC9824100AC98FD /* ReadWriteTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04941BC9820A00AC98FD /* ReadWriteTests.swift */; };
+		653B04BC1BC9824100AC98FD /* Support.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04961BC9820A00AC98FD /* Support.swift */; };
+		653B04BE1BC9824100AC98FD /* ValueWithObjectMetadataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04981BC9820A00AC98FD /* ValueWithObjectMetadataTests.swift */; };
+		653B04BF1BC9824100AC98FD /* ValueWithValueMetadataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04991BC9820A00AC98FD /* ValueWithValueMetadataTests.swift */; };
+		653B04C01BC9824100AC98FD /* YapDatabaseExtensionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B049A1BC9820A00AC98FD /* YapDatabaseExtensionsTests.swift */; };
 		653B04C11BC982CC00AC98FD /* YapDatabaseExtensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 653B04791BC9816D00AC98FD /* YapDatabaseExtensions.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		654EAE761BCD44D90093AB0C /* Functional_AnyWithObjectMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 654EAE751BCD44D90093AB0C /* Functional_AnyWithObjectMetadata.swift */; settings = {ASSET_TAGS = (); }; };
-		654EAE771BCD44D90093AB0C /* Functional_AnyWithObjectMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 654EAE751BCD44D90093AB0C /* Functional_AnyWithObjectMetadata.swift */; settings = {ASSET_TAGS = (); }; };
-		654EAE791BCD45480093AB0C /* Functional_AnyWithValueMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 654EAE781BCD45480093AB0C /* Functional_AnyWithValueMetadata.swift */; settings = {ASSET_TAGS = (); }; };
-		654EAE7A1BCD45480093AB0C /* Functional_AnyWithValueMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 654EAE781BCD45480093AB0C /* Functional_AnyWithValueMetadata.swift */; settings = {ASSET_TAGS = (); }; };
-		654EAE7C1BCD4C6B0093AB0C /* Persistable_AnyWithObjectMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 654EAE7B1BCD4C6B0093AB0C /* Persistable_AnyWithObjectMetadata.swift */; settings = {ASSET_TAGS = (); }; };
-		654EAE7D1BCD4C6B0093AB0C /* Persistable_AnyWithObjectMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 654EAE7B1BCD4C6B0093AB0C /* Persistable_AnyWithObjectMetadata.swift */; settings = {ASSET_TAGS = (); }; };
-		654EAE7F1BCD4CD70093AB0C /* Persistable_AnyWithValueMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 654EAE7E1BCD4CD70093AB0C /* Persistable_AnyWithValueMetadata.swift */; settings = {ASSET_TAGS = (); }; };
-		654EAE801BCD4CD70093AB0C /* Persistable_AnyWithValueMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 654EAE7E1BCD4CD70093AB0C /* Persistable_AnyWithValueMetadata.swift */; settings = {ASSET_TAGS = (); }; };
-		65BCF8C01BCED9D00023ED13 /* Curried_ObjectWithNoMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65BCF8BF1BCED9D00023ED13 /* Curried_ObjectWithNoMetadata.swift */; settings = {ASSET_TAGS = (); }; };
-		65BCF8C11BCED9D00023ED13 /* Curried_ObjectWithNoMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65BCF8BF1BCED9D00023ED13 /* Curried_ObjectWithNoMetadata.swift */; settings = {ASSET_TAGS = (); }; };
-		65C5578B1BCB26010065C96A /* Functional_ObjectWithObjectMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C5577D1BCB26010065C96A /* Functional_ObjectWithObjectMetadata.swift */; settings = {ASSET_TAGS = (); }; };
-		65C5578C1BCB26010065C96A /* Functional_ObjectWithObjectMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C5577D1BCB26010065C96A /* Functional_ObjectWithObjectMetadata.swift */; settings = {ASSET_TAGS = (); }; };
-		65C5578D1BCB26010065C96A /* Functional_ObjectWithValueMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C5577E1BCB26010065C96A /* Functional_ObjectWithValueMetadata.swift */; settings = {ASSET_TAGS = (); }; };
-		65C5578E1BCB26010065C96A /* Functional_ObjectWithValueMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C5577E1BCB26010065C96A /* Functional_ObjectWithValueMetadata.swift */; settings = {ASSET_TAGS = (); }; };
-		65C5578F1BCB26010065C96A /* Functional_ValueWIthObjectMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C5577F1BCB26010065C96A /* Functional_ValueWIthObjectMetadata.swift */; settings = {ASSET_TAGS = (); }; };
-		65C557901BCB26010065C96A /* Functional_ValueWIthObjectMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C5577F1BCB26010065C96A /* Functional_ValueWIthObjectMetadata.swift */; settings = {ASSET_TAGS = (); }; };
-		65C557911BCB26010065C96A /* Functional_ValueWIthValueMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C557801BCB26010065C96A /* Functional_ValueWIthValueMetadata.swift */; settings = {ASSET_TAGS = (); }; };
-		65C557921BCB26010065C96A /* Functional_ValueWIthValueMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C557801BCB26010065C96A /* Functional_ValueWIthValueMetadata.swift */; settings = {ASSET_TAGS = (); }; };
-		65C557951BCB26010065C96A /* Persistable_ObjectWithObjectMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C557831BCB26010065C96A /* Persistable_ObjectWithObjectMetadata.swift */; settings = {ASSET_TAGS = (); }; };
-		65C557961BCB26010065C96A /* Persistable_ObjectWithObjectMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C557831BCB26010065C96A /* Persistable_ObjectWithObjectMetadata.swift */; settings = {ASSET_TAGS = (); }; };
-		65C557971BCB26010065C96A /* Persistable_ObjectWithValueMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C557841BCB26010065C96A /* Persistable_ObjectWithValueMetadata.swift */; settings = {ASSET_TAGS = (); }; };
-		65C557981BCB26010065C96A /* Persistable_ObjectWithValueMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C557841BCB26010065C96A /* Persistable_ObjectWithValueMetadata.swift */; settings = {ASSET_TAGS = (); }; };
-		65C5579B1BCB26010065C96A /* Persistable_ValueWithObjectMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C557861BCB26010065C96A /* Persistable_ValueWithObjectMetadata.swift */; settings = {ASSET_TAGS = (); }; };
-		65C5579C1BCB26010065C96A /* Persistable_ValueWithObjectMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C557861BCB26010065C96A /* Persistable_ValueWithObjectMetadata.swift */; settings = {ASSET_TAGS = (); }; };
-		65C5579D1BCB26010065C96A /* Persistable_ValueWithValueMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C557871BCB26010065C96A /* Persistable_ValueWithValueMetadata.swift */; settings = {ASSET_TAGS = (); }; };
-		65C5579E1BCB26010065C96A /* Persistable_ValueWithValueMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C557871BCB26010065C96A /* Persistable_ValueWithValueMetadata.swift */; settings = {ASSET_TAGS = (); }; };
-		65C5579F1BCB26010065C96A /* Read.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C557881BCB26010065C96A /* Read.swift */; settings = {ASSET_TAGS = (); }; };
-		65C557A01BCB26010065C96A /* Read.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C557881BCB26010065C96A /* Read.swift */; settings = {ASSET_TAGS = (); }; };
-		65C557A11BCB26010065C96A /* Persistable_Remove.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C557891BCB26010065C96A /* Persistable_Remove.swift */; settings = {ASSET_TAGS = (); }; };
-		65C557A21BCB26010065C96A /* Persistable_Remove.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C557891BCB26010065C96A /* Persistable_Remove.swift */; settings = {ASSET_TAGS = (); }; };
-		65C557A61BCB26310065C96A /* Functional_Remove.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C557A51BCB26310065C96A /* Functional_Remove.swift */; settings = {ASSET_TAGS = (); }; };
-		65C557A71BCB26310065C96A /* Functional_Remove.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C557A51BCB26310065C96A /* Functional_Remove.swift */; settings = {ASSET_TAGS = (); }; };
-		65C8DB401BCD24AF002F2C05 /* ObjectWithNoMetadataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04911BC9820A00AC98FD /* ObjectWithNoMetadataTests.swift */; settings = {ASSET_TAGS = (); }; };
-		65C8DB411BCD24AF002F2C05 /* ObjectWithNoMetadataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04911BC9820A00AC98FD /* ObjectWithNoMetadataTests.swift */; settings = {ASSET_TAGS = (); }; };
-		65C8DB421BCD24EA002F2C05 /* Persistable_ObjectWithNoMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C557821BCB26010065C96A /* Persistable_ObjectWithNoMetadata.swift */; settings = {ASSET_TAGS = (); }; };
-		65C8DB431BCD24EB002F2C05 /* Persistable_ObjectWithNoMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C557821BCB26010065C96A /* Persistable_ObjectWithNoMetadata.swift */; settings = {ASSET_TAGS = (); }; };
-		65C8DB441BCD24FA002F2C05 /* Persistable_ValueWithNoMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C557851BCB26010065C96A /* Persistable_ValueWithNoMetadata.swift */; settings = {ASSET_TAGS = (); }; };
-		65C8DB451BCD24FB002F2C05 /* Persistable_ValueWithNoMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C557851BCB26010065C96A /* Persistable_ValueWithNoMetadata.swift */; settings = {ASSET_TAGS = (); }; };
-		65C8DB461BCD25E2002F2C05 /* ValueWithNoMetadataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04971BC9820A00AC98FD /* ValueWithNoMetadataTests.swift */; settings = {ASSET_TAGS = (); }; };
-		65C8DB471BCD25E3002F2C05 /* ValueWithNoMetadataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04971BC9820A00AC98FD /* ValueWithNoMetadataTests.swift */; settings = {ASSET_TAGS = (); }; };
-		65C8DB491BCD2676002F2C05 /* Functional_ObjectWithNoMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C8DB481BCD2676002F2C05 /* Functional_ObjectWithNoMetadata.swift */; settings = {ASSET_TAGS = (); }; };
-		65C8DB4A1BCD2676002F2C05 /* Functional_ObjectWithNoMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C8DB481BCD2676002F2C05 /* Functional_ObjectWithNoMetadata.swift */; settings = {ASSET_TAGS = (); }; };
-		65C8DB4C1BCD283D002F2C05 /* Functional_ValueWithNoMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C8DB4B1BCD283D002F2C05 /* Functional_ValueWithNoMetadata.swift */; settings = {ASSET_TAGS = (); }; };
-		65C8DB4D1BCD283D002F2C05 /* Functional_ValueWithNoMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C8DB4B1BCD283D002F2C05 /* Functional_ValueWithNoMetadata.swift */; settings = {ASSET_TAGS = (); }; };
-		AC8FC0BC100A1A0A60C3B18F /* Pods_YapDatabaseExtensions_OSXTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 574741755E625D8A78119A8A /* Pods_YapDatabaseExtensions_OSXTests.framework */; };
+		654EAE761BCD44D90093AB0C /* Functional_AnyWithObjectMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 654EAE751BCD44D90093AB0C /* Functional_AnyWithObjectMetadata.swift */; };
+		654EAE771BCD44D90093AB0C /* Functional_AnyWithObjectMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 654EAE751BCD44D90093AB0C /* Functional_AnyWithObjectMetadata.swift */; };
+		654EAE791BCD45480093AB0C /* Functional_AnyWithValueMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 654EAE781BCD45480093AB0C /* Functional_AnyWithValueMetadata.swift */; };
+		654EAE7A1BCD45480093AB0C /* Functional_AnyWithValueMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 654EAE781BCD45480093AB0C /* Functional_AnyWithValueMetadata.swift */; };
+		654EAE7C1BCD4C6B0093AB0C /* Persistable_AnyWithObjectMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 654EAE7B1BCD4C6B0093AB0C /* Persistable_AnyWithObjectMetadata.swift */; };
+		654EAE7D1BCD4C6B0093AB0C /* Persistable_AnyWithObjectMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 654EAE7B1BCD4C6B0093AB0C /* Persistable_AnyWithObjectMetadata.swift */; };
+		654EAE7F1BCD4CD70093AB0C /* Persistable_AnyWithValueMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 654EAE7E1BCD4CD70093AB0C /* Persistable_AnyWithValueMetadata.swift */; };
+		654EAE801BCD4CD70093AB0C /* Persistable_AnyWithValueMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 654EAE7E1BCD4CD70093AB0C /* Persistable_AnyWithValueMetadata.swift */; };
+		65580CAC1BF375E00055E65C /* CocoaLumberjack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65580CA91BF375E00055E65C /* CocoaLumberjack.framework */; };
+		65580CAD1BF375E00055E65C /* ValueCoding.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65580CAA1BF375E00055E65C /* ValueCoding.framework */; };
+		65580CAE1BF375E00055E65C /* YapDatabase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65580CAB1BF375E00055E65C /* YapDatabase.framework */; };
+		65580CB41BF3B1A80055E65C /* CocoaLumberjack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65580CB11BF3B1A80055E65C /* CocoaLumberjack.framework */; };
+		65580CB51BF3B1A80055E65C /* ValueCoding.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65580CB21BF3B1A80055E65C /* ValueCoding.framework */; };
+		65580CB61BF3B1A80055E65C /* YapDatabase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65580CB31BF3B1A80055E65C /* YapDatabase.framework */; };
+		65580CB71BF3B2A70055E65C /* CocoaLumberjack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65580CB11BF3B1A80055E65C /* CocoaLumberjack.framework */; };
+		65580CB81BF3B2A70055E65C /* ValueCoding.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65580CB21BF3B1A80055E65C /* ValueCoding.framework */; };
+		65580CB91BF3B2A70055E65C /* YapDatabase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65580CB31BF3B1A80055E65C /* YapDatabase.framework */; };
+		65580CBA1BF3B3150055E65C /* CocoaLumberjack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65580CA91BF375E00055E65C /* CocoaLumberjack.framework */; };
+		65580CBB1BF3B3150055E65C /* ValueCoding.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65580CAA1BF375E00055E65C /* ValueCoding.framework */; };
+		65580CBC1BF3B3150055E65C /* YapDatabase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65580CAB1BF375E00055E65C /* YapDatabase.framework */; };
+		65BCF8C01BCED9D00023ED13 /* Curried_ObjectWithNoMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65BCF8BF1BCED9D00023ED13 /* Curried_ObjectWithNoMetadata.swift */; };
+		65BCF8C11BCED9D00023ED13 /* Curried_ObjectWithNoMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65BCF8BF1BCED9D00023ED13 /* Curried_ObjectWithNoMetadata.swift */; };
+		65C5578B1BCB26010065C96A /* Functional_ObjectWithObjectMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C5577D1BCB26010065C96A /* Functional_ObjectWithObjectMetadata.swift */; };
+		65C5578C1BCB26010065C96A /* Functional_ObjectWithObjectMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C5577D1BCB26010065C96A /* Functional_ObjectWithObjectMetadata.swift */; };
+		65C5578D1BCB26010065C96A /* Functional_ObjectWithValueMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C5577E1BCB26010065C96A /* Functional_ObjectWithValueMetadata.swift */; };
+		65C5578E1BCB26010065C96A /* Functional_ObjectWithValueMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C5577E1BCB26010065C96A /* Functional_ObjectWithValueMetadata.swift */; };
+		65C5578F1BCB26010065C96A /* Functional_ValueWIthObjectMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C5577F1BCB26010065C96A /* Functional_ValueWIthObjectMetadata.swift */; };
+		65C557901BCB26010065C96A /* Functional_ValueWIthObjectMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C5577F1BCB26010065C96A /* Functional_ValueWIthObjectMetadata.swift */; };
+		65C557911BCB26010065C96A /* Functional_ValueWIthValueMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C557801BCB26010065C96A /* Functional_ValueWIthValueMetadata.swift */; };
+		65C557921BCB26010065C96A /* Functional_ValueWIthValueMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C557801BCB26010065C96A /* Functional_ValueWIthValueMetadata.swift */; };
+		65C557951BCB26010065C96A /* Persistable_ObjectWithObjectMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C557831BCB26010065C96A /* Persistable_ObjectWithObjectMetadata.swift */; };
+		65C557961BCB26010065C96A /* Persistable_ObjectWithObjectMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C557831BCB26010065C96A /* Persistable_ObjectWithObjectMetadata.swift */; };
+		65C557971BCB26010065C96A /* Persistable_ObjectWithValueMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C557841BCB26010065C96A /* Persistable_ObjectWithValueMetadata.swift */; };
+		65C557981BCB26010065C96A /* Persistable_ObjectWithValueMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C557841BCB26010065C96A /* Persistable_ObjectWithValueMetadata.swift */; };
+		65C5579B1BCB26010065C96A /* Persistable_ValueWithObjectMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C557861BCB26010065C96A /* Persistable_ValueWithObjectMetadata.swift */; };
+		65C5579C1BCB26010065C96A /* Persistable_ValueWithObjectMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C557861BCB26010065C96A /* Persistable_ValueWithObjectMetadata.swift */; };
+		65C5579D1BCB26010065C96A /* Persistable_ValueWithValueMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C557871BCB26010065C96A /* Persistable_ValueWithValueMetadata.swift */; };
+		65C5579E1BCB26010065C96A /* Persistable_ValueWithValueMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C557871BCB26010065C96A /* Persistable_ValueWithValueMetadata.swift */; };
+		65C5579F1BCB26010065C96A /* Read.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C557881BCB26010065C96A /* Read.swift */; };
+		65C557A01BCB26010065C96A /* Read.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C557881BCB26010065C96A /* Read.swift */; };
+		65C557A11BCB26010065C96A /* Persistable_Remove.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C557891BCB26010065C96A /* Persistable_Remove.swift */; };
+		65C557A21BCB26010065C96A /* Persistable_Remove.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C557891BCB26010065C96A /* Persistable_Remove.swift */; };
+		65C557A61BCB26310065C96A /* Functional_Remove.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C557A51BCB26310065C96A /* Functional_Remove.swift */; };
+		65C557A71BCB26310065C96A /* Functional_Remove.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C557A51BCB26310065C96A /* Functional_Remove.swift */; };
+		65C8DB401BCD24AF002F2C05 /* ObjectWithNoMetadataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04911BC9820A00AC98FD /* ObjectWithNoMetadataTests.swift */; };
+		65C8DB411BCD24AF002F2C05 /* ObjectWithNoMetadataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04911BC9820A00AC98FD /* ObjectWithNoMetadataTests.swift */; };
+		65C8DB421BCD24EA002F2C05 /* Persistable_ObjectWithNoMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C557821BCB26010065C96A /* Persistable_ObjectWithNoMetadata.swift */; };
+		65C8DB431BCD24EB002F2C05 /* Persistable_ObjectWithNoMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C557821BCB26010065C96A /* Persistable_ObjectWithNoMetadata.swift */; };
+		65C8DB441BCD24FA002F2C05 /* Persistable_ValueWithNoMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C557851BCB26010065C96A /* Persistable_ValueWithNoMetadata.swift */; };
+		65C8DB451BCD24FB002F2C05 /* Persistable_ValueWithNoMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C557851BCB26010065C96A /* Persistable_ValueWithNoMetadata.swift */; };
+		65C8DB461BCD25E2002F2C05 /* ValueWithNoMetadataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04971BC9820A00AC98FD /* ValueWithNoMetadataTests.swift */; };
+		65C8DB471BCD25E3002F2C05 /* ValueWithNoMetadataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04971BC9820A00AC98FD /* ValueWithNoMetadataTests.swift */; };
+		65C8DB491BCD2676002F2C05 /* Functional_ObjectWithNoMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C8DB481BCD2676002F2C05 /* Functional_ObjectWithNoMetadata.swift */; };
+		65C8DB4A1BCD2676002F2C05 /* Functional_ObjectWithNoMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C8DB481BCD2676002F2C05 /* Functional_ObjectWithNoMetadata.swift */; };
+		65C8DB4C1BCD283D002F2C05 /* Functional_ValueWithNoMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C8DB4B1BCD283D002F2C05 /* Functional_ValueWithNoMetadata.swift */; };
+		65C8DB4D1BCD283D002F2C05 /* Functional_ValueWithNoMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C8DB4B1BCD283D002F2C05 /* Functional_ValueWithNoMetadata.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -110,12 +117,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		25A5FCE19D2DB109BEA221DD /* Pods-YapDatabaseExtensions-iOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-YapDatabaseExtensions-iOSTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-YapDatabaseExtensions-iOSTests/Pods-YapDatabaseExtensions-iOSTests.debug.xcconfig"; sourceTree = "<group>"; };
-		3924F2A8B094550C2705DC44 /* Pods-YapDatabaseExtensions-OSXTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-YapDatabaseExtensions-OSXTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-YapDatabaseExtensions-OSXTests/Pods-YapDatabaseExtensions-OSXTests.release.xcconfig"; sourceTree = "<group>"; };
-		5550DE9AA69FDA43AE8D0D51 /* Pods_YapDatabaseExtensions_iOSTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_YapDatabaseExtensions_iOSTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		574741755E625D8A78119A8A /* Pods_YapDatabaseExtensions_OSXTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_YapDatabaseExtensions_OSXTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		598392EAD289EAEAE8D3B2CD /* Pods-YapDatabaseExtensions-iOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-YapDatabaseExtensions-iOS.release.xcconfig"; path = "Pods/Target Support Files/Pods-YapDatabaseExtensions-iOS/Pods-YapDatabaseExtensions-iOS.release.xcconfig"; sourceTree = "<group>"; };
-		5AC602528D550B8182F7A0C6 /* Pods-YapDatabaseExtensions-iOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-YapDatabaseExtensions-iOS.debug.xcconfig"; path = "Pods/Target Support Files/Pods-YapDatabaseExtensions-iOS/Pods-YapDatabaseExtensions-iOS.debug.xcconfig"; sourceTree = "<group>"; };
 		651DD49F1BCEF4D700DD94E2 /* Curried_ObjectWithObjectMetadata.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Curried_ObjectWithObjectMetadata.swift; path = Curried/Curried_ObjectWithObjectMetadata.swift; sourceTree = "<group>"; };
 		651DD4A01BCEF4D700DD94E2 /* Curried_ObjectWithValueMetadata.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Curried_ObjectWithValueMetadata.swift; path = Curried/Curried_ObjectWithValueMetadata.swift; sourceTree = "<group>"; };
 		651DD4A11BCEF4D700DD94E2 /* Curried_ValueWithNoMetadata.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Curried_ValueWithNoMetadata.swift; path = Curried/Curried_ValueWithNoMetadata.swift; sourceTree = "<group>"; };
@@ -144,6 +145,12 @@
 		654EAE781BCD45480093AB0C /* Functional_AnyWithValueMetadata.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Functional_AnyWithValueMetadata.swift; sourceTree = "<group>"; };
 		654EAE7B1BCD4C6B0093AB0C /* Persistable_AnyWithObjectMetadata.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Persistable_AnyWithObjectMetadata.swift; sourceTree = "<group>"; };
 		654EAE7E1BCD4CD70093AB0C /* Persistable_AnyWithValueMetadata.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Persistable_AnyWithValueMetadata.swift; sourceTree = "<group>"; };
+		65580CA91BF375E00055E65C /* CocoaLumberjack.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CocoaLumberjack.framework; path = Carthage/Build/iOS/CocoaLumberjack.framework; sourceTree = "<group>"; };
+		65580CAA1BF375E00055E65C /* ValueCoding.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ValueCoding.framework; path = Carthage/Build/iOS/ValueCoding.framework; sourceTree = "<group>"; };
+		65580CAB1BF375E00055E65C /* YapDatabase.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = YapDatabase.framework; path = Carthage/Build/iOS/YapDatabase.framework; sourceTree = "<group>"; };
+		65580CB11BF3B1A80055E65C /* CocoaLumberjack.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CocoaLumberjack.framework; path = Carthage/Build/Mac/CocoaLumberjack.framework; sourceTree = "<group>"; };
+		65580CB21BF3B1A80055E65C /* ValueCoding.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ValueCoding.framework; path = Carthage/Build/Mac/ValueCoding.framework; sourceTree = "<group>"; };
+		65580CB31BF3B1A80055E65C /* YapDatabase.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = YapDatabase.framework; path = Carthage/Build/Mac/YapDatabase.framework; sourceTree = "<group>"; };
 		65BCF8BF1BCED9D00023ED13 /* Curried_ObjectWithNoMetadata.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Curried_ObjectWithNoMetadata.swift; path = Curried/Curried_ObjectWithNoMetadata.swift; sourceTree = "<group>"; };
 		65C5577D1BCB26010065C96A /* Functional_ObjectWithObjectMetadata.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Functional_ObjectWithObjectMetadata.swift; sourceTree = "<group>"; };
 		65C5577E1BCB26010065C96A /* Functional_ObjectWithValueMetadata.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Functional_ObjectWithValueMetadata.swift; sourceTree = "<group>"; };
@@ -160,12 +167,6 @@
 		65C557A51BCB26310065C96A /* Functional_Remove.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Functional_Remove.swift; sourceTree = "<group>"; };
 		65C8DB481BCD2676002F2C05 /* Functional_ObjectWithNoMetadata.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Functional_ObjectWithNoMetadata.swift; sourceTree = "<group>"; };
 		65C8DB4B1BCD283D002F2C05 /* Functional_ValueWithNoMetadata.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Functional_ValueWithNoMetadata.swift; sourceTree = "<group>"; };
-		9D7D405FE2B19AF9F31FA60A /* Pods-YapDatabaseExtensions-iOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-YapDatabaseExtensions-iOSTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-YapDatabaseExtensions-iOSTests/Pods-YapDatabaseExtensions-iOSTests.release.xcconfig"; sourceTree = "<group>"; };
-		B26F7704368F3FE50A228AB0 /* Pods-YapDatabaseExtensions-OSX.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-YapDatabaseExtensions-OSX.debug.xcconfig"; path = "Pods/Target Support Files/Pods-YapDatabaseExtensions-OSX/Pods-YapDatabaseExtensions-OSX.debug.xcconfig"; sourceTree = "<group>"; };
-		D13C45EFF8EA26355D7BE26C /* Pods-YapDatabaseExtensions-OSX.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-YapDatabaseExtensions-OSX.release.xcconfig"; path = "Pods/Target Support Files/Pods-YapDatabaseExtensions-OSX/Pods-YapDatabaseExtensions-OSX.release.xcconfig"; sourceTree = "<group>"; };
-		DB4702C82EB6B1579DB4EF99 /* Pods_YapDatabaseExtensions_OSX.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_YapDatabaseExtensions_OSX.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		DC6DF36A6B07743776990FC1 /* Pods-YapDatabaseExtensions-OSXTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-YapDatabaseExtensions-OSXTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-YapDatabaseExtensions-OSXTests/Pods-YapDatabaseExtensions-OSXTests.debug.xcconfig"; sourceTree = "<group>"; };
-		EE3D86AD60BF064ADA4CC71C /* Pods_YapDatabaseExtensions_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_YapDatabaseExtensions_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -173,7 +174,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				085C9EA234EAEF057CC78041 /* Pods_YapDatabaseExtensions_iOS.framework in Frameworks */,
+				65580CAC1BF375E00055E65C /* CocoaLumberjack.framework in Frameworks */,
+				65580CAD1BF375E00055E65C /* ValueCoding.framework in Frameworks */,
+				65580CAE1BF375E00055E65C /* YapDatabase.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -181,8 +184,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				65580CBA1BF3B3150055E65C /* CocoaLumberjack.framework in Frameworks */,
+				65580CBB1BF3B3150055E65C /* ValueCoding.framework in Frameworks */,
+				65580CBC1BF3B3150055E65C /* YapDatabase.framework in Frameworks */,
 				653B044E1BC97ED700AC98FD /* YapDatabaseExtensions.framework in Frameworks */,
-				00EFE0D3D9A2DDD7C6BF526A /* Pods_YapDatabaseExtensions_iOSTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -190,7 +195,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				371109FDB091F2E45241BC22 /* Pods_YapDatabaseExtensions_OSX.framework in Frameworks */,
+				65580CB41BF3B1A80055E65C /* CocoaLumberjack.framework in Frameworks */,
+				65580CB51BF3B1A80055E65C /* ValueCoding.framework in Frameworks */,
+				65580CB61BF3B1A80055E65C /* YapDatabase.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -198,8 +205,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				65580CB71BF3B2A70055E65C /* CocoaLumberjack.framework in Frameworks */,
+				65580CB81BF3B2A70055E65C /* ValueCoding.framework in Frameworks */,
+				65580CB91BF3B2A70055E65C /* YapDatabase.framework in Frameworks */,
 				653B046A1BC9805D00AC98FD /* YapDatabaseExtensions.framework in Frameworks */,
-				AC8FC0BC100A1A0A60C3B18F /* Pods_YapDatabaseExtensions_OSXTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -213,7 +222,6 @@
 				653B048C1BC9820A00AC98FD /* Tests */,
 				653B04771BC9816D00AC98FD /* Supporting Files */,
 				653B04441BC97ED700AC98FD /* Products */,
-				B10C6366F8DD8553B1B23D41 /* Pods */,
 				8EF7013721C73AB49C4BA4FE /* Frameworks */,
 			);
 			sourceTree = "<group>";
@@ -335,27 +343,14 @@
 		8EF7013721C73AB49C4BA4FE /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				DB4702C82EB6B1579DB4EF99 /* Pods_YapDatabaseExtensions_OSX.framework */,
-				574741755E625D8A78119A8A /* Pods_YapDatabaseExtensions_OSXTests.framework */,
-				EE3D86AD60BF064ADA4CC71C /* Pods_YapDatabaseExtensions_iOS.framework */,
-				5550DE9AA69FDA43AE8D0D51 /* Pods_YapDatabaseExtensions_iOSTests.framework */,
+				65580CB11BF3B1A80055E65C /* CocoaLumberjack.framework */,
+				65580CB21BF3B1A80055E65C /* ValueCoding.framework */,
+				65580CB31BF3B1A80055E65C /* YapDatabase.framework */,
+				65580CA91BF375E00055E65C /* CocoaLumberjack.framework */,
+				65580CAA1BF375E00055E65C /* ValueCoding.framework */,
+				65580CAB1BF375E00055E65C /* YapDatabase.framework */,
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		B10C6366F8DD8553B1B23D41 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				B26F7704368F3FE50A228AB0 /* Pods-YapDatabaseExtensions-OSX.debug.xcconfig */,
-				D13C45EFF8EA26355D7BE26C /* Pods-YapDatabaseExtensions-OSX.release.xcconfig */,
-				DC6DF36A6B07743776990FC1 /* Pods-YapDatabaseExtensions-OSXTests.debug.xcconfig */,
-				3924F2A8B094550C2705DC44 /* Pods-YapDatabaseExtensions-OSXTests.release.xcconfig */,
-				5AC602528D550B8182F7A0C6 /* Pods-YapDatabaseExtensions-iOS.debug.xcconfig */,
-				598392EAD289EAEAE8D3B2CD /* Pods-YapDatabaseExtensions-iOS.release.xcconfig */,
-				25A5FCE19D2DB109BEA221DD /* Pods-YapDatabaseExtensions-iOSTests.debug.xcconfig */,
-				9D7D405FE2B19AF9F31FA60A /* Pods-YapDatabaseExtensions-iOSTests.release.xcconfig */,
-			);
-			name = Pods;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -384,12 +379,10 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 653B04591BC97ED700AC98FD /* Build configuration list for PBXNativeTarget "YapDatabaseExtensions-iOS" */;
 			buildPhases = (
-				87A2A3019EEBED13473D74C2 /* Check Pods Manifest.lock */,
 				653B043E1BC97ED700AC98FD /* Sources */,
 				653B043F1BC97ED700AC98FD /* Frameworks */,
 				653B04401BC97ED700AC98FD /* Headers */,
 				653B04411BC97ED700AC98FD /* Resources */,
-				E8EA528EB7E8024A7D0E0227 /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -404,12 +397,10 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 653B045A1BC97ED700AC98FD /* Build configuration list for PBXNativeTarget "YapDatabaseExtensions-iOSTests" */;
 			buildPhases = (
-				B72849EB15D9E86F25C5530F /* Check Pods Manifest.lock */,
 				653B04491BC97ED700AC98FD /* Sources */,
 				653B044A1BC97ED700AC98FD /* Frameworks */,
 				653B044B1BC97ED700AC98FD /* Resources */,
-				84C2EBCB7056CD7D8838C49E /* Embed Pods Frameworks */,
-				E4307CBC641D59DF2F853906 /* Copy Pods Resources */,
+				65580CAF1BF3A9D90055E65C /* Copy Carthage Frameworks */,
 			);
 			buildRules = (
 			);
@@ -425,12 +416,10 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 653B04711BC9805D00AC98FD /* Build configuration list for PBXNativeTarget "YapDatabaseExtensions-OSX" */;
 			buildPhases = (
-				49BAD171DC9CE6905FDF2B89 /* Check Pods Manifest.lock */,
 				653B045B1BC9805D00AC98FD /* Sources */,
 				653B045C1BC9805D00AC98FD /* Frameworks */,
 				653B045D1BC9805D00AC98FD /* Headers */,
 				653B045E1BC9805D00AC98FD /* Resources */,
-				9EABF98CD0DDE87344A42CB4 /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -445,12 +434,10 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 653B04741BC9805D00AC98FD /* Build configuration list for PBXNativeTarget "YapDatabaseExtensions-OSXTests" */;
 			buildPhases = (
-				D4FA2DFB00EBFF31BA9CEBD0 /* Check Pods Manifest.lock */,
 				653B04651BC9805D00AC98FD /* Sources */,
 				653B04661BC9805D00AC98FD /* Frameworks */,
 				653B04671BC9805D00AC98FD /* Resources */,
-				062778A7BA5F879BD51CCB6E /* Embed Pods Frameworks */,
-				DB9842EF2260186A61B3A3E6 /* Copy Pods Resources */,
+				65580CB01BF3AA290055E65C /* Copy Carthage Frameworks */,
 			);
 			buildRules = (
 			);
@@ -468,7 +455,7 @@
 		653B04381BC97E7400AC98FD /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0700;
+				LastUpgradeCheck = 0710;
 				TargetAttributes = {
 					653B04421BC97ED700AC98FD = {
 						CreatedOnToolsVersion = 7.0.1;
@@ -509,7 +496,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				653B049B1BC9820A00AC98FD /* Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -537,154 +523,40 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		062778A7BA5F879BD51CCB6E /* Embed Pods Frameworks */ = {
+		65580CAF1BF3A9D90055E65C /* Copy Carthage Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
+				"$(SRCROOT)/Carthage/Build/iOS/ValueCoding.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/CocoaLumberjack.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/YapDatabase.framework",
 			);
-			name = "Embed Pods Frameworks";
+			name = "Copy Carthage Frameworks";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-YapDatabaseExtensions-OSXTests/Pods-YapDatabaseExtensions-OSXTests-frameworks.sh\"\n";
+			shellScript = "/usr/local/bin/carthage copy-frameworks ";
 			showEnvVarsInLog = 0;
 		};
-		49BAD171DC9CE6905FDF2B89 /* Check Pods Manifest.lock */ = {
+		65580CB01BF3AA290055E65C /* Copy Carthage Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
+				"$(SRCROOT)/Carthage/Build/Mac/ValueCoding.framework",
+				"$(SRCROOT)/Carthage/Build/Mac/CocoaLumberjack.framework",
+				"$(SRCROOT)/Carthage/Build/Mac/YapDatabase.framework",
 			);
-			name = "Check Pods Manifest.lock";
+			name = "Copy Carthage Frameworks";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
-			showEnvVarsInLog = 0;
-		};
-		84C2EBCB7056CD7D8838C49E /* Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Embed Pods Frameworks";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-YapDatabaseExtensions-iOSTests/Pods-YapDatabaseExtensions-iOSTests-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		87A2A3019EEBED13473D74C2 /* Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Check Pods Manifest.lock";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
-			showEnvVarsInLog = 0;
-		};
-		9EABF98CD0DDE87344A42CB4 /* Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-YapDatabaseExtensions-OSX/Pods-YapDatabaseExtensions-OSX-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		B72849EB15D9E86F25C5530F /* Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Check Pods Manifest.lock";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
-			showEnvVarsInLog = 0;
-		};
-		D4FA2DFB00EBFF31BA9CEBD0 /* Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Check Pods Manifest.lock";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
-			showEnvVarsInLog = 0;
-		};
-		DB9842EF2260186A61B3A3E6 /* Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-YapDatabaseExtensions-OSXTests/Pods-YapDatabaseExtensions-OSXTests-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		E4307CBC641D59DF2F853906 /* Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-YapDatabaseExtensions-iOSTests/Pods-YapDatabaseExtensions-iOSTests-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		E8EA528EB7E8024A7D0E0227 /* Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-YapDatabaseExtensions-iOS/Pods-YapDatabaseExtensions-iOS-resources.sh\"\n";
+			shellScript = "/usr/local/bin/carthage copy-frameworks ";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -811,10 +683,12 @@
 		653B043C1BC97E7400AC98FD /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ENABLE_TESTABILITY = YES;
 				INFOPLIST_FILE = "$(SRCROOT)/YapDatabaseExtensions/Supporting Files/Info.plist";
+				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "me.danthorpe.$(PRODUCT_NAME)";
 				PRODUCT_NAME = YapDatabaseExtensions;
-				PROJECT_VERSION = 2.2.1;
+				PROJECT_VERSION = 2.3.0;
 			};
 			name = Debug;
 		};
@@ -824,13 +698,12 @@
 				INFOPLIST_FILE = "$(SRCROOT)/YapDatabaseExtensions/Supporting Files/Info.plist";
 				PRODUCT_BUNDLE_IDENTIFIER = "me.danthorpe.$(PRODUCT_NAME)";
 				PRODUCT_NAME = YapDatabaseExtensions;
-				PROJECT_VERSION = 2.2.1;
+				PROJECT_VERSION = 2.3.0;
 			};
 			name = Release;
 		};
 		653B04551BC97ED700AC98FD /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5AC602528D550B8182F7A0C6 /* Pods-YapDatabaseExtensions-iOS.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				APPLICATION_EXTENSION_API_ONLY = NO;
@@ -857,6 +730,10 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -887,7 +764,6 @@
 		};
 		653B04561BC97ED700AC98FD /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 598392EAD289EAEAE8D3B2CD /* Pods-YapDatabaseExtensions-iOS.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				APPLICATION_EXTENSION_API_ONLY = NO;
@@ -914,6 +790,10 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -937,7 +817,6 @@
 		};
 		653B04571BC97ED700AC98FD /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 25A5FCE19D2DB109BEA221DD /* Pods-YapDatabaseExtensions-iOSTests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
@@ -958,6 +837,10 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -986,7 +869,6 @@
 		};
 		653B04581BC97ED700AC98FD /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9D7D405FE2B19AF9F31FA60A /* Pods-YapDatabaseExtensions-iOSTests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
@@ -1007,6 +889,10 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -1028,7 +914,6 @@
 		};
 		653B04721BC9805D00AC98FD /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B26F7704368F3FE50A228AB0 /* Pods-YapDatabaseExtensions-OSX.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
@@ -1054,6 +939,10 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/Mac",
+				);
 				FRAMEWORK_VERSION = A;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -1084,7 +973,6 @@
 		};
 		653B04731BC9805D00AC98FD /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = D13C45EFF8EA26355D7BE26C /* Pods-YapDatabaseExtensions-OSX.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
@@ -1110,6 +998,10 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/Mac",
+				);
 				FRAMEWORK_VERSION = A;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -1132,7 +1024,6 @@
 		};
 		653B04751BC9805D00AC98FD /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = DC6DF36A6B07743776990FC1 /* Pods-YapDatabaseExtensions-OSXTests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
@@ -1153,6 +1044,10 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/Mac",
+				);
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -1181,7 +1076,6 @@
 		};
 		653B04761BC9805D00AC98FD /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3924F2A8B094550C2705DC44 /* Pods-YapDatabaseExtensions-OSXTests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
@@ -1202,6 +1096,10 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/Mac",
+				);
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
