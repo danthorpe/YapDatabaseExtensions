@@ -2,3 +2,4 @@
 source /usr/local/opt/chruby/share/chruby/chruby.sh
 chruby ruby
 bundle exec fastlane ios test
+
