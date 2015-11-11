@@ -377,6 +377,7 @@
 				653B04491BC97ED700AC98FD /* Sources */,
 				653B044A1BC97ED700AC98FD /* Frameworks */,
 				653B044B1BC97ED700AC98FD /* Resources */,
+				65580CAF1BF3A9D90055E65C /* Copy Carthage Frameworks */,
 			);
 			buildRules = (
 			);
@@ -413,6 +414,7 @@
 				653B04651BC9805D00AC98FD /* Sources */,
 				653B04661BC9805D00AC98FD /* Frameworks */,
 				653B04671BC9805D00AC98FD /* Resources */,
+				65580CB01BF3AA290055E65C /* Copy Carthage Frameworks */,
 			);
 			buildRules = (
 			);
@@ -497,6 +499,45 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		65580CAF1BF3A9D90055E65C /* Copy Carthage Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/Carthage/Build/iOS/ValueCoding.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/CocoaLumberjack.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/YapDatabase.framework",
+			);
+			name = "Copy Carthage Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/usr/local/bin/carthage copy-frameworks ";
+			showEnvVarsInLog = 0;
+		};
+		65580CB01BF3AA290055E65C /* Copy Carthage Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/Carthage/Build/Mac/ValueCoding.framework",
+				"$(SRCROOT)/Carthage/Build/Mac/CocoaLumberjack.framework",
+				"$(SRCROOT)/Carthage/Build/Mac/YapDatabase.framework",
+			);
+			name = "Copy Carthage Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/usr/local/bin/carthage copy-frameworks ";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		653B043E1BC97ED700AC98FD /* Sources */ = {

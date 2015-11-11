@@ -1,2 +1,2 @@
 github "danthorpe/ValueCoding"
-github "danthorpe/YapDatabase" "YAP-243_add_missing_files_to_project"
+github "danthorpe/YapDatabase" "master"
