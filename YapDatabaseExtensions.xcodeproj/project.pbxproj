@@ -24,7 +24,6 @@
 		653B04861BC981D100AC98FD /* YapDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04811BC981D100AC98FD /* YapDB.swift */; };
 		653B048A1BC981D700AC98FD /* YapDatabaseExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04801BC981D100AC98FD /* YapDatabaseExtensions.swift */; };
 		653B048B1BC981D700AC98FD /* YapDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04811BC981D100AC98FD /* YapDB.swift */; };
-		653B049B1BC9820A00AC98FD /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 653B048D1BC9820A00AC98FD /* Info.plist */; };
 		653B04AA1BC9824000AC98FD /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04901BC9820A00AC98FD /* Models.swift */; };
 		653B04AC1BC9824000AC98FD /* ObjectWithObjectMetadataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04921BC9820A00AC98FD /* ObjectWithObjectMetadataTests.swift */; };
 		653B04AD1BC9824000AC98FD /* ObjectWithValueMetadataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B04931BC9820A00AC98FD /* ObjectWithValueMetadataTests.swift */; };
@@ -53,6 +52,15 @@
 		65580CAC1BF375E00055E65C /* CocoaLumberjack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65580CA91BF375E00055E65C /* CocoaLumberjack.framework */; };
 		65580CAD1BF375E00055E65C /* ValueCoding.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65580CAA1BF375E00055E65C /* ValueCoding.framework */; };
 		65580CAE1BF375E00055E65C /* YapDatabase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65580CAB1BF375E00055E65C /* YapDatabase.framework */; };
+		65580CB41BF3B1A80055E65C /* CocoaLumberjack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65580CB11BF3B1A80055E65C /* CocoaLumberjack.framework */; };
+		65580CB51BF3B1A80055E65C /* ValueCoding.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65580CB21BF3B1A80055E65C /* ValueCoding.framework */; };
+		65580CB61BF3B1A80055E65C /* YapDatabase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65580CB31BF3B1A80055E65C /* YapDatabase.framework */; };
+		65580CB71BF3B2A70055E65C /* CocoaLumberjack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65580CB11BF3B1A80055E65C /* CocoaLumberjack.framework */; };
+		65580CB81BF3B2A70055E65C /* ValueCoding.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65580CB21BF3B1A80055E65C /* ValueCoding.framework */; };
+		65580CB91BF3B2A70055E65C /* YapDatabase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65580CB31BF3B1A80055E65C /* YapDatabase.framework */; };
+		65580CBA1BF3B3150055E65C /* CocoaLumberjack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65580CA91BF375E00055E65C /* CocoaLumberjack.framework */; };
+		65580CBB1BF3B3150055E65C /* ValueCoding.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65580CAA1BF375E00055E65C /* ValueCoding.framework */; };
+		65580CBC1BF3B3150055E65C /* YapDatabase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65580CAB1BF375E00055E65C /* YapDatabase.framework */; };
 		65BCF8C01BCED9D00023ED13 /* Curried_ObjectWithNoMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65BCF8BF1BCED9D00023ED13 /* Curried_ObjectWithNoMetadata.swift */; };
 		65BCF8C11BCED9D00023ED13 /* Curried_ObjectWithNoMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65BCF8BF1BCED9D00023ED13 /* Curried_ObjectWithNoMetadata.swift */; };
 		65C5578B1BCB26010065C96A /* Functional_ObjectWithObjectMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C5577D1BCB26010065C96A /* Functional_ObjectWithObjectMetadata.swift */; };
@@ -140,6 +148,9 @@
 		65580CA91BF375E00055E65C /* CocoaLumberjack.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CocoaLumberjack.framework; path = Carthage/Build/iOS/CocoaLumberjack.framework; sourceTree = "<group>"; };
 		65580CAA1BF375E00055E65C /* ValueCoding.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ValueCoding.framework; path = Carthage/Build/iOS/ValueCoding.framework; sourceTree = "<group>"; };
 		65580CAB1BF375E00055E65C /* YapDatabase.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = YapDatabase.framework; path = Carthage/Build/iOS/YapDatabase.framework; sourceTree = "<group>"; };
+		65580CB11BF3B1A80055E65C /* CocoaLumberjack.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CocoaLumberjack.framework; path = Carthage/Build/Mac/CocoaLumberjack.framework; sourceTree = "<group>"; };
+		65580CB21BF3B1A80055E65C /* ValueCoding.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ValueCoding.framework; path = Carthage/Build/Mac/ValueCoding.framework; sourceTree = "<group>"; };
+		65580CB31BF3B1A80055E65C /* YapDatabase.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = YapDatabase.framework; path = Carthage/Build/Mac/YapDatabase.framework; sourceTree = "<group>"; };
 		65BCF8BF1BCED9D00023ED13 /* Curried_ObjectWithNoMetadata.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Curried_ObjectWithNoMetadata.swift; path = Curried/Curried_ObjectWithNoMetadata.swift; sourceTree = "<group>"; };
 		65C5577D1BCB26010065C96A /* Functional_ObjectWithObjectMetadata.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Functional_ObjectWithObjectMetadata.swift; sourceTree = "<group>"; };
 		65C5577E1BCB26010065C96A /* Functional_ObjectWithValueMetadata.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Functional_ObjectWithValueMetadata.swift; sourceTree = "<group>"; };
@@ -173,6 +184,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				65580CBA1BF3B3150055E65C /* CocoaLumberjack.framework in Frameworks */,
+				65580CBB1BF3B3150055E65C /* ValueCoding.framework in Frameworks */,
+				65580CBC1BF3B3150055E65C /* YapDatabase.framework in Frameworks */,
 				653B044E1BC97ED700AC98FD /* YapDatabaseExtensions.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -181,6 +195,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				65580CB41BF3B1A80055E65C /* CocoaLumberjack.framework in Frameworks */,
+				65580CB51BF3B1A80055E65C /* ValueCoding.framework in Frameworks */,
+				65580CB61BF3B1A80055E65C /* YapDatabase.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -188,6 +205,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				65580CB71BF3B2A70055E65C /* CocoaLumberjack.framework in Frameworks */,
+				65580CB81BF3B2A70055E65C /* ValueCoding.framework in Frameworks */,
+				65580CB91BF3B2A70055E65C /* YapDatabase.framework in Frameworks */,
 				653B046A1BC9805D00AC98FD /* YapDatabaseExtensions.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -323,6 +343,9 @@
 		8EF7013721C73AB49C4BA4FE /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				65580CB11BF3B1A80055E65C /* CocoaLumberjack.framework */,
+				65580CB21BF3B1A80055E65C /* ValueCoding.framework */,
+				65580CB31BF3B1A80055E65C /* YapDatabase.framework */,
 				65580CA91BF375E00055E65C /* CocoaLumberjack.framework */,
 				65580CAA1BF375E00055E65C /* ValueCoding.framework */,
 				65580CAB1BF375E00055E65C /* YapDatabase.framework */,
@@ -473,7 +496,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				653B049B1BC9820A00AC98FD /* Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -815,6 +837,10 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -863,6 +889,10 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -909,6 +939,10 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/Mac",
+				);
 				FRAMEWORK_VERSION = A;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -964,6 +998,10 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/Mac",
+				);
 				FRAMEWORK_VERSION = A;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -1006,6 +1044,10 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/Mac",
+				);
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -1054,6 +1096,10 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/Mac",
+				);
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
