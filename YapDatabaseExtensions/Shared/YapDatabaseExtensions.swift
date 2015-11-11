@@ -402,7 +402,7 @@ extension YapDatabaseReadTransaction: ReadTransactionType {
     - returns: an array of String values.
     */
     public func keysInCollection(collection: String) -> [String] {
-        return allKeysInCollection(collection) as! [String]
+        return allKeysInCollection(collection)
     }
 
     /**
