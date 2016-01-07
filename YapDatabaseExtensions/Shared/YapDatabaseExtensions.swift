@@ -14,13 +14,13 @@ avoid any possible future clashes with `YapDatabase` types.
 public struct YapDB {
 
     /**
-    Helper function for evaluating the path to a database for easy use in the YapDatabase constructor.
+    Helper function for building the path to a database for easy use in the YapDatabase constructor.
     
     - parameter directory: a NSSearchPathDirectory value, use .DocumentDirectory for production.
     - parameter name: a String, the name of the sqlite file.
     - parameter suffix: a String, will be appended to the name of the file.
     
-    - returns: a String
+    - returns: a String representing the path to a database in the given search directory, with the given name/suffix.
     */
     public static func pathToDatabase(directory: NSSearchPathDirectory, name: String, suffix: String? = .None) -> String {
         let paths = NSSearchPathForDirectoriesInDomains(directory, .UserDomainMask, true)
