@@ -252,6 +252,18 @@ extension Persistable {
     }
 }
 
+// MARK: Functions
+
+public func keyForPersistable<P: Persistable>(persistable: P) -> String {
+    return persistable.key
+}
+
+public func indexForPersistable<P: Persistable>(persistable: P) -> YapDB.Index {
+    return persistable.index
+}
+
+// MARK: -
+
 /// A facade interface for a read transaction.
 public protocol ReadTransactionType {
 
@@ -596,20 +608,6 @@ public final class YapDBIndexCoder: NSObject, NSCoding, CodingType {
         aCoder.encodeObject(value.collection, forKey: "collection")
         aCoder.encodeObject(value.key, forKey: "key")
     }
-}
-
-
-
-
-
-// MARK: - Functions
-
-public func keyForPersistable<P: Persistable>(persistable: P) -> String {
-    return persistable.key
-}
-
-public func indexForPersistable<P: Persistable>(persistable: P) -> YapDB.Index {
-    return persistable.index
 }
 
 // MARK: - Deprecations
