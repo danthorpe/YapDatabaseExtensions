@@ -227,6 +227,10 @@ pod 'YapDatabaseExtensions/Functional’
 
 API documentation is available on [CocoaDocs.org](http://cocoadocs.org/docsets/YapDatabaseExtensions).
 
+## Developing
+
+To start working in this repository’s `YapDatabaseExtensions.xcodeproj`, you’ll need to use [Carthage](https://github.com/Carthage/Carthage#installing-carthage) to download & build the project’s dependencies, with the commands `carthage checkout` and `carthage build`.
+
 ## Author
 
 Daniel Thorpe, [@danthorpe](https://twitter.com/danthorpe)

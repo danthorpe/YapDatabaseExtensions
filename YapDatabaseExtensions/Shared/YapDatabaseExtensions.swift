@@ -14,13 +14,13 @@ avoid any possible future clashes with `YapDatabase` types.
 public struct YapDB {
 
     /**
-    Helper function for evaluating the path to a database for easy use in the YapDatabase constructor.
+    Helper function for building the path to a database for easy use in the YapDatabase constructor.
     
     - parameter directory: a NSSearchPathDirectory value, use .DocumentDirectory for production.
     - parameter name: a String, the name of the sqlite file.
     - parameter suffix: a String, will be appended to the name of the file.
     
-    - returns: a String
+    - returns: a String representing the path to a database in the given search directory, with the given name/suffix.
     */
     public static func pathToDatabase(directory: NSSearchPathDirectory, name: String, suffix: String? = .None) -> String {
         let paths = NSSearchPathForDirectoriesInDomains(directory, .UserDomainMask, true)
@@ -341,6 +341,8 @@ public protocol ConnectionType {
 
     The majority of the wrapped functions provided by these extensions use this as
     their basis.
+     
+    The completion block is run on the given `queue`.
 
     - parameter block: a closure which receives YapDatabaseReadTransaction and returns T
     - parameter queue: a dispatch_queue_t, defaults to main queue, can be ommitted in most cases.
@@ -355,6 +357,8 @@ public protocol ConnectionType {
 
     The majority of the wrapped functions provided by these extensions use this as
     their basis.
+
+    The completion block is run on the given `queue`.
 
     - parameter block: a closure which receives YapDatabaseReadWriteTransaction and returns T
     - parameter queue: a dispatch_queue_t, defaults to main queue, can be ommitted in most cases.
@@ -495,6 +499,8 @@ extension YapDatabaseConnection: ConnectionType {
     The majority of the wrapped functions provided by these extensions use this as
     their basis.
 
+    The completion block is run on the given `queue`.
+
     - parameter block: a closure which receives YapDatabaseReadTransaction and returns T
     - parameter queue: a dispatch_queue_t, defaults to main queue, can be ommitted in most cases.
     - parameter completion: a closure which receives T and returns Void.
@@ -511,6 +517,8 @@ extension YapDatabaseConnection: ConnectionType {
 
     The majority of the wrapped functions provided by these extensions use this as
     their basis.
+    
+    The completion block is run on the given `queue`.
 
     - parameter block: a closure which receives YapDatabaseReadWriteTransaction and returns T
     - parameter queue: a dispatch_queue_t, defaults to main queue, can be ommitted in most cases.
