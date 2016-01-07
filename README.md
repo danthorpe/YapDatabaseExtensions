@@ -77,9 +77,11 @@ Item encoding | Metadata encoding | Pattern
 `ValueCoding` | `NSCoding`        | ValueWithObjectMetadata
 `ValueCoding` | `ValueCoding`     | ValueWithValueMetadata
 
-There are also two styles of API. The *functional* API works on `YapDatabase` types, `YapDatabaseReadTransaction`, `YapDatabaseReadWriteTransaction` and `YapDatabaseConnection`. The *persistable* API works on your `Persistable` types directly, and receives the `YapDatabase` type as arguments.
+## Extension APIs
 
-## Functional API
+YapDatabaseExtensions provides two styles of API. The *functional* API works on `YapDatabase` types, `YapDatabaseReadTransaction`, `YapDatabaseReadWriteTransaction` and `YapDatabaseConnection`. The *persistable* API works on your `Persistable` types directly, and receives the `YapDatabase` type as arguments.
+
+### Functional API
 
 The following “functional” APIs are available directly on the `YapDatabase` types.
 
@@ -141,7 +143,7 @@ connection.read { transaction in
 }
 ```
 
-## `Persistable` API
+### `Persistable` API
 
 The APIs all work on single or sequences of `Persistable` items. To write to the database:
 
