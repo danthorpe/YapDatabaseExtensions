@@ -341,6 +341,8 @@ public protocol ConnectionType {
 
     The majority of the wrapped functions provided by these extensions use this as
     their basis.
+     
+    The completion block is run on the given `queue`.
 
     - parameter block: a closure which receives YapDatabaseReadTransaction and returns T
     - parameter queue: a dispatch_queue_t, defaults to main queue, can be ommitted in most cases.
@@ -355,6 +357,8 @@ public protocol ConnectionType {
 
     The majority of the wrapped functions provided by these extensions use this as
     their basis.
+
+    The completion block is run on the given `queue`.
 
     - parameter block: a closure which receives YapDatabaseReadWriteTransaction and returns T
     - parameter queue: a dispatch_queue_t, defaults to main queue, can be ommitted in most cases.
@@ -495,6 +499,8 @@ extension YapDatabaseConnection: ConnectionType {
     The majority of the wrapped functions provided by these extensions use this as
     their basis.
 
+    The completion block is run on the given `queue`.
+
     - parameter block: a closure which receives YapDatabaseReadTransaction and returns T
     - parameter queue: a dispatch_queue_t, defaults to main queue, can be ommitted in most cases.
     - parameter completion: a closure which receives T and returns Void.
@@ -511,6 +517,8 @@ extension YapDatabaseConnection: ConnectionType {
 
     The majority of the wrapped functions provided by these extensions use this as
     their basis.
+    
+    The completion block is run on the given `queue`.
 
     - parameter block: a closure which receives YapDatabaseReadWriteTransaction and returns T
     - parameter queue: a dispatch_queue_t, defaults to main queue, can be ommitted in most cases.
