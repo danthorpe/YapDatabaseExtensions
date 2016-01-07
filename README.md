@@ -77,7 +77,7 @@ Item encoding | Metadata encoding | Pattern
 `ValueCoding` | `NSCoding`        | ValueWithObjectMetadata
 `ValueCoding` | `ValueCoding`     | ValueWithValueMetadata
 
-## Swifty APIs
+## Extension APIs
 
 YapDatabaseExtensions provides two styles of API. The *functional* API works on `YapDatabase` types, `YapDatabaseReadTransaction`, `YapDatabaseReadWriteTransaction` and `YapDatabaseConnection`. The *persistable* API works on your `Persistable` types directly, and receives the `YapDatabase` type as arguments.
 
