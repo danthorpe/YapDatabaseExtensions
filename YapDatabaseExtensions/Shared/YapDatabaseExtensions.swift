@@ -547,14 +547,11 @@ extension YapDatabase: DatabaseType {
     }
 }
 
+// MARK: - YapDB.Index
 
-// MARK: Hashable etc
+// MARK: Hashable & Equality
 
-extension YapDB.Index: CustomStringConvertible, Hashable {
-
-    public var description: String {
-        return "\(collection):\(key)"
-    }
+extension YapDB.Index: Hashable {
 
     public var hashValue: Int {
         return description.hashValue
@@ -563,6 +560,15 @@ extension YapDB.Index: CustomStringConvertible, Hashable {
 
 public func == (a: YapDB.Index, b: YapDB.Index) -> Bool {
     return (a.collection == b.collection) && (a.key == b.key)
+}
+
+// MARK: CustomStringConvertible
+
+extension YapDB.Index: CustomStringConvertible {
+
+    public var description: String {
+        return "\(collection):\(key)"
+    }
 }
 
 // MARK: ValueCoding
