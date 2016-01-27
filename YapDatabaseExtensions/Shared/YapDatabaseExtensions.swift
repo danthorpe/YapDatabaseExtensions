@@ -252,6 +252,18 @@ extension Persistable {
     }
 }
 
+// MARK: Functions
+
+public func keyForPersistable<P: Persistable>(persistable: P) -> String {
+    return persistable.key
+}
+
+public func indexForPersistable<P: Persistable>(persistable: P) -> YapDB.Index {
+    return persistable.index
+}
+
+// MARK: -
+
 /// A facade interface for a read transaction.
 public protocol ReadTransactionType {
 
@@ -555,14 +567,11 @@ extension YapDatabase: DatabaseType {
     }
 }
 
+// MARK: - YapDB.Index
 
-// MARK: Hashable etc
+// MARK: Hashable & Equality
 
-extension YapDB.Index: CustomStringConvertible, Hashable {
-
-    public var description: String {
-        return "\(collection):\(key)"
-    }
+extension YapDB.Index: Hashable {
 
     public var hashValue: Int {
         return description.hashValue
@@ -571,6 +580,15 @@ extension YapDB.Index: CustomStringConvertible, Hashable {
 
 public func == (a: YapDB.Index, b: YapDB.Index) -> Bool {
     return (a.collection == b.collection) && (a.key == b.key)
+}
+
+// MARK: CustomStringConvertible
+
+extension YapDB.Index: CustomStringConvertible {
+
+    public var description: String {
+        return "\(collection):\(key)"
+    }
 }
 
 // MARK: ValueCoding
@@ -598,20 +616,6 @@ public final class YapDBIndexCoder: NSObject, NSCoding, CodingType {
         aCoder.encodeObject(value.collection, forKey: "collection")
         aCoder.encodeObject(value.key, forKey: "key")
     }
-}
-
-
-
-
-
-// MARK: - Functions
-
-public func keyForPersistable<P: Persistable>(persistable: P) -> String {
-    return persistable.key
-}
-
-public func indexForPersistable<P: Persistable>(persistable: P) -> YapDB.Index {
-    return persistable.index
 }
 
 // MARK: - Deprecations
