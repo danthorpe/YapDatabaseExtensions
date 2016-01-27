@@ -1,28 +1,32 @@
-before_all do |lane|
-  carthage
-end
-
 platform :ios do
+
+  before_all do |lane|
+    carthage platform: 'iOS'
+  end
 
   desc "Runs all the tests"
   lane :test do
-	xctest scheme: 'YapDatabaseExtensions-iOS', 
-      sdk: 'iphonesimulator',
-      destination: 'platform=iOS Simulator,name=iPhone 6,OS=9.2',
-      destination_timeout: 120,
-      derivedDataPath: '.ci/xcodebuild-data'
+    xctest scheme: 'YapDatabaseExtensions-iOS', 
+        sdk: 'iphonesimulator',
+        destination: 'platform=iOS Simulator,name=iPhone 6,OS=9.2',
+        destination_timeout: 120,
+        derivedDataPath: '.ci/xcodebuild-data'
   end
-
+  
 end
 
 platform :mac do
-  
+
+  before_all do |lane|
+    carthage platform: 'Mac'
+  end
+
   desc "Runs all the tests"
   lane :test do
-	xctest scheme: 'YapDatabaseExtensions-OSX', 
-    sdk: 'macosx', 
-    destination: 'platform=OS X',
-    derivedDataPath: '.ci/xcodebuild-data'
+    xctest scheme: 'YapDatabaseExtensions-OSX', 
+      sdk: 'macosx', 
+      destination: 'platform=OS X',
+      derivedDataPath: '.ci/xcodebuild-data'
   end
   
 end
