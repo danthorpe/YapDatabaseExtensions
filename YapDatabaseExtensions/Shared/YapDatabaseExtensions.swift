@@ -448,14 +448,12 @@ extension YapDatabaseReadWriteTransaction: WriteTransactionType {
 
     public func writeAtIndex(index: YapDB.Index, object: AnyObject, metadata: AnyObject? = .None) {
 
-        if let metadata = metadata {
-            if !metadata.isEqual(readMetadataAtIndex(index)) {
-                setObject(object, forKey: index.key, inCollection: index.collection, withMetadata: metadata)
-                return
-            }
+        guard let metadata = metadata where !metadata.isEqual(readMetadataAtIndex(index)) else {
+            setObject(object, forKey: index.key, inCollection: index.collection)
+            return
         }
         
-        setObject(object, forKey: index.key, inCollection: index.collection)
+        setObject(object, forKey: index.key, inCollection: index.collection, withMetadata: metadata)
     }
 
     func removeAtIndex(index: YapDB.Index) {
