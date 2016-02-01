@@ -454,11 +454,11 @@ extension YapDatabaseReadWriteTransaction: WriteTransactionType {
             return
         }
 
-        // if metadata is equal to the existing metadata, don't writer or delete metadata
+        // if metadata is equal to the existing metadata, don't write or delete metadata
         if metadata.isEqual(readMetadataAtIndex(index)) {
             setObject(object, forKey: index.key, inCollection: index.collection)
         }
-        // else, explicityly write the metadata
+        // else, explicitly write the metadata
         else {
             setObject(object, forKey: index.key, inCollection: index.collection, withMetadata: metadata)
         }
