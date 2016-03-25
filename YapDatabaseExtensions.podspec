@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name              = "YapDatabaseExtensions"
-  s.version           = "2.4.0"
+  s.version           = "2.5.0"
   s.summary           = "Helpers for using value types with YapDatabase."
   s.description       = <<-DESC
   
@@ -19,7 +19,7 @@ Pod::Spec.new do |s|
   s.ios.deployment_target = '8.0'
   s.osx.deployment_target = '10.10'
 
-  s.dependency 'ValueCoding', '= 1.2.0'
+  s.dependency 'ValueCoding', '~> 1.3'
   s.dependency 'YapDatabase', '~> 2'
   
   s.subspec 'Core' do |ss|
