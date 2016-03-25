@@ -11,8 +11,8 @@ import YapDatabase
 
 /// Generic protocol for Reader types.
 public protocol Readable {
-    typealias ItemType
-    typealias Database: DatabaseType
+    associatedtype ItemType
+    associatedtype Database: DatabaseType
 
     var transaction: Database.Connection.ReadTransaction? { get }
     var connection: Database.Connection { get }
