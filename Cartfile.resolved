@@ -1,3 +1,3 @@
 github "CocoaLumberjack/CocoaLumberjack" "2.2.0"
-github "danthorpe/ValueCoding" "1.1.0"
-github "yapstudios/YapDatabase" "1d71f8388a825d933406fd25bc9398797e268277"
+github "danthorpe/ValueCoding" "1.2.0"
+github "yapstudios/YapDatabase" "2.8.3"

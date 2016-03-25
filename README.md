@@ -1,12 +1,11 @@
-![](header.png)
+![](https://raw.githubusercontent.com/danthorpe/YapDatabaseExtensions/development/header.png)
 
 [![Build status](https://badge.buildkite.com/95784c169af7db5e36cefe146d5d3f3899c8339d46096a6349.svg)](https://buildkite.com/danthorpe/yapdatabaseextensions?branch=development)
-[![codecov.io](http://codecov.io/github/danthorpe/YapDatabaseExtensions/coverage.svg?branch=development)](http://codecov.io/github/danthorpe/YapDatabaseExtensions?branch=development)
-[![Cocoapods Compatible](https://img.shields.io/cocoapods/v/YapDatabaseExtensions.svg)](https://img.shields.io/cocoapods/v/YapDatabaseExtensions.svg)
-[![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
+[![Coverage Status](https://coveralls.io/repos/github/danthorpe/YapDatabaseExtensions/badge.svg?branch=development)](https://coveralls.io/github/danthorpe/YapDatabaseExtensions?branch=development)
+[![CocoaPods Compatible](https://img.shields.io/cocoapods/v/YapDatabaseExtensions.svg)](https://img.shields.io/cocoapods/v/YapDatabaseExtensions.svg)
+[![CocoaPods Documentation](https://img.shields.io/cocoapods/metrics/doc-percent/YapDatabaseExtensions.svg?style=flat)](https://cocoapods.org/pods/YapDatabaseExtensions)
 [![Platform](https://img.shields.io/cocoapods/p/YapDatabaseExtensions.svg?style=flat)](http://cocoadocs.org/docsets/YapDatabaseExtensions)
-[![Join the chat at https://gitter.im/danthorpe/YapDatabaseExtensions](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/danthorpe/YapDatabaseExtensions?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-
+[![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 
 # YapDatabaseExtensions
 
@@ -77,9 +76,11 @@ Item encoding | Metadata encoding | Pattern
 `ValueCoding` | `NSCoding`        | ValueWithObjectMetadata
 `ValueCoding` | `ValueCoding`     | ValueWithValueMetadata
 
-There are also two styles of API. The *functional* API works on `YapDatabase` types, `YapDatabaseReadTransaction`, `YapDatabaseReadWriteTransaction` and `YapDatabaseConnection`. The *persistable* API works on your `Persistable` types directly, and receives the `YapDatabase` type as arguments.
+## Extension APIs
 
-## Functional API
+YapDatabaseExtensions provides two styles of API. The *functional* API works on `YapDatabase` types, `YapDatabaseReadTransaction`, `YapDatabaseReadWriteTransaction` and `YapDatabaseConnection`. The *persistable* API works on your `Persistable` types directly, and receives the `YapDatabase` type as arguments.
+
+### Functional API
 
 The following “functional” APIs are available directly on the `YapDatabase` types.
 
@@ -141,7 +142,7 @@ connection.read { transaction in
 }
 ```
 
-## `Persistable` API
+### `Persistable` API
 
 The APIs all work on single or sequences of `Persistable` items. To write to the database:
 
@@ -224,6 +225,10 @@ pod 'YapDatabaseExtensions/Functional’
 ## API Documentation
 
 API documentation is available on [CocoaDocs.org](http://cocoadocs.org/docsets/YapDatabaseExtensions).
+
+## Developing
+
+To start working in this repository’s `YapDatabaseExtensions.xcodeproj`, you’ll need to use [Carthage](https://github.com/Carthage/Carthage#installing-carthage) to download & build the project’s dependencies, with the commands `carthage checkout` and `carthage build`.
 
 ## Author
 

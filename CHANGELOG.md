@@ -1,3 +1,13 @@
+# 2.4.0
+1. [[YDB-73](https://github.com/danthorpe/YapDatabaseExtensions/pull/73), [YDB-77](https://github.com/danthorpe/YapDatabaseExtensions/pull/77)]: Improvements to README and documentation. Thanks [@cdzombak](https://github.com/cdzombak)!
+2. [[YDB-74](https://github.com/danthorpe/YapDatabaseExtensions/pull/74)]: Improvements to CI & automation.
+3. [[YDB-78](https://github.com/danthorpe/YapDatabaseExtensions/pull/78)]: Annotations the code base with `MARK: -`. Thanks again [@cdzombak](https://github.com/cdzombak).
+4. [[YDB-81](https://github.com/danthorpe/YapDatabaseExtensions/pull/81)]: Corrects the spelling of CocoaPods - thanks [@ReadmeCritic](https://github.com/ReadmeCritic)!
+5. [[YDB-83](https://github.com/danthorpe/YapDatabaseExtensions/pull/83)]: Switches CI scripts to use `scan` and update the Cartfile to point directly at YapDatabase.
+6. [[YDB-82](https://github.com/danthorpe/YapDatabaseExtensions/pull/82)]: Updates CI pipeline to support Swift 2.1 & Swift 2.2 based branches.
+
+Sorry this all took so long to get released - kinda dropped off my radar. Thanks to [@cdzombak](https://github.com/cdzombak) for improving the overall readability of the codebase!
+
 # 2.3.0
 1. [[YDB-70](https://github.com/danthorpe/YapDatabaseExtensions/pull/70), [YDB-71](https://github.com/danthorpe/YapDatabaseExtensions/pull/71)]: Changes changes necessary for compatibility with YapDatabase 2.7.4 which added sub-module support for most extensions.
 

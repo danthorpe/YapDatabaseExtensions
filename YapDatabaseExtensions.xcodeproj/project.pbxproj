@@ -683,22 +683,24 @@
 		653B043C1BC97E7400AC98FD /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_CODE_COVERAGE = YES;
 				ENABLE_TESTABILITY = YES;
 				INFOPLIST_FILE = "$(SRCROOT)/YapDatabaseExtensions/Supporting Files/Info.plist";
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "me.danthorpe.$(PRODUCT_NAME)";
 				PRODUCT_NAME = YapDatabaseExtensions;
-				PROJECT_VERSION = 2.3.0;
+				PROJECT_VERSION = 2.4.0;
 			};
 			name = Debug;
 		};
 		653B043D1BC97E7400AC98FD /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_CODE_COVERAGE = YES;
 				INFOPLIST_FILE = "$(SRCROOT)/YapDatabaseExtensions/Supporting Files/Info.plist";
 				PRODUCT_BUNDLE_IDENTIFIER = "me.danthorpe.$(PRODUCT_NAME)";
 				PRODUCT_NAME = YapDatabaseExtensions;
-				PROJECT_VERSION = 2.3.0;
+				PROJECT_VERSION = 2.4.0;
 			};
 			name = Release;
 		};
