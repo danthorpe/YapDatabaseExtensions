@@ -148,7 +148,7 @@ class YapDatabaseConnectionTests: ReadWriteBaseTests {
 
     func test__async_read() {
         let db = YapDB.testDatabase()
-        let expectation = expectationWithDescription("Test: \(__FUNCTION__)")
+        let expectation = expectationWithDescription("Test: \(#function)")
 
         db.makeNewConnection().write(item)
         XCTAssertNotNil(Employee.read(db).atIndex(index))
@@ -168,7 +168,7 @@ class YapDatabaseConnectionTests: ReadWriteBaseTests {
 
     func test__async_write() {
         let db = YapDB.testDatabase()
-        let expectation = expectationWithDescription("Test: \(__FUNCTION__)")
+        let expectation = expectationWithDescription("Test: \(#function)")
 
         var written: Employee? = .None
         db.makeNewConnection().asyncWrite({ transaction -> Employee? in
@@ -187,7 +187,7 @@ class YapDatabaseConnectionTests: ReadWriteBaseTests {
 
     func test__writeBlockOperation() {
         let db = YapDB.testDatabase()
-        let expectation = expectationWithDescription("Test: \(__FUNCTION__)")
+        let expectation = expectationWithDescription("Test: \(#function)")
 
         var didExecuteWithTransaction = false
         let operation = db.makeNewConnection().writeBlockOperation { transaction in
@@ -264,9 +264,10 @@ class ValueCodingTests: XCTestCase {
     }
 
     func test__index_is_hashable() {
-        let byHashes: [YapDB.Index: Product] = items.reduce(Dictionary<YapDB.Index, Product>()) { (var dic, product) in
-            dic.updateValue(product, forKey: product.index)
-            return dic
+        let byHashes: [YapDB.Index: Product] = items.reduce(Dictionary<YapDB.Index, Product>()) { (dictionary, product) in
+            var dictionary = dictionary
+            dictionary.updateValue(product, forKey: product.index)
+            return dictionary
         }
         XCTAssertEqual(byHashes.count, items.count)
     }
