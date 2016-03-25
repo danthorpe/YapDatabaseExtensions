@@ -302,7 +302,7 @@ class Functional_Write_ValueWithNoMetadataTests: ValueWithNoMetadataTests {
 
     func test__connection__async_write_item() {
         var result: TypeUnderTest!
-        let expectation = expectationWithDescription("Test: \(__FUNCTION__)")
+        let expectation = expectationWithDescription("Test: \(#function)")
         connection.asyncWrite(item) { tmp in
             result = tmp
             expectation.fulfill()
@@ -314,7 +314,7 @@ class Functional_Write_ValueWithNoMetadataTests: ValueWithNoMetadataTests {
 
     func test__connection__async_write_items() {
         var result: [TypeUnderTest] = []
-        let expectation = expectationWithDescription("Test: \(__FUNCTION__)")
+        let expectation = expectationWithDescription("Test: \(#function)")
         connection.asyncWrite(items) { received in
             result = received
             expectation.fulfill()
@@ -354,7 +354,7 @@ class Functional_Remove_ValueWithNoMetadataTests: ValueWithNoMetadataTests {
     }
 
     func test__connection_async_remove_item() {
-        let expectation = expectationWithDescription("Test: \(__FUNCTION__)")
+        let expectation = expectationWithDescription("Test: \(#function)")
         configureForReadingSingle()
         connection.asyncRemove(item) {
             expectation.fulfill()
@@ -365,7 +365,7 @@ class Functional_Remove_ValueWithNoMetadataTests: ValueWithNoMetadataTests {
     }
 
     func test__connection_async_remove_items() {
-        let expectation = expectationWithDescription("Test: \(__FUNCTION__)")
+        let expectation = expectationWithDescription("Test: \(#function)")
         configureForReadingMultiple()
         connection.asyncRemove(items) {
             expectation.fulfill()
@@ -666,7 +666,7 @@ class Persistable_Write_ValueWithNoMetadataTests: ValueWithNoMetadataTests {
     }
 
     func test__item_persistable__write_async_using_connection() {
-        let expectation = expectationWithDescription("Test: \(__FUNCTION__)")
+        let expectation = expectationWithDescription("Test: \(#function)")
         var result: TypeUnderTest! = nil
 
         item.asyncWrite(connection) { tmp in
@@ -679,7 +679,7 @@ class Persistable_Write_ValueWithNoMetadataTests: ValueWithNoMetadataTests {
     }
 
     func test__item_persistable__write_using_opertion() {
-        let expectation = expectationWithDescription("Test: \(__FUNCTION__)")
+        let expectation = expectationWithDescription("Test: \(#function)")
 
         let operation = item.writeOperation(connection)
         operation.completionBlock = {
@@ -705,7 +705,7 @@ class Persistable_Write_ValueWithNoMetadataTests: ValueWithNoMetadataTests {
     }
 
     func test__items_persistable__write_async_using_connection() {
-        let expectation = expectationWithDescription("Test: \(__FUNCTION__)")
+        let expectation = expectationWithDescription("Test: \(#function)")
         var result: [TypeUnderTest] = []
         
         items.asyncWrite(connection) { tmp in
@@ -718,7 +718,7 @@ class Persistable_Write_ValueWithNoMetadataTests: ValueWithNoMetadataTests {
     }
 
     func test__items_persistable__write_using_opertion() {
-        let expectation = expectationWithDescription("Test: \(__FUNCTION__)")
+        let expectation = expectationWithDescription("Test: \(#function)")
 
         let operation = items.writeOperation(connection)
         operation.completionBlock = {
@@ -750,7 +750,7 @@ class Persistable_Remove_ValueWithNoMetadataTests: ValueWithNoMetadataTests {
     }
 
     func test__connection_async_remove_item() {
-        let expectation = expectationWithDescription("Test: \(__FUNCTION__)")
+        let expectation = expectationWithDescription("Test: \(#function)")
         configureForReadingSingle()
         item.asyncRemove(connection) {
             expectation.fulfill()
@@ -761,7 +761,7 @@ class Persistable_Remove_ValueWithNoMetadataTests: ValueWithNoMetadataTests {
     }
 
     func test__connection_operation_remove_item() {
-        let expectation = expectationWithDescription("Test: \(__FUNCTION__)")
+        let expectation = expectationWithDescription("Test: \(#function)")
         configureForReadingSingle()
         let operation = item.removeOperation(connection)
         operation.completionBlock = {
@@ -788,7 +788,7 @@ class Persistable_Remove_ValueWithNoMetadataTests: ValueWithNoMetadataTests {
     }
 
     func test__connection_async_remove_items() {
-        let expectation = expectationWithDescription("Test: \(__FUNCTION__)")
+        let expectation = expectationWithDescription("Test: \(#function)")
         configureForReadingMultiple()
         items.asyncRemove(connection) {
             expectation.fulfill()
@@ -799,7 +799,7 @@ class Persistable_Remove_ValueWithNoMetadataTests: ValueWithNoMetadataTests {
     }
 
     func test__connection_operation_remove_items() {
-        let expectation = expectationWithDescription("Test: \(__FUNCTION__)")
+        let expectation = expectationWithDescription("Test: \(#function)")
         configureForReadingMultiple()
         let operation = items.removeOperation(connection)
         operation.completionBlock = {

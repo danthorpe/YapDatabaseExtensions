@@ -79,7 +79,6 @@ public struct YapDB {
         return db
     }
 
-
     /**
     Conveniently create an empty database for testing purposes in the app's Caches directory.
     
@@ -106,7 +105,7 @@ public struct YapDB {
     
     - returns: the YapDatabase instance.
     */
-    public static func testDatabase(file: String = __FILE__, test: String = __FUNCTION__, operations: DatabaseOperationsBlock? = .None) -> YapDatabase {
+    public static func testDatabase(file: String = #file, test: String = #function, operations: DatabaseOperationsBlock? = .None) -> YapDatabase {
         let path = pathToDatabase(.CachesDirectory, name: (file as NSString).lastPathComponent, suffix: test.stringByTrimmingCharactersInSet(NSCharacterSet(charactersInString: "()")))
         assert(!path.isEmpty, "Path should not be empty.")
         do {
@@ -154,7 +153,7 @@ for the type. To use `String` type identifiers, use the aliased
 Identifier type.
 */
 public protocol Identifiable {
-    typealias IdentifierType: CustomStringConvertible
+    associatedtype IdentifierType: CustomStringConvertible
     var identifier: IdentifierType { get }
 }
 
@@ -184,7 +183,7 @@ are stored in the same YapDatabase collection.
 public protocol Persistable: Identifiable {
 
     /// The nested type of the metadata. Defaults to Void.
-    typealias MetadataType
+    associatedtype MetadataType
 
     /// The YapDatabase collection name the type is stored in.
     static var collection: String { get }
@@ -317,8 +316,8 @@ public protocol WriteTransactionType: ReadTransactionType {
 
 /// A facade interface for a database connection.
 public protocol ConnectionType {
-    typealias ReadTransaction: ReadTransactionType
-    typealias WriteTransaction: WriteTransactionType
+    associatedtype ReadTransaction: ReadTransactionType
+    associatedtype WriteTransaction: WriteTransactionType
 
     /**
     Synchronously reads from the database on the connection. The closure receives
@@ -397,7 +396,7 @@ public protocol ConnectionType {
 
 /// A facade interface for a database.
 public protocol DatabaseType {
-    typealias Connection: ConnectionType
+    associatedtype Connection: ConnectionType
     func makeNewConnection() -> Connection
 }
 
