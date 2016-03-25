@@ -1,3 +1,8 @@
+# 2.5.0
+1. [[YDB-84](https://github.com/danthorpe/YapDatabaseExtensions/pull/85)]: Updates to Swift 2.2
+
+No significant changes, just updated for Swift 2.2 :)
+
 # 2.4.0
 1. [[YDB-73](https://github.com/danthorpe/YapDatabaseExtensions/pull/73), [YDB-77](https://github.com/danthorpe/YapDatabaseExtensions/pull/77)]: Improvements to README and documentation. Thanks [@cdzombak](https://github.com/cdzombak)!
 2. [[YDB-74](https://github.com/danthorpe/YapDatabaseExtensions/pull/74)]: Improvements to CI & automation.
