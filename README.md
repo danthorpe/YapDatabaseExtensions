@@ -1,12 +1,11 @@
-![](header.png)
+![](https://raw.githubusercontent.com/danthorpe/YapDatabaseExtensions/development/header.png)
 
 [![Build status](https://badge.buildkite.com/95784c169af7db5e36cefe146d5d3f3899c8339d46096a6349.svg)](https://buildkite.com/danthorpe/yapdatabaseextensions?branch=development)
-[![codecov.io](http://codecov.io/github/danthorpe/YapDatabaseExtensions/coverage.svg?branch=development)](http://codecov.io/github/danthorpe/YapDatabaseExtensions?branch=development)
+[![Coverage Status](https://coveralls.io/repos/github/danthorpe/YapDatabaseExtensions/badge.svg?branch=development)](https://coveralls.io/github/danthorpe/YapDatabaseExtensions?branch=development)
 [![CocoaPods Compatible](https://img.shields.io/cocoapods/v/YapDatabaseExtensions.svg)](https://img.shields.io/cocoapods/v/YapDatabaseExtensions.svg)
-[![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
+[![CocoaPods Documentation](https://img.shields.io/cocoapods/metrics/doc-percent/YapDatabaseExtensions.svg?style=flat)](https://cocoapods.org/pods/YapDatabaseExtensions)
 [![Platform](https://img.shields.io/cocoapods/p/YapDatabaseExtensions.svg?style=flat)](http://cocoadocs.org/docsets/YapDatabaseExtensions)
-[![Join the chat at https://gitter.im/danthorpe/YapDatabaseExtensions](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/danthorpe/YapDatabaseExtensions?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-
+[![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 
 # YapDatabaseExtensions
 
