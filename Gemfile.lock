@@ -281,7 +281,7 @@ PLATFORMS
 DEPENDENCIES
   cocoapods
   cocoapods-keys
-  fastlane (>= 1.16)
+  fastlane
   slather
   xcpretty
 
