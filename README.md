@@ -3,7 +3,6 @@
 [![Build status](https://badge.buildkite.com/95784c169af7db5e36cefe146d5d3f3899c8339d46096a6349.svg)](https://buildkite.com/danthorpe/yapdatabaseextensions?branch=development)
 [![Coverage Status](https://coveralls.io/repos/github/danthorpe/YapDatabaseExtensions/badge.svg?branch=development)](https://coveralls.io/github/danthorpe/YapDatabaseExtensions?branch=development)
 [![CocoaPods Compatible](https://img.shields.io/cocoapods/v/YapDatabaseExtensions.svg)](https://img.shields.io/cocoapods/v/YapDatabaseExtensions.svg)
-[![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 [![CocoaPods Documentation](https://img.shields.io/cocoapods/metrics/doc-percent/YapDatabaseExtensions.svg?style=flat)](https://cocoapods.org/pods/YapDatabaseExtensions)
 [![Platform](https://img.shields.io/cocoapods/p/YapDatabaseExtensions.svg?style=flat)](http://cocoadocs.org/docsets/YapDatabaseExtensions)
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
