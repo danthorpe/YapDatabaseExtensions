@@ -148,7 +148,7 @@ extension YapDB {
             case ByMetadata(YapDatabaseViewGroupingWithMetadataBlock)
             case ByRow(YapDatabaseViewGroupingWithRowBlock)
 
-            func object(opts: YapDatabaseBlockInvoke? = .None) -> YapDatabaseViewGrouping {
+            func object(withOptions opts: YapDatabaseBlockInvoke? = .None) -> YapDatabaseViewGrouping {
                 if let opts = opts {
                     switch self {
                     case let .ByKey(block):         return YapDatabaseViewGrouping.withOptions(opts, keyBlock: block)
@@ -176,7 +176,7 @@ extension YapDB {
             case ByMetadata(YapDatabaseViewSortingWithMetadataBlock)
             case ByRow(YapDatabaseViewSortingWithRowBlock)
 
-            func object(opts: YapDatabaseBlockInvoke? = .None) -> YapDatabaseViewSorting {
+            func object(withOptions opts: YapDatabaseBlockInvoke? = .None) -> YapDatabaseViewSorting {
                 if let opts = opts {
                     switch self {
                     case let .ByKey(block):         return YapDatabaseViewSorting.withOptions(opts, keyBlock: block)
@@ -222,7 +222,7 @@ extension YapDB {
         }
 
         func createDatabaseView() -> YapDatabaseView {
-            return YapDatabaseView(grouping: grouping.object(groupingOptions), sorting: sorting.object(sortingOptions), versionTag: version, options: options)
+            return YapDatabaseView(grouping: grouping.object(withOptions: groupingOptions), sorting: sorting.object(withOptions: sortingOptions), versionTag: version, options: options)
         }
 
         func registerInDatabase(database: YapDatabase, withConnection connection: YapDatabaseConnection? = .None) {
@@ -259,7 +259,7 @@ extension YapDB {
             case ByMetadata(YapDatabaseViewFilteringWithMetadataBlock)
             case ByRow(YapDatabaseViewFilteringWithRowBlock)
 
-            func object(ops: YapDatabaseBlockInvoke? = .None) -> YapDatabaseViewFiltering {
+            func object(withOptions ops: YapDatabaseBlockInvoke? = .None) -> YapDatabaseViewFiltering {
                 if let ops = ops {
                     switch self {
                     case .ByKey(let block):      return YapDatabaseViewFiltering.withOptions(ops, keyBlock: block)
@@ -301,7 +301,7 @@ extension YapDB {
         }
 
         func createDatabaseView() -> YapDatabaseView {
-            return YapDatabaseFilteredView(parentViewName: parent.name, filtering: filtering.object(filteringOptions), versionTag: version, options: options)
+            return YapDatabaseFilteredView(parentViewName: parent.name, filtering: filtering.object(withOptions: filteringOptions), versionTag: version, options: options)
         }
 
         func registerInDatabase(database: YapDatabase, withConnection connection: YapDatabaseConnection? = .None) {
