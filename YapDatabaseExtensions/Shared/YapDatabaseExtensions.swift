@@ -181,15 +181,15 @@ defined in this framework. It assumes that all instances of a type
 are stored in the same YapDatabase collection.
 */
 public protocol Persistable: Identifiable {
-
-    /// The nested type of the metadata. Defaults to Void.
-    associatedtype MetadataType
+//
+//    /// The nested type of the metadata. Defaults to Void.
+//    associatedtype MetadataType
 
     /// The YapDatabase collection name the type is stored in.
     static var collection: String { get }
-
-    /// A metadata which is set when reading, and get when writing.
-    var metadata: MetadataType? { get set }
+//
+//    /// A metadata which is set when reading, and get when writing.
+//    var metadata: MetadataType? { get set }
 }
 
 extension Persistable {
