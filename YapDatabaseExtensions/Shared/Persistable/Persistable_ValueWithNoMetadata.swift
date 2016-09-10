@@ -13,7 +13,6 @@ import ValueCoding
 
 extension Persistable where
     Self: ValueCoding,
-    Self.MetadataType == Void,
     Self.Coder: NSCoding,
     Self.Coder.ValueType == Self {
 
@@ -63,7 +62,6 @@ extension Persistable where
 extension SequenceType where
     Generator.Element: Persistable,
     Generator.Element: ValueCoding,
-    Generator.Element.MetadataType == Void,
     Generator.Element.Coder: NSCoding,
     Generator.Element.Coder.ValueType == Generator.Element {
 
@@ -113,7 +111,6 @@ extension SequenceType where
 extension Readable where
     ItemType: ValueCoding,
     ItemType: Persistable,
-    ItemType.MetadataType == Void,
     ItemType.Coder: NSCoding,
     ItemType.Coder.ValueType == ItemType {
 
