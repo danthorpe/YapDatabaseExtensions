@@ -181,15 +181,9 @@ defined in this framework. It assumes that all instances of a type
 are stored in the same YapDatabase collection.
 */
 public protocol Persistable: Identifiable {
-//
-//    /// The nested type of the metadata. Defaults to Void.
-//    associatedtype MetadataType
 
     /// The YapDatabase collection name the type is stored in.
     static var collection: String { get }
-//
-//    /// A metadata which is set when reading, and get when writing.
-//    var metadata: MetadataType? { get set }
 }
 
 extension Persistable {
@@ -220,15 +214,6 @@ extension Persistable {
         Keys: SequenceType,
         Keys.Generator.Element == String>(keys: Keys) -> [YapDB.Index] {
             return Set(keys).map { YapDB.Index(collection: collection, key: $0) }
-    }
-
-    /**
-    Default metadata property. Implement this to re-define your
-    own MetadataType.
-    */
-    public var metadata: Void? {
-        get { return .None }
-        set { }
     }
 
     /**
