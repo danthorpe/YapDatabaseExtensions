@@ -21,19 +21,17 @@ extension ReadTransactionType {
     - returns: an optional `ItemType`
     */
     public func readAtIndex<
-        ValueWithValueMetadata where
-        ValueWithValueMetadata: Persistable,
-        ValueWithValueMetadata: ValueCoding,
-        ValueWithValueMetadata.Coder: NSCoding,
-        ValueWithValueMetadata.Coder.ValueType == ValueWithValueMetadata,
-        ValueWithValueMetadata.MetadataType: ValueCoding,
-        ValueWithValueMetadata.MetadataType.Coder: NSCoding,
-        ValueWithValueMetadata.MetadataType.Coder.ValueType == ValueWithValueMetadata.MetadataType>(index: YapDB.Index) -> ValueWithValueMetadata? {
-            if var item = ValueWithValueMetadata.decode(readAtIndex(index)) {
-                item.metadata = readMetadataAtIndex(index)
-                return item
-            }
-            return .None
+        Value, Metadata where
+        Value: Persistable,
+        Value: ValueCoding,
+        Value.Coder: NSCoding,
+        Value.Coder.ValueType == Value,
+        Metadata: ValueCoding,
+        Metadata.Coder: NSCoding,
+        Metadata.Coder.ValueType == Metadata>(index: YapDB.Index) -> (Value, Metadata?)? {
+            guard let item: Value = Value.decode(readAtIndex(index)) else { return nil }
+            let metadata: Metadata? = readMetadataAtIndex(index)
+            return (item, metadata)
     }
 
     /**
@@ -43,16 +41,17 @@ extension ReadTransactionType {
     - returns: an array of `ItemType`
     */
     public func readAtIndexes<
-        Indexes, ValueWithValueMetadata where
+        Indexes, Value, Metadata where
         Indexes: SequenceType,
         Indexes.Generator.Element == YapDB.Index,
-        ValueWithValueMetadata: Persistable,
-        ValueWithValueMetadata: ValueCoding,
-        ValueWithValueMetadata.Coder: NSCoding,
-        ValueWithValueMetadata.Coder.ValueType == ValueWithValueMetadata,
-        ValueWithValueMetadata.MetadataType: ValueCoding,
-        ValueWithValueMetadata.MetadataType.Coder: NSCoding,
-        ValueWithValueMetadata.MetadataType.Coder.ValueType == ValueWithValueMetadata.MetadataType>(indexes: Indexes) -> [ValueWithValueMetadata] {
+        Value: Persistable,
+        Value: ValueCoding,
+        Value.Coder: NSCoding,
+        Value.Coder.ValueType == Value,
+        Metadata: ValueCoding,
+        Metadata.Coder: NSCoding,
+        Metadata.Coder.ValueType == Metadata>(indexes: Indexes) -> [(Value, Metadata?)] {
+            // FIXME: using flatMap means the output length need not match the input length
             return indexes.flatMap(readAtIndex)
     }
 
@@ -63,15 +62,15 @@ extension ReadTransactionType {
     - returns: an optional `ItemType`
     */
     public func readByKey<
-        ValueWithValueMetadata where
-        ValueWithValueMetadata: Persistable,
-        ValueWithValueMetadata: ValueCoding,
-        ValueWithValueMetadata.Coder: NSCoding,
-        ValueWithValueMetadata.Coder.ValueType == ValueWithValueMetadata,
-        ValueWithValueMetadata.MetadataType: ValueCoding,
-        ValueWithValueMetadata.MetadataType.Coder: NSCoding,
-        ValueWithValueMetadata.MetadataType.Coder.ValueType == ValueWithValueMetadata.MetadataType>(key: String) -> ValueWithValueMetadata? {
-            return readAtIndex(ValueWithValueMetadata.indexWithKey(key))
+        Value, Metadata where
+        Value: Persistable,
+        Value: ValueCoding,
+        Value.Coder: NSCoding,
+        Value.Coder.ValueType == Value,
+        Metadata: ValueCoding,
+        Metadata.Coder: NSCoding,
+        Metadata.Coder.ValueType == Metadata>(key: String) -> (Value, Metadata?)? {
+            return readAtIndex(Value.indexWithKey(key))
     }
 
     /**
@@ -81,17 +80,17 @@ extension ReadTransactionType {
     - returns: an array of `ItemType`
     */
     public func readByKeys<
-        Keys, ValueWithValueMetadata where
+        Keys, Value, Metadata where
         Keys: SequenceType,
         Keys.Generator.Element == String,
-        ValueWithValueMetadata: Persistable,
-        ValueWithValueMetadata: ValueCoding,
-        ValueWithValueMetadata.Coder: NSCoding,
-        ValueWithValueMetadata.Coder.ValueType == ValueWithValueMetadata,
-        ValueWithValueMetadata.MetadataType: ValueCoding,
-        ValueWithValueMetadata.MetadataType.Coder: NSCoding,
-        ValueWithValueMetadata.MetadataType.Coder.ValueType == ValueWithValueMetadata.MetadataType>(keys: Keys) -> [ValueWithValueMetadata] {
-            return readAtIndexes(ValueWithValueMetadata.indexesWithKeys(keys))
+        Value: Persistable,
+        Value: ValueCoding,
+        Value.Coder: NSCoding,
+        Value.Coder.ValueType == Value,
+        Metadata: ValueCoding,
+        Metadata.Coder: NSCoding,
+        Metadata.Coder.ValueType == Metadata>(keys: Keys) -> [(Value, Metadata?)] {
+            return readAtIndexes(Value.indexesWithKeys(keys))
     }
 
     /**
@@ -100,15 +99,15 @@ extension ReadTransactionType {
     - returns: an array of `ItemType`
     */
     public func readAll<
-        ValueWithValueMetadata where
-        ValueWithValueMetadata: Persistable,
-        ValueWithValueMetadata: ValueCoding,
-        ValueWithValueMetadata.Coder: NSCoding,
-        ValueWithValueMetadata.Coder.ValueType == ValueWithValueMetadata,
-        ValueWithValueMetadata.MetadataType: ValueCoding,
-        ValueWithValueMetadata.MetadataType.Coder: NSCoding,
-        ValueWithValueMetadata.MetadataType.Coder.ValueType == ValueWithValueMetadata.MetadataType>() -> [ValueWithValueMetadata] {
-            return readByKeys(keysInCollection(ValueWithValueMetadata.collection))
+        Value, Metadata where
+        Value: Persistable,
+        Value: ValueCoding,
+        Value.Coder: NSCoding,
+        Value.Coder.ValueType == Value,
+        Metadata: ValueCoding,
+        Metadata.Coder: NSCoding,
+        Metadata.Coder.ValueType == Metadata>() -> [(Value, Metadata?)] {
+            return readByKeys(keysInCollection(Value.collection))
     }
 }
 
@@ -121,14 +120,14 @@ extension ConnectionType {
     - returns: an optional `ItemType`
     */
     public func readAtIndex<
-        ValueWithValueMetadata where
-        ValueWithValueMetadata: Persistable,
-        ValueWithValueMetadata: ValueCoding,
-        ValueWithValueMetadata.Coder: NSCoding,
-        ValueWithValueMetadata.Coder.ValueType == ValueWithValueMetadata,
-        ValueWithValueMetadata.MetadataType: ValueCoding,
-        ValueWithValueMetadata.MetadataType.Coder: NSCoding,
-        ValueWithValueMetadata.MetadataType.Coder.ValueType == ValueWithValueMetadata.MetadataType>(index: YapDB.Index) -> ValueWithValueMetadata? {
+        Value, Metadata where
+        Value: Persistable,
+        Value: ValueCoding,
+        Value.Coder: NSCoding,
+        Value.Coder.ValueType == Value,
+        Metadata: ValueCoding,
+        Metadata.Coder: NSCoding,
+        Metadata.Coder.ValueType == Metadata>(index: YapDB.Index) -> (Value, Metadata?)? {
             return read { $0.readAtIndex(index) }
     }
 
@@ -139,16 +138,16 @@ extension ConnectionType {
     - returns: an array of `ItemType`
     */
     public func readAtIndexes<
-        Indexes, ValueWithValueMetadata where
+        Indexes, Value, Metadata where
         Indexes: SequenceType,
         Indexes.Generator.Element == YapDB.Index,
-        ValueWithValueMetadata: Persistable,
-        ValueWithValueMetadata: ValueCoding,
-        ValueWithValueMetadata.Coder: NSCoding,
-        ValueWithValueMetadata.Coder.ValueType == ValueWithValueMetadata,
-        ValueWithValueMetadata.MetadataType: ValueCoding,
-        ValueWithValueMetadata.MetadataType.Coder: NSCoding,
-        ValueWithValueMetadata.MetadataType.Coder.ValueType == ValueWithValueMetadata.MetadataType>(indexes: Indexes) -> [ValueWithValueMetadata] {
+        Value: Persistable,
+        Value: ValueCoding,
+        Value.Coder: NSCoding,
+        Value.Coder.ValueType == Value,
+        Metadata: ValueCoding,
+        Metadata.Coder: NSCoding,
+        Metadata.Coder.ValueType == Metadata>(indexes: Indexes) -> [(Value, Metadata?)] {
             return read { $0.readAtIndexes(indexes) }
     }
 
@@ -159,15 +158,15 @@ extension ConnectionType {
     - returns: an optional `ItemType`
     */
     public func readByKey<
-        ValueWithValueMetadata where
-        ValueWithValueMetadata: Persistable,
-        ValueWithValueMetadata: ValueCoding,
-        ValueWithValueMetadata.Coder: NSCoding,
-        ValueWithValueMetadata.Coder.ValueType == ValueWithValueMetadata,
-        ValueWithValueMetadata.MetadataType: ValueCoding,
-        ValueWithValueMetadata.MetadataType.Coder: NSCoding,
-        ValueWithValueMetadata.MetadataType.Coder.ValueType == ValueWithValueMetadata.MetadataType>(key: String) -> ValueWithValueMetadata? {
-            return readAtIndex(ValueWithValueMetadata.indexWithKey(key))
+        Value, Metadata where
+        Value: Persistable,
+        Value: ValueCoding,
+        Value.Coder: NSCoding,
+        Value.Coder.ValueType == Value,
+        Metadata: ValueCoding,
+        Metadata.Coder: NSCoding,
+        Metadata.Coder.ValueType == Metadata>(key: String) -> (Value, Metadata?)? {
+            return readAtIndex(Value.indexWithKey(key))
     }
 
     /**
@@ -177,17 +176,17 @@ extension ConnectionType {
     - returns: an array of `ItemType`
     */
     public func readByKeys<
-        Keys, ValueWithValueMetadata where
+        Keys, Value, Metadata where
         Keys: SequenceType,
         Keys.Generator.Element == String,
-        ValueWithValueMetadata: Persistable,
-        ValueWithValueMetadata: ValueCoding,
-        ValueWithValueMetadata.Coder: NSCoding,
-        ValueWithValueMetadata.Coder.ValueType == ValueWithValueMetadata,
-        ValueWithValueMetadata.MetadataType: ValueCoding,
-        ValueWithValueMetadata.MetadataType.Coder: NSCoding,
-        ValueWithValueMetadata.MetadataType.Coder.ValueType == ValueWithValueMetadata.MetadataType>(keys: Keys) -> [ValueWithValueMetadata] {
-            return readAtIndexes(ValueWithValueMetadata.indexesWithKeys(keys))
+        Value: Persistable,
+        Value: ValueCoding,
+        Value.Coder: NSCoding,
+        Value.Coder.ValueType == Value,
+        Metadata: ValueCoding,
+        Metadata.Coder: NSCoding,
+        Metadata.Coder.ValueType == Metadata>(keys: Keys) -> [(Value, Metadata?)] {
+            return readAtIndexes(Value.indexesWithKeys(keys))
     }
 
     /**
@@ -196,14 +195,14 @@ extension ConnectionType {
     - returns: an array of `ItemType`
     */
     public func readAll<
-        ValueWithValueMetadata where
-        ValueWithValueMetadata: Persistable,
-        ValueWithValueMetadata: ValueCoding,
-        ValueWithValueMetadata.Coder: NSCoding,
-        ValueWithValueMetadata.Coder.ValueType == ValueWithValueMetadata,
-        ValueWithValueMetadata.MetadataType: ValueCoding,
-        ValueWithValueMetadata.MetadataType.Coder: NSCoding,
-        ValueWithValueMetadata.MetadataType.Coder.ValueType == ValueWithValueMetadata.MetadataType>() -> [ValueWithValueMetadata] {
+        Value, Metadata where
+        Value: Persistable,
+        Value: ValueCoding,
+        Value.Coder: NSCoding,
+        Value.Coder.ValueType == Value,
+        Metadata: ValueCoding,
+        Metadata.Coder: NSCoding,
+        Metadata.Coder.ValueType == Metadata>() -> [(Value, Metadata?)] {
             return read { $0.readAll() }
     }
 }
@@ -218,15 +217,15 @@ extension WriteTransactionType {
     - parameter item: the item to store.
     */
     public func write<
-        ValueWithValueMetadata where
-        ValueWithValueMetadata: Persistable,
-        ValueWithValueMetadata: ValueCoding,
-        ValueWithValueMetadata.Coder: NSCoding,
-        ValueWithValueMetadata.Coder.ValueType == ValueWithValueMetadata,
-        ValueWithValueMetadata.MetadataType: ValueCoding,
-        ValueWithValueMetadata.MetadataType.Coder: NSCoding,
-        ValueWithValueMetadata.MetadataType.Coder.ValueType == ValueWithValueMetadata.MetadataType>(item: ValueWithValueMetadata) -> ValueWithValueMetadata {
-            writeAtIndex(item.index, object: item.encoded, metadata: item.metadata?.encoded)
+        Value, Metadata where
+        Value: Persistable,
+        Value: ValueCoding,
+        Value.Coder: NSCoding,
+        Value.Coder.ValueType == Value,
+        Metadata: ValueCoding,
+        Metadata.Coder: NSCoding,
+        Metadata.Coder.ValueType == Metadata>(item: (Value, Metadata?)) -> (Value, Metadata?) {
+            writeAtIndex(item.0.index, object: item.0.encoded, metadata: item.1?.encoded)
             return item
     }
 
@@ -236,16 +235,16 @@ extension WriteTransactionType {
     - parameter items: a SequenceType of items to store.
     */
     public func write<
-        Items, ValueWithValueMetadata where
+        Items, Value, Metadata where
         Items: SequenceType,
-        Items.Generator.Element == ValueWithValueMetadata,
-        ValueWithValueMetadata: Persistable,
-        ValueWithValueMetadata: ValueCoding,
-        ValueWithValueMetadata.Coder: NSCoding,
-        ValueWithValueMetadata.Coder.ValueType == ValueWithValueMetadata,
-        ValueWithValueMetadata.MetadataType: ValueCoding,
-        ValueWithValueMetadata.MetadataType.Coder: NSCoding,
-        ValueWithValueMetadata.MetadataType.Coder.ValueType == ValueWithValueMetadata.MetadataType>(items: Items) -> [ValueWithValueMetadata] {
+        Items.Generator.Element == (Value, Metadata?),
+        Value: Persistable,
+        Value: ValueCoding,
+        Value.Coder: NSCoding,
+        Value.Coder.ValueType == Value,
+        Metadata: ValueCoding,
+        Metadata.Coder: NSCoding,
+        Metadata.Coder.ValueType == Metadata>(items: Items) -> [(Value, Metadata?)] {
             return items.map(write)
     }
 }
@@ -258,14 +257,14 @@ extension ConnectionType {
     - parameter item: the item to store.
     */
     public func write<
-        ValueWithValueMetadata where
-        ValueWithValueMetadata: Persistable,
-        ValueWithValueMetadata: ValueCoding,
-        ValueWithValueMetadata.Coder: NSCoding,
-        ValueWithValueMetadata.Coder.ValueType == ValueWithValueMetadata,
-        ValueWithValueMetadata.MetadataType: ValueCoding,
-        ValueWithValueMetadata.MetadataType.Coder: NSCoding,
-        ValueWithValueMetadata.MetadataType.Coder.ValueType == ValueWithValueMetadata.MetadataType>(item: ValueWithValueMetadata) -> ValueWithValueMetadata {
+        Value, Metadata where
+        Value: Persistable,
+        Value: ValueCoding,
+        Value.Coder: NSCoding,
+        Value.Coder.ValueType == Value,
+        Metadata: ValueCoding,
+        Metadata.Coder: NSCoding,
+        Metadata.Coder.ValueType == Metadata>(item: (Value, Metadata?)) -> (Value, Metadata?) {
             return write { $0.write(item) }
     }
 
@@ -275,16 +274,16 @@ extension ConnectionType {
     - parameter items: a SequenceType of items to store.
     */
     public func write<
-        Items, ValueWithValueMetadata where
+        Items, Value, Metadata where
         Items: SequenceType,
-        Items.Generator.Element == ValueWithValueMetadata,
-        ValueWithValueMetadata: Persistable,
-        ValueWithValueMetadata: ValueCoding,
-        ValueWithValueMetadata.Coder: NSCoding,
-        ValueWithValueMetadata.Coder.ValueType == ValueWithValueMetadata,
-        ValueWithValueMetadata.MetadataType: ValueCoding,
-        ValueWithValueMetadata.MetadataType.Coder: NSCoding,
-        ValueWithValueMetadata.MetadataType.Coder.ValueType == ValueWithValueMetadata.MetadataType>(items: Items) -> [ValueWithValueMetadata] {
+        Items.Generator.Element == (Value, Metadata?),
+        Value: Persistable,
+        Value: ValueCoding,
+        Value.Coder: NSCoding,
+        Value.Coder.ValueType == Value,
+        Metadata: ValueCoding,
+        Metadata.Coder: NSCoding,
+        Metadata.Coder.ValueType == Metadata>(items: Items) -> [(Value, Metadata?)] {
             return write { $0.write(items) }
     }
 
@@ -296,14 +295,14 @@ extension ConnectionType {
     - parameter completion: a dispatch_block_t for completion.
     */
     public func asyncWrite<
-        ValueWithValueMetadata where
-        ValueWithValueMetadata: Persistable,
-        ValueWithValueMetadata: ValueCoding,
-        ValueWithValueMetadata.Coder: NSCoding,
-        ValueWithValueMetadata.Coder.ValueType == ValueWithValueMetadata,
-        ValueWithValueMetadata.MetadataType: ValueCoding,
-        ValueWithValueMetadata.MetadataType.Coder: NSCoding,
-        ValueWithValueMetadata.MetadataType.Coder.ValueType == ValueWithValueMetadata.MetadataType>(item: ValueWithValueMetadata, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: (ValueWithValueMetadata -> Void)? = .None) {
+        Value, Metadata where
+        Value: Persistable,
+        Value: ValueCoding,
+        Value.Coder: NSCoding,
+        Value.Coder.ValueType == Value,
+        Metadata: ValueCoding,
+        Metadata.Coder: NSCoding,
+        Metadata.Coder.ValueType == Metadata>(item: (Value, Metadata?), queue: dispatch_queue_t = dispatch_get_main_queue(), completion: ((Value, Metadata?) -> Void)? = .None) {
             asyncWrite({ $0.write(item) }, queue: queue, completion: completion)
     }
 
@@ -315,16 +314,16 @@ extension ConnectionType {
     - parameter completion: a dispatch_block_t for completion.
     */
     public func asyncWrite<
-        Items, ValueWithValueMetadata where
+        Items, Value, Metadata where
         Items: SequenceType,
-        Items.Generator.Element == ValueWithValueMetadata,
-        ValueWithValueMetadata: Persistable,
-        ValueWithValueMetadata: ValueCoding,
-        ValueWithValueMetadata.Coder: NSCoding,
-        ValueWithValueMetadata.Coder.ValueType == ValueWithValueMetadata,
-        ValueWithValueMetadata.MetadataType: ValueCoding,
-        ValueWithValueMetadata.MetadataType.Coder: NSCoding,
-        ValueWithValueMetadata.MetadataType.Coder.ValueType == ValueWithValueMetadata.MetadataType>(items: Items, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: ([ValueWithValueMetadata] -> Void)? = .None) {
+        Items.Generator.Element == (Value, Metadata?),
+        Value: Persistable,
+        Value: ValueCoding,
+        Value.Coder: NSCoding,
+        Value.Coder.ValueType == Value,
+        Metadata: ValueCoding,
+        Metadata.Coder: NSCoding,
+        Metadata.Coder.ValueType == Metadata>(items: Items, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: ([(Value, Metadata?)] -> Void)? = .None) {
             asyncWrite({ $0.write(items) }, queue: queue, completion: completion)
     }
 }
