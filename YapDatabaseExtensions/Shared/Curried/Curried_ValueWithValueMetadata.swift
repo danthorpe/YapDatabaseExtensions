@@ -23,13 +23,13 @@ extension Persistable where
     - parameter index: a YapDB.Index
     - returns: a (ReadTransaction) -> Self? closure.
     */
-    public static func readAtIndex<
+    public static func readWithMetadataAtIndex<
         ReadTransaction, Metadata where
         ReadTransaction: ReadTransactionType,
         Metadata: ValueCoding,
         Metadata.Coder: NSCoding,
         Metadata.Coder.ValueType == Metadata>(index: YapDB.Index) -> ReadTransaction -> (Self, Metadata?)? {
-        return { $0.readAtIndex(index) }
+        return { $0.readWithMetadataAtIndex(index) }
     }
 
     /**
@@ -39,7 +39,7 @@ extension Persistable where
     - parameter indexes: a SequenceType of YapDB.Index values
     - returns: a (ReadTransaction) -> [Self] closure.
     */
-    public static func readAtIndexes<
+    public static func readWithMetadataAtIndexes<
         Indexes, ReadTransaction, Metadata where
         Indexes: SequenceType,
         Indexes.Generator.Element == YapDB.Index,
@@ -47,7 +47,7 @@ extension Persistable where
         Metadata: ValueCoding,
         Metadata.Coder: NSCoding,
         Metadata.Coder.ValueType == Metadata>(indexes: Indexes) -> ReadTransaction -> [(Self, Metadata?)] {
-        return { $0.readAtIndexes(indexes) }
+        return { $0.readWithMetadataAtIndexes(indexes) }
     }
 
     /**
@@ -57,13 +57,13 @@ extension Persistable where
     - parameter key: a String
     - returns: a (ReadTransaction) -> Self? closure.
     */
-    public static func readByKey<
+    public static func readWithMetadataByKey<
         ReadTransaction, Metadata where
         ReadTransaction: ReadTransactionType,
         Metadata: ValueCoding,
         Metadata.Coder: NSCoding,
         Metadata.Coder.ValueType == Metadata>(key: String) -> ReadTransaction -> (Self, Metadata?)? {
-        return { $0.readByKey(key) }
+        return { $0.readWithMetadataByKey(key) }
     }
 
     /**
@@ -73,7 +73,7 @@ extension Persistable where
     - parameter keys: a SequenceType of String values
     - returns: a (ReadTransaction) -> [Self] closure.
     */
-    public static func readByKeys<
+    public static func readWithMetadataByKeys<
         Keys, ReadTransaction, Metadata where
         Keys: SequenceType,
         Keys.Generator.Element == String,
@@ -81,7 +81,7 @@ extension Persistable where
         Metadata: ValueCoding,
         Metadata.Coder: NSCoding,
         Metadata.Coder.ValueType == Metadata>(keys: Keys) -> ReadTransaction -> [(Self, Metadata?)] {
-        return  { $0.readAtIndexes(Self.indexesWithKeys(keys)) }
+        return  { $0.readWithMetadataAtIndexes(Self.indexesWithKeys(keys)) }
     }
 
     /**
@@ -91,12 +91,12 @@ extension Persistable where
     - warning: Be aware that this will capure `self`.
     - returns: a (WriteTransaction) -> Self closure
     */
-    public func write<
+    public func writeWithMetadata<
         WriteTransaction, Metadata where
         WriteTransaction: WriteTransactionType,
         Metadata: ValueCoding,
         Metadata.Coder: NSCoding,
         Metadata.Coder.ValueType == Metadata>(metadata: Metadata? = nil) -> WriteTransaction -> (Self, Metadata?) {
-        return { $0.write((self, metadata)) }
+        return { $0.writeWithMetadata((self, metadata)) }
     }
 }
