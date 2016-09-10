@@ -38,7 +38,7 @@ extension Readable where
     Reads the metadata at a given index.
 
     - parameter index: a YapDB.Index
-    - returns: an optional `ItemType.MetadataType`
+    - returns: an optional `Metadata`
     */
     public func metadataAtIndex<
         Metadata where
@@ -50,7 +50,7 @@ extension Readable where
     Reads the metadata at the indexes.
 
     - parameter indexes: a SequenceType of YapDB.Index values
-    - returns: an array of `ItemType.MetadataType`
+    - returns: an array of `Metadata`
     */
     public func metadataAtIndexes<
         Indexes, Metadata where
