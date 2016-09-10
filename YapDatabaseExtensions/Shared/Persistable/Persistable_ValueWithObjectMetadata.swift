@@ -27,7 +27,7 @@ extension Persistable where
     public func writeWithMetadata<
         WriteTransaction, Metadata where
         WriteTransaction: WriteTransactionType,
-        Metadata: NSCoding>(transaction: WriteTransaction, metadata: Metadata? = nil) -> (Self, Metadata?) {
+        Metadata: NSCoding>(transaction: WriteTransaction, metadata: Metadata?) -> (Self, Metadata?) {
         return transaction.writeWithMetadata((self, metadata))
     }
 
@@ -40,7 +40,7 @@ extension Persistable where
     public func writeWithMetadata<
         Connection, Metadata where
         Connection: ConnectionType,
-        Metadata: NSCoding>(connection: Connection, metadata: Metadata? = nil) -> (Self, Metadata?) {
+        Metadata: NSCoding>(connection: Connection, metadata: Metadata?) -> (Self, Metadata?) {
         return connection.writeWithMetadata((self, metadata))
     }
 
@@ -53,7 +53,7 @@ extension Persistable where
     public func asyncWriteWithMetadata<
         Connection, Metadata where
         Connection: ConnectionType,
-        Metadata: NSCoding>(connection: Connection, metadata: Metadata? = nil, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: ((Self, Metadata?) -> Void)? = .None) {
+        Metadata: NSCoding>(connection: Connection, metadata: Metadata?, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: ((Self, Metadata?) -> Void)? = .None) {
         return connection.asyncWriteWithMetadata((self, metadata), queue: queue, completion: completion)
     }
 
@@ -66,7 +66,7 @@ extension Persistable where
     public func writeWithMetadataOperation<
         Connection, Metadata where
         Connection: ConnectionType,
-        Metadata: NSCoding>(connection: Connection, metadata: Metadata? = nil) -> NSOperation {
+        Metadata: NSCoding>(connection: Connection, metadata: Metadata?) -> NSOperation {
         return NSBlockOperation { connection.writeWithMetadata((self, metadata)) }
     }
 }
@@ -86,7 +86,7 @@ extension SequenceType where
     public func writeWithMetadata<
         WriteTransaction, Metadata where
         WriteTransaction: WriteTransactionType,
-        Metadata: NSCoding>(transaction: WriteTransaction, metadata: [Metadata?] = []) -> [(Generator.Element, Metadata?)] {
+        Metadata: NSCoding>(transaction: WriteTransaction, metadata: [Metadata?]) -> [(Generator.Element, Metadata?)] {
         let items = zipToWrite(self, metadata)
         return transaction.writeWithMetadata(items)
     }
@@ -100,7 +100,7 @@ extension SequenceType where
     public func writeWithMetadata<
         Connection, Metadata where
         Connection: ConnectionType,
-        Metadata: NSCoding>(connection: Connection, metadata: [Metadata?] = []) -> [(Generator.Element, Metadata?)] {
+        Metadata: NSCoding>(connection: Connection, metadata: [Metadata?]) -> [(Generator.Element, Metadata?)] {
         let items = zipToWrite(self, metadata)
         return connection.writeWithMetadata(items)
     }
@@ -114,7 +114,7 @@ extension SequenceType where
     public func asyncWriteWithMetadata<
         Connection, Metadata where
         Connection: ConnectionType,
-        Metadata: NSCoding>(connection: Connection, metadata: [Metadata?] = [], queue: dispatch_queue_t = dispatch_get_main_queue(), completion: ([(Generator.Element, Metadata?)] -> Void)? = .None) {
+        Metadata: NSCoding>(connection: Connection, metadata: [Metadata?], queue: dispatch_queue_t = dispatch_get_main_queue(), completion: ([(Generator.Element, Metadata?)] -> Void)? = .None) {
         let items = zipToWrite(self, metadata)
         return connection.asyncWriteWithMetadata(items, queue: queue, completion: completion)
     }
@@ -128,7 +128,7 @@ extension SequenceType where
     public func writeWithMetadataOperation<
         Connection, Metadata where
         Connection: ConnectionType,
-        Metadata: NSCoding>(connection: Connection, metadata: [Metadata?] = []) -> NSOperation {
+        Metadata: NSCoding>(connection: Connection, metadata: [Metadata?]) -> NSOperation {
         let items = zipToWrite(self, metadata)
         return NSBlockOperation { connection.writeWithMetadata(items) }
     }
