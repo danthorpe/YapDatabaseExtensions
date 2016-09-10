@@ -24,7 +24,7 @@ extension Persistable where
     public func write<
         WriteTransaction, Metadata where
         WriteTransaction: WriteTransactionType,
-        Metadata: NSCoding>(transaction: WriteTransaction, metadata: Metadata?) -> (Self, Metadata?) {
+        Metadata: NSCoding>(transaction: WriteTransaction, metadata: Metadata? = nil) -> (Self, Metadata?) {
         return transaction.write((self, metadata))
     }
 
@@ -37,7 +37,7 @@ extension Persistable where
     public func write<
         Connection, Metadata where
         Connection: ConnectionType,
-        Metadata: NSCoding>(connection: Connection, metadata: Metadata?) -> (Self, Metadata?) {
+        Metadata: NSCoding>(connection: Connection, metadata: Metadata? = nil) -> (Self, Metadata?) {
         return connection.write((self, metadata))
     }
 
@@ -50,7 +50,7 @@ extension Persistable where
     public func asyncWrite<
         Connection, Metadata where
         Connection: ConnectionType,
-        Metadata: NSCoding>(connection: Connection, metadata: Metadata?, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: ((Self, Metadata?) -> Void)? = .None) {
+        Metadata: NSCoding>(connection: Connection, metadata: Metadata? = nil, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: ((Self, Metadata?) -> Void)? = .None) {
         return connection.asyncWrite((self, metadata), queue: queue, completion: completion)
     }
 
@@ -63,7 +63,7 @@ extension Persistable where
     public func writeOperation<
         Connection, Metadata where
         Connection: ConnectionType,
-        Metadata: NSCoding>(connection: Connection, metadata: Metadata?) -> NSOperation {
+        Metadata: NSCoding>(connection: Connection, metadata: Metadata? = nil) -> NSOperation {
         return NSBlockOperation { connection.write((self, metadata)) }
     }
 }
@@ -81,7 +81,7 @@ extension SequenceType where
     public func write<
         WriteTransaction, Metadata where
         WriteTransaction: WriteTransactionType,
-        Metadata: NSCoding>(transaction: WriteTransaction, metadata: [Metadata?]) -> [(Generator.Element, Metadata?)] {
+        Metadata: NSCoding>(transaction: WriteTransaction, metadata: [Metadata?] = []) -> [(Generator.Element, Metadata?)] {
         let items = enumerate().map({ (index, element) in (element, metadata[index]) })
         return transaction.write(items)
     }
@@ -95,7 +95,7 @@ extension SequenceType where
     public func write<
         Connection, Metadata where
         Connection: ConnectionType,
-        Metadata: NSCoding>(connection: Connection, metadata: [Metadata?]) -> [(Generator.Element, Metadata?)] {
+        Metadata: NSCoding>(connection: Connection, metadata: [Metadata?] = []) -> [(Generator.Element, Metadata?)] {
         let items = enumerate().map({ (index, element) in (element, metadata[index]) })
         return connection.write(items)
     }
@@ -109,7 +109,7 @@ extension SequenceType where
     public func asyncWrite<
         Connection, Metadata where
         Connection: ConnectionType,
-        Metadata: NSCoding>(connection: Connection, metadata: [Metadata?], queue: dispatch_queue_t = dispatch_get_main_queue(), completion: ([(Generator.Element, Metadata?)] -> Void)? = .None) {
+        Metadata: NSCoding>(connection: Connection, metadata: [Metadata?] = [], queue: dispatch_queue_t = dispatch_get_main_queue(), completion: ([(Generator.Element, Metadata?)] -> Void)? = .None) {
         let items = enumerate().map({ (index, element) in (element, metadata[index]) })
         return connection.asyncWrite(items, queue: queue, completion: completion)
     }
@@ -123,7 +123,7 @@ extension SequenceType where
     public func writeOperation<
         Connection, Metadata where
         Connection: ConnectionType,
-        Metadata: NSCoding>(connection: Connection, metadata: [Metadata?]) -> NSOperation {
+        Metadata: NSCoding>(connection: Connection, metadata: [Metadata?] = []) -> NSOperation {
         let items = enumerate().map({ (index, element) in (element, metadata[index]) })
         return NSBlockOperation { connection.write(items) }
     }

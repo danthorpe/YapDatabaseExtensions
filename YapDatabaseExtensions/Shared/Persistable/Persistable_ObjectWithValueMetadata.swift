@@ -27,7 +27,7 @@ extension Persistable where
         WriteTransaction: WriteTransactionType,
         Metadata: ValueCoding,
         Metadata.Coder: NSCoding,
-        Metadata.Coder.ValueType == Metadata>(transaction: WriteTransaction, metadata: Metadata?) -> (Self, Metadata?) {
+        Metadata.Coder.ValueType == Metadata>(transaction: WriteTransaction, metadata: Metadata? = nil) -> (Self, Metadata?) {
         return transaction.write((self, metadata))
     }
 
@@ -42,7 +42,7 @@ extension Persistable where
         Connection: ConnectionType,
         Metadata: ValueCoding,
         Metadata.Coder: NSCoding,
-        Metadata.Coder.ValueType == Metadata>(connection: Connection, metadata: Metadata?) -> (Self, Metadata?) {
+        Metadata.Coder.ValueType == Metadata>(connection: Connection, metadata: Metadata? = nil) -> (Self, Metadata?) {
         return connection.write((self, metadata))
     }
 
@@ -57,7 +57,7 @@ extension Persistable where
         Connection: ConnectionType,
         Metadata: ValueCoding,
         Metadata.Coder: NSCoding,
-        Metadata.Coder.ValueType == Metadata>(connection: Connection, metadata: Metadata?, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: ((Self, Metadata?) -> Void)? = .None) {
+        Metadata.Coder.ValueType == Metadata>(connection: Connection, metadata: Metadata? = nil, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: ((Self, Metadata?) -> Void)? = .None) {
         return connection.asyncWrite((self, metadata), queue: queue, completion: completion)
     }
 
@@ -72,7 +72,7 @@ extension Persistable where
         Connection: ConnectionType,
         Metadata: ValueCoding,
         Metadata.Coder: NSCoding,
-        Metadata.Coder.ValueType == Metadata>(connection: Connection, metadata: Metadata?) -> NSOperation {
+        Metadata.Coder.ValueType == Metadata>(connection: Connection, metadata: Metadata? = nil) -> NSOperation {
         return NSBlockOperation { connection.write((self, metadata)) }
     }
 }
@@ -92,7 +92,7 @@ extension SequenceType where
         WriteTransaction: WriteTransactionType,
         Metadata: ValueCoding,
         Metadata.Coder: NSCoding,
-        Metadata.Coder.ValueType == Metadata>(transaction: WriteTransaction, metadata: [Metadata?]) -> [(Generator.Element, Metadata?)] {
+        Metadata.Coder.ValueType == Metadata>(transaction: WriteTransaction, metadata: [Metadata?] = []) -> [(Generator.Element, Metadata?)] {
         let items = enumerate().map({ (index, element) in (element, metadata[index]) })
         return transaction.write(items)
     }
@@ -108,7 +108,7 @@ extension SequenceType where
         Connection: ConnectionType,
         Metadata: ValueCoding,
         Metadata.Coder: NSCoding,
-        Metadata.Coder.ValueType == Metadata>(connection: Connection, metadata: [Metadata?]) -> [(Generator.Element, Metadata?)] {
+        Metadata.Coder.ValueType == Metadata>(connection: Connection, metadata: [Metadata?] = []) -> [(Generator.Element, Metadata?)] {
         let items = enumerate().map({ (index, element) in (element, metadata[index]) })
         return connection.write(items)
     }
@@ -124,7 +124,7 @@ extension SequenceType where
         Connection: ConnectionType,
         Metadata: ValueCoding,
         Metadata.Coder: NSCoding,
-        Metadata.Coder.ValueType == Metadata>(connection: Connection, metadata: [Metadata?], queue: dispatch_queue_t = dispatch_get_main_queue(), completion: ([(Generator.Element, Metadata?)] -> Void)? = .None) {
+        Metadata.Coder.ValueType == Metadata>(connection: Connection, metadata: [Metadata?] = [], queue: dispatch_queue_t = dispatch_get_main_queue(), completion: ([(Generator.Element, Metadata?)] -> Void)? = .None) {
         let items = enumerate().map({ (index, element) in (element, metadata[index]) })
         return connection.asyncWrite(items, queue: queue, completion: completion)
     }
@@ -140,7 +140,7 @@ extension SequenceType where
         Connection: ConnectionType,
         Metadata: ValueCoding,
         Metadata.Coder: NSCoding,
-        Metadata.Coder.ValueType == Metadata>(connection: Connection, metadata: [Metadata?]) -> NSOperation {
+        Metadata.Coder.ValueType == Metadata>(connection: Connection, metadata: [Metadata?] = []) -> NSOperation {
         let items = enumerate().map({ (index, element) in (element, metadata[index]) })
         return NSBlockOperation { connection.write(items) }
     }
