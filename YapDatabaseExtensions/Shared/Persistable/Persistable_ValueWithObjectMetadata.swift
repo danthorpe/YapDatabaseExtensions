@@ -87,7 +87,7 @@ extension SequenceType where
         WriteTransaction, Metadata where
         WriteTransaction: WriteTransactionType,
         Metadata: NSCoding>(transaction: WriteTransaction, metadata: [Metadata?] = []) -> [(Generator.Element, Metadata?)] {
-        let items = enumerate().map({ (index, element) in (element, metadata[index]) })
+        let items = zipToWrite(self, metadata)
         return transaction.write(items)
     }
 
@@ -101,7 +101,7 @@ extension SequenceType where
         Connection, Metadata where
         Connection: ConnectionType,
         Metadata: NSCoding>(connection: Connection, metadata: [Metadata?] = []) -> [(Generator.Element, Metadata?)] {
-        let items = enumerate().map({ (index, element) in (element, metadata[index]) })
+        let items = zipToWrite(self, metadata)
         return connection.write(items)
     }
 
@@ -115,7 +115,7 @@ extension SequenceType where
         Connection, Metadata where
         Connection: ConnectionType,
         Metadata: NSCoding>(connection: Connection, metadata: [Metadata?] = [], queue: dispatch_queue_t = dispatch_get_main_queue(), completion: ([(Generator.Element, Metadata?)] -> Void)? = .None) {
-        let items = enumerate().map({ (index, element) in (element, metadata[index]) })
+        let items = zipToWrite(self, metadata)
         return connection.asyncWrite(items, queue: queue, completion: completion)
     }
 
@@ -129,7 +129,7 @@ extension SequenceType where
         Connection, Metadata where
         Connection: ConnectionType,
         Metadata: NSCoding>(connection: Connection, metadata: [Metadata?] = []) -> NSOperation {
-        let items = enumerate().map({ (index, element) in (element, metadata[index]) })
+        let items = zipToWrite(self, metadata)
         return NSBlockOperation { connection.write(items) }
     }
 }

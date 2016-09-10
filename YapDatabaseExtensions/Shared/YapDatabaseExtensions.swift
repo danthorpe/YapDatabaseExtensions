@@ -119,6 +119,16 @@ public struct YapDB {
     }
 }
 
+public func zipToWrite<
+    Value, Values, Metadata, Metadatas where
+    Values: SequenceType,
+    Values.Generator.Element == Value,
+    Metadatas: SequenceType,
+    Metadatas.Generator.Element == Metadata
+    >(values: Values, _ metadatas: Metadatas) -> [(Value, Metadata)] {
+    return zip(values, metadatas).map { ($0, $1) }
+}
+
 extension YapDB {
 
     /**
