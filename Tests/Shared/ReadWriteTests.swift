@@ -10,10 +10,12 @@ import YapDatabase
 class ReadWriteBaseTests: XCTestCase {
 
     var item: Employee!
+    var metadata: NSDate!
     var index: YapDB.Index!
     var key: String!
 
     var items: [Employee]!
+    var metadatas: [NSDate?]!
     var indexes: [YapDB.Index]!
     var keys: [String]!
 
@@ -29,9 +31,11 @@ class ReadWriteBaseTests: XCTestCase {
 
     override func tearDown() {
         item = nil
+        metadata = nil
         index = nil
         key = nil
         items = nil
+        metadatas = nil
         indexes = nil
         keys = nil
         super.tearDown()
@@ -39,18 +43,23 @@ class ReadWriteBaseTests: XCTestCase {
 
     func createPersistables() {
         item = Employee(id: "beatle-1", name: "John")
-        item.metadata = NSDate()
+        metadata = NSDate()
         items = [
             item,
             Employee(id: "beatle-2", name: "Paul"),
             Employee(id: "beatle-3", name: "George"),
             Employee(id: "beatle-4", name: "Ringo")
         ]
-        items.suffixFrom(1).forEach { $0.metadata = NSDate() }
+        metadatas = [
+            metadata,
+            NSDate(),
+            NSDate(),
+            NSDate()
+        ]
     }
 
     func writeItemsToDatabase(db: YapDatabase) {
-        db.makeNewConnection().write(items)
+        db.makeNewConnection().writeWithMetadata(zipToWrite(items, metadatas))
     }
 }
 

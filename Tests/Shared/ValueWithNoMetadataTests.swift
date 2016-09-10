@@ -114,7 +114,6 @@ class ValueWithNoMetadataTests: XCTestCase {
         }
         XCTAssertEqual(readTransaction.didReadAtIndex, index)
         XCTAssertEqual(result.identifier, item.identifier)
-        XCTAssertNil(result.metadata)
         return true
     }
 
@@ -134,18 +133,6 @@ class ValueWithNoMetadataTests: XCTestCase {
 
     func checkTransactionDidRemoveItems() {
         XCTAssertEqual(writeTransaction.didRemoveAtIndexes, indexes)
-    }
-}
-
-class Base_ValueWithNoMetadataTests: ValueWithNoMetadataTests {
-
-    func test__metadata_is_nil() {
-        XCTAssertNil(item.metadata)
-    }
-
-    func test__metadata_cannot_be_set() {
-        item.metadata = Void()
-        XCTAssertNil(item.metadata)
     }
 }
 
