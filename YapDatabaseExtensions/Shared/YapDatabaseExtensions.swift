@@ -119,16 +119,6 @@ public struct YapDB {
     }
 }
 
-public func zipToWrite<
-    Value, Values, Metadata, Metadatas where
-    Values: SequenceType,
-    Values.Generator.Element == Value,
-    Metadatas: SequenceType,
-    Metadatas.Generator.Element == Metadata
-    >(values: Values, _ metadatas: Metadatas) -> [(Value, Metadata)] {
-    return zip(values, metadatas).map { ($0, $1) }
-}
-
 extension YapDB {
 
     /**
@@ -152,6 +142,30 @@ extension YapDB {
             self.collection = collection
             self.key = key
         }
+    }
+}
+
+/**
+A pairing (effectively a tuple) of a value and a metadata.
+Used when values and metadatas are read or written together.
+*/
+public struct YapItem<Value, Metadata> {
+
+    /// The item's value
+    let value: Value
+
+    /// The item's metadata
+    let metadata: Metadata?
+
+    /**
+    Create a new YapItem value.
+
+    - parameter value: the value associated with a `YapDB.Index`
+    - parameter metadata: an optional metadata associated with a `YapDB.Index`
+    */
+    public init(_ value: Value, _ metadata: Metadata?) {
+        self.value = value
+        self.metadata = metadata
     }
 }
 

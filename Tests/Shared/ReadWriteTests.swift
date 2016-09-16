@@ -59,7 +59,7 @@ class ReadWriteBaseTests: XCTestCase {
     }
 
     func writeItemsToDatabase(db: YapDatabase) {
-        db.makeNewConnection().writeWithMetadata(zipToWrite(items, metadatas))
+        db.makeNewConnection().writeWithMetadata(items.yapItems(with: metadatas))
     }
 }
 

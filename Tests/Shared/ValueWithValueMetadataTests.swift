@@ -120,34 +120,34 @@ class ValueWithValueMetadataTests: XCTestCase {
         readTransaction.keys = keys
     }
 
-    func checkTransactionDidWriteItem(result: (TypeUnderTest, MetadataTypeUnderTest?)) {
-        XCTAssertEqual(result.0.identifier, item.identifier)
+    func checkTransactionDidWriteItem(result: YapItem<TypeUnderTest, MetadataTypeUnderTest>) {
+        XCTAssertEqual(result.value.identifier, item.identifier)
         XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
         XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].0, index)
         XCTAssertEqual(TypeUnderTest.decode(writeTransaction.didWriteAtIndexes[0].1)!, item)
         XCTAssertEqual(MetadataTypeUnderTest.decode(writeTransaction.didWriteAtIndexes[0].2), metadata)
     }
 
-    func checkTransactionDidWriteItems(result: [(TypeUnderTest, MetadataTypeUnderTest?)]) {
+    func checkTransactionDidWriteItems(result: [YapItem<TypeUnderTest, MetadataTypeUnderTest>]) {
         XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
         XCTAssertEqual(writeTransaction.didWriteAtIndexes.map { $0.0.key }.sort(), indexes.map { $0.key }.sort())
         XCTAssertEqual(writeTransaction.didWriteAtIndexes.map { $0.2 }.count, items.count)
         XCTAssertFalse(result.isEmpty)
-        XCTAssertEqual(Set(result.map({$0.0})), Set(items))
+        XCTAssertEqual(Set(result.map({$0.value})), Set(items))
     }
 
-    func checkTransactionDidReadItem(result: (TypeUnderTest, MetadataTypeUnderTest?)?) -> Bool {
+    func checkTransactionDidReadItem(result: YapItem<TypeUnderTest, MetadataTypeUnderTest>?) -> Bool {
         XCTAssertEqual(readTransaction.didReadAtIndex, index)
         guard let result = result else {
             return false
         }
         XCTAssertEqual(readTransaction.didReadMetadataAtIndex, index)
-        XCTAssertEqual(result.0.identifier, item.identifier)
-        XCTAssertEqual(result.1, metadata)
+        XCTAssertEqual(result.value.identifier, item.identifier)
+        XCTAssertEqual(result.metadata, metadata)
         return true
     }
 
-    func checkTransactionDidReadItems(result: [(TypeUnderTest, MetadataTypeUnderTest?)]) -> Bool {
+    func checkTransactionDidReadItems(result: [YapItem<TypeUnderTest, MetadataTypeUnderTest>]) -> Bool {
         if result.isEmpty {
             return false
         }
@@ -361,29 +361,29 @@ class Functional_Read_Metadata_ValueWithValueMetadataTests: ValueWithValueMetada
 class Functional_Write_ValueWithValueMetadataTests: ValueWithValueMetadataTests {
 
     func test__transaction__write_item() {
-        checkTransactionDidWriteItem(writeTransaction.writeWithMetadata((item, metadata)))
+        checkTransactionDidWriteItem(writeTransaction.writeWithMetadata(YapItem(item, metadata)))
     }
 
     func test__transaction__write_items() {
-        checkTransactionDidWriteItems(writeTransaction.writeWithMetadata(zipToWrite(items, metadatas)))
+        checkTransactionDidWriteItems(writeTransaction.writeWithMetadata(items.yapItems(with: metadatas)))
     }
 
     // MARK: - Functional API - Connection - Writing
 
     func test__connection__write_item() {
-        checkTransactionDidWriteItem(connection.writeWithMetadata((item, metadata)))
+        checkTransactionDidWriteItem(connection.writeWithMetadata(YapItem(item, metadata)))
         XCTAssertTrue(connection.didWrite)
     }
 
     func test__connection__write_items() {
-        checkTransactionDidWriteItems(connection.writeWithMetadata(zipToWrite(items, metadatas)))
+        checkTransactionDidWriteItems(connection.writeWithMetadata(items.yapItems(with: metadatas)))
         XCTAssertTrue(connection.didWrite)
     }
 
     func test__connection__async_write_item() {
-        var result: (TypeUnderTest, MetadataTypeUnderTest?)!
+        var result: YapItem<TypeUnderTest, MetadataTypeUnderTest>!
         let expectation = expectationWithDescription("Test: \(#function)")
-        connection.asyncWriteWithMetadata((item, metadata)) { tmp in
+        connection.asyncWriteWithMetadata(YapItem(item, metadata)) { tmp in
             result = tmp
             expectation.fulfill()
         }
@@ -393,9 +393,9 @@ class Functional_Write_ValueWithValueMetadataTests: ValueWithValueMetadataTests 
     }
 
     func test__connection__async_write_items() {
-        var result: [(TypeUnderTest, MetadataTypeUnderTest?)] = []
+        var result: [YapItem<TypeUnderTest, MetadataTypeUnderTest>] = []
         let expectation = expectationWithDescription("Test: \(#function)")
-        connection.asyncWriteWithMetadata(zipToWrite(items, metadatas)) { received in
+        connection.asyncWriteWithMetadata(items.yapItems(with: metadatas)) { received in
             result = received
             expectation.fulfill()
         }
@@ -526,14 +526,14 @@ class Persistable_Read_ValueWithValueMetadataTests: ValueWithValueMetadataTests 
     func test__reader__in_transaction_at_index_2() {
         configureForReadingSingle()
         reader = Read(readTransaction)
-        let atIndex: YapDB.Index -> (TypeUnderTest, MetadataTypeUnderTest?)? = reader.withMetadataInTransactionAtIndex(readTransaction)
+        let atIndex: YapDB.Index -> YapItem<TypeUnderTest, MetadataTypeUnderTest>? = reader.withMetadataInTransactionAtIndex(readTransaction)
         XCTAssertTrue(checkTransactionDidReadItem(atIndex(index)))
     }
 
     func test__reader__at_index_in_transaction() {
         configureForReadingSingle()
         reader = Read(readTransaction)
-        let inTransaction: TestableReadTransaction -> (TypeUnderTest, MetadataTypeUnderTest?)? = reader.withMetadataAtIndexInTransaction(index)
+        let inTransaction: TestableReadTransaction -> YapItem<TypeUnderTest, MetadataTypeUnderTest>? = reader.withMetadataAtIndexInTransaction(index)
         XCTAssertTrue(checkTransactionDidReadItem(inTransaction(readTransaction)))
     }
 
@@ -557,14 +557,14 @@ class Persistable_Read_ValueWithValueMetadataTests: ValueWithValueMetadataTests 
     func test__reader__in_transaction_by_key_2() {
         configureForReadingSingle()
         reader = Read(readTransaction)
-        let byKey: String -> (TypeUnderTest, MetadataTypeUnderTest?)? = reader.withMetadataInTransactionByKey(readTransaction)
+        let byKey: String -> YapItem<TypeUnderTest, MetadataTypeUnderTest>? = reader.withMetadataInTransactionByKey(readTransaction)
         XCTAssertTrue(checkTransactionDidReadItem(byKey(key)))
     }
 
     func test__reader__by_key_in_transaction() {
         configureForReadingSingle()
         reader = Read(readTransaction)
-        let inTransaction: TestableReadTransaction -> (TypeUnderTest, MetadataTypeUnderTest?)? = reader.withMetadataByKeyInTransaction(key)
+        let inTransaction: TestableReadTransaction -> YapItem<TypeUnderTest, MetadataTypeUnderTest>? = reader.withMetadataByKeyInTransaction(key)
         XCTAssertTrue(checkTransactionDidReadItem(inTransaction(readTransaction)))
     }
 
@@ -647,9 +647,9 @@ class Persistable_Read_ValueWithValueMetadataTests: ValueWithValueMetadataTests 
     func test__reader_with_transaction__filter() {
         configureForReadingSingle()
         reader = Read(readTransaction)
-        let (items, missing): ([(TypeUnderTest, MetadataTypeUnderTest?)], [String]) = reader.withMetadataFilterExisting(keys)
+        let (items, missing): ([YapItem<TypeUnderTest, MetadataTypeUnderTest>], [String]) = reader.withMetadataFilterExisting(keys)
         XCTAssertEqual(readTransaction.didReadAtIndexes.first!, indexes.first!)
-        XCTAssertEqual(items.map { $0.0.identifier }, items.prefixUpTo(1).map { $0.0.identifier })
+        XCTAssertEqual(items.map { $0.value.identifier }, items.prefixUpTo(1).map { $0.value.identifier })
         XCTAssertEqual(missing, Array(keys.suffixFrom(1)))
     }
 
@@ -798,7 +798,7 @@ class Persistable_Write_ValueWithValueMetadataTests: ValueWithValueMetadataTests
 
     func test__item_persistable__write_async_using_connection() {
         let expectation = expectationWithDescription("Test: \(#function)")
-        var result: (TypeUnderTest, MetadataTypeUnderTest?)! = nil
+        var result: YapItem<TypeUnderTest, MetadataTypeUnderTest>! = nil
 
         item.asyncWriteWithMetadata(connection, metadata: metadata) { tmp in
             result = tmp
@@ -837,7 +837,7 @@ class Persistable_Write_ValueWithValueMetadataTests: ValueWithValueMetadataTests
 
     func test__items_persistable__write_async_using_connection() {
         let expectation = expectationWithDescription("Test: \(#function)")
-        var result: [(TypeUnderTest, MetadataTypeUnderTest?)] = []
+        var result: [YapItem<TypeUnderTest, MetadataTypeUnderTest>] = []
 
         items.asyncWriteWithMetadata(connection, metadata: metadatas) { tmp in
             result = tmp

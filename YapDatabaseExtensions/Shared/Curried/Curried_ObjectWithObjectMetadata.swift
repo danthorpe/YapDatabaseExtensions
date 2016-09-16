@@ -24,7 +24,7 @@ extension Persistable where
     public static func readWithMetadataAtIndex<
         ReadTransaction, Metadata where
         ReadTransaction: ReadTransactionType,
-        Metadata: NSCoding>(index: YapDB.Index) -> ReadTransaction -> (Self, Metadata?)? {
+        Metadata: NSCoding>(index: YapDB.Index) -> ReadTransaction -> YapItem<Self, Metadata>? {
         return { $0.readWithMetadataAtIndex(index) }
     }
 
@@ -40,7 +40,7 @@ extension Persistable where
         Indexes: SequenceType,
         Indexes.Generator.Element == YapDB.Index,
         ReadTransaction: ReadTransactionType,
-        Metadata: NSCoding>(indexes: Indexes) -> ReadTransaction -> [(Self, Metadata?)] {
+        Metadata: NSCoding>(indexes: Indexes) -> ReadTransaction -> [YapItem<Self, Metadata>] {
         return { $0.readWithMetadataAtIndexes(indexes) }
     }
 
@@ -54,7 +54,7 @@ extension Persistable where
     public static func readWithMetadataByKey<
         ReadTransaction, Metadata where
         ReadTransaction: ReadTransactionType,
-        Metadata: NSCoding>(key: String) -> ReadTransaction -> (Self, Metadata?)? {
+        Metadata: NSCoding>(key: String) -> ReadTransaction -> YapItem<Self, Metadata>? {
         return { $0.readWithMetadataByKey(key) }
     }
 
@@ -70,7 +70,7 @@ extension Persistable where
         Keys: SequenceType,
         Keys.Generator.Element == String,
         ReadTransaction: ReadTransactionType,
-        Metadata: NSCoding>(keys: Keys) -> ReadTransaction -> [(Self, Metadata?)] {
+        Metadata: NSCoding>(keys: Keys) -> ReadTransaction -> [YapItem<Self, Metadata>] {
         return  { $0.readWithMetadataAtIndexes(Self.indexesWithKeys(keys)) }
     }
 
@@ -84,7 +84,7 @@ extension Persistable where
     public func writeWithMetadata<
         WriteTransaction, Metadata where
         WriteTransaction: WriteTransactionType,
-        Metadata: NSCoding>(metadata: Metadata? = nil) -> WriteTransaction -> (Self, Metadata?) {
-        return { $0.writeWithMetadata((self, metadata)) }
+        Metadata: NSCoding>(metadata: Metadata? = nil) -> WriteTransaction -> YapItem<Self, Metadata> {
+        return { $0.writeWithMetadata(YapItem(self, metadata)) }
     }
 }

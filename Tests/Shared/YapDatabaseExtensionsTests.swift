@@ -114,10 +114,10 @@ class YapDatabaseReadWriteTransactionTests: ReadWriteBaseTests {
         db.makeNewConnection().readWriteWithBlock { transaction in
             transaction.writeAtIndex(self.index, object: self.item, metadata: self.metadata)
         }
-        let written: (Employee, NSDate?)? = Employee.read(db).withMetadataAtIndex(index)
+        let written: YapItem<Employee, NSDate>? = Employee.read(db).withMetadataAtIndex(index)
         XCTAssertNotNil(written)
-        XCTAssertNotNil(written!.1)
-        XCTAssertEqual(written!.0.identifier, item.identifier)
+        XCTAssertNotNil(written!.metadata)
+        XCTAssertEqual(written!.value.identifier, item.identifier)
     }
 
     func test__remove_at_indexes() {
