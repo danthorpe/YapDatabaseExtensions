@@ -29,7 +29,7 @@ platform :mac do
     scan(
       scheme: 'YapDatabaseExtensions', 
       output_directory: ".ci/xcodebuild-data",
-      destination: "platform=Mac"
+      destination: "platform=OS X"
     )
 
   end
