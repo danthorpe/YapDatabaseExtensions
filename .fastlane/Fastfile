@@ -8,9 +8,9 @@ platform :ios do
   lane :test do
         
     scan(
-      scheme: 'YapDatabaseExtensions-iOS', 
+      scheme: 'YapDatabaseExtensions', 
       output_directory: ".ci/xcodebuild-data",
-      xcargs: "-derivedDataPath .ci/xcodebuild-data"
+      destination: "platform=iOS Simulator,OS=9.3,name=iPhone 6s"
     )
 
   end
@@ -27,9 +27,9 @@ platform :mac do
   lane :test do
         
     scan(
-      scheme: 'YapDatabaseExtensions-OSX', 
+      scheme: 'YapDatabaseExtensions', 
       output_directory: ".ci/xcodebuild-data",
-      xcargs: "-derivedDataPath .ci/xcodebuild-data"
+      destination: "platform=OS X"
     )
 
   end
