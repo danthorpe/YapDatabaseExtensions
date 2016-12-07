@@ -2,14 +2,6 @@
 //  Created by Daniel Thorpe on 22/04/2015.
 //
 
-import YapDatabase
-import YapDatabase.Utilities
-import YapDatabase.YapDatabaseView
-import YapDatabase.YapDatabaseFilteredView
-import YapDatabase.YapDatabaseSearchResultsView
-import YapDatabase.YapDatabaseFullTextSearch
-import YapDatabase.YapDatabaseSecondaryIndex
-
 protocol YapDatabaseViewProducer {
     func createDatabaseView() -> YapDatabaseView
 }
@@ -148,12 +140,21 @@ extension YapDB {
             case ByMetadata(YapDatabaseViewGroupingWithMetadataBlock)
             case ByRow(YapDatabaseViewGroupingWithRowBlock)
 
-            var object: YapDatabaseViewGrouping {
-                switch self {
-                case let .ByKey(block):         return YapDatabaseViewGrouping.withKeyBlock(block)
-                case let .ByObject(block):      return YapDatabaseViewGrouping.withObjectBlock(block)
-                case let .ByMetadata(block):    return YapDatabaseViewGrouping.withMetadataBlock(block)
-                case let .ByRow(block):         return YapDatabaseViewGrouping.withRowBlock(block)
+            func object(withOptions opts: YapDatabaseBlockInvoke? = .None) -> YapDatabaseViewGrouping {
+                if let opts = opts {
+                    switch self {
+                    case let .ByKey(block):         return YapDatabaseViewGrouping.withOptions(opts, keyBlock: block)
+                    case let .ByObject(block):      return YapDatabaseViewGrouping.withOptions(opts, objectBlock: block)
+                    case let .ByMetadata(block):    return YapDatabaseViewGrouping.withOptions(opts, metadataBlock: block)
+                    case let .ByRow(block):         return YapDatabaseViewGrouping.withOptions(opts, rowBlock: block)
+                    }
+                } else {
+                    switch self {
+                    case let .ByKey(block):         return YapDatabaseViewGrouping.withKeyBlock(block)
+                    case let .ByObject(block):      return YapDatabaseViewGrouping.withObjectBlock(block)
+                    case let .ByMetadata(block):    return YapDatabaseViewGrouping.withMetadataBlock(block)
+                    case let .ByRow(block):         return YapDatabaseViewGrouping.withRowBlock(block)
+                    }
                 }
             }
         }
@@ -167,18 +168,29 @@ extension YapDB {
             case ByMetadata(YapDatabaseViewSortingWithMetadataBlock)
             case ByRow(YapDatabaseViewSortingWithRowBlock)
 
-            var object: YapDatabaseViewSorting {
-                switch self {
-                case let .ByKey(block):         return YapDatabaseViewSorting.withKeyBlock(block)
-                case let .ByObject(block):      return YapDatabaseViewSorting.withObjectBlock(block)
-                case let .ByMetadata(block):    return YapDatabaseViewSorting.withMetadataBlock(block)
-                case let .ByRow(block):         return YapDatabaseViewSorting.withRowBlock(block)
+            func object(withOptions opts: YapDatabaseBlockInvoke? = .None) -> YapDatabaseViewSorting {
+                if let opts = opts {
+                    switch self {
+                    case let .ByKey(block):         return YapDatabaseViewSorting.withOptions(opts, keyBlock: block)
+                    case let .ByObject(block):      return YapDatabaseViewSorting.withOptions(opts, objectBlock: block)
+                    case let .ByMetadata(block):    return YapDatabaseViewSorting.withOptions(opts, metadataBlock: block)
+                    case let .ByRow(block):         return YapDatabaseViewSorting.withOptions(opts, rowBlock: block)
+                    }
+                } else {
+                    switch self {
+                    case let .ByKey(block):         return YapDatabaseViewSorting.withKeyBlock(block)
+                    case let .ByObject(block):      return YapDatabaseViewSorting.withObjectBlock(block)
+                    case let .ByMetadata(block):    return YapDatabaseViewSorting.withMetadataBlock(block)
+                    case let .ByRow(block):         return YapDatabaseViewSorting.withRowBlock(block)
+                    }
                 }
             }
         }
 
         let grouping: Grouping
+        let groupingOptions: YapDatabaseBlockInvoke?
         let sorting: Sorting
+        let sortingOptions: YapDatabaseBlockInvoke?
 
         /**
         Initializer for a View. 
@@ -190,14 +202,19 @@ extension YapDB {
         - parameter persistent: a Bool, defaults to true - meaning that the contents of the view will be stored in YapDatabase between launches.
         - parameter collections: an optional array of collections which is used to white list the collections searched when populating the view.
         */
-        public init(name: String, grouping g: Grouping, sorting s: Sorting, version: String = "1.0", persistent: Bool = true, collections: [String]? = .None) {
+        public init(name: String,
+                    grouping g: Grouping, groupingOptions go: YapDatabaseBlockInvoke? = .None,
+                             sorting s: Sorting, sortingOptions so: YapDatabaseBlockInvoke? = .None,
+                            version: String = "1.0", persistent: Bool = true, collections: [String]? = .None) {
             grouping = g
+            groupingOptions = go
             sorting = s
+            sortingOptions = so
             super.init(name: name, version: version, persistent: persistent, collections: collections)
         }
 
         func createDatabaseView() -> YapDatabaseView {
-            return YapDatabaseView(grouping: grouping.object, sorting: sorting.object, versionTag: version, options: options)
+            return YapDatabaseView(grouping: grouping.object(withOptions: groupingOptions), sorting: sorting.object(withOptions: sortingOptions), versionTag: version, options: options)
         }
 
         func registerInDatabase(database: YapDatabase, withConnection connection: YapDatabaseConnection? = .None) {
@@ -234,18 +251,28 @@ extension YapDB {
             case ByMetadata(YapDatabaseViewFilteringWithMetadataBlock)
             case ByRow(YapDatabaseViewFilteringWithRowBlock)
 
-            var object: YapDatabaseViewFiltering {
-                switch self {
-                case let .ByKey(block):         return YapDatabaseViewFiltering.withKeyBlock(block)
-                case let .ByObject(block):      return YapDatabaseViewFiltering.withObjectBlock(block)
-                case let .ByMetadata(block):    return YapDatabaseViewFiltering.withMetadataBlock(block)
-                case let .ByRow(block):         return YapDatabaseViewFiltering.withRowBlock(block)
+            func object(withOptions ops: YapDatabaseBlockInvoke? = .None) -> YapDatabaseViewFiltering {
+                if let ops = ops {
+                    switch self {
+                    case .ByKey(let block):      return YapDatabaseViewFiltering.withOptions(ops, keyBlock: block)
+                    case .ByObject(let block):   return YapDatabaseViewFiltering.withOptions(ops, objectBlock: block)
+                    case .ByMetadata(let block): return YapDatabaseViewFiltering.withOptions(ops, metadataBlock: block)
+                    case .ByRow(let block):      return YapDatabaseViewFiltering.withOptions(ops, rowBlock: block)
+                    }
+                } else {
+                    switch self {
+                    case .ByKey(let block):      return YapDatabaseViewFiltering.withKeyBlock(block)
+                    case .ByObject(let block):   return YapDatabaseViewFiltering.withObjectBlock(block)
+                    case .ByMetadata(let block): return YapDatabaseViewFiltering.withMetadataBlock(block)
+                    case .ByRow(let block):      return YapDatabaseViewFiltering.withRowBlock(block)
+                    }
                 }
             }
         }
 
         let parent: YapDB.Fetch
         let filtering: Filtering
+        let filteringOptions: YapDatabaseBlockInvoke?
 
         /**
         Initializer for a Filter
@@ -257,14 +284,16 @@ extension YapDB {
         - parameter persistent: a Bool, defaults to true - meaning that the contents of the view will be stored in YapDatabase between launches.
         - parameter collections: an optional array of collections which is used to white list the collections searched when populating the view.
         */
-        public init(name: String, parent p: YapDB.Fetch, filtering f: Filtering, version: String = "1.0", persistent: Bool = true, collections: [String]? = .None) {
+        public init(name: String, parent p: YapDB.Fetch, filtering f: Filtering, filteringOptions fo: YapDatabaseBlockInvoke? = .None,
+                    version: String = "1.0", persistent: Bool = true, collections: [String]? = .None) {
             parent = p
             filtering = f
+            filteringOptions = fo
             super.init(name: name, version: version, persistent: persistent, collections: collections)
         }
 
         func createDatabaseView() -> YapDatabaseView {
-            return YapDatabaseFilteredView(parentViewName: parent.name, filtering: filtering.object, versionTag: version, options: options)
+            return YapDatabaseFilteredView(parentViewName: parent.name, filtering: filtering.object(withOptions: filteringOptions), versionTag: version, options: options)
         }
 
         func registerInDatabase(database: YapDatabase, withConnection connection: YapDatabaseConnection? = .None) {
