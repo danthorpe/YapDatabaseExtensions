@@ -2,14 +2,6 @@
 //  Created by Daniel Thorpe on 22/04/2015.
 //
 
-import YapDatabase
-import YapDatabase.Utilities
-import YapDatabase.YapDatabaseView
-import YapDatabase.YapDatabaseFilteredView
-import YapDatabase.YapDatabaseSearchResultsView
-import YapDatabase.YapDatabaseFullTextSearch
-import YapDatabase.YapDatabaseSecondaryIndex
-
 protocol YapDatabaseViewProducer {
     func createDatabaseView() -> YapDatabaseView
 }

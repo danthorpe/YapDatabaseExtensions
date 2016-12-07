@@ -1,7 +1,7 @@
 //
-//  FeatureKit
+//  YapDatabaseExtensions
 //
-//  Copyright © 2016 FeatureKit. All rights reserved.
+//  Copyright © 2016 YapDatabaseExtensions. All rights reserved.
 //
 
 FRAMEWORK_SEARCH_PATHS[sdk=macosx*] = $(SRCROOT)/Carthage/Build/Mac/ $(inherited)
