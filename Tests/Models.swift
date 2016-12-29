@@ -339,14 +339,14 @@ open class ProductCoder: NSObject, NSCoding, CodingProtocol {
     public required init?(coder aDecoder: NSCoder) {
         let identifier = aDecoder.decodeObject(forKey: "identifier") as! String
         let name = aDecoder.decodeObject(forKey: "name") as! String
-        let barcode = Barcode.decode(aDecoder.decodeObjectForKey("barcode"))
+        let barcode = Barcode.decode(aDecoder.decodeObject(forKey: "barcode"))
         value = Product(identifier: identifier, name: name, barcode: barcode!)
     }
 
     open func encode(with aCoder: NSCoder) {
         aCoder.encodeObject(value.identifier, forKey: "identifier")
         aCoder.encode(value.name, forKey: "name")
-        aCoder.encodeObject(value.barcode.encoded, forKey: "barcode")
+        aCoder.encode(value.barcode.encoded, forKey: "barcode")
     }
 }
 
@@ -358,12 +358,12 @@ open class InventoryCoder: NSObject, NSCoding, CodingProtocol {
     }
 
     public required init?(coder aDecoder: NSCoder) {
-        let product = Product.decode(aDecoder.decodeObjectForKey("product"))
+        let product = Product.decode(aDecoder.decodeObject(forKey: "product"))
         value = Inventory(product: product!)
     }
 
     open func encode(with aCoder: NSCoder) {
-        aCoder.encodeObject(value.product.encoded, forKey: "product")
+        aCoder.encode(value.product.encoded, forKey: "product")
     }
 }
 
