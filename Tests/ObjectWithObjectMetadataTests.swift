@@ -13,7 +13,7 @@ import XCTest
 class ObjectWithObjectMetadataTests: XCTestCase {
 
     typealias TypeUnderTest = Employee
-    typealias MetadataTypeUnderTest = Date
+    typealias MetadataTypeUnderTest = NSDate
 
     var item: TypeUnderTest!
     var metadata: MetadataTypeUnderTest!
@@ -78,7 +78,7 @@ class ObjectWithObjectMetadataTests: XCTestCase {
 
     func createPersistables() {
         item = TypeUnderTest(id: "beatle-1", name: "John")
-        metadata = Date()
+        metadata = NSDate()
         items = [
             item,
             TypeUnderTest(id: "beatle-2", name: "Paul"),
@@ -86,7 +86,7 @@ class ObjectWithObjectMetadataTests: XCTestCase {
             TypeUnderTest(id: "beatle-4", name: "Ringo")
         ]
         metadatas = [metadata]
-        items.suffix(from: 1).forEach { _ in metadatas.append(Date()) }
+        items.suffix(from: 1).forEach { _ in metadatas.append(NSDate()) }
     }
 
     func configureForReadingSingle() {
@@ -105,7 +105,7 @@ class ObjectWithObjectMetadataTests: XCTestCase {
         XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
         XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].0, index)
         XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].1.identifier, item.identifier)
-        XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].2 as? Date, metadata)
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].2 as? NSDate, metadata)
     }
 
     func checkTransactionDidWriteItems(_ result: [YapItem<TypeUnderTest, MetadataTypeUnderTest>]) {
@@ -688,7 +688,7 @@ class Persistable_Write_ObjectWithObjectMetadataTests: ObjectWithObjectMetadataT
         XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
         XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].0, index)
         XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].1.identifier, item.identifier)
-        XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].2 as? Date, metadata)
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].2 as? NSDate, metadata)
         XCTAssertTrue(connection.didWrite)
     }
 
