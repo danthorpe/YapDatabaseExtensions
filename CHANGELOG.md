@@ -1,3 +1,7 @@
+# 3.0.0
+1. Separated Metadata from Objects
+2. Updated for Swift 3.0
+
 # 2.6.0
 Updated for Swift 2.3 - sorry it's taken so long!
 
