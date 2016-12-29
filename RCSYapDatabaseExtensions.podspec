@@ -23,7 +23,7 @@ Pod::Spec.new do |s|
   s.osx.deployment_target = '10.11'
 
   s.dependency 'ValueCoding', '~> 2.1.0'
-  s.dependency 'YapDatabase', '2.9.3'
+  s.dependency 'YapDatabase', '2.9.2'
   
   s.subspec 'Core' do |ss|
     ss.source_files = [
