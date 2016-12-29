@@ -556,7 +556,7 @@ class Persistable_Read_ValueWithNoMetadataTests: ValueWithNoMetadataTests {
         reader = Read(readTransaction)
         let (items, missing) = reader.filterExisting(keys)
         XCTAssertEqual(readTransaction.didReadAtIndexes.first!, indexes.first!)
-        XCTAssertEqual(items.map { $0.identifier }, items.prefixUpTo(1).map { $0.identifier })
+        XCTAssertEqual(items.map { $0.identifier }, items.prefix(upTo: 1).map { $0.identifier })
         XCTAssertEqual(missing, Array(keys.suffixFrom(1)))
     }
 
@@ -635,7 +635,7 @@ class Persistable_Read_ValueWithNoMetadataTests: ValueWithNoMetadataTests {
         let (items, missing) = reader.filterExisting(keys)
         XCTAssertTrue(connection.didRead)
         XCTAssertEqual(readTransaction.didReadAtIndexes.first!, indexes.first!)
-        XCTAssertEqual(items.map { $0.identifier }, items.prefixUpTo(1).map { $0.identifier })
+        XCTAssertEqual(items.map { $0.identifier }, items.prefix(upTo: 1).map { $0.identifier })
         XCTAssertEqual(missing, Array(keys.suffixFrom(1)))
     }
 
