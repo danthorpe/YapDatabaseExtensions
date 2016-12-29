@@ -10,7 +10,7 @@ platform :ios do
     scan(
       scheme: 'YapDatabaseExtensions', 
       output_directory: ".ci/xcodebuild-data",
-      destination: "platform=iOS Simulator,OS=9.3,name=iPhone 6s"
+      destination: "platform=iOS Simulator,OS=10.1,name=iPhone 7"
     )
 
   end

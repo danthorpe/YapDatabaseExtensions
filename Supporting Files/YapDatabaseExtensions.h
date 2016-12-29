@@ -1,12 +1,17 @@
 //
-//  YapDatabaseExtensions.h
 //  YapDatabaseExtensions
 //
-//  Created by Daniel Thorpe on 27/09/2016.
-//
+//  Copyright © 2016 YapDatabaseExtensions. All rights reserved.
 //
 
 @import Foundation;
+@import YapDatabase;
+@import YapDatabase.Utilities;
+@import YapDatabase.YapDatabaseView;
+@import YapDatabase.YapDatabaseFilteredView;
+@import YapDatabase.YapDatabaseSearchResultsView;
+@import YapDatabase.YapDatabaseFullTextSearch;
+@import YapDatabase.YapDatabaseSecondaryIndex;
 
 //! Project version number for YapDatabaseExtensions.
 FOUNDATION_EXPORT double YapDatabaseExtensionsVersionNumber;

@@ -1,3 +1,6 @@
+# 2.6.0
+Updated for Swift 2.3 - sorry it's taken so long!
+
 # 2.5.0
 1. [[YDB-84](https://github.com/danthorpe/YapDatabaseExtensions/pull/85)]: Updates to Swift 2.2
 

@@ -9,4 +9,4 @@ steps:
     command: .ci/scripts/test-ios
     agents:
       xcode: "$XCODE"
-      iOS-Simulator: true
+      queue: "iOS-Simulator"

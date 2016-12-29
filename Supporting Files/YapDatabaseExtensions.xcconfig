@@ -1,9 +1,7 @@
 //
-//  YapDatabaseExtensions.xcconfig
 //  YapDatabaseExtensions
 //
-//  Created by Daniel Thorpe on 27/09/2016.
-//
+//  Copyright © 2016 YapDatabaseExtensions. All rights reserved.
 //
 
 #include "Version.xcconfig"
@@ -25,7 +23,7 @@ APPLICATION_EXTENSION_API_ONLY_framework = YES
 APPLICATION_EXTENSION_API_ONLY_xctest = NO
 APPLICATION_EXTENSION_API_ONLY = $(APPLICATION_EXTENSION_API_ONLY_$(WRAPPER_EXTENSION))
 
-SWIFT_VERSION = 2.2
+SWIFT_VERSION = 2.3
 
 // Build Settings
 SUPPORTED_PLATFORMS = macosx iphoneos appletvos watchos appletvsimulator iphonesimulator watchsimulator
