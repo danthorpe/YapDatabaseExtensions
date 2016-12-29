@@ -189,7 +189,7 @@ extension WriteTransactionType {
         Value: ValueCoding,
         Value.Coder: NSCoding,
         Value.Coder.Value == Value {
-            writeAtIndex(item.index, object: item.encoded, metadata: .None)
+            writeAtIndex(item.index, object: item.encoded, metadata: .none)
             return item
     }
 
