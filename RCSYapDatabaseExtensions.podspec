@@ -33,12 +33,12 @@ Pod::Spec.new do |s|
   end
   
   s.subspec 'Functional' do |ss|
-    ss.dependency 'YapDatabaseExtensions/Core'
+    ss.dependency 'RCSYapDatabaseExtensions/Core'
     ss.source_files = 'Sources/Functional_*.swift'
   end
 
   s.subspec 'Persitable' do |ss|
-    ss.dependency 'YapDatabaseExtensions/Functional'
+    ss.dependency 'RCSYapDatabaseExtensions/Functional'
     ss.source_files = [
       'Sources/Read.swift', 
       'Sources/Persistable_*.swift'
