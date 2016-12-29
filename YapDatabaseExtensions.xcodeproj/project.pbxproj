@@ -323,7 +323,6 @@
 				ValueCoding,
 				YapDatabase,
 				CocoaLumberjack,
-				Reachability,
 			);
 			name = "Copy Carthage Frameworks";
 			outputPaths = (
