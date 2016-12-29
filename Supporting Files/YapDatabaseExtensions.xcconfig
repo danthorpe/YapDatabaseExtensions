@@ -11,8 +11,8 @@ INFOPLIST_FILE_framework = $(SRCROOT)/Supporting Files/Info.plist
 INFOPLIST_FILE_xctest = $(SRCROOT)/Tests/Info.plist
 INFOPLIST_FILE = $(INFOPLIST_FILE_$(WRAPPER_EXTENSION))
 
-PRODUCT_BUNDLE_IDENTIFIER_framework = me.danthorpe.YapDatabaseExtensions
-PRODUCT_BUNDLE_IDENTIFIER_xctest = me.danthorpe.YapDatabaseExtensionsTests
+PRODUCT_BUNDLE_IDENTIFIER_framework = com.roepcke.YapDatabaseExtensions
+PRODUCT_BUNDLE_IDENTIFIER_xctest = com.roepcke.YapDatabaseExtensionsTests
 PRODUCT_BUNDLE_IDENTIFIER = $(PRODUCT_BUNDLE_IDENTIFIER_$(WRAPPER_EXTENSION))
 
 PRODUCT_NAME_framework = YapDatabaseExtensions
