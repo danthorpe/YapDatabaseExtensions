@@ -650,7 +650,7 @@ class Persistable_Read_ValueWithValueMetadataTests: ValueWithValueMetadataTests 
         let (items, missing): ([YapItem<TypeUnderTest, MetadataTypeUnderTest>], [String]) = reader.withMetadataFilterExisting(keys)
         XCTAssertEqual(readTransaction.didReadAtIndexes.first!, indexes.first!)
         XCTAssertEqual(items.map { $0.value.identifier }, items.prefix(upTo: 1).map { $0.value.identifier })
-        XCTAssertEqual(missing, Array(keys.suffixFrom(1)))
+        XCTAssertEqual(missing, Array(keys.suffix(from: 1)))
     }
 
     // Reading - With Connection
@@ -729,7 +729,7 @@ class Persistable_Read_ValueWithValueMetadataTests: ValueWithValueMetadataTests 
         XCTAssertTrue(connection.didRead)
         XCTAssertEqual(readTransaction.didReadAtIndexes.first!, indexes.first!)
         XCTAssertEqual(items.map { $0.identifier }, items.prefix(upTo: 1).map { $0.identifier })
-        XCTAssertEqual(missing, Array(keys.suffixFrom(1)))
+        XCTAssertEqual(missing, Array(keys.suffix(from: 1)))
     }
 
 }
