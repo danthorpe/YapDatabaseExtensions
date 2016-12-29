@@ -73,7 +73,7 @@ extension Persistable where
         Metadata: ValueCoding,
         Metadata.Coder: NSCoding,
         Metadata.Coder.Value == Metadata {
-        return BlockOperation { connection.writeWithMetadata(YapItem(self, metadata)) }
+        return BlockOperation { _ = connection.writeWithMetadata(YapItem(self, metadata)) }
     }
 }
 
@@ -159,7 +159,7 @@ extension Sequence where
         Metadata.Coder: NSCoding,
         Metadata.Coder.Value == Metadata {
         let items = yapItems(with: metadata)
-        return BlockOperation { connection.writeWithMetadata(items) }
+        return BlockOperation { _ = connection.writeWithMetadata(items) }
     }
 }
 

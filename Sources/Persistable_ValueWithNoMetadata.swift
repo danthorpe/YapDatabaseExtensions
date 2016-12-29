@@ -55,7 +55,7 @@ extension Persistable where
     - returns: an `NSOperation`
     */
     public func writeOperation<Connection: ConnectionType>(_ connection: Connection) -> Operation {
-        return BlockOperation { connection.write(self) }
+        return BlockOperation { _ = connection.write(self) }
     }
 }
 
@@ -102,7 +102,7 @@ extension Sequence where
     - returns: an `NSOperation`
     */
     public func writeOperation<Connection: ConnectionType>(_ connection: Connection) -> Operation {
-        return BlockOperation { connection.write(self) }
+        return BlockOperation { _ = connection.write(self) }
     }
 }
 

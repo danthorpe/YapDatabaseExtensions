@@ -64,7 +64,7 @@ extension Persistable where
         Connection, Metadata>(_ connection: Connection, metadata: Metadata?) -> Operation where
         Connection: ConnectionType,
         Metadata: NSCoding {
-        return BlockOperation { connection.writeWithMetadata(YapItem(self, metadata)) }
+        return BlockOperation { _ = connection.writeWithMetadata(YapItem(self, metadata)) }
     }
 }
 
@@ -140,7 +140,7 @@ extension Sequence where
         Connection: ConnectionType,
         Metadata: NSCoding {
         let items = yapItems(with: metadata)
-        return BlockOperation { connection.writeWithMetadata(items) }
+        return BlockOperation { _ = connection.writeWithMetadata(items) }
     }
 }
 
