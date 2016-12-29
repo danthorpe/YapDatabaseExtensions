@@ -111,7 +111,7 @@ class YapDatabaseReadWriteTransactionTests: ReadWriteBaseTests {
 
     func test__write_at_index_with_metadata() {
         let db = YapDB.testDatabase()
-        db.makeNewConnection().readWriteWithBlock { transaction in
+        db.makeNewConnection().readWrite { transaction in
             transaction.writeAtIndex(self.index, object: self.item, metadata: self.metadata)
         }
         let written: YapItem<Employee, NSDate>? = Employee.read(db).withMetadataAtIndex(index)
