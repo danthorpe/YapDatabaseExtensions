@@ -240,7 +240,7 @@ class ValueCodingTests: XCTestCase {
         item = Product(
             identifier: "vodka-123",
             name: "Belvidere",
-            barcode: .UPCA(1, 2, 3, 4)
+            barcode: .upca(1, 2, 3, 4)
         )
         metadata = Product.Metadata(categoryIdentifier: 1)
         items = [
@@ -248,17 +248,17 @@ class ValueCodingTests: XCTestCase {
             Product(
                 identifier: "gin-123",
                 name: "Boxer Gin",
-                barcode: .UPCA(5, 10, 15, 20)
+                barcode: .upca(5, 10, 15, 20)
             ),
             Product(
                 identifier: "rum-123",
                 name: "Mount Gay Rum",
-                barcode: .UPCA(12, 24, 39, 48)
+                barcode: .upca(12, 24, 39, 48)
             ),
             Product(
                 identifier: "gin-234",
                 name: "Monkey 47",
-                barcode: .UPCA(31, 62, 93, 124)
+                barcode: .upca(31, 62, 93, 124)
             )
         ]
         metadatas = [

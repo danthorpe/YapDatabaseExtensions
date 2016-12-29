@@ -398,13 +398,13 @@ public func products() -> YapDB.Fetch {
         return nil
     })
 
-    let sorting: YapDB.View.Sorting = .ByObject({ (_, group, collection1, key1, object1, collection2, key2, object2) -> ComparisonResult in
+    let sorting: YapDB.View.Sorting = .byObject({ (_, group, collection1, key1, object1, collection2, key2, object2) -> ComparisonResult in
         if let product1 = Product.decode(object1) {
             if let product2 = Product.decode(object2) {
                 return product1.name.caseInsensitiveCompare(product2.name)
             }
         }
-        return .OrderedSame
+        return .orderedSame
     })
 
     let view = YapDB.View(
