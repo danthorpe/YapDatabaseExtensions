@@ -70,7 +70,7 @@ class ReadTests: ReadWriteBaseTests {
     func test__initialize_with_transaction() {
         let db = YapDB.testDatabase()
         let connection = db.makeNewConnection()
-        connection.readWithBlock { transaction in
+        connection.read { transaction in
             self.reader = Read(transaction)
             XCTAssertNotNil(self.reader)
         }
@@ -95,7 +95,7 @@ class ReadTests: ReadWriteBaseTests {
     func test__getting_reader_from_persistable_with_transaction() {
         let db = YapDB.testDatabase()
         let connection = db.makeNewConnection()
-        connection.readWithBlock { transaction in
+        connection.read { transaction in
             self.reader = Employee.read(transaction)
             XCTAssertNotNil(self.reader)
         }

@@ -61,12 +61,12 @@ open class NamedEntity: NSObject, NSCoding {
     }
 
     public required init?(coder aDecoder: NSCoder) {
-        identifier = aDecoder.decodeObjectForKey("identifier") as! Identifier
+        identifier = aDecoder.decodeObject(forKey: "identifier") as! Identifier
         name = aDecoder.decodeObject(forKey: "name") as! String
     }
 
     open func encode(with aCoder: NSCoder) {
-        aCoder.encodeObject(identifier, forKey: "identifier")
+        aCoder.encode(identifier, forKey: "identifier")
         aCoder.encode(name, forKey: "name")
     }
 }
@@ -344,7 +344,7 @@ open class ProductCoder: NSObject, NSCoding, CodingProtocol {
     }
 
     open func encode(with aCoder: NSCoder) {
-        aCoder.encodeObject(value.identifier, forKey: "identifier")
+        aCoder.encode(value.identifier, forKey: "identifier")
         aCoder.encode(value.name, forKey: "name")
         aCoder.encode(value.barcode.encoded, forKey: "barcode")
     }
@@ -389,7 +389,7 @@ open class ManagerMetadataCoder: NSObject, NSCoding, CodingProtocol {
 
 public func products() -> YapDB.Fetch {
 
-    let grouping: YapDB.View.Grouping = .ByMetadata({ (_, collection, key, metadata) -> String! in
+    let grouping: YapDB.View.Grouping = .byMetadata({ (_, collection, key, metadata) -> String! in
         if collection == Product.collection {
             if let metadata = Product.Metadata.decode(metadata) {
                 return "category: \(metadata.categoryIdentifier)"
@@ -398,7 +398,7 @@ public func products() -> YapDB.Fetch {
         return nil
     })
 
-    let sorting: YapDB.View.Sorting = .ByObject({ (_, group, collection1, key1, object1, collection2, key2, object2) -> NSComparisonResult in
+    let sorting: YapDB.View.Sorting = .ByObject({ (_, group, collection1, key1, object1, collection2, key2, object2) -> ComparisonResult in
         if let product1 = Product.decode(object1) {
             if let product2 = Product.decode(object2) {
                 return product1.name.caseInsensitiveCompare(product2.name)
@@ -413,7 +413,7 @@ public func products() -> YapDB.Fetch {
         sorting: sorting,
         collections: [Product.collection])
 
-    return .View(view)
+    return .view(view)
 }
 
 

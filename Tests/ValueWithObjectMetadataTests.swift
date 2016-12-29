@@ -132,7 +132,7 @@ class ValueWithObjectMetadataTests: XCTestCase {
 
     func checkTransactionDidWriteItems(_ result: [YapItem<TypeUnderTest, MetadataTypeUnderTest>]) {
         XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
-        XCTAssertEqual(writeTransaction.didWriteAtIndexes.map { $0.0.key }.sort(), indexes.map { $0.key }.sort())
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes.map { $0.0.key }.sorted(), indexes.map { $0.key }.sorted())
         XCTAssertEqual(writeTransaction.didWriteAtIndexes.map { $0.2 }.count, items.count)
         XCTAssertFalse(result.isEmpty)
         XCTAssertEqual(Set(result.map({$0.value})), Set(items))
@@ -862,7 +862,7 @@ class Persistable_Write_ValueWithObjectMetadataTests: ValueWithObjectMetadataTes
         operationQueue.addOperation(operation)
         waitForExpectations(timeout: 3.0, handler: nil)
         XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
-        XCTAssertEqual(writeTransaction.didWriteAtIndexes.map { $0.0.key }.sort(), indexes.map { $0.key }.sort())
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes.map { $0.0.key }.sorted(), indexes.map { $0.key }.sorted())
         XCTAssertEqual(writeTransaction.didWriteAtIndexes.map { $0.2 }.count, items.count)
         XCTAssertTrue(connection.didWrite)
     }    

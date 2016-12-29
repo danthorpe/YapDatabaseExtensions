@@ -102,7 +102,7 @@ class ValueWithNoMetadataTests: XCTestCase {
 
     func checkTransactionDidWriteItems(_ result: [TypeUnderTest]) {
         XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
-        XCTAssertEqual(writeTransaction.didWriteAtIndexes.map { $0.0.key }.sort(), indexes.map { $0.key }.sort())
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes.map { $0.0.key }.sorted(), indexes.map { $0.key }.sorted())
         XCTAssertEqual(writeTransaction.didWriteAtIndexes.map { $0.2 }.count, items.count)
         XCTAssertFalse(result.isEmpty)
         XCTAssertEqual(Set(result), Set(items))
@@ -715,7 +715,7 @@ class Persistable_Write_ValueWithNoMetadataTests: ValueWithNoMetadataTests {
         operationQueue.addOperation(operation)
         waitForExpectations(timeout: 3.0, handler: nil)
         XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
-        XCTAssertEqual(writeTransaction.didWriteAtIndexes.map { $0.0.key }.sort(), indexes.map { $0.key }.sort())
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes.map { $0.0.key }.sorted(), indexes.map { $0.key }.sorted())
         XCTAssertEqual(writeTransaction.didWriteAtIndexes.map { $0.2 }.count, items.count)
         XCTAssertTrue(connection.didWrite)
     }
