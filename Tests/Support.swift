@@ -118,12 +118,12 @@ class TestableConnection {
 
 extension TestableConnection: ConnectionType {
 
-    func read<T>(_ block: (TestableReadTransaction) -> T) -> T {
+    func read<T>(_ block: @escaping (TestableReadTransaction) -> T) -> T {
         didRead = true
         return block(readTransaction)
     }
 
-    func write<T>(_ block: (TestableWriteTransaction) -> T) -> T {
+    func write<T>(_ block: @escaping (TestableWriteTransaction) -> T) -> T {
         didWrite = true
         return block(writeTransaction)
     }
