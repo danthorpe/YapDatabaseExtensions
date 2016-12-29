@@ -109,7 +109,7 @@ public struct YapDB {
         let path = pathToDatabase(.cachesDirectory, name: (file as NSString).lastPathComponent, suffix: test.trimmingCharacters(in: CharacterSet(charactersIn: "()")))
         assert(!path.isEmpty, "Path should not be empty.")
         do {
-            try FileManager.default.removeItem(atPath: path)
+            try FileManager.`default`.removeItem(atPath: path)
         }
         catch { }
 
@@ -192,10 +192,6 @@ Identifier for your String identifiers.
 
 */
 public typealias Identifier = String
-
-extension Identifier: CustomStringConvertible {
-    public var description: String { return self }
-}
 
 // MARK: - Persistable
 
@@ -339,7 +335,7 @@ public protocol ConnectionType {
     - parameter block: a closure which receives YapDatabaseReadTransaction and returns T
     - returns: An instance of T
     */
-    func read<T>(_ block: (ReadTransaction) -> T) -> T
+    func read<T>(_ block: @escaping (ReadTransaction) -> T) -> T
 
     /**
     Synchronously writes to the database on the connection. The closure receives
@@ -352,7 +348,7 @@ public protocol ConnectionType {
     - parameter block: a closure which receives YapDatabaseReadWriteTransaction and returns T
     - returns: An instance of T
     */
-    func write<T>(_ block: (WriteTransaction) -> T) -> T
+    func write<T>(_ block: @escaping (WriteTransaction) -> T) -> T
 
     /**
     Asynchronously reads from the database on the connection. The closure receives
@@ -368,7 +364,7 @@ public protocol ConnectionType {
     - parameter queue: a dispatch_queue_t, defaults to main queue, can be ommitted in most cases.
     - parameter completion: a closure which receives T and returns Void.
     */
-    func asyncRead<T>(_ block: (ReadTransaction) -> T, queue: DispatchQueue, completion: (T) -> Void)
+    func asyncRead<T>(_ block: @escaping (ReadTransaction) -> T, queue: DispatchQueue, completion: @escaping (T) -> Void)
 
     /**
     Asynchronously writes to the database on the connection. The closure receives
@@ -384,7 +380,7 @@ public protocol ConnectionType {
     - parameter queue: a dispatch_queue_t, defaults to main queue, can be ommitted in most cases.
     - parameter completion: a closure which receives T and returns Void.
     */
-    func asyncWrite<T>(_ block: (WriteTransaction) -> T, queue: DispatchQueue, completion: ((T) -> Void)?)
+    func asyncWrite<T>(_ block: @escaping (WriteTransaction) -> T, queue: DispatchQueue, completion: ((T) -> Void)?)
 
     /**
     Execute a read/write block inside a `NSOperation`. The block argument receives a
@@ -400,7 +396,7 @@ public protocol ConnectionType {
     - parameter block: a closure of type (YapDatabaseReadWriteTransaction) -> Void
     - returns: an `NSOperation`.
     */
-    func writeBlockOperation(_ block: (WriteTransaction) -> Void) -> Operation
+    func writeBlockOperation(_ block: @escaping (WriteTransaction) -> Void) -> Operation
 }
 
 /// A facade interface for a database.
@@ -607,7 +603,7 @@ extension YapDB.Index: ValueCoding {
 
 // MARK: Coders
 
-public final class YapDBIndexCoder: NSObject, NSCoding, CodingType {
+public final class YapDBIndexCoder: NSObject, NSCoding, CodingProtocol {
     public let value: YapDB.Index
 
     public init(_ v: YapDB.Index) {
@@ -640,8 +636,8 @@ public typealias ValueMetadataPersistable = Persistable
 @available(*, unavailable, renamed: "ValueCoding")
 public typealias Saveable = ValueCoding
 
-@available(*, unavailable, renamed: "CodingType")
-public typealias Archiver = CodingType
+@available(*, unavailable, renamed: "CodingProtocol")
+public typealias Archiver = CodingProtocol
 
 
 

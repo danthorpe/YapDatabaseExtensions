@@ -373,7 +373,7 @@ extension YapDB {
         func registerInDatabase(_ database: YapDatabase, withConnection connection: YapDatabaseConnection? = .none) {
 
             if (database.registeredExtension(searchName) as? YapDatabaseFullTextSearch) == .none {
-                let fullTextSearch = YapDatabaseFullTextSearch(columnNames: columnNames, handler: handler.object, versionTag: version)
+                let fullTextSearch = YapDatabaseFullTextSearch(columnNames: columnNames, options: nil, handler: handler.object, versionTag: version)
                 if let connection = connection {
                     database.register(fullTextSearch, withName: searchName, connection: connection)
                 }

@@ -55,7 +55,7 @@ extension Persistable where
     - returns: a closure which receives as an argument the receiver of this function.
     */
     public func asyncWriteWithMetadata<
-        Connection, Metadata>(_ connection: Connection, metadata: Metadata?, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: ((YapItem<Self, Metadata>) -> Void)? = .none) where
+        Connection, Metadata>(_ connection: Connection, metadata: Metadata?, queue: DispatchQueue = DispatchQueue.main, completion: ((YapItem<Self, Metadata>) -> Void)? = .none) where
         Connection: ConnectionType,
         Metadata: ValueCoding,
         Metadata.Coder: NSCoding,
@@ -93,7 +93,7 @@ extension Sequence where
      - returns: an array where Persistables and Metadata with corresponding indexes in `self` and `metadata` are joined in a `YapItem`
      */
     public func yapItems<
-        Metadatas, Metadata>(with metadata: Metadatas) -> [YapItem<Generator.Element, Metadata>] where
+        Metadatas, Metadata>(with metadata: Metadatas) -> [YapItem<Iterator.Element, Metadata>] where
         Metadata: ValueCoding,
         Metadata.Coder: NSCoding,
         Metadata.Coder.Value == Metadata,
@@ -109,7 +109,7 @@ extension Sequence where
     - returns: the receiver.
     */
     public func writeWithMetadata<
-        WriteTransaction, Metadata>(_ transaction: WriteTransaction, metadata: [Metadata?]) -> [YapItem<Generator.Element, Metadata>] where
+        WriteTransaction, Metadata>(_ transaction: WriteTransaction, metadata: [Metadata?]) -> [YapItem<Iterator.Element, Metadata>] where
         WriteTransaction: WriteTransactionType,
         Metadata: ValueCoding,
         Metadata.Coder: NSCoding,
@@ -125,7 +125,7 @@ extension Sequence where
     - returns: the receiver.
     */
     public func writeWithMetadata<
-        Connection, Metadata>(_ connection: Connection, metadata: [Metadata?]) -> [YapItem<Generator.Element, Metadata>] where
+        Connection, Metadata>(_ connection: Connection, metadata: [Metadata?]) -> [YapItem<Iterator.Element, Metadata>] where
         Connection: ConnectionType,
         Metadata: ValueCoding,
         Metadata.Coder: NSCoding,
@@ -141,7 +141,7 @@ extension Sequence where
     - returns: a closure which receives as an argument the receiver of this function.
     */
     public func asyncWriteWithMetadata<
-        Connection, Metadata>(_ connection: Connection, metadata: [Metadata?], queue: dispatch_queue_t = dispatch_get_main_queue(), completion: (([YapItem<Generator.Element, Metadata>]) -> Void)? = .None) where
+        Connection, Metadata>(_ connection: Connection, metadata: [Metadata?], queue: DispatchQueue = DispatchQueue.main, completion: (([YapItem<Iterator.Element, Metadata>]) -> Void)? = .none) where
         Connection: ConnectionType,
         Metadata: ValueCoding,
         Metadata.Coder: NSCoding,

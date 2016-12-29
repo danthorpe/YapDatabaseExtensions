@@ -30,7 +30,7 @@ extension Persistable {
 
     - parameter connection: a `ConnectionType` connection
     */
-    public func asyncRemove<Connection: ConnectionType>(_ connection: Connection, queue: DispatchQueue = DispatchQueue.main, completion: @escaping ()->()? = .none) {
+    public func asyncRemove<Connection: ConnectionType>(_ connection: Connection, queue: DispatchQueue = DispatchQueue.main, completion: (()->())? = .none) {
         connection.asyncRemove(self, queue: queue, completion: completion)
     }
 
@@ -71,7 +71,7 @@ Iterator.Element: Persistable {
 
     - parameter connection: a `ConnectionType` connection
     */
-    public func asyncRemove<Connection: ConnectionType>(_ connection: Connection, queue: DispatchQueue = DispatchQueue.main, completion: @escaping ()->()? = .none) {
+    public func asyncRemove<Connection: ConnectionType>(_ connection: Connection, queue: DispatchQueue = DispatchQueue.main, completion: (()->())? = .none) {
         connection.asyncRemove(self, queue: queue, completion: completion)
     }
 

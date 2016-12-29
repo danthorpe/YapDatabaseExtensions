@@ -44,7 +44,7 @@ extension Persistable where
     - parameter connection: a YapDatabaseConnection
     - returns: a closure which receives as an argument the receiver of this function.
     */
-    public func asyncWrite<Connection: ConnectionType>(_ connection: Connection, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: ((Self) -> Void)? = .none) {
+    public func asyncWrite<Connection: ConnectionType>(_ connection: Connection, queue: DispatchQueue = DispatchQueue.main, completion: ((Self) -> Void)? = .none) {
         return connection.asyncWrite(self, queue: queue, completion: completion)
     }
 
@@ -71,7 +71,7 @@ extension Sequence where
     - parameter transaction: a WriteTransactionType e.g. YapDatabaseReadWriteTransaction
     - returns: the receiver.
     */
-    public func write<WriteTransaction: WriteTransactionType>(_ transaction: WriteTransaction) -> [Generator.Element] {
+    public func write<WriteTransaction: WriteTransactionType>(_ transaction: WriteTransaction) -> [Iterator.Element] {
         return transaction.write(self)
     }
 
@@ -81,7 +81,7 @@ extension Sequence where
     - parameter connection: a ConnectionType e.g. YapDatabaseConnection
     - returns: the receiver.
     */
-    public func write<Connection: ConnectionType>(_ connection: Connection) -> [Generator.Element] {
+    public func write<Connection: ConnectionType>(_ connection: Connection) -> [Iterator.Element] {
         return connection.write(self)
     }
 
@@ -91,7 +91,7 @@ extension Sequence where
     - parameter connection: a ConnectionType e.g. YapDatabaseConnection
     - returns: a closure which receives as an argument the receiver of this function.
     */
-    public func asyncWrite<Connection: ConnectionType>(_ connection: Connection, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: (([Generator.Element]) -> Void)? = .None) {
+    public func asyncWrite<Connection: ConnectionType>(_ connection: Connection, queue: DispatchQueue = DispatchQueue.main, completion: (([Iterator.Element]) -> Void)? = .none) {
         return connection.asyncWrite(self, queue: queue, completion: completion)
     }
 

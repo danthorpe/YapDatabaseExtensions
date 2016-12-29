@@ -253,7 +253,7 @@ extension Manager.Metadata: ValueCoding {
 
 // MARK: - Coders
 
-open class BarcodeCoder: NSObject, NSCoding, CodingType {
+open class BarcodeCoder: NSObject, NSCoding, CodingProtocol {
     open let value: Barcode
 
     public required init(_ v: Barcode) {
@@ -293,7 +293,7 @@ open class BarcodeCoder: NSObject, NSCoding, CodingType {
     }
 }
 
-open class ProductCategoryCoder: NSObject, NSCoding, CodingType {
+open class ProductCategoryCoder: NSObject, NSCoding, CodingProtocol {
     open let value: Product.Category
 
     public required init(_ v: Product.Category) {
@@ -312,7 +312,7 @@ open class ProductCategoryCoder: NSObject, NSCoding, CodingType {
     }
 }
 
-open class ProductMetadataCoder: NSObject, NSCoding, CodingType {
+open class ProductMetadataCoder: NSObject, NSCoding, CodingProtocol {
     open let value: Product.Metadata
 
     public required init(_ v: Product.Metadata) {
@@ -329,7 +329,7 @@ open class ProductMetadataCoder: NSObject, NSCoding, CodingType {
     }
 }
 
-open class ProductCoder: NSObject, NSCoding, CodingType {
+open class ProductCoder: NSObject, NSCoding, CodingProtocol {
     open let value: Product
 
     public required init(_ v: Product) {
@@ -350,7 +350,7 @@ open class ProductCoder: NSObject, NSCoding, CodingType {
     }
 }
 
-open class InventoryCoder: NSObject, NSCoding, CodingType {
+open class InventoryCoder: NSObject, NSCoding, CodingProtocol {
     open let value: Inventory
 
     public required init(_ v: Inventory) {
@@ -368,7 +368,7 @@ open class InventoryCoder: NSObject, NSCoding, CodingType {
 }
 
 
-open class ManagerMetadataCoder: NSObject, NSCoding, CodingType {
+open class ManagerMetadataCoder: NSObject, NSCoding, CodingProtocol {
     open let value: Manager.Metadata
 
     public required init(_ v: Manager.Metadata) {

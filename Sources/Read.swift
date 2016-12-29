@@ -118,7 +118,7 @@ extension Readable
     where
     ItemType: Persistable {
 
-    func sync<T>(_ block: (Database.Connection.ReadTransaction) -> T) -> T {
+    func sync<T>(_ block: @escaping (Database.Connection.ReadTransaction) -> T) -> T {
         if let transaction = transaction {
             return block(transaction)
         }

@@ -65,8 +65,8 @@ extension ConnectionType {
 
     - parameter item: a `Persistable` item
     */
-    public func asyncRemove<Item: Persistable>(_ item: Item, queue: DispatchQueue = DispatchQueue.main, completion: @escaping ()->()? = .none) {
-        asyncWrite({ $0.remove(item) }, queue: queue, completion: { _ in completion() })
+    public func asyncRemove<Item: Persistable>(_ item: Item, queue: DispatchQueue = DispatchQueue.main, completion: (()->())? = .none) {
+        asyncWrite({ $0.remove(item) }, queue: queue, completion: { _ in completion?() })
     }
 
     /**
@@ -76,10 +76,10 @@ extension ConnectionType {
     - parameter items: a sequence of `Persistable` items
     */
     public func asyncRemove<
-        Items, Item>(_ items: Items, queue: DispatchQueue = DispatchQueue.main, completion: @escaping ()->()? = .none) where
+        Items, Item>(_ items: Items, queue: DispatchQueue = DispatchQueue.main, completion: (()->())? = .none) where
         Items: Sequence,
         Items.Iterator.Element == Item,
         Item: Persistable {
-            asyncWrite({ $0.remove(items) }, queue: queue, completion: { _ in completion() })
+            asyncWrite({ $0.remove(items) }, queue: queue, completion: { _ in completion?() })
     }
 }

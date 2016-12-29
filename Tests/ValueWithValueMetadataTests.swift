@@ -53,7 +53,7 @@ class ValueWithValueMetadataTests: XCTestCase {
         connection.writeTransaction = writeTransaction
         database.connection = connection
 
-        dispatchQueue = DispatchQueue.global(qos: DispatchQoS.QoSClass.default)
+        dispatchQueue = DispatchQueue.global(qos: DispatchQoS.QoSClass.`default`)
         operationQueue = OperationQueue()
     }
 
