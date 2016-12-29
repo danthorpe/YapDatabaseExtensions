@@ -26,17 +26,17 @@ public struct Read<Item, D: DatabaseType>: Readable {
     let reader: Handle<D>
 
     public var transaction: D.Connection.ReadTransaction? {
-        if case let .Transaction(transaction) = reader {
+        if case let .transaction(transaction) = reader {
             return transaction
         }
-        return .None
+        return .none
     }
 
     public var connection: D.Connection {
         switch reader {
-        case .Transaction(_):
+        case .transaction(_):
             fatalError("Attempting to get connection from a transaction.")
-        case .Connection(let connection):
+        case .connection(let connection):
             return connection
         default:
             return database.makeNewConnection()
@@ -44,22 +44,22 @@ public struct Read<Item, D: DatabaseType>: Readable {
     }
 
     internal var database: D {
-        if case let .Database(database) = reader {
+        if case let .database(database) = reader {
             return database
         }
         fatalError("Attempting to get database from \(reader)")
     }
 
     internal init(_ transaction: D.Connection.ReadTransaction) {
-        reader = .Transaction(transaction)
+        reader = .transaction(transaction)
     }
 
     internal init(_ connection: D.Connection) {
-        reader = .Connection(connection)
+        reader = .connection(connection)
     }
 
     internal init(_ database: D) {
-        reader = .Database(database)
+        reader = .database(database)
     }
 }
 
@@ -83,7 +83,7 @@ extension Persistable {
     - parameter transaction: a type conforming to ReadTransactionType such as
     YapDatabaseReadTransaction
     */
-    public static func read<D: DatabaseType>(transaction: D.Connection.ReadTransaction) -> Read<Self, D> {
+    public static func read<D: DatabaseType>(_ transaction: D.Connection.ReadTransaction) -> Read<Self, D> {
         return Read(transaction)
     }
 
@@ -105,11 +105,11 @@ extension Persistable {
     - parameter connection: a type conforming to ConnectionType such as
     YapDatabaseConnection.
     */
-    public static func read<D: DatabaseType>(connection: D.Connection) -> Read<Self, D> {
+    public static func read<D: DatabaseType>(_ connection: D.Connection) -> Read<Self, D> {
         return Read(connection)
     }
 
-    internal static func read<D: DatabaseType>(database: D) -> Read<Self, D> {
+    internal static func read<D: DatabaseType>(_ database: D) -> Read<Self, D> {
         return Read(database)
     }
 }
@@ -118,7 +118,7 @@ extension Readable
     where
     ItemType: Persistable {
 
-    func sync<T>(block: (Database.Connection.ReadTransaction) -> T) -> T {
+    func sync<T>(_ block: (Database.Connection.ReadTransaction) -> T) -> T {
         if let transaction = transaction {
             return block(transaction)
         }

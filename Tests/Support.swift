@@ -12,7 +12,7 @@ import Foundation
 class TestableReadTransaction {
 
     var keys: [String] = []
-    var didKeysInCollection: String? = .None
+    var didKeysInCollection: String? = .none
 
     var object: AnyObject? {
         get { return objects.first }
@@ -53,7 +53,7 @@ class TestableReadTransaction {
             currentReadIndex += 1
             return object
         }
-        return .None
+        return .none
     }
 
     func getNextMetadata() -> AnyObject? {
@@ -62,23 +62,23 @@ class TestableReadTransaction {
             currentMetadataReadIndex += 1
             return object
         }
-        return .None
+        return .none
     }
 }
 
 extension TestableReadTransaction: ReadTransactionType {
 
-    func keysInCollection(collection: String) -> [String] {
+    func keysInCollection(_ collection: String) -> [String] {
         didKeysInCollection = collection
         return keys
     }
 
-    func readAtIndex(index: YapDB.Index) -> AnyObject? {
+    func readAtIndex(_ index: YapDB.Index) -> AnyObject? {
         didReadAtIndexes.append(index)
         return getNextObject()
     }
 
-    func readMetadataAtIndex(index: YapDB.Index) -> AnyObject? {
+    func readMetadataAtIndex(_ index: YapDB.Index) -> AnyObject? {
         didReadMetadataAtIndexes.append(index)
         return getNextMetadata()
     }
@@ -93,14 +93,14 @@ class TestableWriteTransaction: TestableReadTransaction {
 
 extension TestableWriteTransaction: WriteTransactionType {
 
-    func writeAtIndex(index: YapDB.Index, object: AnyObject, metadata: AnyObject?) {
+    func writeAtIndex(_ index: YapDB.Index, object: AnyObject, metadata: AnyObject?) {
         didWriteAtIndexes.append((index, object, metadata))
     }
 
     func removeAtIndexes<
-        Indexes where
-        Indexes: SequenceType,
-        Indexes.Generator.Element == YapDB.Index>(indexes: Indexes) {
+        Indexes>(_ indexes: Indexes) where
+        Indexes: Sequence,
+        Indexes.Iterator.Element == YapDB.Index {
             didRemoveAtIndexes = Array(indexes)
     }
 }
@@ -118,34 +118,34 @@ class TestableConnection {
 
 extension TestableConnection: ConnectionType {
 
-    func read<T>(block: TestableReadTransaction -> T) -> T {
+    func read<T>(_ block: (TestableReadTransaction) -> T) -> T {
         didRead = true
         return block(readTransaction)
     }
 
-    func write<T>(block: TestableWriteTransaction -> T) -> T {
+    func write<T>(_ block: (TestableWriteTransaction) -> T) -> T {
         didWrite = true
         return block(writeTransaction)
     }
 
-    func asyncRead<T>(block: TestableReadTransaction -> T, queue: dispatch_queue_t, completion: (T) -> Void) {
+    func asyncRead<T>(_ block: @escaping (TestableReadTransaction) -> T, queue: DispatchQueue, completion: @escaping (T) -> Void) {
         didAsyncRead = true
-        dispatch_async(queue) { [transaction = self.readTransaction] in
+        queue.async { [transaction = self.readTransaction] in
             completion(block(transaction))
         }
     }
 
-    func asyncWrite<T>(block: TestableWriteTransaction -> T, queue: dispatch_queue_t, completion: (T -> Void)? = .None) {
+    func asyncWrite<T>(_ block: @escaping (TestableWriteTransaction) -> T, queue: DispatchQueue, completion: ((T) -> Void)? = .none) {
         didAsyncWrite = true
-        dispatch_async(queue) { [transaction = self.writeTransaction] in
+        queue.async { [transaction = self.writeTransaction] in
             let result = block(transaction)
             completion?(result)
         }
     }
 
-    func writeBlockOperation(block: TestableWriteTransaction -> Void) -> NSOperation {
+    func writeBlockOperation(_ block: @escaping (TestableWriteTransaction) -> Void) -> Operation {
         didWriteBlockOperation = true
-        return NSBlockOperation { block(self.writeTransaction) }
+        return BlockOperation { block(self.writeTransaction) }
     }
 }
 

@@ -12,7 +12,7 @@ extension Persistable {
 
     - parameter transaction: a `WriteTransactionType` transaction
     */
-    public func remove<WriteTransaction: WriteTransactionType>(transaction: WriteTransaction) {
+    public func remove<WriteTransaction: WriteTransactionType>(_ transaction: WriteTransaction) {
         transaction.remove(self)
     }
 
@@ -21,7 +21,7 @@ extension Persistable {
 
     - parameter connection: a `ConnectionType` connection
     */
-    public func remove<Connection: ConnectionType>(connection: Connection) {
+    public func remove<Connection: ConnectionType>(_ connection: Connection) {
         connection.remove(self)
     }
 
@@ -30,7 +30,7 @@ extension Persistable {
 
     - parameter connection: a `ConnectionType` connection
     */
-    public func asyncRemove<Connection: ConnectionType>(connection: Connection, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: dispatch_block_t? = .None) {
+    public func asyncRemove<Connection: ConnectionType>(_ connection: Connection, queue: DispatchQueue = DispatchQueue.main, completion: ()->()? = .none) {
         connection.asyncRemove(self, queue: queue, completion: completion)
     }
 
@@ -40,20 +40,20 @@ extension Persistable {
 
     - parameter connection: a `ConnectionType` connection
     */
-    public func removeOperation<Connection: ConnectionType>(connection: Connection) -> NSOperation {
-        return NSBlockOperation { connection.remove(self) }
+    public func removeOperation<Connection: ConnectionType>(_ connection: Connection) -> Operation {
+        return BlockOperation { connection.remove(self) }
     }
 }
 
-extension SequenceType where
-Generator.Element: Persistable {
+extension Sequence where
+Iterator.Element: Persistable {
 
     /**
     Removes the receiver using the write transaction.
 
     - parameter transaction: a `WriteTransactionType` transaction
     */
-    public func remove<WriteTransaction: WriteTransactionType>(transaction: WriteTransaction) {
+    public func remove<WriteTransaction: WriteTransactionType>(_ transaction: WriteTransaction) {
         transaction.remove(self)
     }
 
@@ -62,7 +62,7 @@ Generator.Element: Persistable {
 
     - parameter connection: a `ConnectionType` connection
     */
-    public func remove<Connection: ConnectionType>(connection: Connection) {
+    public func remove<Connection: ConnectionType>(_ connection: Connection) {
         connection.remove(self)
     }
 
@@ -71,7 +71,7 @@ Generator.Element: Persistable {
 
     - parameter connection: a `ConnectionType` connection
     */
-    public func asyncRemove<Connection: ConnectionType>(connection: Connection, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: dispatch_block_t? = .None) {
+    public func asyncRemove<Connection: ConnectionType>(_ connection: Connection, queue: DispatchQueue = DispatchQueue.main, completion: ()->()? = .none) {
         connection.asyncRemove(self, queue: queue, completion: completion)
     }
 
@@ -81,8 +81,8 @@ Generator.Element: Persistable {
 
     - parameter connection: a `ConnectionType` connection
     */
-    public func removeOperation<Connection: ConnectionType>(connection: Connection) -> NSOperation {
-        return NSBlockOperation { connection.remove(self) }
+    public func removeOperation<Connection: ConnectionType>(_ connection: Connection) -> Operation {
+        return BlockOperation { connection.remove(self) }
     }
 }
 

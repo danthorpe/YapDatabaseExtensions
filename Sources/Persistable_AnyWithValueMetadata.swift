@@ -15,36 +15,36 @@ extension Readable where
     ItemType: Persistable {
 
     func metadataInTransaction<
-        Metadata where
+        Metadata>(_ transaction: Database.Connection.ReadTransaction, atIndex index: YapDB.Index) -> Metadata? where
         Metadata: ValueCoding,
         Metadata.Coder: NSCoding,
-        Metadata.Coder.ValueType == Metadata>(transaction: Database.Connection.ReadTransaction, atIndex index: YapDB.Index) -> Metadata? {
+        Metadata.Coder.Value == Metadata {
         return transaction.readMetadataAtIndex(index)
     }
 
     func metadataAtIndexInTransaction<
-        Metadata where
+        Metadata>(_ index: YapDB.Index) -> (Database.Connection.ReadTransaction) -> Metadata? where
         Metadata: ValueCoding,
         Metadata.Coder: NSCoding,
-        Metadata.Coder.ValueType == Metadata>(index: YapDB.Index) -> Database.Connection.ReadTransaction -> Metadata? {
+        Metadata.Coder.Value == Metadata {
         return { self.metadataInTransaction($0, atIndex: index) }
     }
 
     func metadataInTransactionAtIndex<
-        Metadata where
+        Metadata>(_ transaction: Database.Connection.ReadTransaction) -> (YapDB.Index) -> Metadata? where
         Metadata: ValueCoding,
         Metadata.Coder: NSCoding,
-        Metadata.Coder.ValueType == Metadata>(transaction: Database.Connection.ReadTransaction) -> YapDB.Index -> Metadata? {
+        Metadata.Coder.Value == Metadata {
         return { self.metadataInTransaction(transaction, atIndex: $0) }
     }
 
     func metadataAtIndexesInTransaction<
-        Indexes, Metadata where
-        Indexes: SequenceType,
-        Indexes.Generator.Element == YapDB.Index,
+        Indexes, Metadata>(_ indexes: Indexes) -> (Database.Connection.ReadTransaction) -> [Metadata] where
+        Indexes: Sequence,
+        Indexes.Iterator.Element == YapDB.Index,
         Metadata: ValueCoding,
         Metadata.Coder: NSCoding,
-        Metadata.Coder.ValueType == Metadata>(indexes: Indexes) -> Database.Connection.ReadTransaction -> [Metadata] {
+        Metadata.Coder.Value == Metadata {
             return { indexes.flatMap(self.metadataInTransactionAtIndex($0)) }
     }
 
@@ -55,10 +55,10 @@ extension Readable where
     - returns: an optional `Metadata`
     */
     public func metadataAtIndex<
-        Metadata where
+        Metadata>(_ index: YapDB.Index) -> Metadata? where
         Metadata: ValueCoding,
         Metadata.Coder: NSCoding,
-        Metadata.Coder.ValueType == Metadata>(index: YapDB.Index) -> Metadata? {
+        Metadata.Coder.Value == Metadata {
         return sync(metadataAtIndexInTransaction(index))
     }
 
@@ -69,12 +69,12 @@ extension Readable where
     - returns: an array of `Metadata`
     */
     public func metadataAtIndexes<
-        Indexes, Metadata where
-        Indexes: SequenceType,
-        Indexes.Generator.Element == YapDB.Index,
+        Indexes, Metadata>(_ indexes: Indexes) -> [Metadata] where
+        Indexes: Sequence,
+        Indexes.Iterator.Element == YapDB.Index,
         Metadata: ValueCoding,
         Metadata.Coder: NSCoding,
-        Metadata.Coder.ValueType == Metadata>(indexes: Indexes) -> [Metadata] {
+        Metadata.Coder.Value == Metadata {
             return sync(metadataAtIndexesInTransaction(indexes))
     }
 }

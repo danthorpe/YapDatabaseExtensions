@@ -21,12 +21,12 @@ extension ReadTransactionType {
     - returns: an optional `ItemType`
     */
     public func readAtIndex<
-        Value where
+        Value>(_ index: YapDB.Index) -> Value? where
         Value: Persistable,
         Value: ValueCoding,
         Value.Coder: NSCoding,
-        Value.Coder.ValueType == Value>(index: YapDB.Index) -> Value? {
-            return Value.decode(readAtIndex(index))
+        Value.Coder.Value == Value {
+            return Value.decode(readAtIndex(index) as Any?)
     }
 
     /**
@@ -36,13 +36,13 @@ extension ReadTransactionType {
     - returns: an array of `ItemType`
     */
     public func readAtIndexes<
-        Indexes, Value where
-        Indexes: SequenceType,
-        Indexes.Generator.Element == YapDB.Index,
+        Indexes, Value>(_ indexes: Indexes) -> [Value] where
+        Indexes: Sequence,
+        Indexes.Iterator.Element == YapDB.Index,
         Value: Persistable,
         Value: ValueCoding,
         Value.Coder: NSCoding,
-        Value.Coder.ValueType == Value>(indexes: Indexes) -> [Value] {
+        Value.Coder.Value == Value {
             return indexes.flatMap(readAtIndex)
     }
 
@@ -53,11 +53,11 @@ extension ReadTransactionType {
     - returns: an optional `ItemType`
     */
     public func readByKey<
-        Value where
+        Value>(_ key: String) -> Value? where
         Value: Persistable,
         Value: ValueCoding,
         Value.Coder: NSCoding,
-        Value.Coder.ValueType == Value>(key: String) -> Value? {
+        Value.Coder.Value == Value {
             return readAtIndex(Value.indexWithKey(key))
     }
 
@@ -68,13 +68,13 @@ extension ReadTransactionType {
     - returns: an array of `ItemType`
     */
     public func readByKeys<
-        Keys, Value where
-        Keys: SequenceType,
-        Keys.Generator.Element == String,
+        Keys, Value>(_ keys: Keys) -> [Value] where
+        Keys: Sequence,
+        Keys.Iterator.Element == String,
         Value: Persistable,
         Value: ValueCoding,
         Value.Coder: NSCoding,
-        Value.Coder.ValueType == Value>(keys: Keys) -> [Value] {
+        Value.Coder.Value == Value {
             return readAtIndexes(Value.indexesWithKeys(keys))
     }
 
@@ -84,11 +84,11 @@ extension ReadTransactionType {
     - returns: an array of `ItemType`
     */
     public func readAll<
-        Value where
+        Value>() -> [Value] where
         Value: Persistable,
         Value: ValueCoding,
         Value.Coder: NSCoding,
-        Value.Coder.ValueType == Value>() -> [Value] {
+        Value.Coder.Value == Value {
             return readByKeys(keysInCollection(Value.collection))
     }
 }
@@ -102,11 +102,11 @@ extension ConnectionType {
     - returns: an optional `ItemType`
     */
     public func readAtIndex<
-        Value where
+        Value>(_ index: YapDB.Index) -> Value? where
         Value: Persistable,
         Value: ValueCoding,
         Value.Coder: NSCoding,
-        Value.Coder.ValueType == Value>(index: YapDB.Index) -> Value? {
+        Value.Coder.Value == Value {
             return read { $0.readAtIndex(index) }
     }
 
@@ -117,13 +117,13 @@ extension ConnectionType {
     - returns: an array of `ItemType`
     */
     public func readAtIndexes<
-        Indexes, Value where
-        Indexes: SequenceType,
-        Indexes.Generator.Element == YapDB.Index,
+        Indexes, Value>(_ indexes: Indexes) -> [Value] where
+        Indexes: Sequence,
+        Indexes.Iterator.Element == YapDB.Index,
         Value: Persistable,
         Value: ValueCoding,
         Value.Coder: NSCoding,
-        Value.Coder.ValueType == Value>(indexes: Indexes) -> [Value] {
+        Value.Coder.Value == Value {
             return read { $0.readAtIndexes(indexes) }
     }
 
@@ -134,11 +134,11 @@ extension ConnectionType {
     - returns: an optional `ItemType`
     */
     public func readByKey<
-        Value where
+        Value>(_ key: String) -> Value? where
         Value: Persistable,
         Value: ValueCoding,
         Value.Coder: NSCoding,
-        Value.Coder.ValueType == Value>(key: String) -> Value? {
+        Value.Coder.Value == Value {
             return readAtIndex(Value.indexWithKey(key))
     }
 
@@ -149,13 +149,13 @@ extension ConnectionType {
     - returns: an array of `ItemType`
     */
     public func readByKeys<
-        Keys, Value where
-        Keys: SequenceType,
-        Keys.Generator.Element == String,
+        Keys, Value>(_ keys: Keys) -> [Value] where
+        Keys: Sequence,
+        Keys.Iterator.Element == String,
         Value: Persistable,
         Value: ValueCoding,
         Value.Coder: NSCoding,
-        Value.Coder.ValueType == Value>(keys: Keys) -> [Value] {
+        Value.Coder.Value == Value {
             return readAtIndexes(Value.indexesWithKeys(keys))
     }
 
@@ -165,11 +165,11 @@ extension ConnectionType {
     - returns: an array of `ItemType`
     */
     public func readAll<
-        Value where
+        Value>() -> [Value] where
         Value: Persistable,
         Value: ValueCoding,
         Value.Coder: NSCoding,
-        Value.Coder.ValueType == Value>() -> [Value] {
+        Value.Coder.Value == Value {
             return read { $0.readAll() }
     }
 }
@@ -184,11 +184,11 @@ extension WriteTransactionType {
     - parameter item: the item to store.
     */
     public func write<
-        Value where
+        Value>(_ item: Value) -> Value where
         Value: Persistable,
         Value: ValueCoding,
         Value.Coder: NSCoding,
-        Value.Coder.ValueType == Value>(item: Value) -> Value {
+        Value.Coder.Value == Value {
             writeAtIndex(item.index, object: item.encoded, metadata: .None)
             return item
     }
@@ -199,13 +199,13 @@ extension WriteTransactionType {
     - parameter items: a SequenceType of items to store.
     */
     public func write<
-        Items, Value where
-        Items: SequenceType,
-        Items.Generator.Element == Value,
+        Items, Value>(_ items: Items) -> [Value] where
+        Items: Sequence,
+        Items.Iterator.Element == Value,
         Value: Persistable,
         Value: ValueCoding,
         Value.Coder: NSCoding,
-        Value.Coder.ValueType == Value>(items: Items) -> [Value] {
+        Value.Coder.Value == Value {
             return items.map(write)
     }
 }
@@ -218,11 +218,11 @@ extension ConnectionType {
     - parameter item: the item to store.
     */
     public func write<
-        Value where
+        Value>(_ item: Value) -> Value where
         Value: Persistable,
         Value: ValueCoding,
         Value.Coder: NSCoding,
-        Value.Coder.ValueType == Value>(item: Value) -> Value {
+        Value.Coder.Value == Value {
             return write { $0.write(item) }
     }
 
@@ -232,13 +232,13 @@ extension ConnectionType {
     - parameter items: a SequenceType of items to store.
     */
     public func write<
-        Items, Value where
-        Items: SequenceType,
-        Items.Generator.Element == Value,
+        Items, Value>(_ items: Items) -> [Value] where
+        Items: Sequence,
+        Items.Iterator.Element == Value,
         Value: Persistable,
         Value: ValueCoding,
         Value.Coder: NSCoding,
-        Value.Coder.ValueType == Value>(items: Items) -> [Value] {
+        Value.Coder.Value == Value {
             return write { $0.write(items) }
     }
 
@@ -250,11 +250,11 @@ extension ConnectionType {
     - parameter completion: a dispatch_block_t for completion.
     */
     public func asyncWrite<
-        Value where
+        Value>(_ item: Value, queue: DispatchQueue = DispatchQueue.main, completion: ((Value) -> Void)? = .none) where
         Value: Persistable,
         Value: ValueCoding,
         Value.Coder: NSCoding,
-        Value.Coder.ValueType == Value>(item: Value, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: (Value -> Void)? = .None) {
+        Value.Coder.Value == Value {
             asyncWrite({ $0.write(item) }, queue: queue, completion: completion)
     }
 
@@ -266,13 +266,13 @@ extension ConnectionType {
     - parameter completion: a dispatch_block_t for completion.
     */
     public func asyncWrite<
-        Items, Value where
-        Items: SequenceType,
-        Items.Generator.Element == Value,
+        Items, Value>(_ items: Items, queue: DispatchQueue = DispatchQueue.main, completion: (([Value]) -> Void)? = .none) where
+        Items: Sequence,
+        Items.Iterator.Element == Value,
         Value: Persistable,
         Value: ValueCoding,
         Value.Coder: NSCoding,
-        Value.Coder.ValueType == Value>(items: Items, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: ([Value] -> Void)? = .None) {
+        Value.Coder.Value == Value {
             asyncWrite({ $0.write(items) }, queue: queue, completion: completion)
     }
 }
