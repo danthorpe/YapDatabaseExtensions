@@ -123,7 +123,7 @@ class YapDatabaseReadWriteTransactionTests: ReadWriteBaseTests {
     func test__remove_at_indexes() {
         let db = YapDB.testDatabase()
 
-        db.makeNewConnection().write(items)
+        _ = db.makeNewConnection().write(items)
         XCTAssertNotNil(Employee.read(db).atIndex(index))
 
         db.makeNewConnection().readWrite { transaction in
@@ -149,7 +149,7 @@ class YapDatabaseConnectionTests: ReadWriteBaseTests {
         let db = YapDB.testDatabase()
         let expectation = self.expectation(description: "Test: \(#function)")
 
-        db.makeNewConnection().write(item)
+        _ = db.makeNewConnection().write(item)
         XCTAssertNotNil(Employee.read(db).atIndex(index))
 
         var received: Employee? = .none
