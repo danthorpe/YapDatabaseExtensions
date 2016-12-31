@@ -141,7 +141,7 @@ class YapDatabaseConnectionTests: ReadWriteBaseTests {
 
     override func setUp() {
         super.setUp()
-        dispatchQueue = DispatchQueue.global(qos: DispatchQoS.QoSClass.`default`)
+        dispatchQueue = DispatchQueue.global(qos: .default)
         operationQueue = OperationQueue()
     }
 

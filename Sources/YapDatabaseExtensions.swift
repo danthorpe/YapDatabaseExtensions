@@ -109,7 +109,7 @@ public struct YapDB {
         let path = pathToDatabase(.cachesDirectory, name: (file as NSString).lastPathComponent, suffix: test.trimmingCharacters(in: CharacterSet(charactersIn: "()")))
         assert(!path.isEmpty, "Path should not be empty.")
         do {
-            try FileManager.`default`.removeItem(atPath: path)
+            try FileManager.default.removeItem(atPath: path)
         }
         catch { }
 
