@@ -50,10 +50,10 @@ public struct Inventory: Identifiable, Equatable {
     }
 }
 
-open class NamedEntity: NSObject, NSCoding {
+public class NamedEntity: NSObject, NSCoding {
 
-    open let identifier: Identifier
-    open let name: String
+    public let identifier: Identifier
+    public let name: String
 
     public init(id: String, name n: String) {
         identifier = id
@@ -65,18 +65,18 @@ open class NamedEntity: NSObject, NSCoding {
         name = aDecoder.decodeObject(forKey: "name") as! String
     }
 
-    open func encode(with aCoder: NSCoder) {
+    public func encode(with aCoder: NSCoder) {
         aCoder.encode(identifier, forKey: "identifier")
         aCoder.encode(name, forKey: "name")
     }
 }
 
-open class Person: NamedEntity { }
+public class Person: NamedEntity { }
 
-open class Employee: NamedEntity {
+public class Employee: NamedEntity {
 }
 
-open class Manager: NamedEntity {
+public class Manager: NamedEntity {
     public struct Metadata: Equatable {
         public let numberOfDirectReports: Int
     }
@@ -149,7 +149,7 @@ extension Manager.Metadata: Hashable {
 
 extension NamedEntity {
 
-    open override var description: String {
+    public override var description: String {
         return "id: \(identifier), name: \(name)"
     }
 }
@@ -253,8 +253,8 @@ extension Manager.Metadata: ValueCoding {
 
 // MARK: - Coders
 
-open class BarcodeCoder: NSObject, NSCoding, CodingProtocol {
-    open let value: Barcode
+public class BarcodeCoder: NSObject, NSCoding, CodingProtocol {
+    public let value: Barcode
 
     public required init(_ v: Barcode) {
         value = v
@@ -279,7 +279,7 @@ open class BarcodeCoder: NSObject, NSCoding, CodingProtocol {
         }
     }
 
-    open func encode(with aCoder: NSCoder) {
+    public func encode(with aCoder: NSCoder) {
         aCoder.encode(value.kind.rawValue, forKey: "kind")
         switch value {
         case let .upca(numberSystem, manufacturer, product, check):
@@ -293,8 +293,8 @@ open class BarcodeCoder: NSObject, NSCoding, CodingProtocol {
     }
 }
 
-open class ProductCategoryCoder: NSObject, NSCoding, CodingProtocol {
-    open let value: Product.Category
+public class ProductCategoryCoder: NSObject, NSCoding, CodingProtocol {
+    public let value: Product.Category
 
     public required init(_ v: Product.Category) {
         value = v
@@ -306,14 +306,14 @@ open class ProductCategoryCoder: NSObject, NSCoding, CodingProtocol {
         value = Product.Category(identifier: identifier, name: name!)
     }
 
-    open func encode(with aCoder: NSCoder) {
+    public func encode(with aCoder: NSCoder) {
         aCoder.encode(value.identifier, forKey: "identifier")
         aCoder.encode(value.name, forKey: "name")
     }
 }
 
-open class ProductMetadataCoder: NSObject, NSCoding, CodingProtocol {
-    open let value: Product.Metadata
+public class ProductMetadataCoder: NSObject, NSCoding, CodingProtocol {
+    public let value: Product.Metadata
 
     public required init(_ v: Product.Metadata) {
         value = v
@@ -324,13 +324,13 @@ open class ProductMetadataCoder: NSObject, NSCoding, CodingProtocol {
         value = Product.Metadata(categoryIdentifier: categoryIdentifier)
     }
 
-    open func encode(with aCoder: NSCoder) {
+    public func encode(with aCoder: NSCoder) {
         aCoder.encode(value.categoryIdentifier, forKey: "categoryIdentifier")
     }
 }
 
-open class ProductCoder: NSObject, NSCoding, CodingProtocol {
-    open let value: Product
+public class ProductCoder: NSObject, NSCoding, CodingProtocol {
+    public let value: Product
 
     public required init(_ v: Product) {
         value = v
@@ -343,15 +343,15 @@ open class ProductCoder: NSObject, NSCoding, CodingProtocol {
         value = Product(identifier: identifier, name: name, barcode: barcode!)
     }
 
-    open func encode(with aCoder: NSCoder) {
+    public func encode(with aCoder: NSCoder) {
         aCoder.encode(value.identifier, forKey: "identifier")
         aCoder.encode(value.name, forKey: "name")
         aCoder.encode(value.barcode.encoded, forKey: "barcode")
     }
 }
 
-open class InventoryCoder: NSObject, NSCoding, CodingProtocol {
-    open let value: Inventory
+public class InventoryCoder: NSObject, NSCoding, CodingProtocol {
+    public let value: Inventory
 
     public required init(_ v: Inventory) {
         value = v
@@ -362,14 +362,14 @@ open class InventoryCoder: NSObject, NSCoding, CodingProtocol {
         value = Inventory(product: product!)
     }
 
-    open func encode(with aCoder: NSCoder) {
+    public func encode(with aCoder: NSCoder) {
         aCoder.encode(value.product.encoded, forKey: "product")
     }
 }
 
 
-open class ManagerMetadataCoder: NSObject, NSCoding, CodingProtocol {
-    open let value: Manager.Metadata
+public class ManagerMetadataCoder: NSObject, NSCoding, CodingProtocol {
+    public let value: Manager.Metadata
 
     public required init(_ v: Manager.Metadata) {
         value = v
@@ -380,7 +380,7 @@ open class ManagerMetadataCoder: NSObject, NSCoding, CodingProtocol {
         value = Manager.Metadata(numberOfDirectReports: numberOfDirectReports)
     }
 
-    open func encode(with aCoder: NSCoder) {
+    public func encode(with aCoder: NSCoder) {
         aCoder.encode(value.numberOfDirectReports, forKey: "numberOfDirectReports")
     }
 }
