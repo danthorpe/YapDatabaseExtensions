@@ -39,13 +39,13 @@ extension Readable where
     }
 
     func metadataAtIndexesInTransaction<
-        Indexes, Metadata>(_ indexes: Indexes) -> (Database.Connection.ReadTransaction) -> [Metadata] where
+        Indexes, Metadata>(_ indexes: Indexes) -> (Database.Connection.ReadTransaction) -> [Metadata?] where
         Indexes: Sequence,
         Indexes.Iterator.Element == YapDB.Index,
         Metadata: ValueCoding,
         Metadata.Coder: NSCoding,
         Metadata.Coder.Value == Metadata {
-            return { indexes.flatMap(self.metadataInTransactionAtIndex($0)) }
+            return { indexes.map(self.metadataInTransactionAtIndex($0)) }
     }
 
     /**
@@ -69,7 +69,7 @@ extension Readable where
     - returns: an array of `Metadata`
     */
     public func metadataAtIndexes<
-        Indexes, Metadata>(_ indexes: Indexes) -> [Metadata] where
+        Indexes, Metadata>(_ indexes: Indexes) -> [Metadata?] where
         Indexes: Sequence,
         Indexes.Iterator.Element == YapDB.Index,
         Metadata: ValueCoding,

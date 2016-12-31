@@ -34,12 +34,12 @@ extension ReadTransactionType {
     - returns: an array of `ItemType`
     */
     public func readAtIndexes<
-        Indexes, Object>(_ indexes: Indexes) -> [Object] where
+        Indexes, Object>(_ indexes: Indexes) -> [Object?] where
         Indexes: Sequence,
         Indexes.Iterator.Element == YapDB.Index,
         Object: Persistable,
         Object: NSCoding {
-            return indexes.flatMap(readAtIndex)
+            return indexes.map(readAtIndex)
     }
 
     /**
@@ -62,7 +62,7 @@ extension ReadTransactionType {
     - returns: an array of `ItemType`
     */
     public func readByKeys<
-        Keys, Object>(_ keys: Keys) -> [Object] where
+        Keys, Object>(_ keys: Keys) -> [Object?] where
         Keys: Sequence,
         Keys.Iterator.Element == String,
         Object: Persistable,
@@ -76,7 +76,7 @@ extension ReadTransactionType {
     - returns: an array of `ItemType`
     */
     public func readAll<
-        Object>() -> [Object] where
+        Object>() -> [Object?] where
         Object: Persistable,
         Object: NSCoding {
             return readByKeys(keysInCollection(Object.collection))
@@ -105,7 +105,7 @@ extension ConnectionType {
     - returns: an array of `ItemType`
     */
     public func readAtIndexes<
-        Indexes, Object>(_ indexes: Indexes) -> [Object] where
+        Indexes, Object>(_ indexes: Indexes) -> [Object?] where
         Indexes: Sequence,
         Indexes.Iterator.Element == YapDB.Index,
         Object: Persistable,
@@ -133,7 +133,7 @@ extension ConnectionType {
     - returns: an array of `ItemType`
     */
     public func readByKeys<
-        Keys, Object>(_ keys: Keys) -> [Object] where
+        Keys, Object>(_ keys: Keys) -> [Object?] where
         Keys: Sequence,
         Keys.Iterator.Element == String,
         Object: Persistable,
@@ -147,7 +147,7 @@ extension ConnectionType {
     - returns: an array of `ItemType`
     */
     public func readAll<
-        Object>() -> [Object] where
+        Object>() -> [Object?] where
         Object: Persistable,
         Object: NSCoding {
             return read { $0.readAll() }

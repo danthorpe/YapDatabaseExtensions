@@ -127,11 +127,11 @@ extension Readable where
     }
 
     func atIndexesInTransaction<
-        Indexes>(_ indexes: Indexes) -> (Database.Connection.ReadTransaction) -> [ItemType] where
+        Indexes>(_ indexes: Indexes) -> (Database.Connection.ReadTransaction) -> [ItemType?] where
         Indexes: Sequence,
         Indexes.Iterator.Element == YapDB.Index {
             let atIndex = inTransactionAtIndex
-            return { indexes.flatMap(atIndex($0)) }
+            return { indexes.map(atIndex($0)) }
     }
 
     func inTransaction(_ transaction: Database.Connection.ReadTransaction, byKey key: String) -> ItemType? {
@@ -146,11 +146,11 @@ extension Readable where
         return { self.inTransaction($0, byKey: key) }
     }
 
-    func byKeysInTransaction(_ keys: [String]? = .none) -> (Database.Connection.ReadTransaction) -> [ItemType] {
+    func byKeysInTransaction(_ keys: [String]? = .none) -> (Database.Connection.ReadTransaction) -> [ItemType?] {
         let byKey = inTransactionByKey
         return { transaction in
             let keys = keys ?? transaction.keysInCollection(ItemType.collection)
-            return keys.flatMap(byKey(transaction))
+            return keys.map(byKey(transaction))
         }
     }
 
@@ -171,7 +171,7 @@ extension Readable where
     - returns: an array of `ItemType`
     */
     public func atIndexes<
-        Indexes>(_ indexes: Indexes) -> [ItemType] where
+        Indexes>(_ indexes: Indexes) -> [ItemType?] where
         Indexes: Sequence,
         Indexes.Iterator.Element == YapDB.Index {
             return sync(atIndexesInTransaction(indexes))
@@ -194,7 +194,7 @@ extension Readable where
     - returns: an array of `ItemType`
     */
     public func byKeys<
-        Keys>(_ keys: Keys) -> [ItemType] where
+        Keys>(_ keys: Keys) -> [ItemType?] where
         Keys: Sequence,
         Keys.Iterator.Element == String {
             return sync(byKeysInTransaction(Array(keys)))
@@ -205,7 +205,7 @@ extension Readable where
 
     - returns: an array of `ItemType`
     */
-    public func all() -> [ItemType] {
+    public func all() -> [ItemType?] {
         return sync(byKeysInTransaction())
     }
 
@@ -218,9 +218,15 @@ extension Readable where
     public func filterExisting(_ keys: [String]) -> (existing: [ItemType], missing: [String]) {
         let existingInTransaction = byKeysInTransaction(keys)
         return sync { transaction -> ([ItemType], [String]) in
-            let existing = existingInTransaction(transaction)
-            let existingKeys = existing.map(keyForPersistable)
-            let missingKeys = keys.filter { !existingKeys.contains($0) }
+            var missingKeys = [String]()
+            let maybeExisting = existingInTransaction(transaction)
+            let existing = zip(keys, maybeExisting).flatMap { zipped -> ItemType? in
+                guard let item = zipped.1 else {
+                    missingKeys.append(zipped.0)
+                    return nil
+                }
+                return item
+            }
             return (existing, missingKeys)
         }
     }

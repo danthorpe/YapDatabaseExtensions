@@ -127,12 +127,12 @@ class ObjectWithObjectMetadataTests: XCTestCase {
         return true
     }
 
-    func checkTransactionDidReadItems(_ result: [YapItem<TypeUnderTest, MetadataTypeUnderTest>]) -> Bool {
-        if result.isEmpty {
+    func checkTransactionDidReadItems(_ result: [YapItem<TypeUnderTest, MetadataTypeUnderTest>?]) -> Bool {
+        if result.flatMap({$0}).isEmpty {
             return false
         }
         XCTAssertEqual(Set(readTransaction.didReadAtIndexes), Set(indexes))
-        XCTAssertEqual(result.count, items.count)
+        XCTAssertEqual(result.flatMap({$0}).count, items.count)
         return true
     }
 

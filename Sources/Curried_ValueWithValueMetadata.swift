@@ -40,7 +40,7 @@ extension Persistable where
     - returns: a (ReadTransaction) -> [Self] closure.
     */
     public static func readWithMetadataAtIndexes<
-        Indexes, ReadTransaction, Metadata>(_ indexes: Indexes) -> (ReadTransaction) -> [YapItem<Self, Metadata>] where
+        Indexes, ReadTransaction, Metadata>(_ indexes: Indexes) -> (ReadTransaction) -> [YapItem<Self, Metadata>?] where
         Indexes: Sequence,
         Indexes.Iterator.Element == YapDB.Index,
         ReadTransaction: ReadTransactionType,
@@ -74,7 +74,7 @@ extension Persistable where
     - returns: a (ReadTransaction) -> [Self] closure.
     */
     public static func readWithMetadataByKeys<
-        Keys, ReadTransaction, Metadata>(_ keys: Keys) -> (ReadTransaction) -> [YapItem<Self, Metadata>] where
+        Keys, ReadTransaction, Metadata>(_ keys: Keys) -> (ReadTransaction) -> [YapItem<Self, Metadata>?] where
         Keys: Sequence,
         Keys.Iterator.Element == String,
         ReadTransaction: ReadTransactionType,

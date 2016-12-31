@@ -35,7 +35,7 @@ extension Persistable where
     - returns: a (ReadTransaction) -> [Self] closure.
     */
     public static func readAtIndexes<
-        Indexes, ReadTransaction>(_ indexes: Indexes) -> (ReadTransaction) -> [Self] where
+        Indexes, ReadTransaction>(_ indexes: Indexes) -> (ReadTransaction) -> [Self?] where
         Indexes: Sequence,
         Indexes.Iterator.Element == YapDB.Index,
         ReadTransaction: ReadTransactionType {
@@ -63,7 +63,7 @@ extension Persistable where
     - returns: a (ReadTransaction) -> [Self] closure.
     */
     public static func readByKeys<
-        Keys, ReadTransaction>(_ keys: Keys) -> (ReadTransaction) -> [Self] where
+        Keys, ReadTransaction>(_ keys: Keys) -> (ReadTransaction) -> [Self?] where
         Keys: Sequence,
         Keys.Iterator.Element == String,
         ReadTransaction: ReadTransactionType {

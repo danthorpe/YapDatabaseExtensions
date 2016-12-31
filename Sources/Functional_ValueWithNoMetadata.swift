@@ -36,14 +36,14 @@ extension ReadTransactionType {
     - returns: an array of `ItemType`
     */
     public func readAtIndexes<
-        Indexes, Value>(_ indexes: Indexes) -> [Value] where
+        Indexes, Value>(_ indexes: Indexes) -> [Value?] where
         Indexes: Sequence,
         Indexes.Iterator.Element == YapDB.Index,
         Value: Persistable,
         Value: ValueCoding,
         Value.Coder: NSCoding,
         Value.Coder.Value == Value {
-            return indexes.flatMap(readAtIndex)
+            return indexes.map(readAtIndex)
     }
 
     /**
@@ -68,7 +68,7 @@ extension ReadTransactionType {
     - returns: an array of `ItemType`
     */
     public func readByKeys<
-        Keys, Value>(_ keys: Keys) -> [Value] where
+        Keys, Value>(_ keys: Keys) -> [Value?] where
         Keys: Sequence,
         Keys.Iterator.Element == String,
         Value: Persistable,
@@ -84,7 +84,7 @@ extension ReadTransactionType {
     - returns: an array of `ItemType`
     */
     public func readAll<
-        Value>() -> [Value] where
+        Value>() -> [Value?] where
         Value: Persistable,
         Value: ValueCoding,
         Value.Coder: NSCoding,
@@ -117,7 +117,7 @@ extension ConnectionType {
     - returns: an array of `ItemType`
     */
     public func readAtIndexes<
-        Indexes, Value>(_ indexes: Indexes) -> [Value] where
+        Indexes, Value>(_ indexes: Indexes) -> [Value?] where
         Indexes: Sequence,
         Indexes.Iterator.Element == YapDB.Index,
         Value: Persistable,
@@ -149,7 +149,7 @@ extension ConnectionType {
     - returns: an array of `ItemType`
     */
     public func readByKeys<
-        Keys, Value>(_ keys: Keys) -> [Value] where
+        Keys, Value>(_ keys: Keys) -> [Value?] where
         Keys: Sequence,
         Keys.Iterator.Element == String,
         Value: Persistable,
@@ -165,7 +165,7 @@ extension ConnectionType {
     - returns: an array of `ItemType`
     */
     public func readAll<
-        Value>() -> [Value] where
+        Value>() -> [Value?] where
         Value: Persistable,
         Value: ValueCoding,
         Value.Coder: NSCoding,

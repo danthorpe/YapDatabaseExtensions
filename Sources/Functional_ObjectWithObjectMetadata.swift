@@ -37,14 +37,13 @@ extension ReadTransactionType {
     - returns: an array of `ItemType`
     */
     public func readWithMetadataAtIndexes<
-        Indexes, Object, Metadata>(_ indexes: Indexes) -> [YapItem<Object, Metadata>] where
+        Indexes, Object, Metadata>(_ indexes: Indexes) -> [YapItem<Object, Metadata>?] where
         Indexes: Sequence,
         Indexes.Iterator.Element == YapDB.Index,
         Object: Persistable,
         Object: NSCoding,
         Metadata: NSCoding {
-            // FIXME: using flatMap means the output length need not match the input length
-            return indexes.flatMap(readWithMetadataAtIndex)
+            return indexes.map(readWithMetadataAtIndex)
     }
 
     /**
@@ -68,7 +67,7 @@ extension ReadTransactionType {
     - returns: an array of `ItemType`
     */
     public func readWithMetadataByKeys<
-        Keys, Object, Metadata>(_ keys: Keys) -> [YapItem<Object, Metadata>] where
+        Keys, Object, Metadata>(_ keys: Keys) -> [YapItem<Object, Metadata>?] where
         Keys: Sequence,
         Keys.Iterator.Element == String,
         Object: Persistable,
@@ -83,7 +82,7 @@ extension ReadTransactionType {
     - returns: an array of `ItemType`
     */
     public func readWithMetadataAll<
-        Object, Metadata>() -> [YapItem<Object, Metadata>] where
+        Object, Metadata>() -> [YapItem<Object, Metadata>?] where
         Object: Persistable,
         Object: NSCoding,
         Metadata: NSCoding {
@@ -114,7 +113,7 @@ extension ConnectionType {
     - returns: an array of `ItemType`
     */
     public func readWithMetadataAtIndexes<
-        Indexes, Object, Metadata>(_ indexes: Indexes) -> [YapItem<Object, Metadata>] where
+        Indexes, Object, Metadata>(_ indexes: Indexes) -> [YapItem<Object, Metadata>?] where
         Indexes: Sequence,
         Indexes.Iterator.Element == YapDB.Index,
         Object: Persistable,
@@ -144,7 +143,7 @@ extension ConnectionType {
     - returns: an array of `ItemType`
     */
     public func readWithMetadataByKeys<
-        Keys, Object, Metadata>(_ keys: Keys) -> [YapItem<Object, Metadata>] where
+        Keys, Object, Metadata>(_ keys: Keys) -> [YapItem<Object, Metadata>?] where
         Keys: Sequence,
         Keys.Iterator.Element == String,
         Object: Persistable,
@@ -159,7 +158,7 @@ extension ConnectionType {
     - returns: an array of `ItemType`
     */
     public func readWithMetadataAll<
-        Object, Metadata>() -> [YapItem<Object, Metadata>] where
+        Object, Metadata>() -> [YapItem<Object, Metadata>?] where
         Object: Persistable,
         Object: NSCoding,
         Metadata: NSCoding {
