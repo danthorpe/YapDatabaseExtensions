@@ -103,8 +103,8 @@ extension YapDB {
         - parameter database: a YapDatabase instance
         - returns: A Bool
         */
-        open func isRegisteredInDatabase(_ database: YapDatabase) -> Bool {
-            return (database.registeredExtension(name) as? YapDatabaseView) != .none
+        public func isRegisteredInDatabase(_ database: YapDatabase) -> Bool {
+            return (database.registeredExtension(name) as? YapDatabaseExtension) != .none
         }
     }
 
