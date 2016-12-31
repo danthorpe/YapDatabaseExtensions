@@ -637,7 +637,7 @@ public typealias ValueMetadataPersistable = Persistable
 public typealias Saveable = ValueCoding
 
 @available(*, unavailable, renamed: "CodingProtocol")
+public typealias CodingType = CodingProtocol
+
+@available(*, unavailable, renamed: "CodingProtocol")
 public typealias Archiver = CodingProtocol
-
-
-
