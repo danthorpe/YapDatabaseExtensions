@@ -31,13 +31,11 @@ public struct Product: Identifiable, Equatable {
         }
     }
 
-    public var metadata: Metadata? = .None
     public let identifier: Identifier
     internal let name: String
     internal let barcode: Barcode
 
-    public init(metadata: Metadata? = .None, identifier: Identifier, name: String, barcode: Barcode) {
-        self.metadata = metadata
+    public init(identifier: Identifier, name: String, barcode: Barcode) {
         self.identifier = identifier
         self.name = name
         self.barcode = barcode
@@ -46,7 +44,6 @@ public struct Product: Identifiable, Equatable {
 
 public struct Inventory: Identifiable, Equatable {
     let product: Product
-    public var metadata: NSNumber? = .None
 
     public var identifier: Identifier {
         return product.identifier
@@ -77,14 +74,12 @@ public class NamedEntity: NSObject, NSCoding {
 public class Person: NamedEntity { }
 
 public class Employee: NamedEntity {
-    public var metadata: NSDate? = .None
 }
 
 public class Manager: NamedEntity {
     public struct Metadata: Equatable {
         public let numberOfDirectReports: Int
     }
-    public var metadata: Metadata? = .None
 }
 
 // MARK: - Equatable
@@ -109,7 +104,7 @@ public func == (a: Product.Metadata, b: Product.Metadata) -> Bool {
 }
 
 public func == (a: Inventory, b: Inventory) -> Bool {
-    return (a.product == b.product) && (a.metadata == b.metadata)
+    return (a.product == b.product)
 }
 
 public func == (a: NamedEntity, b: NamedEntity) -> Bool {
@@ -137,6 +132,18 @@ extension Product: Hashable {
 extension Inventory: Hashable {
     public var hashValue: Int {
         return product.hashValue
+    }
+}
+
+extension Product.Metadata: Hashable {
+    public var hashValue: Int {
+        return categoryIdentifier.hashValue
+    }
+}
+
+extension Manager.Metadata: Hashable {
+    public var hashValue: Int {
+        return numberOfDirectReports.hashValue
     }
 }
 
@@ -352,7 +359,7 @@ public class InventoryCoder: NSObject, NSCoding, CodingType {
 
     public required init?(coder aDecoder: NSCoder) {
         let product = Product.decode(aDecoder.decodeObjectForKey("product"))
-        value = Inventory(product: product!, metadata: .None)
+        value = Inventory(product: product!)
     }
 
     public func encodeWithCoder(aCoder: NSCoder) {

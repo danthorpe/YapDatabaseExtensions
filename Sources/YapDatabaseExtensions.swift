@@ -145,6 +145,30 @@ extension YapDB {
     }
 }
 
+/**
+A pairing (effectively a tuple) of a value and a metadata.
+Used when values and metadatas are read or written together.
+*/
+public struct YapItem<Value, Metadata> {
+
+    /// The item's value
+    let value: Value
+
+    /// The item's metadata
+    let metadata: Metadata?
+
+    /**
+    Create a new YapItem value.
+
+    - parameter value: the value associated with a `YapDB.Index`
+    - parameter metadata: an optional metadata associated with a `YapDB.Index`
+    */
+    public init(_ value: Value, _ metadata: Metadata?) {
+        self.value = value
+        self.metadata = metadata
+    }
+}
+
 // MARK: - Identifiable
 
 /**
@@ -182,14 +206,8 @@ are stored in the same YapDatabase collection.
 */
 public protocol Persistable: Identifiable {
 
-    /// The nested type of the metadata. Defaults to Void.
-    associatedtype MetadataType
-
     /// The YapDatabase collection name the type is stored in.
     static var collection: String { get }
-
-    /// A metadata which is set when reading, and get when writing.
-    var metadata: MetadataType? { get set }
 }
 
 extension Persistable {
@@ -220,15 +238,6 @@ extension Persistable {
         Keys: SequenceType,
         Keys.Generator.Element == String>(keys: Keys) -> [YapDB.Index] {
             return Set(keys).map { YapDB.Index(collection: collection, key: $0) }
-    }
-
-    /**
-    Default metadata property. Implement this to re-define your
-    own MetadataType.
-    */
-    public var metadata: Void? {
-        get { return .None }
-        set { }
     }
 
     /**

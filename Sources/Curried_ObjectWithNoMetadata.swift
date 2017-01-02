@@ -12,8 +12,7 @@ import ValueCoding
 // MARK: - Persistable
 
 extension Persistable where
-    Self: NSCoding,
-    Self.MetadataType == Void {
+    Self: NSCoding {
 
     /**
     Returns a closure which, given a read transaction will return

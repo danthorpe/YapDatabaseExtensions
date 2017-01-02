@@ -106,19 +106,18 @@ class YapDatabaseReadWriteTransactionTests: ReadWriteBaseTests {
         }
         let written = Employee.read(db).atIndex(index)
         XCTAssertNotNil(written)
-        XCTAssertNil(written!.metadata)
         XCTAssertEqual(written!.identifier, item.identifier)
     }
 
     func test__write_at_index_with_metadata() {
         let db = YapDB.testDatabase()
         db.makeNewConnection().readWriteWithBlock { transaction in
-            transaction.writeAtIndex(self.index, object: self.item, metadata: self.item.metadata)
+            transaction.writeAtIndex(self.index, object: self.item, metadata: self.metadata)
         }
-        let written = Employee.read(db).atIndex(index)
+        let written: YapItem<Employee, NSDate>? = Employee.read(db).withMetadataAtIndex(index)
         XCTAssertNotNil(written)
         XCTAssertNotNil(written!.metadata)
-        XCTAssertEqual(written!.identifier, item.identifier)
+        XCTAssertEqual(written!.value.identifier, item.identifier)
     }
 
     func test__remove_at_indexes() {
@@ -172,7 +171,7 @@ class YapDatabaseConnectionTests: ReadWriteBaseTests {
 
         var written: Employee? = .None
         db.makeNewConnection().asyncWrite({ transaction -> Employee? in
-            transaction.writeAtIndex(self.index, object: self.item, metadata: self.item.metadata)
+            transaction.writeAtIndex(self.index, object: self.item, metadata: self.metadata)
             return self.item
         }, queue: dispatchQueue) { (result: Employee?) in
             written = result
@@ -206,10 +205,12 @@ class YapDatabaseConnectionTests: ReadWriteBaseTests {
 class ValueCodingTests: XCTestCase {
 
     var item: Product!
+    var metadata: Product.Metadata!
     var index: YapDB.Index!
     var key: String!
 
     var items: [Product]!
+    var metadatas: [Product.Metadata?]!
     var indexes: [YapDB.Index]!
     var keys: [String]!
 
@@ -225,9 +226,11 @@ class ValueCodingTests: XCTestCase {
 
     override func tearDown() {
         item = nil
+        metadata = nil
         index = nil
         key = nil
         items = nil
+        metadatas = nil
         indexes = nil
         keys = nil
         super.tearDown()
@@ -235,31 +238,34 @@ class ValueCodingTests: XCTestCase {
 
     func createPersistables() {
         item = Product(
-            metadata: Product.Metadata(categoryIdentifier: 1),
             identifier: "vodka-123",
             name: "Belvidere",
             barcode: .UPCA(1, 2, 3, 4)
         )
+        metadata = Product.Metadata(categoryIdentifier: 1)
         items = [
             item,
             Product(
-                metadata: Product.Metadata(categoryIdentifier: 2),
                 identifier: "gin-123",
                 name: "Boxer Gin",
                 barcode: .UPCA(5, 10, 15, 20)
             ),
             Product(
-                metadata: Product.Metadata(categoryIdentifier: 3),
                 identifier: "rum-123",
                 name: "Mount Gay Rum",
                 barcode: .UPCA(12, 24, 39, 48)
             ),
             Product(
-                metadata: Product.Metadata(categoryIdentifier: 2),
                 identifier: "gin-234",
                 name: "Monkey 47",
                 barcode: .UPCA(31, 62, 93, 124)
             )
+        ]
+        metadatas = [
+            metadata,
+            Product.Metadata(categoryIdentifier: 2),
+            Product.Metadata(categoryIdentifier: 3),
+            Product.Metadata(categoryIdentifier: 2)
         ]
     }
 
