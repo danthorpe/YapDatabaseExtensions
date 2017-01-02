@@ -30,7 +30,6 @@ public protocol Identifiable {
 
 public protocol Persistable: Identifiable {
     static var collection: String { get }
-    var metadata: MetadataType? { get set }
 }
 ``` 
 
@@ -41,26 +40,11 @@ While not a requirement of YapDatabase, for these extensions, it is required tha
 There is also a `YapDB.Index` struct which composes the key and collection into a single type. This is used internally for all access methods. Properties defined in an extension on `Persistable` provide access to `key` and `index`.
 
 ### Metadata
-YapDatabase supports storing metadata alongside the primary object. YapDatabaseExtensions supports automatic reading and writing of metadata as an optional property of the `Persistable` type.
+YapDatabase supports storing metadata alongside the primary object. YapDatabaseExtensions supports optional reading and writing of metadata alongside a `Persistable` type.
 
-By default, all types which conform to `Persistable`, will get a `MetadataType` of `Void` which is synthesized by default. Therefore if you do not want or need a metadata type, there is nothing to do.
+Your custom metadata types must conform to either `NSCoding` or `ValueCoding`.
 
-To support a custom metadata type, just add the following to your `Persistable` type, e.g.:
-
-```swift
-struct MyCustomValue: Persistable, ValueCoding {
-    typealias Coder = MyCustomValueCoder
-    static let collection = “MyCustomValues”
-    var metadata: MyCustomMetadata? = .None
-    let identifier: NSUUID
-}
-```
-
-where the type (`MyCustomMetadata` in the above snippet) implements either `NSCoding` or `ValueCoding`.
-
-When creating a new item, set the metadata property before saving the item to the database. YapDatabaseExtensions will then save the metadata inside YapDatabase correctly. *There is no need to encode the metadata inside the primary object*. When reading objects which have a valid `MetadataType`, YapDatabaseExtensions will automatically read, decode and set the item’s metadata before returning the item.
-
-Note that previous metadata protocols `ObjectMetadataPersistable` and `ValueMetadataPersistable` have been deprecated in favor of `Persistable`.
+In this version of YapDatabaseExtensions, metadata has been removed from `Persistable`, and all reads and writes of metadata must be done explicitly. Additionally, since the `MetadataType` is decoupled from the `Persistable` type, a single `Persistable` type can use many different types of metadata, as appropriate. When you want to read or write a value and it's metadata together, you use the "withMetadata" variants of the API, which accept and return `YapItem<Value, Metadata>` values. `YapItem` is basically a slightly nicer wrapper than a Swift tuple, which can be extended, unlike anonymous tuple types.
 
 ## “Correct” Type Patterns
 Because the generic protocols, `ValueCoding` and `CodingType` have self-reflective properties, they must be correctly implemented for the APIs to be available. This means that the equality `ValueCoding.Coder.ValueType == Self` must be met. The APIs are all composed with this represented in their generic where clauses. This means that if your `ValueCoding` type is not the `ValueType` of its `Coder`, your code will not compile.
@@ -69,10 +53,10 @@ Therefore, there are six valid `Persistable` type patterns as described in the t
 
 Item encoding | Metadata encoding | Pattern
 --------------|-------------------|------------------
-`NSCoding`    | `Void` Metadata   | Object
+`NSCoding`    | No Metadata       | Object
 `NSCoding`    | `NSCoding`        | ObjectWithObjectMetadata
 `NSCoding`    | `ValueCoding`     | ObjectWithValueMetadata
-`ValueCoding` | `Void` Metadata   | Value
+`ValueCoding` | No Metadata       | Value
 `ValueCoding` | `NSCoding`        | ValueWithObjectMetadata
 `ValueCoding` | `ValueCoding`     | ValueWithValueMetadata
 
@@ -118,7 +102,7 @@ if let item: Item? = connection.readAtIndex(index) {
   // etc
 }
 
-if let meta: Item.MetadataType? = connection.readMetadataAtIndex(index) {
+if let meta: MetadataType? = connection.readMetadataAtIndex(index) {
   // etc
 }
 
@@ -138,7 +122,7 @@ connection.read { transaction in
     let c: [Item] = transaction.readAtIndexes(indexes)
     let d: [Item] = transaction.readByKeys(keys)
     let all: [Item] = transaction.readAll()
-    let meta: [Item.MetadataType] = transaction.readMetadataAtIndexes(indexes)
+    let meta: [MetadataType] = transaction.readMetadataAtIndexes(indexes)
 }
 ```
 
@@ -166,8 +150,15 @@ Reading items from the database is a little different.
 
 ```swift
 // Read using a YapDB.Index.
-if let item = Item.read(transaction).byIndex(index) {
+if let item = Item.read(transaction).atIndex(index) {
    // etc - item is correct type, no casting required.
+}
+
+// Read value and metadata using a YapDB.Index.
+if let item: YapItem<Item, MetadataType>? = Item.read(transaction).withMetadataAtIndex(index) {
+   // etc - item is a correct type, no casting required.
+   // item.value contains the value
+   // item.metadata contains the metadata, wrapped in an Optional
 }
 
 // Read an array of items from an array of YapDB.Index(s)
@@ -192,7 +183,7 @@ let (items, missingKeys) = Item.read(transaction).filterExisting(someKeys)
 Similarly, to work directly on a `YapDatabaseConnection`, use the following:
 
 ```swift
-if let item = Item.read(connection).byIndex(index) {
+if let item = Item.read(connection).atIndex(index) {
    // etc - item is correct type, no casting required.
 }
 
@@ -233,6 +224,7 @@ To start working in this repository’s `YapDatabaseExtensions.xcodeproj`, you�
 ## Author
 
 Daniel Thorpe, [@danthorpe](https://twitter.com/danthorpe)
+Jim Roepcke, [@JimRoepcke](https://twitter.com/JimRoepcke)
 
 ## License
 

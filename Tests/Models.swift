@@ -12,8 +12,8 @@ import YapDatabase
 import YapDatabaseExtensions
 
 public enum Barcode: Equatable {
-    case UPCA(Int, Int, Int, Int)
-    case QRCode(String)
+    case upca(Int, Int, Int, Int)
+    case qrCode(String)
 }
 
 public struct Product: Identifiable, Equatable {
@@ -31,13 +31,11 @@ public struct Product: Identifiable, Equatable {
         }
     }
 
-    public var metadata: Metadata? = .None
     public let identifier: Identifier
     internal let name: String
     internal let barcode: Barcode
 
-    public init(metadata: Metadata? = .None, identifier: Identifier, name: String, barcode: Barcode) {
-        self.metadata = metadata
+    public init(identifier: Identifier, name: String, barcode: Barcode) {
         self.identifier = identifier
         self.name = name
         self.barcode = barcode
@@ -46,7 +44,6 @@ public struct Product: Identifiable, Equatable {
 
 public struct Inventory: Identifiable, Equatable {
     let product: Product
-    public var metadata: NSNumber? = .None
 
     public var identifier: Identifier {
         return product.identifier
@@ -64,36 +61,34 @@ public class NamedEntity: NSObject, NSCoding {
     }
 
     public required init?(coder aDecoder: NSCoder) {
-        identifier = aDecoder.decodeObjectForKey("identifier") as! Identifier
-        name = aDecoder.decodeObjectForKey("name") as! String
+        identifier = aDecoder.decodeObject(forKey: "identifier") as! Identifier
+        name = aDecoder.decodeObject(forKey: "name") as! String
     }
 
-    public func encodeWithCoder(aCoder: NSCoder) {
-        aCoder.encodeObject(identifier, forKey: "identifier")
-        aCoder.encodeObject(name, forKey: "name")
+    public func encode(with aCoder: NSCoder) {
+        aCoder.encode(identifier, forKey: "identifier")
+        aCoder.encode(name, forKey: "name")
     }
 }
 
 public class Person: NamedEntity { }
 
 public class Employee: NamedEntity {
-    public var metadata: NSDate? = .None
 }
 
 public class Manager: NamedEntity {
     public struct Metadata: Equatable {
         public let numberOfDirectReports: Int
     }
-    public var metadata: Metadata? = .None
 }
 
 // MARK: - Equatable
 
 public func == (a: Barcode, b: Barcode) -> Bool {
     switch (a, b) {
-    case let (.UPCA(aNS, aM, aP, aC), .UPCA(bNS, bM, bP, bC)):
+    case let (.upca(aNS, aM, aP, aC), .upca(bNS, bM, bP, bC)):
         return (aNS == bNS) && (aM == bM) && (aP == bP) && (aC == bC)
-    case let (.QRCode(aCode), .QRCode(bCode)):
+    case let (.qrCode(aCode), .qrCode(bCode)):
         return aCode == bCode
     default:
         return false
@@ -109,7 +104,7 @@ public func == (a: Product.Metadata, b: Product.Metadata) -> Bool {
 }
 
 public func == (a: Inventory, b: Inventory) -> Bool {
-    return (a.product == b.product) && (a.metadata == b.metadata)
+    return (a.product == b.product)
 }
 
 public func == (a: NamedEntity, b: NamedEntity) -> Bool {
@@ -140,6 +135,18 @@ extension Inventory: Hashable {
     }
 }
 
+extension Product.Metadata: Hashable {
+    public var hashValue: Int {
+        return categoryIdentifier.hashValue
+    }
+}
+
+extension Manager.Metadata: Hashable {
+    public var hashValue: Int {
+        return numberOfDirectReports.hashValue
+    }
+}
+
 extension NamedEntity {
 
     public override var description: String {
@@ -157,9 +164,9 @@ extension Barcode: Persistable {
 
     public var identifier: Int {
         switch self {
-        case let .UPCA(numberSystem, manufacturer, product, check):
+        case let .upca(numberSystem, manufacturer, product, check):
             return "\(numberSystem).\(manufacturer).\(product).\(check)".hashValue
-        case let .QRCode(code):
+        case let .qrCode(code):
             return code.hashValue
         }
     }
@@ -213,12 +220,12 @@ extension Manager: Persistable {
 extension Barcode: ValueCoding {
     public typealias Coder = BarcodeCoder
 
-    enum Kind: Int { case UPCA = 1, QRCode }
+    enum Kind: Int { case upca = 1, qrCode }
 
     var kind: Kind {
         switch self {
-        case UPCA(_): return Kind.UPCA
-        case QRCode(_): return Kind.QRCode
+        case .upca(_): return Kind.upca
+        case .qrCode(_): return Kind.qrCode
         }
     }
 }
@@ -246,7 +253,7 @@ extension Manager.Metadata: ValueCoding {
 
 // MARK: - Coders
 
-public class BarcodeCoder: NSObject, NSCoding, CodingType {
+public class BarcodeCoder: NSObject, NSCoding, CodingProtocol {
     public let value: Barcode
 
     public required init(_ v: Barcode) {
@@ -254,17 +261,17 @@ public class BarcodeCoder: NSObject, NSCoding, CodingType {
     }
 
     public required init?(coder aDecoder: NSCoder) {
-        if let kind = Barcode.Kind(rawValue: aDecoder.decodeIntegerForKey("kind")) {
+        if let kind = Barcode.Kind(rawValue: aDecoder.decodeInteger(forKey: "kind")) {
             switch kind {
-            case .UPCA:
-                let numberSystem = aDecoder.decodeIntegerForKey("numberSystem")
-                let manufacturer = aDecoder.decodeIntegerForKey("manufacturer")
-                let product = aDecoder.decodeIntegerForKey("product")
-                let check = aDecoder.decodeIntegerForKey("check")
-                value = .UPCA(numberSystem, manufacturer, product, check)
-            case .QRCode:
-                let code = aDecoder.decodeObjectForKey("code") as! String
-                value = .QRCode(code)
+            case .upca:
+                let numberSystem = aDecoder.decodeInteger(forKey: "numberSystem")
+                let manufacturer = aDecoder.decodeInteger(forKey: "manufacturer")
+                let product = aDecoder.decodeInteger(forKey: "product")
+                let check = aDecoder.decodeInteger(forKey: "check")
+                value = .upca(numberSystem, manufacturer, product, check)
+            case .qrCode:
+                let code = aDecoder.decodeObject(forKey: "code") as! String
+                value = .qrCode(code)
             }
         }
         else {
@@ -272,21 +279,21 @@ public class BarcodeCoder: NSObject, NSCoding, CodingType {
         }
     }
 
-    public func encodeWithCoder(aCoder: NSCoder) {
-        aCoder.encodeInteger(value.kind.rawValue, forKey: "kind")
+    public func encode(with aCoder: NSCoder) {
+        aCoder.encode(value.kind.rawValue, forKey: "kind")
         switch value {
-        case let .UPCA(numberSystem, manufacturer, product, check):
-            aCoder.encodeInteger(numberSystem, forKey: "numberSystem")
-            aCoder.encodeInteger(manufacturer, forKey: "manufacturer")
-            aCoder.encodeInteger(product, forKey: "product")
-            aCoder.encodeInteger(check, forKey: "check")
-        case let .QRCode(code):
-            aCoder.encodeObject(code, forKey: "code")
+        case let .upca(numberSystem, manufacturer, product, check):
+            aCoder.encode(numberSystem, forKey: "numberSystem")
+            aCoder.encode(manufacturer, forKey: "manufacturer")
+            aCoder.encode(product, forKey: "product")
+            aCoder.encode(check, forKey: "check")
+        case let .qrCode(code):
+            aCoder.encode(code, forKey: "code")
         }
     }
 }
 
-public class ProductCategoryCoder: NSObject, NSCoding, CodingType {
+public class ProductCategoryCoder: NSObject, NSCoding, CodingProtocol {
     public let value: Product.Category
 
     public required init(_ v: Product.Category) {
@@ -294,18 +301,18 @@ public class ProductCategoryCoder: NSObject, NSCoding, CodingType {
     }
 
     public required init?(coder aDecoder: NSCoder) {
-        let identifier = aDecoder.decodeIntegerForKey("identifier")
-        let name = aDecoder.decodeObjectForKey("name") as? String
+        let identifier = aDecoder.decodeInteger(forKey: "identifier")
+        let name = aDecoder.decodeObject(forKey: "name") as? String
         value = Product.Category(identifier: identifier, name: name!)
     }
 
-    public func encodeWithCoder(aCoder: NSCoder) {
-        aCoder.encodeInteger(value.identifier, forKey: "identifier")
-        aCoder.encodeObject(value.name, forKey: "name")
+    public func encode(with aCoder: NSCoder) {
+        aCoder.encode(value.identifier, forKey: "identifier")
+        aCoder.encode(value.name, forKey: "name")
     }
 }
 
-public class ProductMetadataCoder: NSObject, NSCoding, CodingType {
+public class ProductMetadataCoder: NSObject, NSCoding, CodingProtocol {
     public let value: Product.Metadata
 
     public required init(_ v: Product.Metadata) {
@@ -313,16 +320,16 @@ public class ProductMetadataCoder: NSObject, NSCoding, CodingType {
     }
 
     public required init?(coder aDecoder: NSCoder) {
-        let categoryIdentifier = aDecoder.decodeIntegerForKey("categoryIdentifier")
+        let categoryIdentifier = aDecoder.decodeInteger(forKey: "categoryIdentifier")
         value = Product.Metadata(categoryIdentifier: categoryIdentifier)
     }
 
-    public func encodeWithCoder(aCoder: NSCoder) {
-        aCoder.encodeInteger(value.categoryIdentifier, forKey: "categoryIdentifier")
+    public func encode(with aCoder: NSCoder) {
+        aCoder.encode(value.categoryIdentifier, forKey: "categoryIdentifier")
     }
 }
 
-public class ProductCoder: NSObject, NSCoding, CodingType {
+public class ProductCoder: NSObject, NSCoding, CodingProtocol {
     public let value: Product
 
     public required init(_ v: Product) {
@@ -330,20 +337,20 @@ public class ProductCoder: NSObject, NSCoding, CodingType {
     }
 
     public required init?(coder aDecoder: NSCoder) {
-        let identifier = aDecoder.decodeObjectForKey("identifier") as! String
-        let name = aDecoder.decodeObjectForKey("name") as! String
-        let barcode = Barcode.decode(aDecoder.decodeObjectForKey("barcode"))
+        let identifier = aDecoder.decodeObject(forKey: "identifier") as! String
+        let name = aDecoder.decodeObject(forKey: "name") as! String
+        let barcode = Barcode.decode(aDecoder.decodeObject(forKey: "barcode"))
         value = Product(identifier: identifier, name: name, barcode: barcode!)
     }
 
-    public func encodeWithCoder(aCoder: NSCoder) {
-        aCoder.encodeObject(value.identifier, forKey: "identifier")
-        aCoder.encodeObject(value.name, forKey: "name")
-        aCoder.encodeObject(value.barcode.encoded, forKey: "barcode")
+    public func encode(with aCoder: NSCoder) {
+        aCoder.encode(value.identifier, forKey: "identifier")
+        aCoder.encode(value.name, forKey: "name")
+        aCoder.encode(value.barcode.encoded, forKey: "barcode")
     }
 }
 
-public class InventoryCoder: NSObject, NSCoding, CodingType {
+public class InventoryCoder: NSObject, NSCoding, CodingProtocol {
     public let value: Inventory
 
     public required init(_ v: Inventory) {
@@ -351,17 +358,17 @@ public class InventoryCoder: NSObject, NSCoding, CodingType {
     }
 
     public required init?(coder aDecoder: NSCoder) {
-        let product = Product.decode(aDecoder.decodeObjectForKey("product"))
-        value = Inventory(product: product!, metadata: .None)
+        let product = Product.decode(aDecoder.decodeObject(forKey: "product"))
+        value = Inventory(product: product!)
     }
 
-    public func encodeWithCoder(aCoder: NSCoder) {
-        aCoder.encodeObject(value.product.encoded, forKey: "product")
+    public func encode(with aCoder: NSCoder) {
+        aCoder.encode(value.product.encoded, forKey: "product")
     }
 }
 
 
-public class ManagerMetadataCoder: NSObject, NSCoding, CodingType {
+public class ManagerMetadataCoder: NSObject, NSCoding, CodingProtocol {
     public let value: Manager.Metadata
 
     public required init(_ v: Manager.Metadata) {
@@ -369,12 +376,12 @@ public class ManagerMetadataCoder: NSObject, NSCoding, CodingType {
     }
 
     public required init?(coder aDecoder: NSCoder) {
-        let numberOfDirectReports = aDecoder.decodeIntegerForKey("numberOfDirectReports")
+        let numberOfDirectReports = aDecoder.decodeInteger(forKey: "numberOfDirectReports")
         value = Manager.Metadata(numberOfDirectReports: numberOfDirectReports)
     }
 
-    public func encodeWithCoder(aCoder: NSCoder) {
-        aCoder.encodeInteger(value.numberOfDirectReports, forKey: "numberOfDirectReports")
+    public func encode(with aCoder: NSCoder) {
+        aCoder.encode(value.numberOfDirectReports, forKey: "numberOfDirectReports")
     }
 }
 
@@ -382,7 +389,7 @@ public class ManagerMetadataCoder: NSObject, NSCoding, CodingType {
 
 public func products() -> YapDB.Fetch {
 
-    let grouping: YapDB.View.Grouping = .ByMetadata({ (_, collection, key, metadata) -> String! in
+    let grouping: YapDB.View.Grouping = .byMetadata({ (_, collection, key, metadata) -> String! in
         if collection == Product.collection {
             if let metadata = Product.Metadata.decode(metadata) {
                 return "category: \(metadata.categoryIdentifier)"
@@ -391,13 +398,13 @@ public func products() -> YapDB.Fetch {
         return nil
     })
 
-    let sorting: YapDB.View.Sorting = .ByObject({ (_, group, collection1, key1, object1, collection2, key2, object2) -> NSComparisonResult in
+    let sorting: YapDB.View.Sorting = .byObject({ (_, group, collection1, key1, object1, collection2, key2, object2) -> ComparisonResult in
         if let product1 = Product.decode(object1) {
             if let product2 = Product.decode(object2) {
                 return product1.name.caseInsensitiveCompare(product2.name)
             }
         }
-        return .OrderedSame
+        return .orderedSame
     })
 
     let view = YapDB.View(
@@ -406,7 +413,7 @@ public func products() -> YapDB.Fetch {
         sorting: sorting,
         collections: [Product.collection])
 
-    return .View(view)
+    return .view(view)
 }
 
 
