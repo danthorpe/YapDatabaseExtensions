@@ -14,7 +14,7 @@ import ValueCoding
 extension Persistable where
     Self: ValueCoding,
     Self.Coder: NSCoding,
-    Self.Coder.ValueType == Self {
+    Self.Coder.Value == Self {
 
     // Writing
 
@@ -25,11 +25,11 @@ extension Persistable where
     - returns: the receiver.
     */
     public func writeWithMetadata<
-        WriteTransaction, Metadata where
+        WriteTransaction, Metadata>(_ transaction: WriteTransaction, metadata: Metadata?) -> YapItem<Self, Metadata> where
         WriteTransaction: WriteTransactionType,
         Metadata: ValueCoding,
         Metadata.Coder: NSCoding,
-        Metadata.Coder.ValueType == Metadata>(transaction: WriteTransaction, metadata: Metadata?) -> YapItem<Self, Metadata> {
+        Metadata.Coder.Value == Metadata {
         return transaction.writeWithMetadata(YapItem(self, metadata))
     }
 
@@ -40,11 +40,11 @@ extension Persistable where
     - returns: the receiver.
     */
     public func writeWithMetadata<
-        Connection, Metadata where
+        Connection, Metadata>(_ connection: Connection, metadata: Metadata?) -> YapItem<Self, Metadata> where
         Connection: ConnectionType,
         Metadata: ValueCoding,
         Metadata.Coder: NSCoding,
-        Metadata.Coder.ValueType == Metadata>(connection: Connection, metadata: Metadata?) -> YapItem<Self, Metadata> {
+        Metadata.Coder.Value == Metadata {
         return connection.writeWithMetadata(YapItem(self, metadata))
     }
 
@@ -55,11 +55,11 @@ extension Persistable where
     - returns: a closure which receives as an argument the receiver of this function.
     */
     public func asyncWriteWithMetadata<
-        Connection, Metadata where
+        Connection, Metadata>(_ connection: Connection, metadata: Metadata?, queue: DispatchQueue = DispatchQueue.main, completion: ((YapItem<Self, Metadata>) -> Void)? = .none) where
         Connection: ConnectionType,
         Metadata: ValueCoding,
         Metadata.Coder: NSCoding,
-        Metadata.Coder.ValueType == Metadata>(connection: Connection, metadata: Metadata?, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: (YapItem<Self, Metadata> -> Void)? = .None) {
+        Metadata.Coder.Value == Metadata {
         return connection.asyncWriteWithMetadata(YapItem(self, metadata), queue: queue, completion: completion)
     }
 
@@ -70,20 +70,20 @@ extension Persistable where
     - returns: an `NSOperation`
     */
     public func writeWithMetadataOperation<
-        Connection, Metadata where
+        Connection, Metadata>(_ connection: Connection, metadata: Metadata?) -> Operation where
         Connection: ConnectionType,
         Metadata: ValueCoding,
         Metadata.Coder: NSCoding,
-        Metadata.Coder.ValueType == Metadata>(connection: Connection, metadata: Metadata?) -> NSOperation {
-        return NSBlockOperation { connection.writeWithMetadata(YapItem(self, metadata)) }
+        Metadata.Coder.Value == Metadata {
+        return BlockOperation { _ = connection.writeWithMetadata(YapItem(self, metadata)) }
     }
 }
 
-extension SequenceType where
-    Generator.Element: Persistable,
-    Generator.Element: ValueCoding,
-    Generator.Element.Coder: NSCoding,
-    Generator.Element.Coder.ValueType == Generator.Element {
+extension Sequence where
+    Iterator.Element: Persistable,
+    Iterator.Element: ValueCoding,
+    Iterator.Element.Coder: NSCoding,
+    Iterator.Element.Coder.Value == Iterator.Element {
 
     /**
      Zips the receiver with metadata into an array of YapItem.
@@ -93,12 +93,12 @@ extension SequenceType where
      - returns: an array where Persistables and Metadata with corresponding indexes in `self` and `metadata` are joined in a `YapItem`
      */
     public func yapItems<
-        Metadatas, Metadata where
+        Metadatas, Metadata>(with metadata: Metadatas) -> [YapItem<Iterator.Element, Metadata>] where
         Metadata: ValueCoding,
         Metadata.Coder: NSCoding,
-        Metadata.Coder.ValueType == Metadata,
-        Metadatas: SequenceType,
-        Metadatas.Generator.Element == Optional<Metadata>>(with metadata: Metadatas) -> [YapItem<Generator.Element, Metadata>] {
+        Metadata.Coder.Value == Metadata,
+        Metadatas: Sequence,
+        Metadatas.Iterator.Element == Optional<Metadata> {
         return zip(self, metadata).map { YapItem($0, $1) }
     }
 
@@ -109,11 +109,11 @@ extension SequenceType where
     - returns: the receiver.
     */
     public func writeWithMetadata<
-        WriteTransaction, Metadata where
+        WriteTransaction, Metadata>(_ transaction: WriteTransaction, metadata: [Metadata?]) -> [YapItem<Iterator.Element, Metadata>] where
         WriteTransaction: WriteTransactionType,
         Metadata: ValueCoding,
         Metadata.Coder: NSCoding,
-        Metadata.Coder.ValueType == Metadata>(transaction: WriteTransaction, metadata: [Metadata?]) -> [YapItem<Generator.Element, Metadata>] {
+        Metadata.Coder.Value == Metadata {
         let items = yapItems(with: metadata)
         return transaction.writeWithMetadata(items)
     }
@@ -125,11 +125,11 @@ extension SequenceType where
     - returns: the receiver.
     */
     public func writeWithMetadata<
-        Connection, Metadata where
+        Connection, Metadata>(_ connection: Connection, metadata: [Metadata?]) -> [YapItem<Iterator.Element, Metadata>] where
         Connection: ConnectionType,
         Metadata: ValueCoding,
         Metadata.Coder: NSCoding,
-        Metadata.Coder.ValueType == Metadata>(connection: Connection, metadata: [Metadata?]) -> [YapItem<Generator.Element, Metadata>] {
+        Metadata.Coder.Value == Metadata {
         let items = yapItems(with: metadata)
         return connection.writeWithMetadata(items)
     }
@@ -141,11 +141,11 @@ extension SequenceType where
     - returns: a closure which receives as an argument the receiver of this function.
     */
     public func asyncWriteWithMetadata<
-        Connection, Metadata where
+        Connection, Metadata>(_ connection: Connection, metadata: [Metadata?], queue: DispatchQueue = DispatchQueue.main, completion: (([YapItem<Iterator.Element, Metadata>]) -> Void)? = .none) where
         Connection: ConnectionType,
         Metadata: ValueCoding,
         Metadata.Coder: NSCoding,
-        Metadata.Coder.ValueType == Metadata>(connection: Connection, metadata: [Metadata?], queue: dispatch_queue_t = dispatch_get_main_queue(), completion: ([YapItem<Generator.Element, Metadata>] -> Void)? = .None) {
+        Metadata.Coder.Value == Metadata {
         let items = yapItems(with: metadata)
         return connection.asyncWriteWithMetadata(items, queue: queue, completion: completion)
     }
@@ -157,13 +157,13 @@ extension SequenceType where
     - returns: an `NSOperation`
     */
     public func writeWithMetadataOperation<
-        Connection, Metadata where
+        Connection, Metadata>(_ connection: Connection, metadata: [Metadata?]) -> Operation where
         Connection: ConnectionType,
         Metadata: ValueCoding,
         Metadata.Coder: NSCoding,
-        Metadata.Coder.ValueType == Metadata>(connection: Connection, metadata: [Metadata?]) -> NSOperation {
+        Metadata.Coder.Value == Metadata {
         let items = yapItems(with: metadata)
-        return NSBlockOperation { connection.writeWithMetadata(items) }
+        return BlockOperation { _ = connection.writeWithMetadata(items) }
     }
 }
 
@@ -173,74 +173,74 @@ extension Readable where
     ItemType: ValueCoding,
     ItemType: Persistable,
     ItemType.Coder: NSCoding,
-    ItemType.Coder.ValueType == ItemType {
+    ItemType.Coder.Value == ItemType {
 
     func withMetadataInTransaction<
-        Metadata where
+        Metadata>(_ transaction: Database.Connection.ReadTransaction, atIndex index: YapDB.Index) -> YapItem<ItemType, Metadata>? where
         Metadata: ValueCoding,
         Metadata.Coder: NSCoding,
-        Metadata.Coder.ValueType == Metadata>(transaction: Database.Connection.ReadTransaction, atIndex index: YapDB.Index) -> YapItem<ItemType, Metadata>? {
+        Metadata.Coder.Value == Metadata {
         return transaction.readWithMetadataAtIndex(index)
     }
 
     func withMetadataInTransactionAtIndex<
-        Metadata where
+        Metadata>(_ transaction: Database.Connection.ReadTransaction) -> (YapDB.Index) -> YapItem<ItemType, Metadata>? where
         Metadata: ValueCoding,
         Metadata.Coder: NSCoding,
-        Metadata.Coder.ValueType == Metadata>(transaction: Database.Connection.ReadTransaction) -> YapDB.Index -> YapItem<ItemType, Metadata>? {
+        Metadata.Coder.Value == Metadata {
         return { self.withMetadataInTransaction(transaction, atIndex: $0) }
     }
 
     func withMetadataAtIndexInTransaction<
-        Metadata where
+        Metadata>(_ index: YapDB.Index) -> (Database.Connection.ReadTransaction) -> YapItem<ItemType, Metadata>? where
         Metadata: ValueCoding,
         Metadata.Coder: NSCoding,
-        Metadata.Coder.ValueType == Metadata>(index: YapDB.Index) -> Database.Connection.ReadTransaction -> YapItem<ItemType, Metadata>? {
+        Metadata.Coder.Value == Metadata {
         return { self.withMetadataInTransaction($0, atIndex: index) }
     }
 
     func withMetadataAtIndexesInTransaction<
-        Indexes, Metadata where
-        Indexes: SequenceType,
-        Indexes.Generator.Element == YapDB.Index,
+        Indexes, Metadata>(_ indexes: Indexes) -> (Database.Connection.ReadTransaction) -> [YapItem<ItemType, Metadata>?] where
+        Indexes: Sequence,
+        Indexes.Iterator.Element == YapDB.Index,
         Metadata: ValueCoding,
         Metadata.Coder: NSCoding,
-        Metadata.Coder.ValueType == Metadata>(indexes: Indexes) -> Database.Connection.ReadTransaction -> [YapItem<ItemType, Metadata>] {
-        return { indexes.flatMap(self.withMetadataInTransactionAtIndex($0)) }
+        Metadata.Coder.Value == Metadata {
+        return { indexes.map(self.withMetadataInTransactionAtIndex($0)) }
     }
 
     func withMetadataInTransaction<
-        Metadata where
+        Metadata>(_ transaction: Database.Connection.ReadTransaction, byKey key: String) -> YapItem<ItemType, Metadata>? where
         Metadata: ValueCoding,
         Metadata.Coder: NSCoding,
-        Metadata.Coder.ValueType == Metadata>(transaction: Database.Connection.ReadTransaction, byKey key: String) -> YapItem<ItemType, Metadata>? {
+        Metadata.Coder.Value == Metadata {
         return withMetadataInTransaction(transaction, atIndex: ItemType.indexWithKey(key))
     }
 
     func withMetadataInTransactionByKey<
-        Metadata where
+        Metadata>(_ transaction: Database.Connection.ReadTransaction) -> (String) -> YapItem<ItemType, Metadata>? where
         Metadata: ValueCoding,
         Metadata.Coder: NSCoding,
-        Metadata.Coder.ValueType == Metadata>(transaction: Database.Connection.ReadTransaction) -> String -> YapItem<ItemType, Metadata>? {
+        Metadata.Coder.Value == Metadata {
         return { self.withMetadataInTransaction(transaction, byKey: $0) }
     }
 
     func withMetadataByKeyInTransaction<
-        Metadata where
+        Metadata>(_ key: String) -> (Database.Connection.ReadTransaction) -> YapItem<ItemType, Metadata>? where
         Metadata: ValueCoding,
         Metadata.Coder: NSCoding,
-        Metadata.Coder.ValueType == Metadata>(key: String) -> Database.Connection.ReadTransaction -> YapItem<ItemType, Metadata>? {
+        Metadata.Coder.Value == Metadata {
         return { self.withMetadataInTransaction($0, byKey: key) }
     }
 
     func withMetadataByKeysInTransaction<
-        Metadata where
+        Metadata>(_ keys: [String]? = .none) -> (Database.Connection.ReadTransaction) -> [YapItem<ItemType, Metadata>?] where
         Metadata: ValueCoding,
         Metadata.Coder: NSCoding,
-        Metadata.Coder.ValueType == Metadata>(keys: [String]? = .None) -> Database.Connection.ReadTransaction -> [YapItem<ItemType, Metadata>] {
+        Metadata.Coder.Value == Metadata {
         return { transaction in
             let keys = keys ?? transaction.keysInCollection(ItemType.collection)
-            return keys.flatMap(self.withMetadataInTransactionByKey(transaction))
+            return keys.map(self.withMetadataInTransactionByKey(transaction))
         }
     }
 
@@ -251,10 +251,10 @@ extension Readable where
     - returns: an optional `ItemType`
     */
     public func withMetadataAtIndex<
-        Metadata where
+        Metadata>(_ index: YapDB.Index) -> YapItem<ItemType, Metadata>? where
         Metadata: ValueCoding,
         Metadata.Coder: NSCoding,
-        Metadata.Coder.ValueType == Metadata>(index: YapDB.Index) -> YapItem<ItemType, Metadata>? {
+        Metadata.Coder.Value == Metadata {
         return sync(withMetadataAtIndexInTransaction(index))
     }
 
@@ -265,12 +265,12 @@ extension Readable where
     - returns: an array of `ItemType`
     */
     public func withMetadataAtIndexes<
-        Indexes, Metadata where
-        Indexes: SequenceType,
-        Indexes.Generator.Element == YapDB.Index,
+        Indexes, Metadata>(_ indexes: Indexes) -> [YapItem<ItemType, Metadata>?] where
+        Indexes: Sequence,
+        Indexes.Iterator.Element == YapDB.Index,
         Metadata: ValueCoding,
         Metadata.Coder: NSCoding,
-        Metadata.Coder.ValueType == Metadata>(indexes: Indexes) -> [YapItem<ItemType, Metadata>] {
+        Metadata.Coder.Value == Metadata {
             return sync(withMetadataAtIndexesInTransaction(indexes))
     }
 
@@ -281,10 +281,10 @@ extension Readable where
     - returns: an optional `ItemType`
     */
     public func withMetadataByKey<
-        Metadata where
+        Metadata>(_ key: String) -> YapItem<ItemType, Metadata>? where
         Metadata: ValueCoding,
         Metadata.Coder: NSCoding,
-        Metadata.Coder.ValueType == Metadata>(key: String) -> YapItem<ItemType, Metadata>? {
+        Metadata.Coder.Value == Metadata {
         return sync(withMetadataByKeyInTransaction(key))
     }
 
@@ -295,12 +295,12 @@ extension Readable where
     - returns: an array of `ItemType`
     */
     public func withMetadataByKeys<
-        Keys, Metadata where
-        Keys: SequenceType,
-        Keys.Generator.Element == String,
+        Keys, Metadata>(_ keys: Keys) -> [YapItem<ItemType, Metadata>?] where
+        Keys: Sequence,
+        Keys.Iterator.Element == String,
         Metadata: ValueCoding,
         Metadata.Coder: NSCoding,
-        Metadata.Coder.ValueType == Metadata>(keys: Keys) -> [YapItem<ItemType, Metadata>] {
+        Metadata.Coder.Value == Metadata {
             return sync(withMetadataByKeysInTransaction(Array(keys)))
     }
 
@@ -310,10 +310,10 @@ extension Readable where
     - returns: an array of `ItemType`
     */
     public func withMetadataAll<
-        Metadata where
+        Metadata>() -> [YapItem<ItemType, Metadata>?] where
         Metadata: ValueCoding,
         Metadata.Coder: NSCoding,
-        Metadata.Coder.ValueType == Metadata>() -> [YapItem<ItemType, Metadata>] {
+        Metadata.Coder.Value == Metadata {
         return sync(withMetadataByKeysInTransaction())
     }
 
@@ -324,15 +324,21 @@ extension Readable where
     - returns: a tuple of type `([ItemType], [String])`
     */
     public func withMetadataFilterExisting<
-        Metadata where
+        Metadata>(_ keys: [String]) -> (existing: [YapItem<ItemType, Metadata>], missing: [String]) where
         Metadata: ValueCoding,
         Metadata.Coder: NSCoding,
-        Metadata.Coder.ValueType == Metadata>(keys: [String]) -> (existing: [YapItem<ItemType, Metadata>], missing: [String]) {
-        let existingInTransaction: Database.Connection.ReadTransaction -> [YapItem<ItemType, Metadata>] = withMetadataByKeysInTransaction(keys)
+        Metadata.Coder.Value == Metadata {
+        let existingInTransaction: (Database.Connection.ReadTransaction) -> [YapItem<ItemType, Metadata>?] = withMetadataByKeysInTransaction(keys)
         return sync { transaction -> ([YapItem<ItemType, Metadata>], [String]) in
-            let existing = existingInTransaction(transaction)
-            let existingKeys = existing.map {keyForPersistable($0.value)}
-            let missingKeys = keys.filter { !existingKeys.contains($0) }
+            var missingKeys = [String]()
+            let maybeExisting = existingInTransaction(transaction)
+            let existing = zip(keys, maybeExisting).flatMap { zipped -> YapItem<ItemType, Metadata>? in
+                guard let item = zipped.1 else {
+                    missingKeys.append(zipped.0)
+                    return nil
+                }
+                return item
+            }
             return (existing, missingKeys)
         }
     }

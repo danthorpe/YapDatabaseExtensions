@@ -1,3 +1,9 @@
+# 3.0.0
+1. Separated Metadata from Objects (removed `metadata` from `Persistable`)
+2. Updated for Swift 3.0
+3. Pod name changed to RCSYapDatabaseExtensions
+4. Use `map` instead of `flatMap` when reading multiple objects so the order of the output corresponds to the order of the input.
+
 # 2.6.0
 Updated for Swift 2.3 - sorry it's taken so long!
 

@@ -32,8 +32,8 @@ class ValueWithObjectMetadataTests: XCTestCase {
 
     var reader: Read<TypeUnderTest, TestableDatabase>!
 
-    var dispatchQueue: dispatch_queue_t!
-    var operationQueue: NSOperationQueue!
+    var dispatchQueue: DispatchQueue!
+    var operationQueue: OperationQueue!
 
     override func setUp() {
         super.setUp()
@@ -53,8 +53,8 @@ class ValueWithObjectMetadataTests: XCTestCase {
         connection.writeTransaction = writeTransaction
         database.connection = connection
 
-        dispatchQueue = dispatch_get_global_queue(QOS_CLASS_DEFAULT, 0)
-        operationQueue = NSOperationQueue()
+        dispatchQueue = DispatchQueue.global(qos: .default)
+        operationQueue = OperationQueue()
     }
 
     override func tearDown() {
@@ -81,30 +81,30 @@ class ValueWithObjectMetadataTests: XCTestCase {
             Product(
                 identifier: "vodka-123",
                 name: "Belvidere",
-                barcode: .UPCA(1, 2, 3, 4)
+                barcode: .upca(1, 2, 3, 4)
             ),
             Product(
                 identifier: "gin-123",
                 name: "Boxer Gin",
-                barcode: .UPCA(5, 10, 15, 20)
+                barcode: .upca(5, 10, 15, 20)
                 ),
             Product(
                 identifier: "rum-123",
                 name: "Mount Gay Rum",
-                barcode: .UPCA(12, 24, 39, 48)
+                barcode: .upca(12, 24, 39, 48)
                 ),
             Product(
                 identifier: "gin-234",
                 name: "Monkey 47",
-                barcode: .UPCA(31, 62, 93, 124)
+                barcode: .upca(31, 62, 93, 124)
                 )
             ]
 
         metadatas = [
-            NSNumber(integer: 12),
-            NSNumber(integer: 13),
-            NSNumber(integer: 14),
-            NSNumber(integer: 15)
+            NSNumber(value: 12 as Int),
+            NSNumber(value: 13 as Int),
+            NSNumber(value: 14 as Int),
+            NSNumber(value: 15 as Int)
         ]
         items = products.map { TypeUnderTest(product: $0) }
         item = items[0]
@@ -122,7 +122,7 @@ class ValueWithObjectMetadataTests: XCTestCase {
         readTransaction.keys = keys
     }
 
-    func checkTransactionDidWriteItem(result: YapItem<TypeUnderTest, MetadataTypeUnderTest>) {
+    func checkTransactionDidWriteItem(_ result: YapItem<TypeUnderTest, MetadataTypeUnderTest>) {
         XCTAssertEqual(result.value.identifier, item.identifier)
         XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
         XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].0, index)
@@ -130,15 +130,15 @@ class ValueWithObjectMetadataTests: XCTestCase {
         XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].2 as? NSNumber, metadata)
     }
 
-    func checkTransactionDidWriteItems(result: [YapItem<TypeUnderTest, MetadataTypeUnderTest>]) {
+    func checkTransactionDidWriteItems(_ result: [YapItem<TypeUnderTest, MetadataTypeUnderTest>]) {
         XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
-        XCTAssertEqual(writeTransaction.didWriteAtIndexes.map { $0.0.key }.sort(), indexes.map { $0.key }.sort())
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes.map { $0.0.key }.sorted(), indexes.map { $0.key }.sorted())
         XCTAssertEqual(writeTransaction.didWriteAtIndexes.map { $0.2 }.count, items.count)
         XCTAssertFalse(result.isEmpty)
         XCTAssertEqual(Set(result.map({$0.value})), Set(items))
     }
 
-    func checkTransactionDidReadItem(result: YapItem<TypeUnderTest, MetadataTypeUnderTest>?) -> Bool {
+    func checkTransactionDidReadItem(_ result: YapItem<TypeUnderTest, MetadataTypeUnderTest>?) -> Bool {
         XCTAssertEqual(readTransaction.didReadAtIndex, index)
         guard let result = result else {
             return false
@@ -149,16 +149,16 @@ class ValueWithObjectMetadataTests: XCTestCase {
         return true
     }
 
-    func checkTransactionDidReadItems(result: [YapItem<TypeUnderTest, MetadataTypeUnderTest>]) -> Bool {
-        if result.isEmpty {
+    func checkTransactionDidReadItems(_ result: [YapItem<TypeUnderTest, MetadataTypeUnderTest>?]) -> Bool {
+        if result.flatMap({$0}).isEmpty {
             return false
         }
         XCTAssertEqual(Set(readTransaction.didReadAtIndexes), Set(indexes))
-        XCTAssertEqual(result.count, items.count)
+        XCTAssertEqual(result.flatMap({$0}).count, items.count)
         return true
     }
 
-    func checkTransactionDidReadMetadataItem(result: MetadataTypeUnderTest?) -> Bool {
+    func checkTransactionDidReadMetadataItem(_ result: MetadataTypeUnderTest?) -> Bool {
         XCTAssertNil(readTransaction.didReadAtIndex)
         guard let result = result else {
             return false
@@ -168,13 +168,13 @@ class ValueWithObjectMetadataTests: XCTestCase {
         return true
     }
 
-    func checkTransactionDidReadMetadataItems(result: [MetadataTypeUnderTest]) -> Bool {
+    func checkTransactionDidReadMetadataItems(_ result: [MetadataTypeUnderTest?]) -> Bool {
         XCTAssertTrue(readTransaction.didReadAtIndexes.isEmpty)
-        if result.isEmpty {
+        if result.flatMap({$0}).isEmpty {
             return false
         }
         XCTAssertEqual(Set(readTransaction.didReadMetadataAtIndexes), Set(indexes))
-        XCTAssertEqual(result.count, items.count)
+        XCTAssertEqual(result.flatMap({$0}).count, items.count)
         return true
     }
 
@@ -385,24 +385,24 @@ class Functional_Write_ValueWithObjectMetadataTests: ValueWithObjectMetadataTest
 
     func test__connection__async_write_item() {
         var result: YapItem<TypeUnderTest, MetadataTypeUnderTest>!
-        let expectation = expectationWithDescription("Test: \(#function)")
+        let expectation = self.expectation(description: "Test: \(#function)")
         connection.asyncWriteWithMetadata(YapItem(item, metadata)) { tmp in
             result = tmp
             expectation.fulfill()
         }
-        waitForExpectationsWithTimeout(3.0, handler: nil)
+        waitForExpectations(timeout: 3.0, handler: nil)
         checkTransactionDidWriteItem(result)
         XCTAssertTrue(connection.didAsyncWrite)
     }
 
     func test__connection__async_write_items() {
         var result: [YapItem<TypeUnderTest, MetadataTypeUnderTest>] = []
-        let expectation = expectationWithDescription("Test: \(#function)")
+        let expectation = self.expectation(description: "Test: \(#function)")
         connection.asyncWriteWithMetadata(items.yapItems(with: metadatas)) { received in
             result = received
             expectation.fulfill()
         }
-        waitForExpectationsWithTimeout(3.0, handler: nil)
+        waitForExpectations(timeout: 3.0, handler: nil)
         checkTransactionDidWriteItems(result)
         XCTAssertTrue(connection.didAsyncWrite)
     }
@@ -437,23 +437,23 @@ class Functional_Remove_ValueWithObjectMetadataTests: ValueWithObjectMetadataTes
     }
 
     func test__connection_async_remove_item() {
-        let expectation = expectationWithDescription("Test: \(#function)")
+        let expectation = self.expectation(description: "Test: \(#function)")
         configureForReadingSingle()
         connection.asyncRemove(item) {
             expectation.fulfill()
         }
-        waitForExpectationsWithTimeout(3.0, handler: nil)
+        waitForExpectations(timeout: 3.0, handler: nil)
         checkTransactionDidRemoveItem()
         XCTAssertTrue(connection.didAsyncWrite)
     }
 
     func test__connection_async_remove_items() {
-        let expectation = expectationWithDescription("Test: \(#function)")
+        let expectation = self.expectation(description: "Test: \(#function)")
         configureForReadingMultiple()
         connection.asyncRemove(items) {
             expectation.fulfill()
         }
-        waitForExpectationsWithTimeout(3.0, handler: nil)
+        waitForExpectations(timeout: 3.0, handler: nil)
         checkTransactionDidRemoveItems()
         XCTAssertTrue(connection.didAsyncWrite)
     }
@@ -529,14 +529,14 @@ class Persistable_Read_ValueWithObjectMetadataTests: ValueWithObjectMetadataTest
     func test__reader__in_transaction_at_index_2() {
         configureForReadingSingle()
         reader = Read(readTransaction)
-        let atIndex: YapDB.Index -> YapItem<TypeUnderTest, MetadataTypeUnderTest>? = reader.withMetadataInTransactionAtIndex(readTransaction)
+        let atIndex: (YapDB.Index) -> YapItem<TypeUnderTest, MetadataTypeUnderTest>? = reader.withMetadataInTransactionAtIndex(readTransaction)
         XCTAssertTrue(checkTransactionDidReadItem(atIndex(index)))
     }
 
     func test__reader__at_index_in_transaction() {
         configureForReadingSingle()
         reader = Read(readTransaction)
-        let inTransaction: TestableReadTransaction -> YapItem<TypeUnderTest, MetadataTypeUnderTest>? = reader.withMetadataAtIndexInTransaction(index)
+        let inTransaction: (TestableReadTransaction) -> YapItem<TypeUnderTest, MetadataTypeUnderTest>? = reader.withMetadataAtIndexInTransaction(index)
         XCTAssertTrue(checkTransactionDidReadItem(inTransaction(readTransaction)))
     }
 
@@ -560,14 +560,14 @@ class Persistable_Read_ValueWithObjectMetadataTests: ValueWithObjectMetadataTest
     func test__reader__in_transaction_by_key_2() {
         configureForReadingSingle()
         reader = Read(readTransaction)
-        let byKey: String -> YapItem<TypeUnderTest, MetadataTypeUnderTest>? = reader.withMetadataInTransactionByKey(readTransaction)
+        let byKey: (String) -> YapItem<TypeUnderTest, MetadataTypeUnderTest>? = reader.withMetadataInTransactionByKey(readTransaction)
         XCTAssertTrue(checkTransactionDidReadItem(byKey(key)))
     }
 
     func test__reader__by_key_in_transaction() {
         configureForReadingSingle()
         reader = Read(readTransaction)
-        let inTransaction: TestableReadTransaction -> YapItem<TypeUnderTest, MetadataTypeUnderTest>? = reader.withMetadataByKeyInTransaction(key)
+        let inTransaction: (TestableReadTransaction) -> YapItem<TypeUnderTest, MetadataTypeUnderTest>? = reader.withMetadataByKeyInTransaction(key)
         XCTAssertTrue(checkTransactionDidReadItem(inTransaction(readTransaction)))
     }
 
@@ -652,8 +652,8 @@ class Persistable_Read_ValueWithObjectMetadataTests: ValueWithObjectMetadataTest
         reader = Read(readTransaction)
         let (items, missing): ([YapItem<TypeUnderTest, MetadataTypeUnderTest>], [String]) = reader.withMetadataFilterExisting(keys)
         XCTAssertEqual(readTransaction.didReadAtIndexes.first!, indexes.first!)
-        XCTAssertEqual(items.map { $0.value.identifier }, items.prefixUpTo(1).map { $0.value.identifier })
-        XCTAssertEqual(missing, Array(keys.suffixFrom(1)))
+        XCTAssertEqual(items.map { $0.value.identifier }, items.prefix(upTo: 1).map { $0.value.identifier })
+        XCTAssertEqual(missing, Array(keys.suffix(from: 1)))
     }
 
     // Reading - With Connection
@@ -731,8 +731,8 @@ class Persistable_Read_ValueWithObjectMetadataTests: ValueWithObjectMetadataTest
         let (items, missing) = reader.filterExisting(keys)
         XCTAssertTrue(connection.didRead)
         XCTAssertEqual(readTransaction.didReadAtIndexes.first!, indexes.first!)
-        XCTAssertEqual(items.map { $0.identifier }, items.prefixUpTo(1).map { $0.identifier })
-        XCTAssertEqual(missing, Array(keys.suffixFrom(1)))
+        XCTAssertEqual(items.map { $0.identifier }, items.prefix(upTo: 1).map { $0.identifier })
+        XCTAssertEqual(missing, Array(keys.suffix(from: 1)))
     }
 
 }
@@ -800,20 +800,20 @@ class Persistable_Write_ValueWithObjectMetadataTests: ValueWithObjectMetadataTes
     }
 
     func test__item_persistable__write_async_using_connection() {
-        let expectation = expectationWithDescription("Test: \(#function)")
+        let expectation = self.expectation(description: "Test: \(#function)")
         var result: YapItem<TypeUnderTest, MetadataTypeUnderTest>! = nil
 
         item.asyncWriteWithMetadata(connection, metadata: metadata) { tmp in
             result = tmp
             expectation.fulfill()
         }
-        waitForExpectationsWithTimeout(3.0, handler: nil)
+        waitForExpectations(timeout: 3.0, handler: nil)
         checkTransactionDidWriteItem(result)
         XCTAssertTrue(connection.didAsyncWrite)
     }
 
     func test__item_persistable__write_using_opertion() {
-        let expectation = expectationWithDescription("Test: \(#function)")
+        let expectation = self.expectation(description: "Test: \(#function)")
 
         let operation = item.writeWithMetadataOperation(connection, metadata: metadata)
         operation.completionBlock = {
@@ -821,7 +821,7 @@ class Persistable_Write_ValueWithObjectMetadataTests: ValueWithObjectMetadataTes
         }
 
         operationQueue.addOperation(operation)
-        waitForExpectationsWithTimeout(3.0, handler: nil)
+        waitForExpectations(timeout: 3.0, handler: nil)
         XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
         XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].0, index)
         XCTAssertEqual(TypeUnderTest.decode(writeTransaction.didWriteAtIndexes[0].1)!, item)
@@ -839,20 +839,20 @@ class Persistable_Write_ValueWithObjectMetadataTests: ValueWithObjectMetadataTes
     }
 
     func test__items_persistable__write_async_using_connection() {
-        let expectation = expectationWithDescription("Test: \(#function)")
+        let expectation = self.expectation(description: "Test: \(#function)")
         var result: [YapItem<TypeUnderTest, MetadataTypeUnderTest>] = []
         
         items.asyncWriteWithMetadata(connection, metadata: metadatas) { tmp in
             result = tmp
             expectation.fulfill()
         }
-        waitForExpectationsWithTimeout(3.0, handler: nil)
+        waitForExpectations(timeout: 3.0, handler: nil)
         checkTransactionDidWriteItems(result)
         XCTAssertTrue(connection.didAsyncWrite)
     }
 
     func test__items_persistable__write_using_opertion() {
-        let expectation = expectationWithDescription("Test: \(#function)")
+        let expectation = self.expectation(description: "Test: \(#function)")
 
         let operation = items.writeWithMetadataOperation(connection, metadata: metadatas)
         operation.completionBlock = {
@@ -860,9 +860,9 @@ class Persistable_Write_ValueWithObjectMetadataTests: ValueWithObjectMetadataTes
         }
 
         operationQueue.addOperation(operation)
-        waitForExpectationsWithTimeout(3.0, handler: nil)
+        waitForExpectations(timeout: 3.0, handler: nil)
         XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
-        XCTAssertEqual(writeTransaction.didWriteAtIndexes.map { $0.0.key }.sort(), indexes.map { $0.key }.sort())
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes.map { $0.0.key }.sorted(), indexes.map { $0.key }.sorted())
         XCTAssertEqual(writeTransaction.didWriteAtIndexes.map { $0.2 }.count, items.count)
         XCTAssertTrue(connection.didWrite)
     }    
@@ -884,25 +884,25 @@ class Persistable_Remove_ValueWithObjectMetadataTests: ValueWithObjectMetadataTe
     }
 
     func test__connection_async_remove_item() {
-        let expectation = expectationWithDescription("Test: \(#function)")
+        let expectation = self.expectation(description: "Test: \(#function)")
         configureForReadingSingle()
         item.asyncRemove(connection) {
             expectation.fulfill()
         }
-        waitForExpectationsWithTimeout(3.0, handler: nil)
+        waitForExpectations(timeout: 3.0, handler: nil)
         checkTransactionDidRemoveItem()
         XCTAssertTrue(connection.didAsyncWrite)
     }
 
     func test__connection_operation_remove_item() {
-        let expectation = expectationWithDescription("Test: \(#function)")
+        let expectation = self.expectation(description: "Test: \(#function)")
         configureForReadingSingle()
         let operation = item.removeOperation(connection)
         operation.completionBlock = {
             expectation.fulfill()
         }
         operationQueue.addOperation(operation)
-        waitForExpectationsWithTimeout(3.0, handler: nil)
+        waitForExpectations(timeout: 3.0, handler: nil)
         checkTransactionDidRemoveItem()
         XCTAssertTrue(connection.didWrite)
     }
@@ -922,25 +922,25 @@ class Persistable_Remove_ValueWithObjectMetadataTests: ValueWithObjectMetadataTe
     }
 
     func test__connection_async_remove_items() {
-        let expectation = expectationWithDescription("Test: \(#function)")
+        let expectation = self.expectation(description: "Test: \(#function)")
         configureForReadingMultiple()
         items.asyncRemove(connection) {
             expectation.fulfill()
         }
-        waitForExpectationsWithTimeout(3.0, handler: nil)
+        waitForExpectations(timeout: 3.0, handler: nil)
         checkTransactionDidRemoveItems()
         XCTAssertTrue(connection.didAsyncWrite)
     }
 
     func test__connection_operation_remove_items() {
-        let expectation = expectationWithDescription("Test: \(#function)")
+        let expectation = self.expectation(description: "Test: \(#function)")
         configureForReadingMultiple()
         let operation = items.removeOperation(connection)
         operation.completionBlock = {
             expectation.fulfill()
         }
         operationQueue.addOperation(operation)
-        waitForExpectationsWithTimeout(3.0, handler: nil)
+        waitForExpectations(timeout: 3.0, handler: nil)
         checkTransactionDidRemoveItems()
         XCTAssertTrue(connection.didWrite)
     }
