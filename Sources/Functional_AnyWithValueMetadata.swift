@@ -21,11 +21,11 @@ extension ReadTransactionType {
     - returns: an optional `MetadataType`
     */
     public func readMetadataAtIndex<
-        MetadataType where
+        MetadataType>(_ index: YapDB.Index) -> MetadataType? where
         MetadataType: ValueCoding,
         MetadataType.Coder: NSCoding,
-        MetadataType.Coder.ValueType == MetadataType>(index: YapDB.Index) -> MetadataType? {
-            return MetadataType.decode(readMetadataAtIndex(index))
+        MetadataType.Coder.Value == MetadataType {
+            return MetadataType.decode(readMetadataAtIndex(index) as Any?)
     }
 
     /**
@@ -35,13 +35,13 @@ extension ReadTransactionType {
     - returns: an array of `MetadataType`
     */
     public func readMetadataAtIndexes<
-        Indexes, MetadataType where
-        Indexes: SequenceType,
-        Indexes.Generator.Element == YapDB.Index,
+        Indexes, MetadataType>(_ indexes: Indexes) -> [MetadataType?] where
+        Indexes: Sequence,
+        Indexes.Iterator.Element == YapDB.Index,
         MetadataType: ValueCoding,
         MetadataType.Coder: NSCoding,
-        MetadataType.Coder.ValueType == MetadataType>(indexes: Indexes) -> [MetadataType] {
-            return indexes.flatMap(readMetadataAtIndex)
+        MetadataType.Coder.Value == MetadataType {
+            return indexes.map(readMetadataAtIndex)
     }
 }
 
@@ -54,10 +54,10 @@ extension ConnectionType {
     - returns: an optional `MetadataType`
     */
     public func readMetadataAtIndex<
-        MetadataType where
+        MetadataType>(_ index: YapDB.Index) -> MetadataType? where
         MetadataType: ValueCoding,
         MetadataType.Coder: NSCoding,
-        MetadataType.Coder.ValueType == MetadataType>(index: YapDB.Index) -> MetadataType? {
+        MetadataType.Coder.Value == MetadataType {
             return read { $0.readMetadataAtIndex(index) }
     }
 
@@ -68,12 +68,12 @@ extension ConnectionType {
     - returns: an array of `MetadataType`
     */
     public func readMetadataAtIndexes<
-        Indexes, MetadataType where
-        Indexes: SequenceType,
-        Indexes.Generator.Element == YapDB.Index,
+        Indexes, MetadataType>(_ indexes: Indexes) -> [MetadataType?] where
+        Indexes: Sequence,
+        Indexes.Iterator.Element == YapDB.Index,
         MetadataType: ValueCoding,
         MetadataType.Coder: NSCoding,
-        MetadataType.Coder.ValueType == MetadataType>(indexes: Indexes) -> [MetadataType] {
+        MetadataType.Coder.Value == MetadataType {
             return read { $0.readMetadataAtIndexes(indexes) }
     }
 }

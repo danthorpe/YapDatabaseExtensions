@@ -66,7 +66,7 @@ class YapDatabaseReadTransactionTests: ReadWriteBaseTests {
         writeItemsToDatabase(db)
         let keys = db.makeNewConnection().read { $0.keysInCollection(Employee.collection) }
         XCTAssertNotNil(keys)
-        XCTAssertEqual(keys.sort(), items.map { $0.key }.sort())
+        XCTAssertEqual(keys.sorted(), items.map { $0.key }.sorted())
     }
 
     func test__read_at_index_returns_nil_with_empty_db() {
@@ -101,33 +101,32 @@ class YapDatabaseReadWriteTransactionTests: ReadWriteBaseTests {
 
     func test__write_at_index_without_metadata() {
         let db = YapDB.testDatabase()
-        db.makeNewConnection().readWriteWithBlock { transaction in
+        db.makeNewConnection().readWrite { transaction in
             transaction.writeAtIndex(self.index, object: self.item)
         }
         let written = Employee.read(db).atIndex(index)
         XCTAssertNotNil(written)
-        XCTAssertNil(written!.metadata)
         XCTAssertEqual(written!.identifier, item.identifier)
     }
 
     func test__write_at_index_with_metadata() {
         let db = YapDB.testDatabase()
-        db.makeNewConnection().readWriteWithBlock { transaction in
-            transaction.writeAtIndex(self.index, object: self.item, metadata: self.item.metadata)
+        db.makeNewConnection().readWrite { transaction in
+            transaction.writeAtIndex(self.index, object: self.item, metadata: self.metadata)
         }
-        let written = Employee.read(db).atIndex(index)
+        let written: YapItem<Employee, NSDate>? = Employee.read(db).withMetadataAtIndex(index)
         XCTAssertNotNil(written)
         XCTAssertNotNil(written!.metadata)
-        XCTAssertEqual(written!.identifier, item.identifier)
+        XCTAssertEqual(written!.value.identifier, item.identifier)
     }
 
     func test__remove_at_indexes() {
         let db = YapDB.testDatabase()
 
-        db.makeNewConnection().write(items)
+        _ = db.makeNewConnection().write(items)
         XCTAssertNotNil(Employee.read(db).atIndex(index))
 
-        db.makeNewConnection().readWriteWithBlock { transaction in
+        db.makeNewConnection().readWrite { transaction in
             transaction.removeAtIndexes(self.indexes)
         }
 
@@ -137,23 +136,23 @@ class YapDatabaseReadWriteTransactionTests: ReadWriteBaseTests {
 
 class YapDatabaseConnectionTests: ReadWriteBaseTests {
 
-    var dispatchQueue: dispatch_queue_t!
-    var operationQueue: NSOperationQueue!
+    var dispatchQueue: DispatchQueue!
+    var operationQueue: OperationQueue!
 
     override func setUp() {
         super.setUp()
-        dispatchQueue = dispatch_get_global_queue(QOS_CLASS_DEFAULT, 0)
-        operationQueue = NSOperationQueue()
+        dispatchQueue = DispatchQueue.global(qos: .default)
+        operationQueue = OperationQueue()
     }
 
     func test__async_read() {
         let db = YapDB.testDatabase()
-        let expectation = expectationWithDescription("Test: \(#function)")
+        let expectation = self.expectation(description: "Test: \(#function)")
 
-        db.makeNewConnection().write(item)
+        _ = db.makeNewConnection().write(item)
         XCTAssertNotNil(Employee.read(db).atIndex(index))
 
-        var received: Employee? = .None
+        var received: Employee? = .none
         db.newConnection().asyncRead({ transaction -> Employee? in
             return transaction.readAtIndex(self.index) as? Employee
         }, queue: dispatchQueue) { (result: Employee?) in
@@ -161,25 +160,25 @@ class YapDatabaseConnectionTests: ReadWriteBaseTests {
             expectation.fulfill()
         }
 
-        waitForExpectationsWithTimeout(3.0, handler: nil)
+        waitForExpectations(timeout: 3.0, handler: nil)
 
         XCTAssertNotNil(received)
     }
 
     func test__async_write() {
         let db = YapDB.testDatabase()
-        let expectation = expectationWithDescription("Test: \(#function)")
+        let expectation = self.expectation(description: "Test: \(#function)")
 
-        var written: Employee? = .None
+        var written: Employee? = .none
         db.makeNewConnection().asyncWrite({ transaction -> Employee? in
-            transaction.writeAtIndex(self.index, object: self.item, metadata: self.item.metadata)
+            transaction.writeAtIndex(self.index, object: self.item, metadata: self.metadata)
             return self.item
         }, queue: dispatchQueue) { (result: Employee?) in
             written = result
             expectation.fulfill()
         }
 
-        waitForExpectationsWithTimeout(3.0, handler: nil)
+        waitForExpectations(timeout: 3.0, handler: nil)
 
         XCTAssertNotNil(written)
         XCTAssertNotNil(Employee.read(db).atIndex(index))
@@ -187,7 +186,7 @@ class YapDatabaseConnectionTests: ReadWriteBaseTests {
 
     func test__writeBlockOperation() {
         let db = YapDB.testDatabase()
-        let expectation = expectationWithDescription("Test: \(#function)")
+        let expectation = self.expectation(description: "Test: \(#function)")
 
         var didExecuteWithTransaction = false
         let operation = db.makeNewConnection().writeBlockOperation { transaction in
@@ -197,8 +196,8 @@ class YapDatabaseConnectionTests: ReadWriteBaseTests {
 
         operationQueue.addOperation(operation)
 
-        waitForExpectationsWithTimeout(3.0, handler: nil)
-        XCTAssertTrue(operation.finished)
+        waitForExpectations(timeout: 3.0, handler: nil)
+        XCTAssertTrue(operation.isFinished)
         XCTAssertTrue(didExecuteWithTransaction)
     }
 }
@@ -206,10 +205,12 @@ class YapDatabaseConnectionTests: ReadWriteBaseTests {
 class ValueCodingTests: XCTestCase {
 
     var item: Product!
+    var metadata: Product.Metadata!
     var index: YapDB.Index!
     var key: String!
 
     var items: [Product]!
+    var metadatas: [Product.Metadata?]!
     var indexes: [YapDB.Index]!
     var keys: [String]!
 
@@ -225,9 +226,11 @@ class ValueCodingTests: XCTestCase {
 
     override func tearDown() {
         item = nil
+        metadata = nil
         index = nil
         key = nil
         items = nil
+        metadatas = nil
         indexes = nil
         keys = nil
         super.tearDown()
@@ -235,31 +238,34 @@ class ValueCodingTests: XCTestCase {
 
     func createPersistables() {
         item = Product(
-            metadata: Product.Metadata(categoryIdentifier: 1),
             identifier: "vodka-123",
             name: "Belvidere",
-            barcode: .UPCA(1, 2, 3, 4)
+            barcode: .upca(1, 2, 3, 4)
         )
+        metadata = Product.Metadata(categoryIdentifier: 1)
         items = [
             item,
             Product(
-                metadata: Product.Metadata(categoryIdentifier: 2),
                 identifier: "gin-123",
                 name: "Boxer Gin",
-                barcode: .UPCA(5, 10, 15, 20)
+                barcode: .upca(5, 10, 15, 20)
             ),
             Product(
-                metadata: Product.Metadata(categoryIdentifier: 3),
                 identifier: "rum-123",
                 name: "Mount Gay Rum",
-                barcode: .UPCA(12, 24, 39, 48)
+                barcode: .upca(12, 24, 39, 48)
             ),
             Product(
-                metadata: Product.Metadata(categoryIdentifier: 2),
                 identifier: "gin-234",
                 name: "Monkey 47",
-                barcode: .UPCA(31, 62, 93, 124)
+                barcode: .upca(31, 62, 93, 124)
             )
+        ]
+        metadatas = [
+            metadata,
+            Product.Metadata(categoryIdentifier: 2),
+            Product.Metadata(categoryIdentifier: 3),
+            Product.Metadata(categoryIdentifier: 2)
         ]
     }
 
@@ -274,11 +280,11 @@ class ValueCodingTests: XCTestCase {
 
     func test__index_is_codable() {
         let db = YapDB.testDatabase()
-        db.makeNewConnection().readWriteWithBlock { transaction in
+        db.makeNewConnection().readWrite { transaction in
             transaction.setObject(self.index.encoded, forKey: "test-index", inCollection: "test-index-collection")
         }
 
-        let unarchived = YapDB.Index.decode(db.makeNewConnection().read { $0.objectForKey("test-index", inCollection: "test-index-collection") })
+        let unarchived = YapDB.Index.decode(db.makeNewConnection().read { $0.object(forKey: "test-index", inCollection: "test-index-collection") })
         XCTAssertNotNil(unarchived)
         XCTAssertEqual(unarchived!, index)
     }

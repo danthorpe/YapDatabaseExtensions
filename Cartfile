@@ -1,3 +1,2 @@
-github "danthorpe/ValueCoding" "1.5.0"
-github "CocoaLumberjack/CocoaLumberjack" "2.4.0"
-github "yapstudios/YapDatabase" "2.9.2"
+github "danthorpe/ValueCoding" "2.1.0"
+github "yapstudios/YapDatabase" "2.9.3"
