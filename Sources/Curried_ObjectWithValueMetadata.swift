@@ -12,10 +12,7 @@ import ValueCoding
 // MARK: - Persistable
 
 extension Persistable where
-    Self: NSCoding,
-    Self.MetadataType: ValueCoding,
-    Self.MetadataType.Coder: NSCoding,
-    Self.MetadataType.Coder.ValueType == Self.MetadataType {
+    Self: NSCoding {
 
     /**
     Returns a closure which, given a read transaction will return
@@ -24,10 +21,13 @@ extension Persistable where
     - parameter index: a YapDB.Index
     - returns: a (ReadTransaction) -> Self? closure.
     */
-    public static func readAtIndex<
-        ReadTransaction where
-        ReadTransaction: ReadTransactionType>(index: YapDB.Index) -> ReadTransaction -> Self? {
-            return { $0.readAtIndex(index) }
+    public static func readWithMetadataAtIndex<
+        ReadTransaction, Metadata>(_ index: YapDB.Index) -> (ReadTransaction) -> YapItem<Self, Metadata>? where
+        ReadTransaction: ReadTransactionType,
+        Metadata: ValueCoding,
+        Metadata.Coder: NSCoding,
+        Metadata.Coder.Value == Metadata {
+            return { $0.readWithMetadataAtIndex(index) }
     }
 
     /**
@@ -37,12 +37,15 @@ extension Persistable where
     - parameter indexes: a SequenceType of YapDB.Index values
     - returns: a (ReadTransaction) -> [Self] closure.
     */
-    public static func readAtIndexes<
-        Indexes, ReadTransaction where
-        Indexes: SequenceType,
-        Indexes.Generator.Element == YapDB.Index,
-        ReadTransaction: ReadTransactionType>(indexes: Indexes) -> ReadTransaction -> [Self] {
-            return { $0.readAtIndexes(indexes) }
+    public static func readWithMetadataAtIndexes<
+        Indexes, ReadTransaction, Metadata>(_ indexes: Indexes) -> (ReadTransaction) -> [YapItem<Self, Metadata>?] where
+        Indexes: Sequence,
+        Indexes.Iterator.Element == YapDB.Index,
+        ReadTransaction: ReadTransactionType,
+        Metadata: ValueCoding,
+        Metadata.Coder: NSCoding,
+        Metadata.Coder.Value == Metadata {
+            return { $0.readWithMetadataAtIndexes(indexes) }
     }
 
     /**
@@ -52,10 +55,13 @@ extension Persistable where
     - parameter key: a String
     - returns: a (ReadTransaction) -> Self? closure.
     */
-    public static func readByKey<
-        ReadTransaction where
-        ReadTransaction: ReadTransactionType>(key: String) -> ReadTransaction -> Self? {
-            return { $0.readByKey(key) }
+    public static func readWithMetadataByKey<
+        ReadTransaction, Metadata>(_ key: String) -> (ReadTransaction) -> YapItem<Self, Metadata>? where
+        ReadTransaction: ReadTransactionType,
+        Metadata: ValueCoding,
+        Metadata.Coder: NSCoding,
+        Metadata.Coder.Value == Metadata {
+            return { $0.readWithMetadataByKey(key) }
     }
 
     /**
@@ -65,12 +71,15 @@ extension Persistable where
     - parameter keys: a SequenceType of String values
     - returns: a (ReadTransaction) -> [Self] closure.
     */
-    public static func readByKeys<
-        Keys, ReadTransaction where
-        Keys: SequenceType,
-        Keys.Generator.Element == String,
-        ReadTransaction: ReadTransactionType>(keys: Keys) -> ReadTransaction -> [Self] {
-            return  { $0.readAtIndexes(Self.indexesWithKeys(keys)) }
+    public static func readWithMetadataByKeys<
+        Keys, ReadTransaction, Metadata>(_ keys: Keys) -> (ReadTransaction) -> [YapItem<Self, Metadata>?] where
+        Keys: Sequence,
+        Keys.Iterator.Element == String,
+        ReadTransaction: ReadTransactionType,
+        Metadata: ValueCoding,
+        Metadata.Coder: NSCoding,
+        Metadata.Coder.Value == Metadata {
+            return  { $0.readWithMetadataAtIndexes(Self.indexesWithKeys(keys)) }
     }
 
     /**
@@ -80,7 +89,12 @@ extension Persistable where
     - warning: Be aware that this will capure `self`.
     - returns: a (WriteTransaction) -> Self closure
     */
-    public func write<WriteTransaction: WriteTransactionType>() -> WriteTransaction -> Self {
-        return { $0.write(self) }
+    public func writeWithMetadata<
+        WriteTransaction, Metadata>(_ metadata: Metadata? = nil) -> (WriteTransaction) -> YapItem<Self, Metadata> where
+        WriteTransaction: WriteTransactionType,
+        Metadata: ValueCoding,
+        Metadata.Coder: NSCoding,
+        Metadata.Coder.Value == Metadata {
+        return { $0.writeWithMetadata(YapItem(self, metadata)) }
     }
 }
