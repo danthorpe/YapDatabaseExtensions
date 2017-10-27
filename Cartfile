@@ -1,2 +1,3 @@
-github "CocoaLumberjack/CocoaLumberjack" "3.3.0"
+github "CocoaLumberjack/CocoaLumberjack" ~> 3.3.0
 github "yapstudios/YapDatabase" ~> 3.0.0
+github "danthorpe/ValueCoding" ~> 3.0.0
