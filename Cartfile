@@ -1,2 +1,2 @@
-github "danthorpe/ValueCoding" "2.1.0"
-github "yapstudios/YapDatabase" "2.9.3"
+github "danthorpe/ValueCoding" ~> 3.0.0
+github "yapstudios/YapDatabase" ~> 3.0.0

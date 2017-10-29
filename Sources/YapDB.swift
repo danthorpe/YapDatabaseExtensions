@@ -7,6 +7,7 @@ import YapDatabase.YapDatabaseView
 import YapDatabase.YapDatabaseFilteredView
 import YapDatabase.YapDatabaseFullTextSearch
 import YapDatabase.YapDatabaseSecondaryIndex
+import YapDatabase.YapDatabaseAutoView
 
 protocol YapDatabaseViewProducer {
     func createDatabaseView() -> YapDatabaseView
