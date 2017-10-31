@@ -103,9 +103,16 @@ class ObjectWithObjectMetadataTests: XCTestCase {
     func checkTransactionDidWriteItem(_ result: YapItem<TypeUnderTest, MetadataTypeUnderTest>) {
         XCTAssertEqual(result.value.identifier, item.identifier)
         XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
-        XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].0, index)
-        XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].1.identifier, item.identifier)
-        XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].2 as? NSDate, metadata)
+        
+        let _index = writeTransaction.didWriteAtIndexes[0].0
+        let _identifier = writeTransaction.didWriteAtIndexes[0].1 as? TypeUnderTest
+        let _metadata = writeTransaction.didWriteAtIndexes[0].2
+        
+        XCTAssertNotNil(_identifier?.identifier)
+        
+        XCTAssertEqual(_index, index)
+        XCTAssertEqual(_identifier?.identifier, item.identifier)
+        XCTAssertEqual(_metadata as? NSDate, metadata)
     }
 
     func checkTransactionDidWriteItems(_ result: [YapItem<TypeUnderTest, MetadataTypeUnderTest>]) {
@@ -686,9 +693,17 @@ class Persistable_Write_ObjectWithObjectMetadataTests: ObjectWithObjectMetadataT
         operationQueue.addOperation(operation)
         waitForExpectations(timeout: 3.0, handler: nil)
         XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
-        XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].0, index)
-        XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].1.identifier, item.identifier)
-        XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].2 as? NSDate, metadata)
+        
+        let _index = writeTransaction.didWriteAtIndexes[0].0
+        let _identifier = writeTransaction.didWriteAtIndexes[0].1 as? TypeUnderTest
+        let _metadata = writeTransaction.didWriteAtIndexes[0].2
+        
+        XCTAssertNotNil(_identifier?.identifier)
+        
+        XCTAssertEqual(_index, index)
+        XCTAssertEqual(_identifier?.identifier, item.identifier)
+        XCTAssertEqual(_metadata as? NSDate, metadata)
+        
         XCTAssertTrue(connection.didWrite)
     }
 

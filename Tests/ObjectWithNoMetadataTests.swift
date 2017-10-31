@@ -93,9 +93,16 @@ class ObjectWithNoMetadataTests: XCTestCase {
     func checkTransactionDidWriteItem(_ result: TypeUnderTest) {
         XCTAssertEqual(result.identifier, item.identifier)
         XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
-        XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].0, index)
-        XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].1.identifier, item.identifier)
-        XCTAssertNil(writeTransaction.didWriteAtIndexes[0].2)
+        
+        let _index = writeTransaction.didWriteAtIndexes[0].0
+        let _identifier = writeTransaction.didWriteAtIndexes[0].1 as? TypeUnderTest
+        let _metadata = writeTransaction.didWriteAtIndexes[0].2
+        
+        XCTAssertNotNil(_identifier?.identifier)
+        
+        XCTAssertEqual(_index, index)
+        XCTAssertEqual(_identifier?.identifier, item.identifier)
+        XCTAssertNil(_metadata)
     }
 
     func checkTransactionDidWriteItems(_ result: [TypeUnderTest]) {
@@ -674,9 +681,16 @@ class Persistable_Write_ObjectWithNoMetadataTests: ObjectWithNoMetadataTests {
         operationQueue.addOperation(operation)
         waitForExpectations(timeout: 3.0, handler: nil)
         XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
-        XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].0, index)
-        XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].1.identifier, item.identifier)
-        XCTAssertNil(writeTransaction.didWriteAtIndexes[0].2)
+        
+        let _index = writeTransaction.didWriteAtIndexes[0].0
+        let _identifier = writeTransaction.didWriteAtIndexes[0].1 as? TypeUnderTest
+        let _metadata = writeTransaction.didWriteAtIndexes[0].2
+        
+        XCTAssertNotNil(_identifier?.identifier)
+        
+        XCTAssertEqual(_index, index)
+        XCTAssertEqual(_identifier?.identifier, item.identifier)
+        XCTAssertNil(_metadata)
         XCTAssertTrue(connection.didWrite)
     }
 
