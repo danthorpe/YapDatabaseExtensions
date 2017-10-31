@@ -50,6 +50,10 @@
 		BC69409D1FA62CBF00658E7C /* CocoaLumberjack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC6940991FA62CBE00658E7C /* CocoaLumberjack.framework */; };
 		BC69409E1FA62CBF00658E7C /* ValueCoding.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC69409A1FA62CBE00658E7C /* ValueCoding.framework */; };
 		BC69409F1FA62CBF00658E7C /* YapDatabase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC69409B1FA62CBE00658E7C /* YapDatabase.framework */; };
+		BCE1D7CC1FA7ECFA00666455 /* CocoaLumberjack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC6940991FA62CBE00658E7C /* CocoaLumberjack.framework */; };
+		BCE1D7CD1FA7ECFD00666455 /* CocoaLumberjackSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC6940981FA62CBE00658E7C /* CocoaLumberjackSwift.framework */; };
+		BCE1D7CE1FA7ECFF00666455 /* ValueCoding.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC69409A1FA62CBE00658E7C /* ValueCoding.framework */; };
+		BCE1D7CF1FA7ED0100666455 /* YapDatabase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC69409B1FA62CBE00658E7C /* YapDatabase.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -130,7 +134,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BCE1D7CC1FA7ECFA00666455 /* CocoaLumberjack.framework in Frameworks */,
 				656BAE7B1D9A4CCC008279EE /* YapDatabaseExtensions.framework in Frameworks */,
+				BCE1D7CF1FA7ED0100666455 /* YapDatabase.framework in Frameworks */,
+				BCE1D7CE1FA7ECFF00666455 /* ValueCoding.framework in Frameworks */,
+				BCE1D7CD1FA7ECFD00666455 /* CocoaLumberjackSwift.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -620,6 +628,10 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -634,7 +646,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks $(FRAMEWORK_SEARCH_PATHS)";
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -669,6 +681,10 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -677,7 +693,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks $(FRAMEWORK_SEARCH_PATHS)";
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = macosx;
