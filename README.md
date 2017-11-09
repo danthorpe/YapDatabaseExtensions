@@ -32,7 +32,7 @@ public protocol Persistable: Identifiable {
     static var collection: String { get }
     var metadata: MetadataType? { get set }
 }
-``` 
+```
 
 The `identifier` property allows the type to support an identifier type such as `NSUUID` or `Int`.
 
@@ -89,7 +89,7 @@ The following “functional” APIs are available directly on the `YapDatabase` 
 let connection = db.newConnection()
 
 // Write a single item
-connection.write(item) 
+connection.write(item)
 
 // Write an array of items, using one transaction.
 connection.write(items)
@@ -101,13 +101,13 @@ connection.asyncWrite(items) { print(“did finish writing”) }
 // Create a write transaction block for multiple writes.
 connection.write { transaction in
     transaction.write(item)
-    transaction.write(items) 
+    transaction.write(items)
 }
 
 // Write many items asynchronously
 connection.asyncWrite({ transaction in
     transaction.write(item)
-    transaction.write(items) 
+    transaction.write(items)
 }, completion: { print(“did finish writing”) })
 ```
 
@@ -160,7 +160,7 @@ item.asyncWrite(connection) { written in
 
 // Return an NSOperation which will perform an sync write on a YapDatabaseConnection.
 let write: NSOperation = item.write(connection)
-``` 
+```
 
 Reading items from the database is a little different.
 
@@ -187,7 +187,7 @@ if let allItems = Item.read(transaction).all() {
 
 // Get the Items which exist for the given keys, and return the [String] keys which are missing.
 let (items, missingKeys) = Item.read(transaction).filterExisting(someKeys)
-``` 
+```
 
 Similarly, to work directly on a `YapDatabaseConnection`, use the following:
 

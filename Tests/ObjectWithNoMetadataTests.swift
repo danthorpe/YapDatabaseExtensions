@@ -29,8 +29,8 @@ class ObjectWithNoMetadataTests: XCTestCase {
 
     var reader: Read<TypeUnderTest, TestableDatabase>!
 
-    var dispatchQueue: dispatch_queue_t!
-    var operationQueue: NSOperationQueue!
+    var dispatchQueue: DispatchQueue!
+    var operationQueue: OperationQueue!
 
     override func setUp() {
         super.setUp()
@@ -50,8 +50,8 @@ class ObjectWithNoMetadataTests: XCTestCase {
         connection.writeTransaction = writeTransaction
         database.connection = connection
 
-        dispatchQueue = dispatch_get_global_queue(QOS_CLASS_DEFAULT, 0)
-        operationQueue = NSOperationQueue()
+        dispatchQueue = DispatchQueue.global(qos: .default)
+        operationQueue = OperationQueue()
     }
 
     override func tearDown() {
@@ -90,38 +90,44 @@ class ObjectWithNoMetadataTests: XCTestCase {
         readTransaction.keys = keys
     }
 
-    func checkTransactionDidWriteItem(result: TypeUnderTest) {
+    func checkTransactionDidWriteItem(_ result: TypeUnderTest) {
         XCTAssertEqual(result.identifier, item.identifier)
         XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
-        XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].0, index)
-        XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].1.identifier, item.identifier)
-        XCTAssertNil(writeTransaction.didWriteAtIndexes[0].2)
+        
+        let _index = writeTransaction.didWriteAtIndexes[0].0
+        let _identifier = writeTransaction.didWriteAtIndexes[0].1 as? TypeUnderTest
+        let _metadata = writeTransaction.didWriteAtIndexes[0].2
+        
+        XCTAssertNotNil(_identifier?.identifier)
+        
+        XCTAssertEqual(_index, index)
+        XCTAssertEqual(_identifier?.identifier, item.identifier)
+        XCTAssertNil(_metadata)
     }
 
-    func checkTransactionDidWriteItems(result: [TypeUnderTest]) {
+    func checkTransactionDidWriteItems(_ result: [TypeUnderTest]) {
         XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
-        XCTAssertEqual(writeTransaction.didWriteAtIndexes.map { $0.0.key }.sort(), indexes.map { $0.key }.sort())
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes.map { $0.0.key }.sorted(), indexes.map { $0.key }.sorted())
         XCTAssertEqual(writeTransaction.didWriteAtIndexes.map { $0.2 }.count, items.count)
         XCTAssertFalse(result.isEmpty)
         XCTAssertEqual(Set(result), Set(items))
     }
 
-    func checkTransactionDidReadItem(result: TypeUnderTest?) -> Bool {
+    func checkTransactionDidReadItem(_ result: TypeUnderTest?) -> Bool {
         guard let result = result else {
             return false
         }
         XCTAssertEqual(readTransaction.didReadAtIndex, index)
         XCTAssertEqual(result.identifier, item.identifier)
-        XCTAssertNil(result.metadata)
         return true
     }
 
-    func checkTransactionDidReadItems(result: [TypeUnderTest]) -> Bool {
-        if result.isEmpty {
+    func checkTransactionDidReadItems(_ result: [TypeUnderTest?]) -> Bool {
+        if result.flatMap({$0}).isEmpty {
             return false
         }
         XCTAssertEqual(Set(readTransaction.didReadAtIndexes), Set(indexes))
-        XCTAssertEqual(result.count, items.count)
+        XCTAssertEqual(result.flatMap({$0}).count, items.count)
         return true
     }
 
@@ -132,18 +138,6 @@ class ObjectWithNoMetadataTests: XCTestCase {
 
     func checkTransactionDidRemoveItems() {
         XCTAssertEqual(writeTransaction.didRemoveAtIndexes, indexes)
-    }
-}
-
-class Base_ObjectWithNoMetadataTests: ObjectWithNoMetadataTests {
-
-    func test__metadata_is_nil() {
-        XCTAssertNil(item.metadata)
-    }
-
-    func test__metadata_cannot_be_set() {
-        item.metadata = Void()
-        XCTAssertNil(item.metadata)
     }
 }
 
@@ -300,24 +294,24 @@ class Functional_Write_ObjectWithNoMetadataTests: ObjectWithNoMetadataTests {
 
     func test__connection__async_write_item() {
         var result: TypeUnderTest!
-        let expectation = expectationWithDescription("Test: \(#function)")
+        let expectation = self.expectation(description: "Test: \(#function)")
         connection.asyncWrite(item) { tmp in
             result = tmp
             expectation.fulfill()
         }
-        waitForExpectationsWithTimeout(3.0, handler: nil)
+        waitForExpectations(timeout: 3.0, handler: nil)
         checkTransactionDidWriteItem(result)
         XCTAssertTrue(connection.didAsyncWrite)
     }
 
     func test__connection__async_write_items() {
         var result: [TypeUnderTest] = []
-        let expectation = expectationWithDescription("Test: \(#function)")
+        let expectation = self.expectation(description: "Test: \(#function)")
         connection.asyncWrite(items) { received in
             result = received
             expectation.fulfill()
         }
-        waitForExpectationsWithTimeout(3.0, handler: nil)
+        waitForExpectations(timeout: 3.0, handler: nil)
         checkTransactionDidWriteItems(result)
         XCTAssertTrue(connection.didAsyncWrite)
     }
@@ -352,23 +346,23 @@ class Functional_Remove_ObjectWithNoMetadataTests: ObjectWithNoMetadataTests {
     }
 
     func test__connection_async_remove_item() {
-        let expectation = expectationWithDescription("Test: \(#function)")
+        let expectation = self.expectation(description: "Test: \(#function)")
         configureForReadingSingle()
         connection.asyncRemove(item) {
             expectation.fulfill()
         }
-        waitForExpectationsWithTimeout(3.0, handler: nil)
+        waitForExpectations(timeout: 3.0, handler: nil)
         checkTransactionDidRemoveItem()
         XCTAssertTrue(connection.didAsyncWrite)
     }
 
     func test__connection_async_remove_items() {
-        let expectation = expectationWithDescription("Test: \(#function)")
+        let expectation = self.expectation(description: "Test: \(#function)")
         configureForReadingMultiple()
         connection.asyncRemove(items) {
             expectation.fulfill()
         }
-        waitForExpectationsWithTimeout(3.0, handler: nil)
+        waitForExpectations(timeout: 3.0, handler: nil)
         checkTransactionDidRemoveItems()
         XCTAssertTrue(connection.didAsyncWrite)
     }
@@ -567,8 +561,8 @@ class Persistable_Read_ObjectWithNoMetadataTests: ObjectWithNoMetadataTests {
         reader = Read(readTransaction)
         let (items, missing) = reader.filterExisting(keys)
         XCTAssertEqual(readTransaction.didReadAtIndexes.first!, indexes.first!)
-        XCTAssertEqual(items.map { $0.identifier }, items.prefixUpTo(1).map { $0.identifier })
-        XCTAssertEqual(missing, Array(keys.suffixFrom(1)))
+        XCTAssertEqual(items.map { $0.identifier }, items.prefix(upTo: 1).map { $0.identifier })
+        XCTAssertEqual(missing, Array(keys.suffix(from: 1)))
     }
 
     // Reading - With Connection
@@ -646,8 +640,8 @@ class Persistable_Read_ObjectWithNoMetadataTests: ObjectWithNoMetadataTests {
         let (items, missing) = reader.filterExisting(keys)
         XCTAssertTrue(connection.didRead)
         XCTAssertEqual(readTransaction.didReadAtIndexes.first!, indexes.first!)
-        XCTAssertEqual(items.map { $0.identifier }, items.prefixUpTo(1).map { $0.identifier })
-        XCTAssertEqual(missing, Array(keys.suffixFrom(1)))
+        XCTAssertEqual(items.map { $0.identifier }, items.prefix(upTo: 1).map { $0.identifier })
+        XCTAssertEqual(missing, Array(keys.suffix(from: 1)))
     }
 
 }
@@ -664,20 +658,20 @@ class Persistable_Write_ObjectWithNoMetadataTests: ObjectWithNoMetadataTests {
     }
 
     func test__item_persistable__write_async_using_connection() {
-        let expectation = expectationWithDescription("Test: \(#function)")
+        let expectation = self.expectation(description: "Test: \(#function)")
         var result: TypeUnderTest! = nil
 
         item.asyncWrite(connection) { tmp in
             result = tmp
             expectation.fulfill()
         }
-        waitForExpectationsWithTimeout(3.0, handler: nil)
+        waitForExpectations(timeout: 3.0, handler: nil)
         checkTransactionDidWriteItem(result)
         XCTAssertTrue(connection.didAsyncWrite)
     }
 
     func test__item_persistable__write_using_opertion() {
-        let expectation = expectationWithDescription("Test: \(#function)")
+        let expectation = self.expectation(description: "Test: \(#function)")
 
         let operation = item.writeOperation(connection)
         operation.completionBlock = {
@@ -685,11 +679,18 @@ class Persistable_Write_ObjectWithNoMetadataTests: ObjectWithNoMetadataTests {
         }
 
         operationQueue.addOperation(operation)
-        waitForExpectationsWithTimeout(3.0, handler: nil)
+        waitForExpectations(timeout: 3.0, handler: nil)
         XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
-        XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].0, index)
-        XCTAssertEqual(writeTransaction.didWriteAtIndexes[0].1.identifier, item.identifier)
-        XCTAssertNil(writeTransaction.didWriteAtIndexes[0].2)
+        
+        let _index = writeTransaction.didWriteAtIndexes[0].0
+        let _identifier = writeTransaction.didWriteAtIndexes[0].1 as? TypeUnderTest
+        let _metadata = writeTransaction.didWriteAtIndexes[0].2
+        
+        XCTAssertNotNil(_identifier?.identifier)
+        
+        XCTAssertEqual(_index, index)
+        XCTAssertEqual(_identifier?.identifier, item.identifier)
+        XCTAssertNil(_metadata)
         XCTAssertTrue(connection.didWrite)
     }
 
@@ -703,20 +704,20 @@ class Persistable_Write_ObjectWithNoMetadataTests: ObjectWithNoMetadataTests {
     }
 
     func test__items_persistable__write_async_using_connection() {
-        let expectation = expectationWithDescription("Test: \(#function)")
+        let expectation = self.expectation(description: "Test: \(#function)")
         var result: [TypeUnderTest] = []
 
         items.asyncWrite(connection) { tmp in
             result = tmp
             expectation.fulfill()
         }
-        waitForExpectationsWithTimeout(3.0, handler: nil)
+        waitForExpectations(timeout: 3.0, handler: nil)
         checkTransactionDidWriteItems(result)
         XCTAssertTrue(connection.didAsyncWrite)
     }
 
     func test__items_persistable__write_using_opertion() {
-        let expectation = expectationWithDescription("Test: \(#function)")
+        let expectation = self.expectation(description: "Test: \(#function)")
 
         let operation = items.writeOperation(connection)
         operation.completionBlock = {
@@ -724,9 +725,9 @@ class Persistable_Write_ObjectWithNoMetadataTests: ObjectWithNoMetadataTests {
         }
 
         operationQueue.addOperation(operation)
-        waitForExpectationsWithTimeout(3.0, handler: nil)
+        waitForExpectations(timeout: 3.0, handler: nil)
         XCTAssertFalse(writeTransaction.didWriteAtIndexes.isEmpty)
-        XCTAssertEqual(writeTransaction.didWriteAtIndexes.map { $0.0.key }.sort(), indexes.map { $0.key }.sort())
+        XCTAssertEqual(writeTransaction.didWriteAtIndexes.map { $0.0.key }.sorted(), indexes.map { $0.key }.sorted())
         XCTAssertEqual(writeTransaction.didWriteAtIndexes.map { $0.2 }.count, items.count)
         XCTAssertTrue(connection.didWrite)
     }
@@ -748,25 +749,25 @@ class Persistable_Remove_ObjectWithNoMetadataTests: ObjectWithNoMetadataTests {
     }
 
     func test__connection_async_remove_item() {
-        let expectation = expectationWithDescription("Test: \(#function)")
+        let expectation = self.expectation(description: "Test: \(#function)")
         configureForReadingSingle()
         item.asyncRemove(connection) {
             expectation.fulfill()
         }
-        waitForExpectationsWithTimeout(3.0, handler: nil)
+        waitForExpectations(timeout: 3.0, handler: nil)
         checkTransactionDidRemoveItem()
         XCTAssertTrue(connection.didAsyncWrite)
     }
 
     func test__connection_operation_remove_item() {
-        let expectation = expectationWithDescription("Test: \(#function)")
+        let expectation = self.expectation(description: "Test: \(#function)")
         configureForReadingSingle()
         let operation = item.removeOperation(connection)
         operation.completionBlock = {
             expectation.fulfill()
         }
         operationQueue.addOperation(operation)
-        waitForExpectationsWithTimeout(3.0, handler: nil)
+        waitForExpectations(timeout: 3.0, handler: nil)
         checkTransactionDidRemoveItem()
         XCTAssertTrue(connection.didWrite)
     }
@@ -786,25 +787,25 @@ class Persistable_Remove_ObjectWithNoMetadataTests: ObjectWithNoMetadataTests {
     }
 
     func test__connection_async_remove_items() {
-        let expectation = expectationWithDescription("Test: \(#function)")
+        let expectation = self.expectation(description: "Test: \(#function)")
         configureForReadingMultiple()
         items.asyncRemove(connection) {
             expectation.fulfill()
         }
-        waitForExpectationsWithTimeout(3.0, handler: nil)
+        waitForExpectations(timeout: 3.0, handler: nil)
         checkTransactionDidRemoveItems()
         XCTAssertTrue(connection.didAsyncWrite)
     }
 
     func test__connection_operation_remove_items() {
-        let expectation = expectationWithDescription("Test: \(#function)")
+        let expectation = self.expectation(description: "Test: \(#function)")
         configureForReadingMultiple()
         let operation = items.removeOperation(connection)
         operation.completionBlock = {
             expectation.fulfill()
         }
         operationQueue.addOperation(operation)
-        waitForExpectationsWithTimeout(3.0, handler: nil)
+        waitForExpectations(timeout: 3.0, handler: nil)
         checkTransactionDidRemoveItems()
         XCTAssertTrue(connection.didWrite)
     }
