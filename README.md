@@ -1,9 +1,4 @@
-![](https://raw.githubusercontent.com/JimRoepcke/RCSYapDatabaseExtensions/development/header.png)
-
-[![CocoaPods Compatible](https://img.shields.io/cocoapods/v/RCSYapDatabaseExtensions.svg)](https://img.shields.io/cocoapods/v/RCSYapDatabaseExtensions.svg)
-[![CocoaPods Documentation](https://img.shields.io/cocoapods/metrics/doc-percent/RCSYapDatabaseExtensions.svg?style=flat)](https://cocoapods.org/pods/RCSYapDatabaseExtensions)
-[![Platform](https://img.shields.io/cocoapods/p/RCSYapDatabaseExtensions.svg?style=flat)](http://cocoadocs.org/docsets/RCSYapDatabaseExtensions)
-[![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
+![](https://raw.githubusercontent.com/JimRoepcke/YapDatabaseExtensions/development/header.png)
 
 # RCSYapDatabaseExtensions
 
@@ -17,21 +12,22 @@ RCSYapDatabaseExtensions is a suite of convenience APIs for working with [YapDat
 While YapDatabase is great, it’s lacking some out of the box convenience and Swift support. In particular, YapDatabase works heavily with `AnyObject` types, which is fine for Objective-C but means no type fidelity with Swift. Similarly saving value types like structs or enums in YapDatabase is problematic. This framework has evolved through 2015 to tackle these issues.
 
 ## Value Types
-The support for encoding and decoding value types, previously the `Saveable` and `Archiver` protocols, has been renamed and moved to their own project. [ValueCoding](https://github.com/danthorpe/ValueCoding) is a dependency of this framework (along with YapDatabase itself). See its [README](https://github.com/danthorpe/ValueCoding/blob/development/README.md) for more info. However, essentially, if you used this project before version 2.1, you’ll need to rename some types - and Xcode should present Fix It options. `Saveable` is now `ValueCoding`, its nested type, previously `ArchiverType` is now `Coder`, and this type must conform to a protocol, previously `Archiver`, now `CodingProtocol`. See how they were all mixed up? Now fixed.
+The support for encoding and decoding value types, previously the `Saveable` and `Archiver` protocols, has been renamed and moved to their own project. [ValueCoding](https://github.com/danthorpe/ValueCoding) is a dependency of this framework (along with YapDatabase itself). See its [README](https://github.com/danthorpe/ValueCoding/blob/development/README.md) for more info. However, essentially, if you used this project before version 2.1, you’ll need to rename some types - and Xcode should present Fix It options. `Saveable` is now `ValueCoding`, its nested type, previously `ArchiverType` is now `Coder`, and this type must conform to a protocol, previously `Archiver`, now `CodingType`. See how they were all mixed up? Now fixed.
 
 ## `Persistable`
 This protocol expresses what is required to support reading from and writing to YapDatabase. Objects are referenced inside the database with a key (a `String`) inside a collection (also a `String`).
 
 ```swift
 public protocol Identifiable {
-    typealias IdentifierType: CustomStringConvertible
+    associatedtype IdentifierType: CustomStringConvertible
     var identifier: IdentifierType { get }
 }
 
 public protocol Persistable: Identifiable {
+    /// The YapDatabase collection name the type is stored in.
     static var collection: String { get }
 }
-``` 
+```
 
 The `identifier` property allows the type to support an identifier type such as `NSUUID` or `Int`.
 
@@ -40,13 +36,26 @@ While not a requirement of YapDatabase, for these extensions, it is required tha
 There is also a `YapDB.Index` struct which composes the key and collection into a single type. This is used internally for all access methods. Properties defined in an extension on `Persistable` provide access to `key` and `index`.
 
 ### Metadata
-YapDatabase supports storing metadata alongside the primary object. RCSYapDatabaseExtensions supports optional reading and writing of metadata alongside a `Persistable` type.
+YapDatabase supports storing metadata alongside the primary object. RCSYapDatabaseExtensions supports automatic reading and writing of metadata as an optional property of the `Persistable` type.
 
-Your custom metadata types must conform to either `NSCoding` or `ValueCoding`.
+By default, all types which conform to `Persistable`, will get a `MetadataType` of `Void` which is synthesized by default. Therefore if you do not want or need a metadata type, there is nothing to do.
 
-**In this fork of YapDatabaseExtensions, metadata has been removed from `Persistable`, and all reads and writes of metadata must be done explicitly.**
+To support a custom metadata type, just add the following to your `Persistable` type, e.g.:
 
-Additionally, since the `MetadataType` is decoupled from the `Persistable` type, a single `Persistable` type can use many different types of metadata, as appropriate. When you want to read or write a value and it's metadata together, you use the "withMetadata" variants of the API, which accept and return `YapItem<Value, Metadata>` values. `YapItem` is basically a slightly nicer wrapper than a Swift tuple, which can be extended, unlike anonymous tuple types.
+```swift
+struct MyCustomValue: Persistable, ValueCoding {
+    typealias Coder = MyCustomValueCoder
+    static let collection = “MyCustomValues”
+    var metadata: MyCustomMetadata? = .None
+    let identifier: NSUUID
+}
+```
+
+where the type (`MyCustomMetadata` in the above snippet) implements either `NSCoding` or `ValueCoding`.
+
+When creating a new item, set the metadata property before saving the item to the database. RCSYapDatabaseExtensions will then save the metadata inside YapDatabase correctly. *There is no need to encode the metadata inside the primary object*. When reading objects which have a valid `MetadataType`, RCSYapDatabaseExtensions will automatically read, decode and set the item’s metadata before returning the item.
+
+Note that previous metadata protocols `ObjectMetadataPersistable` and `ValueMetadataPersistable` have been deprecated in favor of `Persistable`.
 
 ## “Correct” Type Patterns
 Because the generic protocols, `ValueCoding` and `CodingType` have self-reflective properties, they must be correctly implemented for the APIs to be available. This means that the equality `ValueCoding.Coder.ValueType == Self` must be met. The APIs are all composed with this represented in their generic where clauses. This means that if your `ValueCoding` type is not the `ValueType` of its `Coder`, your code will not compile.
@@ -55,10 +64,10 @@ Therefore, there are six valid `Persistable` type patterns as described in the t
 
 Item encoding | Metadata encoding | Pattern
 --------------|-------------------|------------------
-`NSCoding`    | No Metadata       | Object
+`NSCoding`    | `Void` Metadata   | Object
 `NSCoding`    | `NSCoding`        | ObjectWithObjectMetadata
 `NSCoding`    | `ValueCoding`     | ObjectWithValueMetadata
-`ValueCoding` | No Metadata       | Value
+`ValueCoding` | `Void` Metadata   | Value
 `ValueCoding` | `NSCoding`        | ValueWithObjectMetadata
 `ValueCoding` | `ValueCoding`     | ValueWithValueMetadata
 
@@ -75,7 +84,7 @@ The following “functional” APIs are available directly on the `YapDatabase` 
 let connection = db.newConnection()
 
 // Write a single item
-connection.write(item) 
+connection.write(item)
 
 // Write an array of items, using one transaction.
 connection.write(items)
@@ -87,13 +96,13 @@ connection.asyncWrite(items) { print(“did finish writing”) }
 // Create a write transaction block for multiple writes.
 connection.write { transaction in
     transaction.write(item)
-    transaction.write(items) 
+    transaction.write(items)
 }
 
 // Write many items asynchronously
 connection.asyncWrite({ transaction in
     transaction.write(item)
-    transaction.write(items) 
+    transaction.write(items)
 }, completion: { print(“did finish writing”) })
 ```
 
@@ -104,7 +113,7 @@ if let item: Item? = connection.readAtIndex(index) {
   // etc
 }
 
-if let meta: MetadataType? = connection.readMetadataAtIndex(index) {
+if let meta: Item.MetadataType? = connection.readMetadataAtIndex(index) {
   // etc
 }
 
@@ -124,7 +133,7 @@ connection.read { transaction in
     let c: [Item] = transaction.readAtIndexes(indexes)
     let d: [Item] = transaction.readByKeys(keys)
     let all: [Item] = transaction.readAll()
-    let meta: [MetadataType] = transaction.readMetadataAtIndexes(indexes)
+    let meta: [Item.MetadataType] = transaction.readMetadataAtIndexes(indexes)
 }
 ```
 
@@ -146,7 +155,7 @@ item.asyncWrite(connection) { written in
 
 // Return an NSOperation which will perform an sync write on a YapDatabaseConnection.
 let write: NSOperation = item.write(connection)
-``` 
+```
 
 Reading items from the database is a little different.
 
@@ -154,13 +163,6 @@ Reading items from the database is a little different.
 // Read using a YapDB.Index.
 if let item = Item.read(transaction).atIndex(index) {
    // etc - item is correct type, no casting required.
-}
-
-// Read value and metadata using a YapDB.Index.
-if let item: YapItem<Item, MetadataType>? = Item.read(transaction).withMetadataAtIndex(index) {
-   // etc - item is a correct type, no casting required.
-   // item.value contains the value
-   // item.metadata contains the metadata, wrapped in an Optional
 }
 
 // Read an array of items from an array of YapDB.Index(s)
@@ -180,7 +182,7 @@ if let allItems = Item.read(transaction).all() {
 
 // Get the Items which exist for the given keys, and return the [String] keys which are missing.
 let (items, missingKeys) = Item.read(transaction).filterExisting(someKeys)
-``` 
+```
 
 Similarly, to work directly on a `YapDatabaseConnection`, use the following:
 
@@ -202,7 +204,9 @@ let (items, missingKeys) = Item.read(connection).filterExisting(someKeys)
 
 ## Installation
 
-RCSYapDatabaseExtensions is available through [CocoaPods](http://cocoapods.org). To install
+RCSYapDatabaseExtensions is **(not yet)** available through [CocoaPods](http://cocoapods.org). If it was...
+
+To install
 it, simply add the following line to your Podfile:
 
 ```ruby
@@ -217,7 +221,7 @@ pod 'RCSYapDatabaseExtensions/Functional’
 
 ## API Documentation
 
-API documentation is available on [CocoaDocs.org](http://cocoadocs.org/docsets/RCSYapDatabaseExtensions).
+API documentation is **(not yet)** available on [CocoaDocs.org](http://cocoadocs.org/docsets/RCSYapDatabaseExtensions).
 
 ## Developing
 
@@ -226,7 +230,8 @@ To start working in this repository’s `YapDatabaseExtensions.xcodeproj`, you�
 ## Author
 
 Daniel Thorpe, [@danthorpe](https://twitter.com/danthorpe)
-Jim Roepcke, [@JimRoepcke](https://twitter.com/JimRoepcke)
+Jim Roepcke, [@JimRoepcke](https://github.com/JimRoepcke)
+Andrey Yastrebov, [@AYastrebov](https://github.com/AYastrebov)
 
 ## License
 
