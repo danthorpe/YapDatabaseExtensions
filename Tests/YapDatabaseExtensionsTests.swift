@@ -48,7 +48,7 @@ class PersistableTests: XCTestCase {
     func test__indexes_from_keys() {
         let keys = [ "beatle-1", "beatle-2", "beatle-3", "beatle-4", "beatle-2" ]
         let indexes = Person.indexesWithKeys(keys)
-        XCTAssertEqual(indexes.count, 4)
+        XCTAssertEqual(indexes.count, 5)
     }
 }
 
