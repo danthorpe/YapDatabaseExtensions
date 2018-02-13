@@ -15,7 +15,7 @@ Pod::Spec.new do |s|
   s.module_name       = 'RCSYapDatabaseExtensions'
   s.social_media_url  = 'https://twitter.com/JimRoepcke'
   s.requires_arc      = true
-  s.swift_version     = 4.0
+  s.swift_version     = '4.0'
   s.default_subspec   = 'Persitable'
   s.ios.deployment_target = '9.0'
   s.osx.deployment_target = '10.11'
