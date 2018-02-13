@@ -1,3 +1,6 @@
+# 4.0.1
+1. Fixed typo in podspec
+
 # 4.0.0
 1. Updated for Swift 4.0
 2. Updated to use YapDatabase 3.0.2, ValueCoding 2.2.0 and CocoaLumberjack 3.4.1

@@ -2,7 +2,7 @@
 
 # RCSYapDatabaseExtensions
 
-**This is a fork of Dan Thorpe's YapDatabaseExtensions. It was created as my client needed a Swift 3 version immediately, but it also has several other enhancements. Please see CHANGELOG.md for details.**
+**This is a fork of Dan Thorpe's YapDatabaseExtensions. It was initially created as my client needed a Swift 3 version immediately, but it also has several other enhancements, and has now been updated for Swift 4 and YapDatabase 3.0.2. Please see CHANGELOG.md for details.**
 
 Read Dan Thorpe's introductory blog post about [YapDatabase & YapDatabaseExtensions](http://danthorpe.me/posts/yap-database.html), and a follow up on [YapDatabaseExtensions 2](http://danthorpe.me/posts/yapdatabaseextensions-two--the-swiftening.html).
 
