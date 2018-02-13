@@ -233,7 +233,7 @@ extension Persistable {
         Keys>(_ keys: Keys) -> [YapDB.Index] where
         Keys: Sequence,
         Keys.Iterator.Element == String {
-            return Set(keys).map { YapDB.Index(collection: collection, key: $0) }
+            return keys.map { YapDB.Index(collection: collection, key: $0) }
     }
 
     /**
