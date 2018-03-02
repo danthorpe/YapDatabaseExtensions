@@ -1,3 +1,6 @@
+# 4.0.2
+1. Made `YapItem` properties `public`.
+
 # 4.0.1
 1. Fixed typo in podspec
 
