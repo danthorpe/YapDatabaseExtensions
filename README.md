@@ -1,17 +1,12 @@
-![](https://raw.githubusercontent.com/danthorpe/YapDatabaseExtensions/development/header.png)
+![](https://raw.githubusercontent.com/JimRoepcke/YapDatabaseExtensions/development/header.png)
 
-[![Build status](https://badge.buildkite.com/95784c169af7db5e36cefe146d5d3f3899c8339d46096a6349.svg)](https://buildkite.com/danthorpe/yapdatabaseextensions?branch=development)
-[![Coverage Status](https://coveralls.io/repos/github/danthorpe/YapDatabaseExtensions/badge.svg?branch=development)](https://coveralls.io/github/danthorpe/YapDatabaseExtensions?branch=development)
-[![CocoaPods Compatible](https://img.shields.io/cocoapods/v/YapDatabaseExtensions.svg)](https://img.shields.io/cocoapods/v/YapDatabaseExtensions.svg)
-[![CocoaPods Documentation](https://img.shields.io/cocoapods/metrics/doc-percent/YapDatabaseExtensions.svg?style=flat)](https://cocoapods.org/pods/YapDatabaseExtensions)
-[![Platform](https://img.shields.io/cocoapods/p/YapDatabaseExtensions.svg?style=flat)](http://cocoadocs.org/docsets/YapDatabaseExtensions)
-[![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
+# RCSYapDatabaseExtensions
 
-# YapDatabaseExtensions
+**This is a fork of Dan Thorpe's YapDatabaseExtensions. It was initially created as my client needed a Swift 3 version immediately, but it also has several other enhancements, and has now been updated for Swift 4 and YapDatabase 3.0.2. Please see CHANGELOG.md for details.**
 
-Read my introductory blog post about [YapDatabase & YapDatabaseExtensions](http://danthorpe.me/posts/yap-database.html), and a follow up on [YapDatabaseExtensions 2](http://danthorpe.me/posts/yapdatabaseextensions-two--the-swiftening.html).
+Read Dan Thorpe's introductory blog post about [YapDatabase & YapDatabaseExtensions](http://danthorpe.me/posts/yap-database.html), and a follow up on [YapDatabaseExtensions 2](http://danthorpe.me/posts/yapdatabaseextensions-two--the-swiftening.html).
 
-YapDatabaseExtensions is a suite of convenience APIs for working with [YapDatabase](https://github.com/yapstudios/YapDatabase). If you’re not familiar with YapDatabase, it’s a powerful key value database for iOS and Mac - [check it out](https://github.com/yapstudios/YapDatabase)!
+RCSYapDatabaseExtensions is a suite of convenience APIs for working with [YapDatabase](https://github.com/yapstudios/YapDatabase). If you’re not familiar with YapDatabase, it’s a powerful key value database for iOS and Mac - [check it out](https://github.com/yapstudios/YapDatabase)!
 
 ## Motivation
 While YapDatabase is great, it’s lacking some out of the box convenience and Swift support. In particular, YapDatabase works heavily with `AnyObject` types, which is fine for Objective-C but means no type fidelity with Swift. Similarly saving value types like structs or enums in YapDatabase is problematic. This framework has evolved through 2015 to tackle these issues.
@@ -24,15 +19,15 @@ This protocol expresses what is required to support reading from and writing to 
 
 ```swift
 public protocol Identifiable {
-    typealias IdentifierType: CustomStringConvertible
+    associatedtype IdentifierType: CustomStringConvertible
     var identifier: IdentifierType { get }
 }
 
 public protocol Persistable: Identifiable {
+    /// The YapDatabase collection name the type is stored in.
     static var collection: String { get }
-    var metadata: MetadataType? { get set }
 }
-``` 
+```
 
 The `identifier` property allows the type to support an identifier type such as `NSUUID` or `Int`.
 
@@ -41,7 +36,7 @@ While not a requirement of YapDatabase, for these extensions, it is required tha
 There is also a `YapDB.Index` struct which composes the key and collection into a single type. This is used internally for all access methods. Properties defined in an extension on `Persistable` provide access to `key` and `index`.
 
 ### Metadata
-YapDatabase supports storing metadata alongside the primary object. YapDatabaseExtensions supports automatic reading and writing of metadata as an optional property of the `Persistable` type.
+YapDatabase supports storing metadata alongside the primary object. RCSYapDatabaseExtensions supports automatic reading and writing of metadata as an optional property of the `Persistable` type.
 
 By default, all types which conform to `Persistable`, will get a `MetadataType` of `Void` which is synthesized by default. Therefore if you do not want or need a metadata type, there is nothing to do.
 
@@ -58,7 +53,7 @@ struct MyCustomValue: Persistable, ValueCoding {
 
 where the type (`MyCustomMetadata` in the above snippet) implements either `NSCoding` or `ValueCoding`.
 
-When creating a new item, set the metadata property before saving the item to the database. YapDatabaseExtensions will then save the metadata inside YapDatabase correctly. *There is no need to encode the metadata inside the primary object*. When reading objects which have a valid `MetadataType`, YapDatabaseExtensions will automatically read, decode and set the item’s metadata before returning the item.
+When creating a new item, set the metadata property before saving the item to the database. RCSYapDatabaseExtensions will then save the metadata inside YapDatabase correctly. *There is no need to encode the metadata inside the primary object*. When reading objects which have a valid `MetadataType`, RCSYapDatabaseExtensions will automatically read, decode and set the item’s metadata before returning the item.
 
 Note that previous metadata protocols `ObjectMetadataPersistable` and `ValueMetadataPersistable` have been deprecated in favor of `Persistable`.
 
@@ -78,7 +73,7 @@ Item encoding | Metadata encoding | Pattern
 
 ## Extension APIs
 
-YapDatabaseExtensions provides two styles of API. The *functional* API works on `YapDatabase` types, `YapDatabaseReadTransaction`, `YapDatabaseReadWriteTransaction` and `YapDatabaseConnection`. The *persistable* API works on your `Persistable` types directly, and receives the `YapDatabase` type as arguments.
+RCSYapDatabaseExtensions provides two styles of API. The *functional* API works on `YapDatabase` types, `YapDatabaseReadTransaction`, `YapDatabaseReadWriteTransaction` and `YapDatabaseConnection`. The *persistable* API works on your `Persistable` types directly, and receives the `YapDatabase` type as arguments.
 
 ### Functional API
 
@@ -89,7 +84,7 @@ The following “functional” APIs are available directly on the `YapDatabase` 
 let connection = db.newConnection()
 
 // Write a single item
-connection.write(item) 
+connection.write(item)
 
 // Write an array of items, using one transaction.
 connection.write(items)
@@ -101,13 +96,13 @@ connection.asyncWrite(items) { print(“did finish writing”) }
 // Create a write transaction block for multiple writes.
 connection.write { transaction in
     transaction.write(item)
-    transaction.write(items) 
+    transaction.write(items)
 }
 
 // Write many items asynchronously
 connection.asyncWrite({ transaction in
     transaction.write(item)
-    transaction.write(items) 
+    transaction.write(items)
 }, completion: { print(“did finish writing”) })
 ```
 
@@ -160,13 +155,13 @@ item.asyncWrite(connection) { written in
 
 // Return an NSOperation which will perform an sync write on a YapDatabaseConnection.
 let write: NSOperation = item.write(connection)
-``` 
+```
 
 Reading items from the database is a little different.
 
 ```swift
 // Read using a YapDB.Index.
-if let item = Item.read(transaction).byIndex(index) {
+if let item = Item.read(transaction).atIndex(index) {
    // etc - item is correct type, no casting required.
 }
 
@@ -187,12 +182,12 @@ if let allItems = Item.read(transaction).all() {
 
 // Get the Items which exist for the given keys, and return the [String] keys which are missing.
 let (items, missingKeys) = Item.read(transaction).filterExisting(someKeys)
-``` 
+```
 
 Similarly, to work directly on a `YapDatabaseConnection`, use the following:
 
 ```swift
-if let item = Item.read(connection).byIndex(index) {
+if let item = Item.read(connection).atIndex(index) {
    // etc - item is correct type, no casting required.
 }
 
@@ -209,22 +204,24 @@ let (items, missingKeys) = Item.read(connection).filterExisting(someKeys)
 
 ## Installation
 
-YapDatabaseExtensions is available through [CocoaPods](http://cocoapods.org). To install
+RCSYapDatabaseExtensions is **(not yet)** available through [CocoaPods](http://cocoapods.org). If it was...
+
+To install
 it, simply add the following line to your Podfile:
 
 ```ruby
-pod 'YapDatabaseExtensions'
+pod 'RCSYapDatabaseExtensions'
 ```
 
 If you don’t want the extensions API on `Persistable`, integrate the Functional subspec like this:
 
 ```ruby
-pod 'YapDatabaseExtensions/Functional’
+pod 'RCSYapDatabaseExtensions/Functional’
 ```
 
 ## API Documentation
 
-API documentation is available on [CocoaDocs.org](http://cocoadocs.org/docsets/YapDatabaseExtensions).
+API documentation is **(not yet)** available on [CocoaDocs.org](http://cocoadocs.org/docsets/RCSYapDatabaseExtensions).
 
 ## Developing
 
@@ -233,7 +230,9 @@ To start working in this repository’s `YapDatabaseExtensions.xcodeproj`, you�
 ## Author
 
 Daniel Thorpe, [@danthorpe](https://twitter.com/danthorpe)
+Jim Roepcke, [@JimRoepcke](https://github.com/JimRoepcke)
+Andrey Yastrebov, [@AYastrebov](https://github.com/AYastrebov)
 
 ## License
 
-YapDatabaseExtensions is available under the MIT license. See the LICENSE file for more info.
+RCSYapDatabaseExtensions is available under the MIT license. See the LICENSE file for more info.

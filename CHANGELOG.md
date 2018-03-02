@@ -1,3 +1,19 @@
+# 4.0.2
+1. Made `YapItem` properties `public`.
+
+# 4.0.1
+1. Fixed typo in podspec
+
+# 4.0.0
+1. Updated for Swift 4.0
+2. Updated to use YapDatabase 3.0.2, ValueCoding 2.2.0 and CocoaLumberjack 3.4.1
+
+# 3.0.0
+1. Separated Metadata from Objects (removed `metadata` from `Persistable`)
+2. Updated for Swift 3.0
+3. Pod name changed to RCSYapDatabaseExtensions
+4. Use `map` instead of `flatMap` when reading multiple objects so the order of the output corresponds to the order of the input.
+
 # 2.6.0
 Updated for Swift 2.3 - sorry it's taken so long!
 
@@ -50,7 +66,7 @@ Thanks a lot to Ryan ([@aranasaurus](https://github.com/aranasaurus)) for helpin
 # 2.1.0
 1. [[YDB-42](https://github.com/danthorpe/YapDatabaseExtensions/pull/42)]: Refactors read & write API, correctly supporting metadata.
 2. [[YDB-43](https://github.com/danthorpe/YapDatabaseExtensions/pull/43)]: Makes project cross-platform (iOS & Mac OS)
-3. [[YDB-44](https://github.com/danthorpe/YapDatabaseExtensions/pull/44)]: Enables code coverage reporting with CodeCov.io, see reports [here](https://codecov.io/github/danthorpe/YapDatabaseExtensions). 
+3. [[YDB-44](https://github.com/danthorpe/YapDatabaseExtensions/pull/44)]: Enables code coverage reporting with CodeCov.io, see reports [here](https://codecov.io/github/danthorpe/YapDatabaseExtensions).
 4. [[YDB-45](https://github.com/danthorpe/YapDatabaseExtensions/pull/45)]: Adds back functional API.
 5. [[YDB-47](https://github.com/danthorpe/YapDatabaseExtensions/pull/47)]: Updates README.
 6. [[YDB-48](https://github.com/danthorpe/YapDatabaseExtensions/pull/48)]: Removes `Saveable`, created [ValueCoding](https://github.com/danthorpe/ValueCoding) as a standalone project and new dependency.
@@ -72,7 +88,7 @@ Thanks a lot to Ryan ([@aranasaurus](https://github.com/aranasaurus)) for helpin
 4. [[YDB-29](https://github.com/danthorpe/YapDatabaseExtensions/pull/29)]: Adds support to `YapDatabaseConnection` for writeBlockOperation (`NSBlockOperation`), write and remove APIs. This is great if you want to perform a number of writes of different types in the same transaction inside of an `NSOperation` based architecture, as you can do:
 
 ```swift
-queue.addOperation(connection.writeBlockOperation { transaction in 
+queue.addOperation(connection.writeBlockOperation { transaction in
 	transaction.write(foo)
 	transaction.write(bar)
 	transaction.remove(bat)
@@ -81,7 +97,7 @@ queue.addOperation(connection.writeBlockOperation { transaction in
 If you're using my `Operations` framework, as these operations are `NSBlockOperation`s, use `ComposedOperation` to attach conditions or observers. E.g.
 
 ```swift
-let write = ComposedOperation(connection.writeBlockOperation { transaction in 
+let write = ComposedOperation(connection.writeBlockOperation { transaction in
 	transaction.write(foo)
 	transaction.write(bar)
 	transaction.remove(bat)
@@ -120,7 +136,7 @@ queue.addOperation(write)
 
 # 1.1.1
 
-1. [[YDB-11](https://github.com/danthorpe/YapDatabaseExtensions/pull/11)]: Renames `YapDatabase.Index` to `YapDB.Index`. 
+1. [[YDB-11](https://github.com/danthorpe/YapDatabaseExtensions/pull/11)]: Renames `YapDatabase.Index` to `YapDB.Index`.
 
 # 1.1.0
 

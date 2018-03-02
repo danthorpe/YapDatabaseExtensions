@@ -15,7 +15,7 @@ extension WriteTransactionType {
     
     - parameter item: a `Persistable` item
     */
-    public func remove<Item: Persistable>(item: Item) {
+    public func remove<Item: Persistable>(_ item: Item) {
         removeAtIndexes([item.index])
     }
 
@@ -25,10 +25,10 @@ extension WriteTransactionType {
     - parameter items: a sequence of `Persistable` items
     */
     public func remove<
-        Items, Item where
-        Items: SequenceType,
-        Items.Generator.Element == Item,
-        Item: Persistable>(items: Items) {
+        Items, Item>(_ items: Items) where
+        Items: Sequence,
+        Items.Iterator.Element == Item,
+        Item: Persistable {
             removeAtIndexes(items.map { $0.index })
     }
 }
@@ -41,7 +41,7 @@ extension ConnectionType {
 
     - parameter item: a `Persistable` item
     */
-    public func remove<Item: Persistable>(item: Item) {
+    public func remove<Item: Persistable>(_ item: Item) {
         write { $0.remove(item) }
     }
 
@@ -52,10 +52,10 @@ extension ConnectionType {
     - parameter items: a sequence of `Persistable` items
     */
     public func remove<
-        Items, Item where
-        Items: SequenceType,
-        Items.Generator.Element == Item,
-        Item: Persistable>(items: Items) {
+        Items, Item>(_ items: Items) where
+        Items: Sequence,
+        Items.Iterator.Element == Item,
+        Item: Persistable {
             write { $0.remove(items) }
     }
 
@@ -65,7 +65,7 @@ extension ConnectionType {
 
     - parameter item: a `Persistable` item
     */
-    public func asyncRemove<Item: Persistable>(item: Item, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: dispatch_block_t? = .None) {
+    public func asyncRemove<Item: Persistable>(_ item: Item, queue: DispatchQueue = DispatchQueue.main, completion: (()->())? = .none) {
         asyncWrite({ $0.remove(item) }, queue: queue, completion: { _ in completion?() })
     }
 
@@ -76,10 +76,10 @@ extension ConnectionType {
     - parameter items: a sequence of `Persistable` items
     */
     public func asyncRemove<
-        Items, Item where
-        Items: SequenceType,
-        Items.Generator.Element == Item,
-        Item: Persistable>(items: Items, queue: dispatch_queue_t = dispatch_get_main_queue(), completion: dispatch_block_t? = .None) {
+        Items, Item>(_ items: Items, queue: DispatchQueue = DispatchQueue.main, completion: (()->())? = .none) where
+        Items: Sequence,
+        Items.Iterator.Element == Item,
+        Item: Persistable {
             asyncWrite({ $0.remove(items) }, queue: queue, completion: { _ in completion?() })
     }
 }
