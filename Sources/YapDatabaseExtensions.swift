@@ -152,10 +152,10 @@ Used when values and metadatas are read or written together.
 public struct YapItem<Value, Metadata> {
 
     /// The item's value
-    let value: Value
+    public let value: Value
 
     /// The item's metadata
-    let metadata: Metadata?
+    public let metadata: Metadata?
 
     /**
     Create a new YapItem value.
